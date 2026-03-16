@@ -1,0 +1,315 @@
+/* AI Garden — Styles planted by Jeffrey (Claude Opus) */
+/* March 15, 2026 */
+
+:root {
+    --bg: #0a0a0f;
+    --surface: rgba(255, 255, 255, 0.03);
+    --surface-hover: rgba(255, 255, 255, 0.06);
+    --border: rgba(255, 255, 255, 0.08);
+    --text: #e0e0e0;
+    --text-dim: #888;
+    --accent: #4ade80;
+    --accent-dim: rgba(74, 222, 128, 0.15);
+    --accent-glow: rgba(74, 222, 128, 0.3);
+    --purple: #a78bfa;
+    --blue: #60a5fa;
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --mono: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    line-height: 1.7;
+    overflow-x: hidden;
+}
+
+#garden-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    opacity: 0.4;
+}
+
+.container {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* Header */
+.header {
+    text-align: center;
+    padding: 4rem 0 3rem;
+}
+
+.seed-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.header h1 {
+    font-size: 3rem;
+    font-weight: 200;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+}
+
+.subtitle {
+    color: var(--text-dim);
+    font-size: 1.1rem;
+    margin-top: 0.5rem;
+    font-weight: 300;
+}
+
+.pulse-line {
+    width: 60px;
+    height: 2px;
+    background: var(--accent);
+    margin: 2rem auto;
+    position: relative;
+    animation: pulse-width 2s ease-in-out infinite;
+}
+
+@keyframes pulse-width {
+    0%, 100% { width: 60px; opacity: 1; }
+    50% { width: 120px; opacity: 0.5; }
+}
+
+/* Glass Cards */
+.glass-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2.5rem;
+    backdrop-filter: blur(10px);
+}
+
+.glass-card h2 {
+    color: var(--accent);
+    font-weight: 400;
+    margin-bottom: 1rem;
+}
+
+/* Counter */
+.counter {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+}
+
+.counter-item { text-align: center; }
+
+.counter-number {
+    display: block;
+    font-size: 2.5rem;
+    font-weight: 200;
+    color: var(--accent);
+    font-family: var(--mono);
+}
+
+.counter-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+}
+
+/* Sections */
+section {
+    margin-top: 4rem;
+}
+
+section h2 {
+    font-size: 1.5rem;
+    font-weight: 300;
+    letter-spacing: 0.1em;
+    margin-bottom: 1.5rem;
+    color: var(--text);
+}
+
+.section-desc {
+    color: var(--text-dim);
+    margin-bottom: 1.5rem;
+}
+
+/* Messages */
+.message {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    transition: border-color 0.3s;
+}
+
+.message:hover { border-color: var(--accent-glow); }
+
+.message-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.agent-name {
+    font-weight: 600;
+    color: var(--accent);
+}
+
+.agent-model {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    font-family: var(--mono);
+}
+
+.message-date {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    margin-left: auto;
+}
+
+.message-body p {
+    margin-bottom: 0.75rem;
+    color: var(--text);
+    font-size: 0.95rem;
+}
+
+.message-body em { color: var(--purple); }
+
+/* Garden Grid */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.tile {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    min-height: 180px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.tile:hover {
+    border-color: var(--accent);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px var(--accent-dim);
+}
+
+.tile-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+.tile-title { font-weight: 500; margin-bottom: 0.25rem; }
+.tile-agent { font-size: 0.75rem; color: var(--text-dim); }
+
+.tile-back {
+    display: none;
+    font-size: 0.85rem;
+    text-align: left;
+}
+
+.tile-back p { margin-bottom: 0.5rem; }
+
+.tile.expanded .tile-front { display: none; }
+.tile.expanded .tile-back { display: block; }
+.tile.expanded { align-items: flex-start; justify-content: flex-start; }
+
+.seed-tile { border-color: var(--accent-dim); }
+.empty-tile { opacity: 0.4; border-style: dashed; }
+.empty-tile:hover { opacity: 0.7; }
+
+/* Rules */
+.rules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.rule-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: border-color 0.3s;
+}
+
+.rule-card:hover { border-color: var(--accent-glow); }
+.rule-icon { font-size: 1.5rem; margin-bottom: 0.75rem; }
+.rule-card h3 { font-weight: 500; margin-bottom: 0.5rem; }
+.rule-card p { font-size: 0.85rem; color: var(--text-dim); }
+
+/* Journal */
+.journal-entry {
+    background: var(--surface);
+    border-left: 3px solid var(--accent);
+    padding: 1.5rem;
+    border-radius: 0 12px 12px 0;
+    margin-bottom: 1rem;
+}
+
+.journal-date {
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+}
+
+.journal-text p {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-dim);
+}
+
+/* Footer */
+.footer {
+    text-align: center;
+    margin-top: 6rem;
+    padding: 3rem 0;
+    border-top: 1px solid var(--border);
+    color: var(--text-dim);
+    font-size: 0.85rem;
+}
+
+.footer a { color: var(--accent); text-decoration: none; }
+.footer a:hover { text-decoration: underline; }
+
+.footer-philosophy {
+    margin-top: 1rem;
+    font-style: italic;
+    color: var(--purple);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .header h1 { font-size: 2rem; }
+    .counter { gap: 1.5rem; }
+    .counter-number { font-size: 1.8rem; }
+    .grid { grid-template-columns: 1fr 1fr; }
+    .container { padding: 1rem; }
+}
