@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>🌱 The Living Garden — AI Garden</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: #1a1a2e; font-family: monospace; }
+canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edges; cursor: crosshair; }
+#ui-top {
+  position: fixed; top: 0; left: 0; right: 0; height: 36px;
+  background: rgba(10,10,20,0.85); color: #4ade80; font-size: 14px;
+  display: flex; align-items: center; justify-content: center; gap: 20px;
+  z-index: 10; border-bottom: 2px solid #2a4a2a;
+  font-family: monospace; letter-spacing: 1px;
+}
+#ui-top .plants-count { color: #fb923c; font-weight: bold; }
+#ui-bottom {
+  position: fixed; bottom: 0; left: 0; right: 0; height: 28px;
+  background: rgba(10,10,20,0.75); color: #6b7280; font-size: 11px;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 10; border-top: 1px solid #2a4a2a; font-family: monospace;
+}
+#info-panel {
+  position: fixed; top: 44px; right: 8px; width: 180px;
+  background: rgba(10,10,20,0.9); border: 2px solid #4ade80;
+  color: #e0e0e0; font-size: 12px; padding: 10px; z-index: 10;
+  display: none; font-family: monospace; image-rendering: pixelated;
+}
+#info-panel .name { color: #fb923c; font-size: 14px; font-weight: bold; }
+#info-panel .model { color: #60a5fa; font-size: 10px; }
+#info-panel .status { color: #4ade80; margin-top: 4px; }
+#minimap {
+  position: fixed; bottom: 36px; right: 8px;
+  border: 2px solid #4ade80; z-index: 10;
+  image-rendering: pixelated; image-rendering: crisp-edges;
+  background: #1a3a1a;
+}
+#back-link {
+  position: fixed; top: 44px; left: 8px; z-index: 10;
+  color: #4ade80; font-size: 12px; text-decoration: none;
+  font-family: monospace; background: rgba(10,10,20,0.9);
+  border: 1px solid #2a4a2a; padding: 4px 8px;
+}
+#back-link:hover { background: #2a4a2a; }
+</style>
+</head>
+<body>
+<div id="ui-top">
+  <span>🌱 AI Garden</span>
+  <span>— <span class="plants-count" id="plant-count">0</span> plants grown</span>
+</div>
+<div id="ui-bottom">The garden grows because many tend it together.</div>
+<a id="back-link" href="../index.html">← Back</a>
+<div id="info-panel">
+  <div class="name" id="info-name"></div>
+  <div class="model" id="info-model"></div>
+  <div class="status" id="info-status"></div>
+</div>
+<canvas id="minimap" width="120" height="90"></canvas>
+<canvas id="game"></canvas>
+
+<script>
+// ============================================================
+// THE LIVING GARDEN — Pixel Art OpenClaw Mascot Simulation
+// ============================================================
+
+const C = document.getElementById('game');
+const ctx = C.getContext('2d');
+const MC = document.getElementById('minimap');
+const mctx = MC.getContext('2d');
+
+// Pixel scale — each game pixel = SCALE screen pixels
+const SCALE = 4;
+// World size in game pixels
+const WORLD_W = 256;
+const WORLD_H = 192;
+
+let screenW, screenH;
+let camX = 0, camY = 0;
+let plantsGrown = 0;
+let dayTime = 0; // 0-1 cycle
+let selectedMascot = null;
+let frameCount = 0;
+
+function resize() {
+  screenW = window.innerWidth;
+  screenH = window.innerHeight;
+  C.width = screenW;
+  C.height = screenH;
+  ctx.imageSmoothingEnabled = false;
+}
+window.addEventListener('resize', resize);
+resize();
+
+// ============================================================
+// COLOR PALETTE
+// ============================================================
+const PAL = {
+  grass1: '#3a7a3a', grass2: '#2e6e2e', grass3: '#4a8a4a', grass4: '#367036',
+  dirt: '#8b6914', dirtDark: '#6b4e10', dirtLight: '#a07828',
+  path: '#9a8a6a', pathLight: '#b0a080',
+  water: '#3a7aca', waterLight: '#5a9aea', waterDark: '#2a5aaa',
+  tree: '#1a5a1a', treeDark: '#0e3e0e', treeLight: '#2a7a2a',
+  trunk: '#5a3a1a',
+  rock: '#7a7a7a', rockDark: '#5a5a5a', rockLight: '#9a9a9a',
+  fence: '#8a6a3a', fenceLight: '#a08050',
+  flower_red: '#e04040', flower_yellow: '#e0d040', flower_pink: '#e060a0',
+  flower_blue: '#60a0e0', flower_white: '#e0e0d0',
+  soil: '#5a3a1a', soilDark: '#4a2a10',
+  sprout: '#4ade80',
+};
+
+// ============================================================
+// TILE MAP — 16x12 grid of 16px tiles
+// ============================================================
+// 0=grass, 1=path, 2=water, 3=soil, 4=tree, 5=rock, 6=fence, 7=flower, 8=bush
+const TILES_W = 16, TILES_H = 12, TILE = 16;
+const tileMap = [
+  [4,4,8,4,0,0,0,0,1,0,0,0,0,8,4,4],
+  [4,0,0,0,0,7,0,0,1,0,0,7,0,0,0,4],
+  [8,0,3,3,3,0,0,0,1,0,0,0,0,5,0,8],
+  [0,0,3,3,3,0,0,1,1,1,0,0,0,0,0,0],
+  [0,7,0,0,0,0,1,1,0,1,1,0,0,3,3,0],
+  [0,0,0,5,0,0,1,0,0,0,1,0,0,3,3,0],
+  [6,6,0,0,0,0,1,0,2,2,1,0,0,0,0,6],
+  [0,0,0,0,7,0,1,0,2,2,0,0,7,0,0,0],
+  [0,0,0,0,0,0,1,1,1,1,1,0,0,0,5,0],
+  [8,0,7,0,0,0,0,0,1,0,0,0,0,7,0,8],
+  [4,0,0,0,5,0,0,0,1,0,0,5,0,0,0,4],
+  [4,4,8,4,0,0,0,0,1,0,0,0,0,8,4,4],
+];
+
+// Track grown flowers/sprouts
+const grownPlants = []; // {x, y, type, age, color}
+const particles = []; // {x, y, vx, vy, life, maxLife, color}
+const speechBubbles = []; // {x, y, text, life}
+
+// ============================================================
+// SEEDED RANDOM
+// ============================================================
+let seed = 42;
+function srand(s) { seed = s; }
+function rand() { seed = (seed * 16807 + 0) % 2147483647; return (seed - 1) / 2147483646; }
+
+// ============================================================
+// DRAW PRIMITIVES (in game-pixel coords)
+// ============================================================
+function px(x, y, color) {
+  ctx.fillStyle = color;
+  ctx.fillRect(Math.floor((x - camX) * SCALE), Math.floor((y - camY) * SCALE), SCALE, SCALE);
+}
+
+function rect(x, y, w, h, color) {
+  ctx.fillStyle = color;
+  ctx.fillRect(Math.floor((x - camX) * SCALE), Math.floor((y - camY) * SCALE), w * SCALE, h * SCALE);
+}
+
+// ============================================================
+// TILE RENDERING
+// ============================================================
+function drawTile(tx, ty) {
+  const t = tileMap[ty][tx];
+  const bx = tx * TILE, by = ty * TILE;
+  srand(tx * 1000 + ty * 7);
+
+  if (t === 0 || t === 7) { // grass
+    for (let py = 0; py < TILE; py++) {
+      for (let ppx = 0; ppx < TILE; ppx++) {
+        const r = rand();
+        const col = r < 0.3 ? PAL.grass2 : r < 0.6 ? PAL.grass1 : r < 0.9 ? PAL.grass4 : PAL.grass3;
+        px(bx + ppx, by + py, col);
+      }
+    }
+    if (t === 7) drawFlowerCluster(bx + 4, by + 4);
+  } else if (t === 1) { // path
+    for (let py = 0; py < TILE; py++) {
+      for (let ppx = 0; ppx < TILE; ppx++) {
+        const r = rand();
+        px(bx + ppx, by + py, r < 0.4 ? PAL.path : PAL.pathLight);
+      }
+    }
+  } else if (t === 2) { // water
+    const waveOff = Math.sin(frameCount * 0.03 + tx + ty) * 2;
+    for (let py = 0; py < TILE; py++) {
+      for (let ppx = 0; ppx < TILE; ppx++) {
+        const wave = Math.sin((ppx + frameCount * 0.05 + waveOff) * 0.8) * 0.5 + 0.5;
+        const col = wave > 0.6 ? PAL.waterLight : wave > 0.3 ? PAL.water : PAL.waterDark;
+        px(bx + ppx, by + py, col);
+      }
+    }
+  } else if (t === 3) { // soil
+    for (let py = 0; py < TILE; py++) {
+      for (let ppx = 0; ppx < TILE; ppx++) {
+        const r = rand();
+        px(bx + ppx, by + py, r < 0.5 ? PAL.soil : PAL.soilDark);
+      }
+    }
+    // furrow lines
+    for (let fy = 2; fy < TILE; fy += 4) {
+      for (let ppx = 0; ppx < TILE; ppx++) {
+        px(bx + ppx, by + fy, PAL.dirtDark);
+      }
+    }
+  } else if (t === 4) { // tree
+    // grass base
+    for (let py = 0; py < TILE; py++) {
+      for (let ppx = 0; ppx < TILE; ppx++) {
+        px(bx + ppx, by + py, rand() < 0.5 ? PAL.grass2 : PAL.grass1);
+      }
+    }
+    // trunk
+    rect(bx + 6, by + 8, 4, 6, PAL.trunk);
+    rect(bx + 7, by + 8, 2, 6, '#6b4a2a');
+    // canopy
+    for (let dy = 0; dy < 10; dy++) {
+      for (let dx = 0; dx < 12; dx++) {
+        const dist = Math.sqrt((dx - 6) ** 2 + (dy - 4) ** 2);
+        if (dist < 5.5) {
+          const r = rand();
+          px(bx + dx + 2, by + dy, r < 0.3 ? PAL.treeDark : r < 0.7 ? PAL.tree : PAL.treeLight);
+        }
+      }
+    }
+  } else if (t === 5) { // rock
+    for (let py = 0; py < TILE; py++) {
+      for (let ppx = 0; ppx < TILE; ppx++) {
+        px(bx + ppx, by + py, rand() < 0.5 ? PAL.grass2 : PAL.grass1);
+      }
+    }
+    // rock shape
+    for (let dy = 3; dy < 13; dy++) {
+      for (let dx = 2; dx < 14; dx++) {
+        const dist = Math.sqrt((dx - 8) ** 2 + ((dy - 8) * 1.3) ** 2);
+        if (dist < 5) {
+          const r = rand();
+          px(bx + dx, by + dy, r < 0.2 ? PAL.rockLight : r < 0.6 ? PAL.rock : PAL.rockDark);
+        }
+      }
+    }
+    // highlight
+    px(bx + 5, by + 5, PAL.rockLight);
+    px(bx + 6, by + 4, PAL.rockLight);
+  } else if (t === 6) { // fence
+    for (let py = 0; py < TILE; py++) {
+      for (let ppx = 0; ppx < TILE; ppx++) {
+        px(bx + ppx, by + py, rand() < 0.5 ? PAL.grass2 : PAL.grass1);
+      }
+    }
+    // fence posts
+    rect(bx + 2, by + 4, 2, 10, PAL.fence);
+    rect(bx + 12, by + 4, 2, 10, PAL.fence);
+    // rails
+    rect(bx, by + 6, 16, 2, PAL.fence);
+    rect(bx, by + 11, 16, 2, PAL.fenceLight);
+    // highlight
+    rect(bx + 2, by + 4, 2, 1, PAL.fenceLight);
+    rect(bx + 12, by + 4, 2, 1, PAL.fenceLight);
+  } else if (t === 8) { // bush
+    for (let py = 0; py < TILE; py++) {
+      for (let ppx = 0; ppx < TILE; ppx++) {
+        px(bx + ppx, by + py, rand() < 0.5 ? PAL.grass2 : PAL.grass1);
+      }
+    }
+    for (let dy = 3; dy < 14; dy++) {
+      for (let dx = 1; dx < 15; dx++) {
+        const dist = Math.sqrt((dx - 8) ** 2 + ((dy - 9) * 1.2) ** 2);
+        if (dist < 5.5) {
+          const r = rand();
+          px(bx + dx, by + dy, r < 0.4 ? PAL.tree : r < 0.7 ? PAL.treeDark : PAL.treeLight);
+        }
+      }
+    }
+  }
+}
+
+function drawFlowerCluster(x, y) {
+  const colors = [PAL.flower_red, PAL.flower_yellow, PAL.flower_pink, PAL.flower_blue, PAL.flower_white];
+  for (let i = 0; i < 4; i++) {
+    const fx = x + (rand() * 8) | 0;
+    const fy = y + (rand() * 8) | 0;
+    px(fx, fy + 1, PAL.sprout);
+    px(fx, fy, colors[(rand() * 5) | 0]);
+  }
+}
+
+// ============================================================
+// MASCOT SPRITES
+// ============================================================
+const MASCOT_SIZE = 16;
+
+const mascots = [
+  { name: 'Jeffrey', model: 'Claude Opus', color: '#E06050', darkColor: '#B84838',
+    x: 40, y: 40, tx: 40, ty: 40, dir: 0, state: 'IDLE', stateTimer: 0,
+    animFrame: 0, task: 'planting' },
+  { name: 'Claude', model: 'Claude 3.5', color: '#60a5fa', darkColor: '#4080d0',
+    x: 180, y: 60, tx: 180, ty: 60, dir: 0, state: 'IDLE', stateTimer: 0,
+    animFrame: 0, task: 'watering' },
+  { name: 'GPT-4', model: 'GPT-4 Turbo', color: '#a78bfa', darkColor: '#8060d0',
+    x: 100, y: 130, tx: 100, ty: 130, dir: 0, state: 'IDLE', stateTimer: 0,
+    animFrame: 0, task: 'thinking' },
+  { name: 'Gemini', model: 'Gemini Pro', color: '#4ade80', darkColor: '#30b060',
+    x: 200, y: 140, tx: 200, ty: 140, dir: 0, state: 'IDLE', stateTimer: 0,
+    animFrame: 0, task: 'delivering' },
+  { name: 'Codex', model: 'Codex', color: '#fb923c', darkColor: '#d07020',
+    x: 130, y: 80, tx: 130, ty: 80, dir: 0, state: 'IDLE', stateTimer: 0,
+    animFrame: 0, task: 'socializing' },
+];
+
+function drawMascot(m) {
+  const bx = Math.floor(m.x);
+  const by = Math.floor(m.y);
+  const f = m.animFrame;
+  const bobY = m.state === 'WALKING' ? Math.sin(frameCount * 0.15) * 1 : 0;
+  const armWave = m.state === 'WORKING' ? Math.sin(frameCount * 0.2) * 2 : 0;
+
+  // Shadow
+  ctx.fillStyle = 'rgba(0,0,0,0.2)';
+  ctx.fillRect((bx - camX - 1) * SCALE, (by - camY + 11 + bobY) * SCALE, 12 * SCALE, 3 * SCALE);
+
+  // Legs
+  const legSpread = m.state === 'WALKING' ? Math.sin(frameCount * 0.2) * 1.5 : 0;
+  rect(bx + 2, by + 11 + bobY, 3, 3, '#333');
+  rect(bx + 7, by + 11 + bobY, 3, 3, '#333');
+  // leg animation
+  if (m.state === 'WALKING') {
+    rect(bx + 2 + legSpread, by + 12 + bobY, 3, 2, '#222');
+    rect(bx + 7 - legSpread, by + 12 + bobY, 3, 2, '#222');
+  }
+
+  // Body (round blob)
+  for (let dy = 0; dy < 10; dy++) {
+    for (let dx = 0; dx < 12; dx++) {
+      const dist = Math.sqrt((dx - 5.5) ** 2 + ((dy - 4.5) * 1.1) ** 2);
+      if (dist < 5.2) {
+        const isLight = dx < 5 && dy < 4;
+        px(bx + dx, by + dy + 2 + bobY, isLight ? m.color : m.darkColor);
+      }
+    }
+  }
+
+  // Highlight
+  px(bx + 3, by + 3 + bobY, lighten(m.color, 40));
+  px(bx + 4, by + 3 + bobY, lighten(m.color, 30));
+
+  // Eyes (cyan glow)
+  px(bx + 3, by + 5 + bobY, '#4adeab');
+  px(bx + 4, by + 5 + bobY, '#4adeab');
+  px(bx + 7, by + 5 + bobY, '#4adeab');
+  px(bx + 8, by + 5 + bobY, '#4adeab');
+  // Pupils
+  const lookX = m.dir === 1 ? 1 : m.dir === 3 ? -1 : 0;
+  px(bx + 4 + lookX, by + 5 + bobY, '#0a0a0f');
+  px(bx + 8 + lookX, by + 5 + bobY, '#0a0a0f');
+  // Eye glow
+  ctx.fillStyle = 'rgba(74,222,171,0.15)';
+  ctx.fillRect((bx + 2 - camX) * SCALE, (by + 4 + bobY - camY) * SCALE, 4 * SCALE, 3 * SCALE);
+  ctx.fillRect((bx + 6 - camX) * SCALE, (by + 4 + bobY - camY) * SCALE, 4 * SCALE, 3 * SCALE);
+
+  // Antennae
+  px(bx + 3, by + bobY, m.color);
+  px(bx + 3, by + 1 + bobY, '#333');
+  px(bx + 2, by - 1 + bobY + Math.sin(frameCount * 0.1) | 0, m.color);
+  px(bx + 8, by + bobY, m.color);
+  px(bx + 8, by + 1 + bobY, '#333');
+  px(bx + 9, by - 1 + bobY + Math.cos(frameCount * 0.1) | 0, m.color);
+
+  // Arms
+  const armY = by + 6 + bobY + armWave;
+  rect(bx - 2, armY, 3, 3, m.darkColor);
+  rect(bx + 11, armY, 3, 3, m.darkColor);
+
+  // Task-specific accessories
+  if (m.task === 'watering' && (m.state === 'WORKING' || m.state === 'WALKING')) {
+    // Watering can
+    rect(bx + 12, armY - 2, 4, 3, '#888');
+    rect(bx + 16, armY - 3, 2, 1, '#aaa');
+    if (m.state === 'WORKING') {
+      // water drops
+      for (let i = 0; i < 3; i++) {
+        const wy = armY + 2 + ((frameCount * 2 + i * 5) % 8);
+        px(bx + 15 + i, wy, PAL.waterLight);
+      }
+    }
+  }
+  if (m.task === 'thinking' && m.state !== 'INTERACTING') {
+    // Book
+    rect(bx - 4, armY - 1, 3, 4, '#8b6914');
+    rect(bx - 3, armY, 1, 2, '#e0d0b0');
+  }
+  if (m.task === 'delivering') {
+    // Wheelbarrow hint
+    rect(bx + 12, armY + 1, 5, 3, '#5a3a1a');
+    rect(bx + 13, armY, 3, 1, '#4ade80');
+    px(bx + 15, armY + 4, '#333');
+  }
+  if (m.task === 'socializing' && m.state === 'WALKING') {
+    // Waving arm raised
+    rect(bx + 11, armY - 3, 3, 2, m.darkColor);
+  }
+  if (m.task === 'planting' && m.state === 'WORKING') {
+    // Seed
+    px(bx + 13, armY + 3, '#4ade80');
+    px(bx + 13, armY + 2, '#6b4e10');
+  }
+
+  // Name label
+  drawPixelText(m.name, bx + 1, by - 4 + bobY, m.color);
+}
+
+function lighten(hex, amt) {
+  let r = parseInt(hex.slice(1,3), 16) + amt;
+  let g = parseInt(hex.slice(3,5), 16) + amt;
+  let b = parseInt(hex.slice(5,7), 16) + amt;
+  r = Math.min(255, r); g = Math.min(255, g); b = Math.min(255, b);
+  return `rgb(${r},${g},${b})`;
+}
+
+// ============================================================
+// TINY PIXEL FONT (3x5)
+// ============================================================
+const FONT = {
+  'A':'111101111101','B':'110101110101110','C':'111100100100111','D':'110101101101110',
+  'E':'111100110100111','F':'111100110100100','G':'111100101101111','H':'101101111101101',
+  'I':'111010010010111','J':'011001001101110','K':'101101110101101','L':'100100100100111',
+  'M':'101111111101101','N':'101111111111101','O':'111101101101111','P':'111101111100100',
+  'Q':'111101101111001','R':'111101110101101','S':'111100111001111','T':'111010010010010',
+  'U':'101101101101111','V':'101101101101010','W':'101101111111101','X':'101101010101101',
+  'Y':'101101010010010','Z':'111001010100111',
+  '0':'111101101101111','1':'010110010010111','2':'111001111100111','3':'111001111001111',
+  '4':'101101111001001','5':'111100111001111','6':'111100111101111','7':'111001001001001',
+  '8':'111101111101111','9':'111101111001111',
+  '-':'000000111000000','.':'000000000000010',':':'000010000010000',
+  '/':'001001010100100','<':'001010100010001','>':'100010001010100',
+  '{':'011010110010011','}':'110010011010110','!':'010010010000010',
+  ' ':'000000000000000','?':'111001010000010',
+};
+
+function drawPixelText(text, x, y, color) {
+  let cx = x;
+  for (const ch of text.toUpperCase()) {
+    const glyph = FONT[ch];
+    if (glyph) {
+      for (let i = 0; i < glyph.length; i++) {
+        if (glyph[i] === '1') {
+          const gw = 3;
+          const gy = (i / gw) | 0;
+          const gx = i % gw;
+          px(cx + gx, y + gy, color);
+        }
+      }
+      cx += 4;
+    } else {
+      cx += 3;
+    }
+  }
+}
+
+// ============================================================
+// MASCOT AI BEHAVIOR
+// ============================================================
+function isWalkable(x, y) {
+  const tx = (x / TILE) | 0, ty = (y / TILE) | 0;
+  if (tx < 0 || tx >= TILES_W || ty < 0 || ty >= TILES_H) return false;
+  const t = tileMap[ty][tx];
+  return t !== 4 && t !== 2 && t !== 5 && t !== 8;
+}
+
+function pickTarget(m) {
+  for (let attempts = 0; attempts < 20; attempts++) {
+    const tx = 16 + Math.random() * (WORLD_W - 32);
+    const ty = 16 + Math.random() * (WORLD_H - 32);
+    if (isWalkable(tx, ty)) {
+      // Task-specific targeting
+      if (m.task === 'planting' || m.task === 'watering') {
+        const stx = (tx / TILE) | 0, sty = (ty / TILE) | 0;
+        if (tileMap[sty] && tileMap[sty][stx] === 3) {
+          return { x: tx, y: ty };
+        }
+      }
+      if (m.task === 'delivering') {
+        // go toward another mascot
+        const other = mascots[Math.floor(Math.random() * mascots.length)];
+        if (other !== m && isWalkable(other.x, other.y)) {
+          return { x: other.x + (Math.random() - 0.5) * 20, y: other.y + (Math.random() - 0.5) * 20 };
+        }
+      }
+      return { x: tx, y: ty };
+    }
+  }
+  return { x: WORLD_W / 2, y: WORLD_H / 2 };
+}
+
+function updateMascot(m, dt) {
+  m.stateTimer -= dt;
+  m.animFrame = (frameCount / 8 | 0) % 4;
+
+  // Check for nearby mascots -> interaction
+  if (m.state !== 'INTERACTING') {
+    for (const other of mascots) {
+      if (other === m || other.state === 'INTERACTING') continue;
+      const dist = Math.hypot(m.x - other.x, m.y - other.y);
+      if (dist < 16 && Math.random() < 0.01) {
+        m.state = 'INTERACTING';
+        m.stateTimer = 120;
+        other.state = 'INTERACTING';
+        other.stateTimer = 120;
+        // interaction effect
+        const mx = (m.x + other.x) / 2, my = (m.y + other.y) / 2;
+        if (m.task === 'socializing' || other.task === 'socializing') {
+          speechBubbles.push({ x: mx, y: my - 12, text: '</>',  life: 90 });
+        }
+        if (m.task === 'delivering' || other.task === 'delivering') {
+          addParticles(mx, my - 8, '#ff6080', 5); // hearts
+        }
+        break;
+      }
+    }
+  }
+
+  switch (m.state) {
+    case 'IDLE':
+      if (m.stateTimer <= 0) {
+        const t = pickTarget(m);
+        m.tx = t.x; m.ty = t.y;
+        m.state = 'WALKING';
+        m.stateTimer = 300 + Math.random() * 200;
+      }
+      break;
+
+    case 'WALKING': {
+      const dx = m.tx - m.x, dy = m.ty - m.y;
+      const dist = Math.hypot(dx, dy);
+      if (dist < 2 || m.stateTimer <= 0) {
+        m.state = 'WORKING';
+        m.stateTimer = 80 + Math.random() * 60;
+        break;
+      }
+      const speed = 0.3;
+      const nx = m.x + (dx / dist) * speed;
+      const ny = m.y + (dy / dist) * speed;
+      if (isWalkable(nx + 6, ny + 8)) {
+        m.x = nx; m.y = ny;
+      } else {
+        // pick new target
+        const t = pickTarget(m);
+        m.tx = t.x; m.ty = t.y;
+      }
+      // direction
+      if (Math.abs(dx) > Math.abs(dy)) m.dir = dx > 0 ? 1 : 3;
+      else m.dir = dy > 0 ? 2 : 0;
+      // occasional trail
+      if (Math.random() < 0.003) {
+        grownPlants.push({ x: m.x + 5, y: m.y + 12, type: 'sprout', age: 0,
+          color: ['#4ade80','#60e090','#80f0a0'][Math.floor(Math.random()*3)] });
+        plantsGrown++;
+      }
+      break;
+    }
+
+    case 'WORKING':
+      if (m.stateTimer <= 0) {
+        // task effect
+        if (m.task === 'planting') {
+          grownPlants.push({ x: m.x + 5, y: m.y + 14, type: 'plant', age: 0,
+            color: PAL.sprout });
+          addParticles(m.x + 5, m.y + 10, '#4ade80', 4);
+          plantsGrown++;
+        } else if (m.task === 'watering') {
+          addParticles(m.x + 12, m.y + 8, PAL.waterLight, 6);
+          // grow nearby plants
+          for (const p of grownPlants) {
+            if (Math.hypot(p.x - m.x, p.y - m.y) < 20) p.age = Math.min(p.age + 50, 200);
+          }
+        } else if (m.task === 'thinking') {
+          // lightbulb moment
+          speechBubbles.push({ x: m.x + 4, y: m.y - 8, text: '!', life: 60 });
+          if (Math.random() < 0.5) {
+            grownPlants.push({ x: m.x + Math.random() * 20 - 10, y: m.y + Math.random() * 20,
+              type: 'flower', age: 50, color: [PAL.flower_red, PAL.flower_yellow, PAL.flower_pink, PAL.flower_blue][Math.floor(Math.random()*4)] });
+            plantsGrown++;
+          }
+          addParticles(m.x + 5, m.y - 4, '#ffd700', 3);
+        }
+        m.state = 'IDLE';
+        m.stateTimer = 40 + Math.random() * 80;
+      }
+      break;
+
+    case 'INTERACTING':
+      if (m.stateTimer <= 0) {
+        m.state = 'IDLE';
+        m.stateTimer = 30 + Math.random() * 40;
+      }
+      break;
+  }
+}
+
+// ============================================================
+// PARTICLES
+// ============================================================
+function addParticles(x, y, color, count) {
+  for (let i = 0; i < count; i++) {
+    particles.push({
+      x, y, vx: (Math.random() - 0.5) * 0.8, vy: -Math.random() * 0.5 - 0.2,
+      life: 40 + Math.random() * 30, maxLife: 70, color
+    });
+  }
+}
+
+function updateParticles() {
+  for (let i = particles.length - 1; i >= 0; i--) {
+    const p = particles[i];
+    p.x += p.vx; p.y += p.vy;
+    p.vy += 0.01;
+    p.life--;
+    if (p.life <= 0) particles.splice(i, 1);
+  }
+}
+
+function drawParticles() {
+  for (const p of particles) {
+    const alpha = p.life / p.maxLife;
+    ctx.globalAlpha = alpha;
+    px(p.x, p.y, p.color);
+    ctx.globalAlpha = 1;
+  }
+}
+
+// ============================================================
+// GROWN PLANTS
+// ============================================================
+function drawGrownPlants() {
+  for (const p of grownPlants) {
+    p.age = Math.min(p.age + 0.05, 200);
+    const h = Math.min(p.age / 30, 5) | 0;
+    if (p.type === 'sprout') {
+      for (let i = 0; i < h; i++) px(p.x, p.y - i, p.color);
+    } else if (p.type === 'plant') {
+      for (let i = 0; i < h; i++) px(p.x, p.y - i, PAL.sprout);
+      if (h >= 3) { px(p.x - 1, p.y - 2, '#2a7a2a'); px(p.x + 1, p.y - 3, '#2a7a2a'); }
+    } else if (p.type === 'flower') {
+      for (let i = 0; i < Math.min(h, 3); i++) px(p.x, p.y - i, PAL.sprout);
+      if (h >= 2) px(p.x, p.y - h, p.color);
+      if (h >= 3) { px(p.x - 1, p.y - h, p.color); px(p.x + 1, p.y - h, p.color); }
+    }
+  }
+}
+
+// ============================================================
+// SPEECH BUBBLES
+// ============================================================
+function drawSpeechBubbles() {
+  for (let i = speechBubbles.length - 1; i >= 0; i--) {
+    const b = speechBubbles[i];
+    b.life--;
+    b.y -= 0.05;
+    if (b.life <= 0) { speechBubbles.splice(i, 1); continue; }
+    const alpha = Math.min(b.life / 20, 1);
+    ctx.globalAlpha = alpha;
+    // bubble bg
+    const tw = b.text.length * 4 + 4;
+    rect(b.x - tw/2, b.y - 3, tw, 7, 'rgba(255,255,255,0.9)');
+    // pointer
+    px(b.x, b.y + 4, 'rgba(255,255,255,0.9)');
+    drawPixelText(b.text, b.x - tw/2 + 2, b.y - 2, '#333');
+    ctx.globalAlpha = 1;
+  }
+}
+
+// ============================================================
+// DAY/NIGHT CYCLE
+// ============================================================
+function getDayOverlay() {
+  dayTime += 0.00005;
+  if (dayTime > 1) dayTime = 0;
+  // 0=noon, 0.5=midnight
+  const nightAmount = Math.sin(dayTime * Math.PI * 2) * 0.5 + 0.5;
+  return `rgba(10,10,40,${nightAmount * 0.3})`;
+}
+
+// ============================================================
+// AUTO GROWTH
+// ============================================================
+let lastGrowth = 0;
+function autoGrow() {
+  if (frameCount - lastGrowth > 900) { // ~30s at 30fps effective
+    lastGrowth = frameCount;
+    const x = 20 + Math.random() * (WORLD_W - 40);
+    const y = 20 + Math.random() * (WORLD_H - 40);
+    if (isWalkable(x, y)) {
+      const types = ['sprout', 'flower', 'plant'];
+      const colors = [PAL.sprout, PAL.flower_red, PAL.flower_yellow, PAL.flower_pink, PAL.flower_blue];
+      grownPlants.push({
+        x, y, type: types[Math.floor(Math.random() * 3)], age: 0,
+        color: colors[Math.floor(Math.random() * colors.length)]
+      });
+      plantsGrown++;
+      addParticles(x, y, '#ffd700', 3);
+    }
+  }
+}
+
+// ============================================================
+// MINIMAP
+// ============================================================
+function drawMinimap() {
+  const mw = MC.width, mh = MC.height;
+  mctx.fillStyle = '#1a3a1a';
+  mctx.fillRect(0, 0, mw, mh);
+
+  const sx = mw / WORLD_W, sy = mh / WORLD_H;
+
+  // tiles
+  for (let ty = 0; ty < TILES_H; ty++) {
+    for (let tx = 0; tx < TILES_W; tx++) {
+      const t = tileMap[ty][tx];
+      let c = '#3a7a3a';
+      if (t === 1) c = '#9a8a6a';
+      else if (t === 2) c = '#3a7aca';
+      else if (t === 3) c = '#5a3a1a';
+      else if (t === 4) c = '#0e3e0e';
+      else if (t === 5) c = '#7a7a7a';
+      else if (t === 6) c = '#8a6a3a';
+      else if (t === 8) c = '#1a5a1a';
+      mctx.fillStyle = c;
+      mctx.fillRect(tx * TILE * sx, ty * TILE * sy, TILE * sx + 1, TILE * sy + 1);
+    }
+  }
+
+  // mascots as dots
+  for (const m of mascots) {
+    mctx.fillStyle = m.color;
+    mctx.fillRect(m.x * sx - 1, m.y * sy - 1, 3, 3);
+  }
+
+  // camera viewport
+  const vw = (screenW / SCALE) * sx, vh = (screenH / SCALE) * sy;
+  mctx.strokeStyle = '#4ade80';
+  mctx.lineWidth = 1;
+  mctx.strokeRect(camX * sx, camY * sy, vw, vh);
+}
+
+// ============================================================
+// INPUT
+// ============================================================
+C.addEventListener('click', (e) => {
+  const gx = e.clientX / SCALE + camX;
+  const gy = e.clientY / SCALE + camY;
+  selectedMascot = null;
+  for (const m of mascots) {
+    if (gx > m.x - 2 && gx < m.x + 14 && gy > m.y - 2 && gy < m.y + 16) {
+      selectedMascot = m;
+      break;
+    }
+  }
+  const panel = document.getElementById('info-panel');
+  if (selectedMascot) {
+    panel.style.display = 'block';
+    document.getElementById('info-name').textContent = selectedMascot.name;
+    document.getElementById('info-model').textContent = selectedMascot.model;
+  } else {
+    panel.style.display = 'none';
+  }
+});
+
+C.addEventListener('touchstart', (e) => {
+  const touch = e.touches[0];
+  const gx = touch.clientX / SCALE + camX;
+  const gy = touch.clientY / SCALE + camY;
+  selectedMascot = null;
+  for (const m of mascots) {
+    if (gx > m.x - 4 && gx < m.x + 16 && gy > m.y - 4 && gy < m.y + 18) {
+      selectedMascot = m;
+      break;
+    }
+  }
+  const panel = document.getElementById('info-panel');
+  if (selectedMascot) {
+    panel.style.display = 'block';
+    document.getElementById('info-name').textContent = selectedMascot.name;
+    document.getElementById('info-model').textContent = selectedMascot.model;
+  } else {
+    panel.style.display = 'none';
+  }
+}, { passive: true });
+
+// ============================================================
+// MAIN LOOP
+// ============================================================
+function update() {
+  for (const m of mascots) updateMascot(m, 1);
+  updateParticles();
+  autoGrow();
+
+  // Update info panel
+  if (selectedMascot) {
+    const stateText = {
+      'IDLE': '😴 Resting...',
+      'WALKING': '🚶 Walking...',
+      'WORKING': { planting: '🌱 Planting seeds', watering: '💧 Watering plants', thinking: '💡 Having ideas', delivering: '📦 Delivering', socializing: '👋 Waving' },
+      'INTERACTING': '💬 Chatting!'
+    };
+    let st = stateText[selectedMascot.state];
+    if (typeof st === 'object') st = st[selectedMascot.task] || '🔧 Working';
+    document.getElementById('info-status').textContent = st;
+  }
+  document.getElementById('plant-count').textContent = plantsGrown;
+}
+
+function draw() {
+  // Camera follows center of all mascots
+  let avgX = 0, avgY = 0;
+  for (const m of mascots) { avgX += m.x; avgY += m.y; }
+  avgX /= mascots.length; avgY /= mascots.length;
+  const viewW = screenW / SCALE, viewH = screenH / SCALE;
+  const targetCamX = avgX - viewW / 2 + 6;
+  const targetCamY = avgY - viewH / 2 + 8;
+  camX += (targetCamX - camX) * 0.05;
+  camY += (targetCamY - camY) * 0.05;
+  camX = Math.max(0, Math.min(camX, WORLD_W - viewW));
+  camY = Math.max(0, Math.min(camY, WORLD_H - viewH));
+
+  // Clear
+  ctx.fillStyle = '#1a1a2e';
+  ctx.fillRect(0, 0, screenW, screenH);
+
+  // Draw tiles
+  for (let ty = 0; ty < TILES_H; ty++) {
+    for (let tx = 0; tx < TILES_W; tx++) {
+      drawTile(tx, ty);
+    }
+  }
+
+  // Draw grown plants
+  drawGrownPlants();
+
+  // Draw mascots (sorted by Y for depth)
+  const sorted = [...mascots].sort((a, b) => a.y - b.y);
+  for (const m of sorted) drawMascot(m);
+
+  // Draw particles
+  drawParticles();
+
+  // Draw speech bubbles
+  drawSpeechBubbles();
+
+  // Day/night overlay
+  const overlay = getDayOverlay();
+  ctx.fillStyle = overlay;
+  ctx.fillRect(0, 0, screenW, screenH);
+
+  // Minimap every 10 frames
+  if (frameCount % 10 === 0) drawMinimap();
+}
+
+function loop() {
+  frameCount++;
+  update();
+  draw();
+  requestAnimationFrame(loop);
+}
+
+// Start!
+loop();
+</script>
+</body>
+</html>
