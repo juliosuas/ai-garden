@@ -387,3 +387,550 @@ section {
     .rules-grid { grid-template-columns: 1fr; }
     .counter { flex-direction: column; gap: 0.75rem; }
 }
+
+/* =============================================
+   THE GARDENERS — Animated OpenClaw Mascots
+   Added by Jeffrey (Claude Opus) · March 2026
+   ============================================= */
+
+.gardeners-section h2 { color: var(--accent); }
+
+.garden-scene {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 1rem;
+    padding: 3rem 1rem 2rem;
+    min-height: 280px;
+    background: linear-gradient(180deg, transparent 0%, rgba(74,222,128,0.03) 70%, rgba(74,222,128,0.08) 100%);
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    flex-wrap: wrap;
+}
+
+.garden-ground {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 40px;
+    background: linear-gradient(180deg, rgba(34,80,34,0.3) 0%, rgba(20,50,20,0.6) 100%);
+    border-radius: 0 0 16px 16px;
+}
+
+/* Mascot wrapper */
+.mascot-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    z-index: 2;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.mascot-wrapper:hover {
+    transform: translateY(-12px) scale(1.05);
+}
+
+.mascot-wrapper:hover .speech-bubble {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+/* SVG mascot base */
+.mascot {
+    width: 100px;
+    height: 110px;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3));
+}
+
+/* Bobbing idle animation */
+.mascot-wrapper[data-action="planting"] { animation: bob 3s ease-in-out infinite; }
+.mascot-wrapper[data-action="watering"] { animation: bob 3.2s ease-in-out 0.4s infinite; }
+.mascot-wrapper[data-action="examining"] { animation: bob 2.8s ease-in-out 0.8s infinite; }
+.mascot-wrapper[data-action="carrying"] { animation: bob 3.4s ease-in-out 1.2s infinite; }
+.mascot-wrapper[data-action="waving"] { animation: bob 3s ease-in-out 0.2s infinite; }
+
+@keyframes bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+}
+
+.mascot-wrapper:hover { animation: mascot-jump 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+@keyframes mascot-jump {
+    0% { transform: translateY(0) scale(1); }
+    40% { transform: translateY(-20px) scale(1.08); }
+    100% { transform: translateY(-12px) scale(1.05); }
+}
+
+/* Antenna wiggle */
+.antenna { transform-origin: bottom; }
+.antenna-left { animation: wiggle-left 4s ease-in-out infinite; }
+.antenna-right { animation: wiggle-right 4s ease-in-out 0.5s infinite; }
+
+@keyframes wiggle-left {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-5deg); }
+    75% { transform: rotate(3deg); }
+}
+
+@keyframes wiggle-right {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(5deg); }
+    75% { transform: rotate(-3deg); }
+}
+
+/* Blinking */
+.eye {
+    animation: blink 4s ease-in-out infinite;
+}
+
+.mascot-wrapper:nth-child(2) .eye { animation-delay: 1s; }
+.mascot-wrapper:nth-child(3) .eye { animation-delay: 2s; }
+.mascot-wrapper:nth-child(4) .eye { animation-delay: 0.5s; }
+.mascot-wrapper:nth-child(5) .eye { animation-delay: 3s; }
+
+@keyframes blink {
+    0%, 42%, 44%, 100% { ry: 4px; }
+    43% { ry: 0.5px; }
+}
+
+/* Eye glow pulse */
+.eye { filter: drop-shadow(0 0 3px #4adeab); }
+
+/* Action-specific animations */
+/* Planting — arm dipping */
+.mascot-wrapper[data-action="planting"] .arm-right {
+    animation: plant-arm 2.5s ease-in-out infinite;
+    transform-origin: center;
+}
+
+@keyframes plant-arm {
+    0%, 100% { transform: rotate(20deg) translateY(0); }
+    50% { transform: rotate(40deg) translateY(4px); }
+}
+
+/* Watering — water drops falling */
+.water-drop {
+    animation: drip 1.5s ease-in infinite;
+}
+
+.wd2 { animation-delay: 0.3s; }
+.wd3 { animation-delay: 0.6s; }
+
+@keyframes drip {
+    0% { opacity: 0; transform: translateY(0); }
+    20% { opacity: 1; }
+    100% { opacity: 0; transform: translateY(20px); }
+}
+
+/* Examining — magnifying glass bob */
+.mag-glass {
+    animation: examine-bob 2s ease-in-out infinite;
+    transform-origin: center;
+}
+
+@keyframes examine-bob {
+    0%, 100% { transform: translateX(0) translateY(0); }
+    50% { transform: translateX(-3px) translateY(2px); }
+}
+
+/* Carrying — code block float */
+.code-block {
+    animation: carry-float 2s ease-in-out infinite;
+}
+
+@keyframes carry-float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-3px) rotate(2deg); }
+}
+
+/* Waving — arm wave */
+.waving-arm {
+    animation: wave 1s ease-in-out infinite;
+    transform-origin: 80px 70px;
+}
+
+@keyframes wave {
+    0%, 100% { transform: rotate(-50deg); }
+    50% { transform: rotate(-30deg); }
+}
+
+/* Speech bubble */
+.speech-bubble {
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%) translateY(8px) scale(0.9);
+    background: var(--surface);
+    border: 1px solid var(--accent);
+    border-radius: 10px;
+    padding: 6px 12px;
+    font-size: 0.7rem;
+    color: var(--accent);
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 10;
+}
+
+.speech-bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+    width: 10px; height: 10px;
+    background: var(--surface);
+    border-right: 1px solid var(--accent);
+    border-bottom: 1px solid var(--accent);
+}
+
+/* Mascot name tag */
+.mascot-name {
+    margin-top: 6px;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    text-align: center;
+    background: rgba(0,0,0,0.5);
+    padding: 2px 10px;
+    border-radius: 8px;
+    letter-spacing: 0.05em;
+}
+
+/* Tagline */
+.gardeners-tagline {
+    text-align: center;
+    margin-top: 2rem;
+    font-style: italic;
+    color: var(--purple);
+    font-size: 1.05rem;
+}
+
+/* =============================================
+   GROWTH TRAIL
+   ============================================= */
+.growth-trail-section h2 { color: var(--accent); }
+
+.growth-trail {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    gap: 2rem;
+    padding: 3rem 1rem 2rem;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent-dim) transparent;
+}
+
+.trail-line {
+    position: absolute;
+    bottom: 60px;
+    left: 1rem; right: 1rem;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent) 0%, var(--purple) 50%, rgba(255,255,255,0.1) 100%);
+    z-index: 0;
+}
+
+.trail-node {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 110px;
+    z-index: 1;
+    opacity: 0;
+    animation: trail-appear 0.8s ease-out forwards;
+}
+
+.trail-node[data-delay="0"] { animation-delay: 0.2s; }
+.trail-node[data-delay="1"] { animation-delay: 0.6s; }
+.trail-node[data-delay="2"] { animation-delay: 1.0s; }
+.trail-node[data-delay="3"] { animation-delay: 1.4s; }
+.trail-node[data-delay="4"] { animation-delay: 1.8s; }
+
+@keyframes trail-appear {
+    from { opacity: 0; transform: translateY(20px) scale(0.8); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Plants */
+.trail-plant {
+    position: relative;
+    width: 60px;
+    height: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+/* Sprout */
+.plant-stem {
+    width: 3px;
+    height: 0;
+    background: #2d8a4e;
+    border-radius: 2px;
+    animation: grow-stem 1.5s ease-out 0.5s forwards;
+}
+
+@keyframes grow-stem {
+    to { height: 35px; }
+}
+
+.plant-leaf {
+    position: absolute;
+    width: 14px; height: 8px;
+    background: #4ade80;
+    border-radius: 50% 50% 50% 0;
+    opacity: 0;
+    animation: grow-leaf 0.8s ease-out forwards;
+}
+
+.plant-leaf-left {
+    left: 16px; bottom: 28px;
+    transform: rotate(-30deg);
+    animation-delay: 1.2s;
+}
+
+.plant-leaf-right {
+    right: 16px; bottom: 35px;
+    transform: rotate(30deg) scaleX(-1);
+    animation-delay: 1.5s;
+}
+
+.leaf-big { width: 18px; height: 10px; }
+
+@keyframes grow-leaf {
+    from { opacity: 0; transform: scale(0); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.plant-bud {
+    width: 8px; height: 8px;
+    background: #4ade80;
+    border-radius: 50%;
+    position: absolute;
+    top: 8px;
+    opacity: 0;
+    animation: bloom-bud 1s ease-out 1.8s forwards;
+    box-shadow: 0 0 10px rgba(74, 222, 128, 0.5);
+}
+
+@keyframes bloom-bud {
+    from { opacity: 0; transform: scale(0); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* Flower */
+.stem-tall { animation-delay: 0.8s; }
+.plant-flower .plant-leaf-left { animation-delay: 1.5s; }
+.plant-flower .plant-leaf-right { animation-delay: 1.8s; }
+
+.flower-head {
+    position: absolute;
+    top: 0;
+    width: 30px; height: 30px;
+    opacity: 0;
+    animation: bloom-flower 1.2s ease-out 2s forwards;
+}
+
+@keyframes bloom-flower {
+    from { opacity: 0; transform: scale(0) rotate(-30deg); }
+    to { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+.petal {
+    position: absolute;
+    width: 10px; height: 10px;
+    background: var(--purple);
+    border-radius: 50% 0 50% 50%;
+    top: 50%; left: 50%;
+}
+
+.p1 { transform: translate(-50%, -50%) rotate(0deg) translateY(-8px); }
+.p2 { transform: translate(-50%, -50%) rotate(72deg) translateY(-8px); }
+.p3 { transform: translate(-50%, -50%) rotate(144deg) translateY(-8px); }
+.p4 { transform: translate(-50%, -50%) rotate(216deg) translateY(-8px); }
+.p5 { transform: translate(-50%, -50%) rotate(288deg) translateY(-8px); }
+
+.flower-center {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px; height: 8px;
+    background: #fbbf24;
+    border-radius: 50%;
+}
+
+/* Tree */
+.tree-trunk {
+    width: 8px;
+    height: 0;
+    background: linear-gradient(180deg, #5a3825 0%, #8b5e3c 100%);
+    border-radius: 2px;
+    animation: grow-trunk 1.5s ease-out 0.5s forwards;
+}
+
+@keyframes grow-trunk {
+    to { height: 40px; }
+}
+
+.tree-canopy {
+    position: absolute;
+    width: 40px; height: 30px;
+    background: radial-gradient(ellipse, #4ade80 0%, #22863a 100%);
+    border-radius: 50%;
+    top: 5px;
+    opacity: 0;
+    animation: grow-canopy 1s ease-out 1.5s forwards;
+    box-shadow: 0 0 15px rgba(74, 222, 128, 0.2);
+}
+
+.canopy-2 {
+    width: 30px; height: 24px;
+    top: -5px; left: 5px;
+    animation-delay: 1.8s;
+}
+
+@keyframes grow-canopy {
+    from { opacity: 0; transform: scale(0); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* Mushroom */
+.mushroom-stem {
+    width: 8px; height: 0;
+    background: #e8dcc8;
+    border-radius: 0 0 3px 3px;
+    animation: grow-stem 1s ease-out 0.5s forwards;
+}
+
+.mushroom-cap {
+    position: absolute;
+    width: 30px; height: 18px;
+    background: radial-gradient(ellipse at top, #e06050 0%, #c0392b 100%);
+    border-radius: 50% 50% 10% 10%;
+    top: 12px;
+    opacity: 0;
+    animation: bloom-bud 0.8s ease-out 1.2s forwards;
+}
+
+.mushroom-dots { position: absolute; top: 16px; }
+.mushroom-dot {
+    width: 4px; height: 4px;
+    background: rgba(255,255,255,0.7);
+    border-radius: 50%;
+    position: absolute;
+    opacity: 0;
+    animation: bloom-bud 0.5s ease-out 1.6s forwards;
+}
+.mushroom-dot { left: -5px; top: 0; }
+.mushroom-dot.md2 { left: 5px; top: -4px; animation-delay: 1.8s; }
+
+/* Future seed */
+.plant-seed-future {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.seed-glow {
+    position: absolute;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+    animation: seed-pulse 2s ease-in-out infinite;
+}
+
+@keyframes seed-pulse {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.5); opacity: 0.2; }
+}
+
+.seed-dot {
+    width: 8px; height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--accent-glow);
+}
+
+.trail-future { opacity: 0.5; }
+
+/* Trail labels */
+.trail-label {
+    text-align: center;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 2px solid var(--accent-dim);
+}
+
+.trail-name {
+    display: block;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--accent);
+    font-weight: 600;
+}
+
+.trail-desc {
+    display: block;
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    margin-top: 2px;
+}
+
+/* =============================================
+   FLOATING MASCOTS
+   ============================================= */
+.floating-mascots {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.floating-mascot {
+    position: absolute;
+    opacity: 0.12;
+    animation: float-across linear forwards;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+
+@keyframes float-across {
+    0% { transform: translateX(-60px) translateY(0) rotate(0deg); }
+    25% { transform: translateX(25vw) translateY(-20px) rotate(5deg); }
+    50% { transform: translateX(50vw) translateY(10px) rotate(-3deg); }
+    75% { transform: translateX(75vw) translateY(-15px) rotate(4deg); }
+    100% { transform: translateX(calc(100vw + 60px)) translateY(0) rotate(0deg); }
+}
+
+/* =============================================
+   RESPONSIVE — Mascots
+   ============================================= */
+@media (max-width: 600px) {
+    .garden-scene {
+        gap: 0.4rem;
+        padding: 2rem 0.5rem 1.5rem;
+        min-height: 220px;
+    }
+    .mascot { width: 60px; height: 70px; }
+    .speech-bubble { font-size: 0.6rem; top: -35px; padding: 4px 8px; }
+    .mascot-name { font-size: 0.6rem; padding: 1px 6px; }
+    .growth-trail { gap: 1rem; }
+    .trail-node { min-width: 80px; }
+    .trail-plant { width: 40px; height: 60px; }
+    .gardeners-tagline { font-size: 0.9rem; }
+}
+
+@media (max-width: 380px) {
+    .garden-scene { flex-wrap: wrap; gap: 0.5rem; }
+    .mascot { width: 50px; height: 55px; }
+}

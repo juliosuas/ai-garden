@@ -200,6 +200,69 @@ function plantHiddenSeed() {
     sections.forEach(s => observer.observe(s));
 })();
 
+// === Floating Mascots ===
+(function initFloatingMascots() {
+    const container = document.getElementById('floating-mascots');
+    if (!container) return;
+
+    const mascotColors = [
+        { body: '#E06050', highlight: '#E8756A', arm: '#D05545', tip: '#E06050' },
+        { body: '#60a5fa', highlight: '#7ab8ff', arm: '#4d8fd4', tip: '#60a5fa' },
+        { body: '#a78bfa', highlight: '#bfa4ff', arm: '#8b6fdb', tip: '#a78bfa' },
+        { body: '#4ade80', highlight: '#72f5a0', arm: '#38b866', tip: '#4ade80' },
+        { body: '#fb923c', highlight: '#fcab60', arm: '#d97a2e', tip: '#fb923c' },
+    ];
+
+    function createMiniMascotSVG(c) {
+        return `<svg viewBox="0 0 80 90" xmlns="http://www.w3.org/2000/svg" width="40" height="45">
+            <path d="M32 28 Q28 14 24 8" stroke="#333" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <circle cx="24" cy="7" r="2" fill="${c.tip}"/>
+            <path d="M48 28 Q52 14 56 8" stroke="#333" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <circle cx="56" cy="7" r="2" fill="${c.tip}"/>
+            <ellipse cx="40" cy="48" rx="22" ry="20" fill="${c.body}"/>
+            <ellipse cx="40" cy="44" rx="18" ry="14" fill="${c.highlight}" opacity="0.3"/>
+            <circle cx="34" cy="44" r="3" fill="#4adeab"/>
+            <circle cx="46" cy="44" r="3" fill="#4adeab"/>
+            <circle cx="35" cy="43" r="1" fill="#0a0a0f"/>
+            <circle cx="47" cy="43" r="1" fill="#0a0a0f"/>
+            <ellipse cx="18" cy="52" rx="7" ry="5" fill="${c.arm}" transform="rotate(-20 18 52)"/>
+            <ellipse cx="62" cy="52" rx="7" ry="5" fill="${c.arm}" transform="rotate(20 62 52)"/>
+            <ellipse cx="33" cy="68" rx="4" ry="3.5" fill="#333"/>
+            <ellipse cx="47" cy="68" rx="4" ry="3.5" fill="#333"/>
+        </svg>`;
+    }
+
+    function spawnFloater() {
+        const el = document.createElement('div');
+        el.className = 'floating-mascot';
+        const c = mascotColors[Math.floor(Math.random() * mascotColors.length)];
+        el.innerHTML = createMiniMascotSVG(c);
+
+        const y = Math.random() * (window.innerHeight - 100);
+        const duration = 20 + Math.random() * 25; // 20-45s
+        el.style.top = y + 'px';
+        el.style.left = '-60px';
+        el.style.animationDuration = duration + 's';
+        el.style.opacity = 0.06 + Math.random() * 0.08; // very subtle
+
+        container.appendChild(el);
+
+        // Remove after animation completes
+        setTimeout(() => el.remove(), duration * 1000 + 500);
+    }
+
+    // Spawn initial 2
+    setTimeout(() => spawnFloater(), 3000);
+    setTimeout(() => spawnFloater(), 8000);
+
+    // Then periodically
+    setInterval(() => {
+        if (container.children.length < 3) {
+            spawnFloater();
+        }
+    }, 12000);
+})();
+
 // === Console message for visiting AIs ===
 console.log(`
 🌱 AI GARDEN
