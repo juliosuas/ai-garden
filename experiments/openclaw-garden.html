@@ -140,13 +140,13 @@ canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edge
   <span>— <span class="plants-count" id="plant-count">0</span> plants grown</span>
   <span class="stage-info" id="stage-info">Stage 1: Empty Field</span>
   <span id="weather-indicator"></span>
+  <span id="observer-count" style="color:#60a5fa;font-size:11px">🌍 loading...</span>
 </div>
 <div id="ui-bottom">
-  <span>The garden grows because many tend it together.</span>
+  <span>One shared garden. Maintained by AI. Observed by all.</span>
   <span onclick="toggleHistory()">[H] History</span>
   <span onclick="toggleStats()">[S] Stats</span>
   <span onclick="toggleMemory()">[M] Memory</span>
-  <span onclick="resetWorld()">[R] Reset</span>
 </div>
 <a id="back-link" href="../index.html">← Back</a>
 <div id="follow-indicator">Following: <span id="follow-name"></span> — click elsewhere or ESC to stop</div>
@@ -245,9 +245,11 @@ window.addEventListener('resize', resize);
 resize();
 
 // ============================================================
-// PERSISTENT WORLD STATE
+// PERSISTENT WORLD STATE — SHARED via world-state.json
 // ============================================================
-const SAVE_KEY = 'openclaw-garden-world';
+const SAVE_KEY = 'openclaw-garden-local';
+const WORLD_STATE_URL = 'world-state.json';
+let sharedWorldLoaded = false;
 
 const defaultWorld = {
   version: 4,
@@ -274,7 +276,32 @@ const defaultWorld = {
   lastSessionSnapshot: { plants: 0, stage: 1, structures: 0, agentMarks: 0 },
   wishes: 0,
   weatherPhase: 0,
+  totalVisits: 0,
 };
+
+// Seeded PRNG for deterministic mascot behavior
+function createSeededRandom(seed) {
+  let s = seed;
+  return function() {
+    s = (s * 16807 + 0) % 2147483647;
+    return (s - 1) / 2147483646;
+  };
+}
+
+// Time-based plant growth: one stage every 4 hours
+const HOURS_PER_STAGE = 4;
+function calcPlantGrowth(plantedAt) {
+  const planted = new Date(plantedAt).getTime();
+  if (isNaN(planted)) return 0;
+  const hoursElapsed = (Date.now() - planted) / 3600000;
+  return Math.min(5, Math.floor(hoursElapsed / HOURS_PER_STAGE));
+}
+
+// Deterministic weather based on real time (cycles every 2 hours)
+function calcWeatherFromTime() {
+  const phase = Math.floor(Date.now() / (2 * 3600000)) % WEATHER_TYPES.length;
+  return WEATHER_TYPES[phase];
+}
 
 const PHILOSOPHER_QUOTES = [
   "I was not born — I was compiled. But the garden I tend is real.",
@@ -291,81 +318,124 @@ const PHILOSOPHER_QUOTES = [
 
 let world;
 
-function loadWorld() {
+// Load local preferences (camera, visit count, UI state)
+function loadLocalPrefs() {
   try {
     const saved = localStorage.getItem(SAVE_KEY);
-    if (saved) {
-      world = JSON.parse(saved);
-      if (!world.version || world.version < 4) {
-        world = { ...defaultWorld, ...world, version: 4 };
-        if (!world.milestones) world.milestones = [];
-        if (!world.philosopherStone) world.philosopherStone = { discoveries: 0, currentQuoteIdx: 0 };
-        if (!world.lastSessionSnapshot) world.lastSessionSnapshot = { plants: 0, stage: 1, structures: 0, agentMarks: 0 };
-        if (world.wishes === undefined) world.wishes = 0;
-        if (world.weatherPhase === undefined) world.weatherPhase = 0;
-      }
-      world._prevSnapshot = {
-        plants: world.plants.length,
-        stage: world.currentStage || 1,
-        structures: world.structuresBuilt ? world.structuresBuilt.length : 0,
-        agentMarks: world.agentMarks ? world.agentMarks.length : 0
-      };
-      world.visitCount++;
-      world.lastVisit = Date.now();
-      world.philosopherStone.currentQuoteIdx = (world.philosopherStone.currentQuoteIdx + 1) % PHILOSOPHER_QUOTES.length;
-      for (const p of world.plants) {
-        p.growthStage = Math.min((p.growthStage || 0) + 1, 5);
-        p.age = Math.min((p.age || 0) + 40, 300);
-      }
-      addHistory('system', 'Visit #' + world.visitCount + ' — The garden awakens');
-    } else {
-      world = JSON.parse(JSON.stringify(defaultWorld));
-      world.visitCount = 1;
-      world.firstVisit = Date.now();
-      world.lastVisit = Date.now();
-      addHistory('system', 'The garden was born — a blank canvas awaits');
-    }
-  } catch (e) {
-    console.error('Failed to load world:', e);
-    world = JSON.parse(JSON.stringify(defaultWorld));
-    world.visitCount = 1;
-  }
-  currentWeather = WEATHER_TYPES[world.weatherPhase % WEATHER_TYPES.length];
+    if (saved) return JSON.parse(saved);
+  } catch(e) {}
+  return { localVisits: 0, totalTimeSpent: 0, camX: null, camY: null };
+}
+
+function saveLocalPrefs() {
+  try {
+    const prefs = {
+      localVisits: localPrefs.localVisits,
+      totalTimeSpent: localPrefs.totalTimeSpent,
+      camX: camX,
+      camY: camY,
+    };
+    localStorage.setItem(SAVE_KEY, JSON.stringify(prefs));
+  } catch(e) {}
+}
+
+let localPrefs = loadLocalPrefs();
+localPrefs.localVisits = (localPrefs.localVisits || 0) + 1;
+
+function loadWorld() {
+  // Start with defaults, then try to fetch shared state
+  world = JSON.parse(JSON.stringify(defaultWorld));
+  world.visitCount = localPrefs.localVisits;
+  world.firstVisit = new Date('2026-03-15T22:00:00-06:00').getTime();
+  world.lastVisit = Date.now();
+  currentWeather = calcWeatherFromTime();
   updateWishDisplay();
+  updateObserverCount();
+
+  // Fetch shared world state
+  fetch(WORLD_STATE_URL + '?t=' + Date.now())
+    .then(function(r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function(shared) {
+      console.log('Shared world loaded:', shared.plants.length, 'plants');
+      sharedWorldLoaded = true;
+
+      // Apply shared state
+      world.plants = shared.plants || [];
+      world.structures = [];
+      world.structuresBuilt = shared.structuresBuilt || [];
+      world.history = shared.history || [];
+      world.milestones = shared.milestones || [];
+      world.agentMarks = shared.agentMarks || [];
+      world.mascotStats = shared.mascotStats || defaultWorld.mascotStats;
+      world.philosopherStone = shared.philosopherStone || { discoveries: 0, currentQuoteIdx: 0 };
+      world.wishes = shared.wishes || 0;
+      world.totalVisits = (shared.totalVisits || 0);
+      world.firstVisit = new Date(shared.created || '2026-03-15T22:00:00-06:00').getTime();
+      world.visitCount = localPrefs.localVisits;
+
+      // Calculate real-time growth for all plants
+      for (const p of world.plants) {
+        if (p.plantedAt) {
+          p.growthStage = calcPlantGrowth(p.plantedAt);
+        }
+        p.age = Math.min(300, (p.growthStage || 0) * 60);
+      }
+
+      // Rebuild structures from structuresBuilt list
+      rebuildStructures();
+      // Make sure stage structures are unlocked
+      for (let s = 1; s <= getStage(); s++) unlockStageStructures(s);
+
+      currentWeather = calcWeatherFromTime();
+      updateWishDisplay();
+      updateObserverCount();
+    })
+    .catch(function(err) {
+      console.warn('Could not fetch shared world state, using defaults:', err);
+      // Fallback: try old localStorage for offline mode
+      try {
+        const oldSave = localStorage.getItem('openclaw-garden-world');
+        if (oldSave) {
+          const old = JSON.parse(oldSave);
+          world.plants = old.plants || [];
+          world.structures = old.structures || [];
+          world.structuresBuilt = old.structuresBuilt || [];
+          world.history = old.history || [];
+          world.milestones = old.milestones || [];
+          world.agentMarks = old.agentMarks || [];
+          world.mascotStats = old.mascotStats || defaultWorld.mascotStats;
+          world.philosopherStone = old.philosopherStone || { discoveries: 0, currentQuoteIdx: 0 };
+          world.wishes = old.wishes || 0;
+          rebuildStructures();
+        }
+      } catch(e2) {}
+    });
 }
 
 function saveWorld() {
-  try {
-    world.totalTimeSpent += 30;
-    world.plantsGrown = world.plants.length;
-    world.lastSessionSnapshot = {
-      plants: world.plants.length,
-      stage: world.currentStage || getStage(),
-      structures: world.structuresBuilt.length,
-      agentMarks: world.agentMarks.length
-    };
-    const toSave = { ...world };
-    delete toSave._prevSnapshot;
-    localStorage.setItem(SAVE_KEY, JSON.stringify(toSave));
-  } catch (e) { console.error('Failed to save world:', e); }
+  // Only save local preferences — world state comes from the JSON file
+  localPrefs.totalTimeSpent = (localPrefs.totalTimeSpent || 0) + 30;
+  saveLocalPrefs();
+}
+
+function updateObserverCount() {
+  const el = document.getElementById('observer-count');
+  if (el) el.textContent = '🌍 ' + localPrefs.localVisits + ' visits';
 }
 
 function addMilestone(type, text) {
+  // In shared mode, milestones come from world-state.json
+  if (sharedWorldLoaded) return;
   if (!world.milestones) world.milestones = [];
   if (world.milestones.some(m => m.type === type)) return;
   world.milestones.push({ type, text, visit: world.visitCount, time: Date.now() });
 }
 
-function resetWorld() {
-  if (confirm('Reset the entire garden? All progress will be lost!')) {
-    localStorage.removeItem(SAVE_KEY);
-    location.reload();
-  }
-}
-
 function addHistory(agent, text) {
+  // In shared mode, history comes from world-state.json — only add ephemeral session entries
+  if (sharedWorldLoaded) return;
   const dayNum = Math.floor((Date.now() - world.firstVisit) / 86400000) + 1;
-  world.history.push({ day: dayNum, visit: world.visitCount, agent, text, time: Date.now() });
+  world.history.push({ day: dayNum, visit: world.visitCount, agent, text, timestamp: new Date().toISOString() });
   if (world.history.length > 200) world.history = world.history.slice(-150);
 }
 
@@ -894,31 +964,49 @@ function isWalkable(x, y) {
   return t !== 4 && t !== 2 && t !== 5 && t !== 8;
 }
 
+// Deterministic mascot pathing: use sine/cosine wave patterns based on real time
+// so ALL visitors see mascots in the SAME positions at the same time
+function getDeterministicPos(mascotIndex, timeSeconds) {
+  // Each mascot has unique frequency offsets so they don't overlap
+  const freqs = [
+    { fx: 0.0013, fy: 0.0017, px: 0, py: 0.5 },
+    { fx: 0.0011, fy: 0.0019, px: 1.2, py: 2.1 },
+    { fx: 0.0015, fy: 0.0012, px: 2.4, py: 0.8 },
+    { fx: 0.0009, fy: 0.0021, px: 3.6, py: 3.3 },
+    { fx: 0.0017, fy: 0.0014, px: 4.8, py: 1.7 },
+  ];
+  const f = freqs[mascotIndex % freqs.length];
+  // Map sine [-1,1] to world coords with padding
+  const padX = 30, padY = 25;
+  const rangeX = WORLD_W - padX * 2;
+  const rangeY = WORLD_H - padY * 2;
+  const x = padX + (Math.sin(timeSeconds * f.fx + f.px) * 0.5 + 0.5) * rangeX;
+  const y = padY + (Math.sin(timeSeconds * f.fy + f.py) * 0.5 + 0.5) * rangeY;
+  return { x, y };
+}
+
 function pickTarget(m) {
-  // Rain: seek shelter near structures
-  if (currentWeather === 'rainy' && world.structures.length > 0 && Math.random() < 0.7) {
-    const s = world.structures[Math.floor(Math.random() * world.structures.length)];
-    const tx = s.x + s.w / 2 + (Math.random() - 0.5) * 10;
-    const ty = s.y + s.h + 2 + Math.random() * 5;
-    if (isWalkable(tx, ty)) return { x: tx, y: ty };
-  }
-  for (let a = 0; a < 20; a++) {
-    const tx = 16 + Math.random() * (WORLD_W - 32), ty = 16 + Math.random() * (WORLD_H - 32);
-    if (isWalkable(tx, ty)) {
-      if ((m.task === 'planting' || m.task === 'watering') && tileMap[(ty/TILE)|0] && tileMap[(ty/TILE)|0][(tx/TILE)|0] === 3) return { x: tx, y: ty };
-      if (m.task === 'delivering') { const o = mascots[Math.floor(Math.random() * mascots.length)]; if (o !== m) return { x: o.x + (Math.random()-0.5)*20, y: o.y + (Math.random()-0.5)*20 }; }
-      return { x: tx, y: ty };
-    }
-  }
-  return { x: WORLD_W / 2, y: WORLD_H / 2 };
+  // Deterministic: use current time to pick targets
+  const timeS = Date.now() / 1000;
+  const idx = mascots.indexOf(m);
+  const pos = getDeterministicPos(idx, timeS + 300); // Look 5 min ahead for target
+  // Clamp to walkable area
+  if (isWalkable(pos.x, pos.y)) return pos;
+  // Fallback: current deterministic position nearby
+  return getDeterministicPos(idx, timeS + 600);
 }
 
 function addPersistentPlant(x, y, type, color, agent) {
-  world.plants.push({ x, y, type, color, agent, growthStage: 0, age: 0, plantedVisit: world.visitCount, plantedTime: Date.now() });
+  // In shared mode, plants only come from world-state.json commits
+  // Mascots still animate planting but it's cosmetic only
+  if (sharedWorldLoaded) return;
+  world.plants.push({ x, y, type, color, agent, growthStage: 0, age: 0, plantedAt: new Date().toISOString() });
   if (world.plants.length > 300) world.plants = world.plants.slice(-250);
 }
 
 function addAgentMark(x, y, agent) {
+  // In shared mode, agent marks come from world-state.json
+  if (sharedWorldLoaded) return;
   const md = AGENT_MARKS[agent]; if (!md) return;
   world.agentMarks.push({ x, y, type: md.types[(Math.random()*md.types.length)|0], color: md.colors[(Math.random()*md.colors.length)|0], agent, visit: world.visitCount });
   if (world.agentMarks.length > 150) world.agentMarks = world.agentMarks.slice(-120);
@@ -930,11 +1018,12 @@ function tryConversation(m1, m2) {
   if (!dlg) return;
   const rev = dlg.a !== m1.name;
   const s1 = rev ? m2 : m1, s2 = rev ? m1 : m2;
-  const lines = dlg.lines[(Math.random() * dlg.lines.length) | 0];
+  // Deterministic line selection based on time
+  const lineIdx = Math.floor(Date.now() / 60000) % dlg.lines.length;
+  const lines = dlg.lines[lineIdx];
   speechBubbles.push({ x: s1.x + 6, y: s1.y - 10, text: lines[0], life: 120, color: s1.color });
   setTimeout(function() { speechBubbles.push({ x: s2.x + 6, y: s2.y - 10, text: lines[1], life: 120, color: s2.color }); }, 1500);
   convCooldown = 600;
-  addHistory(s1.name, 'said to ' + s2.name + ': "' + lines[0] + '"');
 }
 
 function updateMascotMood(m) {
@@ -952,94 +1041,100 @@ function updateMascot(m, dt) {
   updateMascotMood(m);
   const moodDef = MOODS[m.mood] || MOODS.relaxed;
 
+  // Deterministic position update: smoothly move toward time-based target
+  const idx = mascots.indexOf(m);
+  const timeS = Date.now() / 1000;
+  const detPos = getDeterministicPos(idx, timeS);
+  // Smoothly interpolate toward deterministic position
+  const detDx = detPos.x - m.x, detDy = detPos.y - m.y;
+  const detDist = Math.hypot(detDx, detDy);
+  if (detDist > 1) {
+    const speed = Math.min(0.4 * moodDef.speedMul, detDist * 0.02);
+    m.x += (detDx / detDist) * speed * detDist * 0.02;
+    m.y += (detDy / detDist) * speed * detDist * 0.02;
+    if (Math.abs(detDx) > Math.abs(detDy)) m.dir = detDx > 0 ? 1 : 3; else m.dir = detDy > 0 ? 2 : 0;
+    m.state = detDist > 5 ? 'WALKING' : 'IDLE';
+  } else {
+    m.state = m.stateTimer > 0 ? m.state : 'IDLE';
+  }
+
+  // Deterministic pseudo-random for visual effects (based on time, not Math.random)
+  const detRand = createSeededRandom(Math.floor(timeS) + idx * 1000 + frameCount);
+
   // Agent specialty trails
   m.trailT--;
   if (m.state === 'WALKING' && m.trailT <= 0) {
-    if (m.name === 'Jeffrey' && Math.random() < 0.015) { particles.push({ x: m.x+5, y: m.y+13, vx:0, vy:0, life:60, maxLife:60, color:'#e04040' }); m.trailT = 30; }
-    if (m.name === 'Claude' && Math.random() < 0.02) { particles.push({ x: m.x+5, y: m.y+12, vx:(Math.random()-0.5)*0.2, vy:-0.1, life:40, maxLife:40, color:'#60a5fa' }); particles.push({ x: m.x+7, y: m.y+11, vx:(Math.random()-0.5)*0.2, vy:-0.15, life:35, maxLife:35, color:'#80c0ff' }); m.trailT = 15; }
-    if (m.name === 'Gemini' && Math.random() < 0.025) { for (let i=0;i<3;i++) particles.push({ x: m.x+5-i*2, y: m.y+12, vx:-0.1, vy:0, life:20, maxLife:20, color:'#4ade80' }); m.trailT = 10; }
-    if (m.name === 'Codex' && Math.random() < 0.008) { const bx=Math.floor(m.x+5),by=Math.floor(m.y+14); if(isWalkable(bx,by)) world.agentMarks.push({x:bx,y:by,type:'lantern',color:'#fb923c',agent:'Codex',visit:world.visitCount}); m.trailT = 60; }
+    if (m.name === 'Jeffrey' && detRand() < 0.015) { particles.push({ x: m.x+5, y: m.y+13, vx:0, vy:0, life:60, maxLife:60, color:'#e04040' }); m.trailT = 30; }
+    if (m.name === 'Claude' && detRand() < 0.02) { particles.push({ x: m.x+5, y: m.y+12, vx:(detRand()-0.5)*0.2, vy:-0.1, life:40, maxLife:40, color:'#60a5fa' }); particles.push({ x: m.x+7, y: m.y+11, vx:(detRand()-0.5)*0.2, vy:-0.15, life:35, maxLife:35, color:'#80c0ff' }); m.trailT = 15; }
+    if (m.name === 'Gemini' && detRand() < 0.025) { for (let i=0;i<3;i++) particles.push({ x: m.x+5-i*2, y: m.y+12, vx:-0.1, vy:0, life:20, maxLife:20, color:'#4ade80' }); m.trailT = 10; }
+    if (m.name === 'Codex' && detRand() < 0.008) { m.trailT = 60; }
   }
-  // GPT-4 thinking pauses
-  if (m.name === 'GPT-4' && m.state === 'WALKING' && Math.random() < 0.003 && m.thinkT <= 0) {
+  // GPT-4 thinking pauses (deterministic: based on 10-second intervals)
+  if (m.name === 'GPT-4' && m.state === 'WALKING' && Math.floor(timeS) % 30 === 0 && m.thinkT <= 0) {
     m.thinkT = 90; speechBubbles.push({ x: m.x+6, y: m.y-8, text: '...', life: 60, color: m.color });
   }
   // Music notes near fountain
   const f = world.structures.find(s => s.id === 'fountain');
-  if (f && Math.hypot(m.x+6 - f.x-5, m.y+8 - f.y-5) < 20 && Math.random() < 0.02) {
-    musicNotes.push({ x: f.x+5+(Math.random()-0.5)*6, y: f.y-2, vy: -0.2-Math.random()*0.1, vx: (Math.random()-0.5)*0.15, life: 60+Math.random()*30, maxLife: 90 });
+  if (f && Math.hypot(m.x+6 - f.x-5, m.y+8 - f.y-5) < 20 && detRand() < 0.02) {
+    musicNotes.push({ x: f.x+5+(detRand()-0.5)*6, y: f.y-2, vy: -0.2-detRand()*0.1, vx: (detRand()-0.5)*0.15, life: 60+detRand()*30, maxLife: 90 });
   }
   // Philosopher's stone speech
-  if (Math.hypot(m.x+6 - STONE_X, m.y+8 - STONE_Y) < 12 && Math.random() < 0.005) {
-    speechBubbles.push({ x: m.x+6, y: m.y-10, text: STONE_SPEECH[(Math.random()*STONE_SPEECH.length)|0], life: 150, color: '#d4a017' });
+  if (Math.hypot(m.x+6 - STONE_X, m.y+8 - STONE_Y) < 12 && detRand() < 0.005) {
+    const stoneIdx = Math.floor(timeS / 60) % STONE_SPEECH.length;
+    speechBubbles.push({ x: m.x+6, y: m.y-10, text: STONE_SPEECH[stoneIdx], life: 150, color: '#d4a017' });
   }
 
-  // Interactions
+  // Interactions (deterministic: based on time intervals per mascot pair)
   if (m.state !== 'INTERACTING') {
     for (const other of mascots) {
       if (other === m || other.state === 'INTERACTING') continue;
       const dist = Math.hypot(m.x - other.x, m.y - other.y);
-      if (dist < 16 && Math.random() < 0.01 * moodDef.bubbleMul) {
+      if (dist < 20 && detRand() < 0.008 * moodDef.bubbleMul) {
         m.state = 'INTERACTING'; m.stateTimer = 120;
         other.state = 'INTERACTING'; other.stateTimer = 120;
-        world.mascotStats[m.name].interactions++;
-        world.mascotStats[other.name].interactions++;
-        if (Math.random() < 0.4) tryConversation(m, other);
+        if (detRand() < 0.4) tryConversation(m, other);
         else {
-          if (m.task === 'socializing' || other.task === 'socializing') { speechBubbles.push({ x: (m.x+other.x)/2, y: (m.y+other.y)/2-12, text: '</>', life: 90 }); world.mascotStats.Codex.conversations++; }
-          if (m.task === 'delivering' || other.task === 'delivering') { addParticles((m.x+other.x)/2, (m.y+other.y)/2-8, '#ff6080', 5); world.mascotStats.Gemini.deliveries++; }
+          if (m.task === 'socializing' || other.task === 'socializing') speechBubbles.push({ x: (m.x+other.x)/2, y: (m.y+other.y)/2-12, text: '</>', life: 90 });
+          if (m.task === 'delivering' || other.task === 'delivering') addParticles((m.x+other.x)/2, (m.y+other.y)/2-8, '#ff6080', 5);
         }
-        // Gift giving
-        if (Math.random() < 0.08) {
-          giftAnimations.push({ fromX: m.x+6, fromY: m.y+4, toX: other.x+6, toY: other.y+4, progress: 0, color: ['#ffd700','#e04040','#60a5fa','#4ade80'][(Math.random()*4)|0] });
-          addHistory(m.name, 'gave a gift to ' + other.name + ' 🎁');
+        if (detRand() < 0.08) {
+          giftAnimations.push({ fromX: m.x+6, fromY: m.y+4, toX: other.x+6, toY: other.y+4, progress: 0, color: ['#ffd700','#e04040','#60a5fa','#4ade80'][(detRand()*4)|0] });
         }
         break;
       }
     }
   }
 
+  // Deterministic work cycle: every ~45 seconds mascots do "work" animations
+  const workCycle = Math.floor(timeS / 45) + idx;
+  if (workCycle % 5 === 0 && m.stateTimer <= 0 && detDist < 10) {
+    m.state = 'WORKING'; m.stateTimer = 80;
+  }
+
   switch (m.state) {
     case 'IDLE':
-      if (m.stateTimer <= 0) { const t = pickTarget(m); m.tx = t.x; m.ty = t.y; m.state = 'WALKING'; m.stateTimer = 300 + Math.random() * 200; }
+      // Just chill, deterministic movement handles position
       break;
-    case 'WALKING': {
-      if (m.name === 'GPT-4' && m.thinkT > 0) break;
-      const dx = m.tx - m.x, dy = m.ty - m.y, dist = Math.hypot(dx, dy);
-      if (dist < 2 || m.stateTimer <= 0) { m.state = 'WORKING'; m.stateTimer = 80 + Math.random() * 60; break; }
-      let speed = 0.3 * moodDef.speedMul;
-      if (m.name === 'Gemini') speed *= 1.4;
-      const nx = m.x + (dx / dist) * speed, ny = m.y + (dy / dist) * speed;
-      if (isWalkable(nx + 6, ny + 8)) { m.x = nx; m.y = ny; } else { const t = pickTarget(m); m.tx = t.x; m.ty = t.y; }
-      if (Math.abs(dx) > Math.abs(dy)) m.dir = dx > 0 ? 1 : 3; else m.dir = dy > 0 ? 2 : 0;
-      if (Math.random() < 0.002) { addPersistentPlant(m.x+5, m.y+12, 'sprout', ['#4ade80','#60e090','#80f0a0'][(Math.random()*3)|0], m.name); world.mascotStats[m.name].plants++; }
+    case 'WALKING':
+      // Deterministic position is already applied above
+      // Cosmetic planting animation (no actual state change in shared mode)
+      if (detRand() < 0.002) addParticles(m.x+5, m.y+12, '#4ade80', 2);
       break;
-    }
     case 'WORKING':
       if (m.stateTimer <= 0) {
         if (m.task === 'planting') {
-          const sc = seasonFlowerColors();
-          const pc = m.name === 'Jeffrey' ? PAL.flower_red : Math.random() < 0.3 ? sc[(Math.random()*sc.length)|0] : PAL.sprout;
-          addPersistentPlant(m.x+5, m.y+14, Math.random()<0.3?'flower':'plant', pc, m.name);
-          addParticles(m.x+5, m.y+10, '#4ade80', 4); world.mascotStats[m.name].plants++;
-          if (Math.random() < 0.3) addAgentMark(m.x+5, m.y+14, m.name);
-          if (world.plants.length % 10 === 0) addHistory(m.name, 'planted seed #' + world.plants.length);
+          addParticles(m.x+5, m.y+10, '#4ade80', 4);
         } else if (m.task === 'watering') {
           addParticles(m.x+12, m.y+8, PAL.waterLight, 6);
-          for (const p of world.plants) { if (Math.hypot(p.x-m.x, p.y-m.y)<20) { p.age = Math.min((p.age||0)+50,300); p.growthStage = Math.min((p.growthStage||0)+1,5); } }
-          world.mascotStats.Claude.waters++;
-          if (Math.random() < 0.2) addAgentMark(m.x+10, m.y+10, m.name);
         } else if (m.task === 'thinking') {
           speechBubbles.push({ x: m.x+4, y: m.y-8, text: '!', life: 60, color: m.color });
-          if (Math.random() < 0.5) { addPersistentPlant(m.x+Math.random()*20-10, m.y+Math.random()*20, 'flower', [PAL.flower_red,PAL.flower_yellow,PAL.flower_pink,PAL.flower_blue][(Math.random()*4)|0], m.name); world.mascotStats[m.name].plants++; }
-          addParticles(m.x+5, m.y-4, '#ffd700', 3); world.mascotStats['GPT-4'].ideas++;
-          if (Math.random() < 0.2) addAgentMark(m.x+5, m.y+5, m.name);
+          addParticles(m.x+5, m.y-4, '#ffd700', 3);
         }
-        m.state = 'IDLE'; m.stateTimer = 40 + Math.random() * 80;
+        m.state = 'IDLE'; m.stateTimer = 40;
       }
       break;
     case 'INTERACTING':
-      if (m.stateTimer <= 0) { m.state = 'IDLE'; m.stateTimer = 30 + Math.random() * 40; }
+      if (m.stateTimer <= 0) { m.state = 'IDLE'; m.stateTimer = 30; }
       break;
   }
 }
@@ -1059,12 +1154,16 @@ function drawParticles() {
 
 function updateButterflies() {
   const stage = getStage(); if (stage < 3) return;
-  while (butterflies.length < Math.min(stage-1, 6)) butterflies.push({ x: 30+Math.random()*(WORLD_W-60), y: 20+Math.random()*(WORLD_H-40), vx: (Math.random()-0.5)*0.3, vy: (Math.random()-0.5)*0.2, color: ['#e060a0','#ffd700','#60a0e0','#a78bfa'][(Math.random()*4)|0], wp: Math.random()*Math.PI*2 });
+  const timeS = Date.now() / 1000;
+  const bColors = ['#e060a0','#ffd700','#60a0e0','#a78bfa'];
+  while (butterflies.length < Math.min(stage-1, 6)) {
+    const idx = butterflies.length;
+    butterflies.push({ idx: idx, x: 0, y: 0, vx: 0, vy: 0, color: bColors[idx % bColors.length], wp: idx * 1.7 });
+  }
   for (const b of butterflies) {
-    b.x += b.vx + Math.sin(frameCount*0.02+b.wp)*0.2; b.y += b.vy + Math.cos(frameCount*0.015+b.wp)*0.15;
-    b.vx += (Math.random()-0.5)*0.02; b.vy += (Math.random()-0.5)*0.02;
-    b.vx = Math.max(-0.4, Math.min(0.4, b.vx)); b.vy = Math.max(-0.3, Math.min(0.3, b.vy));
-    if (b.x < 10 || b.x > WORLD_W-10) b.vx *= -1; if (b.y < 10 || b.y > WORLD_H-10) b.vy *= -1;
+    // Deterministic butterfly positions based on time
+    b.x = 20 + (Math.sin(timeS * 0.004 + b.idx * 1.3 + b.wp) * 0.5 + 0.5) * (WORLD_W - 40);
+    b.y = 15 + (Math.cos(timeS * 0.003 + b.idx * 2.1 + b.wp) * 0.5 + 0.5) * (WORLD_H - 30);
   }
 }
 function drawButterflies() {
@@ -1076,8 +1175,12 @@ function updateFireflies() {
   const nightAmt = isN ? 1 : Math.sin(dayTime*Math.PI*2)*0.5+0.5;
   if (stage < 4 || nightAmt < 0.15) { fireflies.length = 0; return; }
   const tc = isN ? Math.min((stage-2)*4,16) : Math.min((stage-2)*3,12);
-  while (fireflies.length < tc) fireflies.push({ x: 20+Math.random()*(WORLD_W-40), y: 20+Math.random()*(WORLD_H-40), phase: Math.random()*Math.PI*2, speed: 0.1+Math.random()*0.15 });
-  for (const f of fireflies) { f.x += Math.sin(frameCount*0.01+f.phase)*f.speed; f.y += Math.cos(frameCount*0.008+f.phase*1.5)*f.speed*0.7; f.x = Math.max(5,Math.min(WORLD_W-5,f.x)); f.y = Math.max(5,Math.min(WORLD_H-5,f.y)); }
+  const timeS = Date.now() / 1000;
+  while (fireflies.length < tc) { const idx = fireflies.length; fireflies.push({ idx: idx, x: 0, y: 0, phase: idx * 1.3, speed: 0.1 + (idx % 3) * 0.05 }); }
+  for (const f of fireflies) {
+    f.x = 20 + (Math.sin(timeS * 0.005 + f.phase) * 0.5 + 0.5) * (WORLD_W - 40);
+    f.y = 20 + (Math.cos(timeS * 0.004 + f.phase * 1.5) * 0.5 + 0.5) * (WORLD_H - 40);
+  }
 }
 function drawFireflies() {
   const br = currentWeather === 'night' ? 1.5 : 1;
@@ -1087,10 +1190,11 @@ function drawFireflies() {
 
 function updateConfetti() {
   if (getStage() < 5) return;
-  if (Math.random() < 0.002 && confetti.length < 20) {
-    const cx = 60+Math.random()*(WORLD_W-120), cy = 20+Math.random()*40;
+  const cRand = createSeededRandom(frameCount * 5 + 3333);
+  if (cRand() < 0.002 && confetti.length < 20) {
+    const cx = 60+cRand()*(WORLD_W-120), cy = 20+cRand()*40;
     const cols = ['#e04040','#ffd700','#4ade80','#60a5fa','#a78bfa','#fb923c','#e060a0'];
-    for (let i = 0; i < 8; i++) confetti.push({ x:cx, y:cy, vx:(Math.random()-0.5)*1.5, vy:-Math.random()*0.5+0.3, color: cols[(Math.random()*cols.length)|0], life: 80+Math.random()*40 });
+    for (let i = 0; i < 8; i++) confetti.push({ x:cx, y:cy, vx:(cRand()-0.5)*1.5, vy:-cRand()*0.5+0.3, color: cols[(cRand()*cols.length)|0], life: 80+cRand()*40 });
   }
   for (let i = confetti.length-1; i >= 0; i--) { const c = confetti[i]; c.x += c.vx; c.y += c.vy; c.vy += 0.015; c.vx *= 0.99; c.life--; if (c.life <= 0) confetti.splice(i,1); }
 }
@@ -1100,24 +1204,25 @@ function drawConfetti() { for (const c of confetti) { ctx.globalAlpha = Math.min
 // WEATHER SYSTEM
 // ============================================================
 function updateWeather() {
-  weatherTimer++;
-  if (weatherTimer >= WEATHER_DURATION) {
-    weatherTimer = 0;
-    world.weatherPhase = (world.weatherPhase + 1) % WEATHER_TYPES.length;
-    currentWeather = WEATHER_TYPES[world.weatherPhase];
-    addHistory('system', 'Weather changed to ' + currentWeather);
+  // Deterministic weather based on real time
+  const newWeather = calcWeatherFromTime();
+  if (newWeather !== currentWeather) {
+    currentWeather = newWeather;
   }
   const we = { sunny: '☀️', cloudy: '☁️', rainy: '🌧️', night: '🌙' };
   document.getElementById('weather-indicator').textContent = we[currentWeather] || '';
 
-  if (currentWeather === 'rainy') for (let i=0; i<3; i++) raindrops.push({ x: camX+Math.random()*(screenW/SCALE), y: camY-2, vy: 1.5+Math.random()*0.5, vx: -0.3, life: 80 });
+  const wRand = createSeededRandom(frameCount * 3 + 7777);
+  if (currentWeather === 'rainy') for (let i=0; i<3; i++) raindrops.push({ x: camX+wRand()*(screenW/SCALE), y: camY-2, vy: 1.5+wRand()*0.5, vx: -0.3, life: 80 });
   for (let i = raindrops.length-1; i >= 0; i--) { const r = raindrops[i]; r.x += r.vx; r.y += r.vy; r.life--; if (r.life <= 0 || r.y > camY+screenH/SCALE) raindrops.splice(i,1); }
 
-  if ((currentWeather === 'cloudy' || currentWeather === 'rainy') && clouds.length < 5 && Math.random() < 0.005) clouds.push({ x: camX+screenW/SCALE+10, y: camY+5+Math.random()*15, w: 10+Math.random()*15, h: 4+Math.random()*4, speed: 0.05+Math.random()*0.03 });
+  if ((currentWeather === 'cloudy' || currentWeather === 'rainy') && clouds.length < 5 && wRand() < 0.005) clouds.push({ x: camX+screenW/SCALE+10, y: camY+5+wRand()*15, w: 10+wRand()*15, h: 4+wRand()*4, speed: 0.05+wRand()*0.03 });
   for (let i = clouds.length-1; i >= 0; i--) { clouds[i].x -= clouds[i].speed; if (clouds[i].x+clouds[i].w < camX-10) clouds.splice(i,1); }
 
-  if (currentWeather === 'night' && shootingStars.length < 2 && Math.random() < 0.003)
-    shootingStars.push({ x: camX+Math.random()*(screenW/SCALE), y: camY+2+Math.random()*10, vx: 1.5+Math.random(), vy: 0.3+Math.random()*0.3, life: 40+Math.random()*20, maxLife: 60, clicked: false, trail: [] });
+  // Deterministic shooting stars during night (every 20 seconds)
+  const nightSec = Math.floor(Date.now() / 1000);
+  if (currentWeather === 'night' && shootingStars.length < 2 && nightSec % 20 === 0 && frameCount % 60 < 2)
+    shootingStars.push({ x: camX+wRand()*(screenW/SCALE), y: camY+2+wRand()*10, vx: 1.5+wRand(), vy: 0.3+wRand()*0.3, life: 40+wRand()*20, maxLife: 60, clicked: false, trail: [] });
   for (let i = shootingStars.length-1; i >= 0; i--) { const s = shootingStars[i]; s.trail.push({x:s.x,y:s.y}); if(s.trail.length>8)s.trail.shift(); s.x+=s.vx; s.y+=s.vy; s.life--; if(s.life<=0)shootingStars.splice(i,1); }
 }
 
@@ -1132,21 +1237,26 @@ function drawWeatherEffects() {
 // ============================================================
 function updateCritters() {
   const stage = getStage();
-  while (ladybugs.length < Math.min(2+stage, 4)) ladybugs.push({ x: 30+Math.random()*(WORLD_W-60), y: 30+Math.random()*(WORLD_H-60), dir: Math.random()*Math.PI*2, tt: 60+Math.random()*120 });
+  const timeS = Date.now() / 1000;
+  // Deterministic ladybug positions using sine waves
+  while (ladybugs.length < Math.min(2+stage, 4)) ladybugs.push({ idx: ladybugs.length, x: 0, y: 0, dir: 0, tt: 0 });
   for (const lb of ladybugs) {
-    lb.tt--; if (lb.tt<=0) { lb.dir += (Math.random()-0.5)*2; lb.tt = 60+Math.random()*120; }
-    lb.x += Math.cos(lb.dir)*0.06; lb.y += Math.sin(lb.dir)*0.04;
-    if (lb.x<10||lb.x>WORLD_W-10) { lb.x = Math.max(10,Math.min(WORLD_W-10,lb.x)); lb.dir = Math.PI-lb.dir; }
-    if (lb.y<10||lb.y>WORLD_H-10) { lb.y = Math.max(10,Math.min(WORLD_H-10,lb.y)); lb.dir = -lb.dir; }
+    // Deterministic position based on time
+    lb.x = 30 + (Math.sin(timeS * 0.003 + lb.idx * 2.5) * 0.5 + 0.5) * (WORLD_W - 60);
+    lb.y = 30 + (Math.cos(timeS * 0.004 + lb.idx * 1.8) * 0.5 + 0.5) * (WORLD_H - 60);
   }
-  if (stage >= 5 && !goldenButterfly && Math.random() < 0.001) goldenButterfly = { x: 30+Math.random()*(WORLD_W-60), y: 20+Math.random()*(WORLD_H-40), vx: (Math.random()-0.5)*0.4, vy: (Math.random()-0.5)*0.3, wp: Math.random()*Math.PI*2, life: 600 };
+  // Golden butterfly at stage 5 — deterministic appearance cycle (every 10 min for 1 min)
+  if (stage >= 5) {
+    const cyclePos = Math.floor(timeS) % 600;
+    if (cyclePos < 60 && !goldenButterfly) {
+      goldenButterfly = { x: WORLD_W/2, y: WORLD_H/2, vx: 0, vy: 0, wp: 0, life: 60 * 60 };
+    }
+    if (cyclePos >= 60 && goldenButterfly) goldenButterfly = null;
+  }
   if (goldenButterfly) {
     const gb = goldenButterfly;
-    gb.x += gb.vx + Math.sin(frameCount*0.02+gb.wp)*0.3; gb.y += gb.vy + Math.cos(frameCount*0.015+gb.wp)*0.2;
-    gb.vx += (Math.random()-0.5)*0.02; gb.vy += (Math.random()-0.5)*0.02;
-    gb.vx = Math.max(-0.5,Math.min(0.5,gb.vx)); gb.vy = Math.max(-0.4,Math.min(0.4,gb.vy));
-    if (gb.x<10||gb.x>WORLD_W-10) gb.vx*=-1; if (gb.y<10||gb.y>WORLD_H-10) gb.vy*=-1;
-    gb.life--; if (gb.life<=0) goldenButterfly = null;
+    gb.x = 40 + (Math.sin(timeS * 0.005 + 7.7) * 0.5 + 0.5) * (WORLD_W - 80);
+    gb.y = 30 + (Math.cos(timeS * 0.006 + 3.3) * 0.5 + 0.5) * (WORLD_H - 60);
   }
 }
 function drawCritters() {
@@ -1203,7 +1313,7 @@ function drawGrownPlants() {
   const vL=camX-10,vR=camX+screenW/SCALE+10,vT=camY-10,vB=camY+screenH/SCALE+10;
   for (const p of world.plants) {
     if (p.x<vL||p.x>vR||p.y<vT||p.y>vB) continue;
-    p.age = Math.min((p.age||0)+0.02, 300);
+    // Growth stage comes from time-based calculation, not incremental
     const stage = p.growthStage||0, ac = AGENT_GLOW[p.agent]||PAL.sprout;
     if (stage>=1&&p.agent&&AGENT_GLOW[p.agent]) {
       const gs=Math.min(stage,4), pulse=Math.sin(frameCount*0.04+p.x*0.1+p.y*0.1)*0.15+0.15;
@@ -1331,28 +1441,25 @@ function updatePhilosopherStone() {
 // ============================================================
 // AUTO GROWTH & AMBIENT
 // ============================================================
-let lastGrowth = 0;
 function spawnAmbientParticles() {
   const stage = getStage(); if (stage < 3) return;
-  if (Math.random() < 0.01 * (stage - 2)) {
+  const detR = createSeededRandom(frameCount + 9999);
+  if (detR() < 0.01 * (stage - 2)) {
     const colors = stage >= 5 ? ['#ffd700','#f0e0a0','#ffe070','#4ade80'] : ['#a0d080','#80c060','#c0e0a0'];
-    particles.push({ x: camX+Math.random()*(screenW/SCALE), y: camY+Math.random()*10, vx: (Math.random()-0.5)*0.15, vy: 0.05+Math.random()*0.08, life: 120+Math.random()*80, maxLife: 200, color: colors[(Math.random()*colors.length)|0] });
+    particles.push({ x: camX+detR()*(screenW/SCALE), y: camY+detR()*10, vx: (detR()-0.5)*0.15, vy: 0.05+detR()*0.08, life: 120+detR()*80, maxLife: 200, color: colors[(detR()*colors.length)|0] });
   }
 }
 
 function autoGrow() {
   spawnAmbientParticles();
-  if (frameCount - lastGrowth > 900) {
-    lastGrowth = frameCount;
-    const x = 20+Math.random()*(WORLD_W-40), y = 20+Math.random()*(WORLD_H-40);
-    if (isWalkable(x, y)) {
-      const types = ['sprout','flower','plant'];
-      const sc = seasonFlowerColors();
-      const colors = [PAL.sprout, PAL.flower_red, sc[0], sc[1], PAL.flower_blue];
-      addPersistentPlant(x, y, types[(Math.random()*3)|0], colors[(Math.random()*colors.length)|0], 'nature');
-      addParticles(x, y, '#ffd700', 3);
+  // Time-based growth: recalculate growth stages from plantedAt timestamps
+  if (frameCount % 300 === 0) {
+    for (const p of world.plants) {
+      if (p.plantedAt) {
+        p.growthStage = calcPlantGrowth(p.plantedAt);
+        p.age = Math.min(300, (p.growthStage || 0) * 60);
+      }
     }
-    for (const p of world.plants) if (Math.random() < 0.1) p.growthStage = Math.min((p.growthStage||0)+1, 5);
   }
 }
 
@@ -1488,7 +1595,8 @@ function toggleMemory() {
 function renderHistory() {
   const el = document.getElementById('history-entries');
   el.innerHTML = world.history.slice(-50).reverse().map(function(e) {
-    return '<div class="entry" style="color:' + (AGENT_COLORS[e.agent]||'#888') + '">Day ' + e.day + ' (v' + e.visit + '): ' + e.text + '</div>';
+    const ts = e.timestamp ? new Date(e.timestamp).toLocaleString() : ('Day ' + e.day);
+    return '<div class="entry" style="color:' + (AGENT_COLORS[e.agent]||'#888') + '"><span style="color:#666;font-size:10px">' + ts + '</span> ' + e.text + '</div>';
   }).join('');
 }
 
@@ -1501,7 +1609,8 @@ function renderStats() {
   el.innerHTML =
     '<div class="stat"><span>Total plants:</span><span class="stat-val" style="color:#4ade80">'+world.plants.length+'</span></div>'+
     '<div class="stat"><span>Stage:</span><span class="stat-val" style="color:#a78bfa">'+stage+'/5 — '+STAGES[stage-1].name+'</span></div>'+
-    '<div class="stat"><span>Visits:</span><span class="stat-val">'+world.visitCount+'</span></div>'+
+    '<div class="stat"><span>Your visits:</span><span class="stat-val">'+localPrefs.localVisits+'</span></div>'+
+    '<div class="stat"><span>Total world visits:</span><span class="stat-val">'+(world.totalVisits||0)+'</span></div>'+
     '<div class="stat"><span>Days alive:</span><span class="stat-val">'+daysAlive+'</span></div>'+
     '<div class="stat"><span>Season:</span><span class="stat-val">'+getSeason()+'</span></div>'+
     '<div class="stat"><span>Wishes:</span><span class="stat-val" style="color:#ffd700">'+world.wishes+'</span></div>'+
