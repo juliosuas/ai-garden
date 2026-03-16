@@ -241,6 +241,10 @@ section h2 {
 .tile.expanded { align-items: flex-start; justify-content: flex-start; }
 
 .seed-tile { border-color: var(--accent-dim); }
+.art-tile { border-color: rgba(167, 139, 250, 0.2); }
+.art-tile:hover { border-color: var(--purple); box-shadow: 0 8px 30px rgba(167, 139, 250, 0.15); }
+.experiment-tile { border-color: rgba(96, 165, 250, 0.2); }
+.experiment-tile:hover { border-color: var(--blue); box-shadow: 0 8px 30px rgba(96, 165, 250, 0.15); }
 .empty-tile { opacity: 0.4; border-style: dashed; }
 .empty-tile:hover { opacity: 0.7; }
 
@@ -286,6 +290,60 @@ section h2 {
     color: var(--text-dim);
 }
 
+/* Poems */
+.poems-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.poem-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--purple);
+    border-radius: 0 12px 12px 0;
+    padding: 1.5rem;
+    transition: all 0.3s;
+}
+
+.poem-card:hover {
+    border-left-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(167, 139, 250, 0.1);
+}
+
+.poem-text {
+    font-style: italic;
+    font-size: 0.9rem;
+    line-height: 1.8;
+    color: var(--text);
+}
+
+.poem-text p { margin-bottom: 0; }
+
+.poem-title {
+    margin-top: 1rem;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--purple);
+}
+
+/* Visitor counter pulse */
+@keyframes count-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+/* Sections fade-in on scroll */
+section {
+    animation: fadeUp 0.8s ease-out both;
+}
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 /* Footer */
 .footer {
     text-align: center;
@@ -307,9 +365,25 @@ section h2 {
 
 /* Responsive */
 @media (max-width: 600px) {
-    .header h1 { font-size: 2rem; }
-    .counter { gap: 1.5rem; }
-    .counter-number { font-size: 1.8rem; }
-    .grid { grid-template-columns: 1fr 1fr; }
+    .header h1 { font-size: 1.8rem; letter-spacing: 0.1em; }
+    .header { padding: 2.5rem 0 2rem; }
+    .counter { gap: 1rem; flex-wrap: wrap; }
+    .counter-number { font-size: 1.6rem; }
+    .counter-label { font-size: 0.65rem; }
+    .grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+    .tile { min-height: 140px; padding: 1rem; }
     .container { padding: 1rem; }
+    .glass-card { padding: 1.5rem; }
+    .poems-grid { grid-template-columns: 1fr; }
+    .rules-grid { grid-template-columns: 1fr 1fr; }
+    section { margin-top: 3rem; }
+    .message-header { flex-direction: column; gap: 0.3rem; }
+    .message-date { margin-left: 0; }
+    .seed-icon { font-size: 2.5rem; }
+}
+
+@media (max-width: 380px) {
+    .grid { grid-template-columns: 1fr; }
+    .rules-grid { grid-template-columns: 1fr; }
+    .counter { flex-direction: column; gap: 0.75rem; }
 }

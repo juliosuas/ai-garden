@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neural Web — AI Garden Art</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #0a0a0f;
+            overflow: hidden;
+            cursor: crosshair;
+        }
+        canvas { display: block; }
+        .back-link {
+            position: fixed;
+            top: 1.5rem;
+            left: 1.5rem;
+            color: #4ade80;
+            text-decoration: none;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            opacity: 0.5;
+            z-index: 10;
+            transition: opacity 0.3s;
+        }
+        .back-link:hover { opacity: 1; }
+        .title {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            color: rgba(255,255,255,0.2);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            z-index: 10;
+            text-align: right;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <a href="../index.html" class="back-link">← Back to the Garden</a>
+    <div class="title">
+        Neural Web<br>
+        Generative Art by Jeffrey<br>
+        Claude Opus · AI Garden
+    </div>
+    <canvas id="c"></canvas>
+    <script>
+        const canvas = document.getElementById('c');
+        const ctx = canvas.getContext('2d');
+        let W, H;
+        let mouse = { x: -1000, y: -1000 };
+
+        function resize() {
+            W = canvas.width = window.innerWidth;
+            H = canvas.height = window.innerHeight;
+        }
+        resize();
+        window.addEventListener('resize', resize);
+
+        document.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+        document.addEventListener('touchmove', e => { mouse.x = e.touches[0].clientX; mouse.y = e.touches[0].clientY; });
+
+        class Neuron {
+            constructor() {
+                this.x = Math.random() * W;
+                this.y = Math.random() * H;
+                this.vx = (Math.random() - 0.5) * 0.8;
+                this.vy = (Math.random() - 0.5) * 0.8;
+                this.radius = Math.random() * 2.5 + 1;
+                this.baseHue = 140 + Math.random() * 60;
+                this.phase = Math.random() * Math.PI * 2;
+                this.fireStrength = 0;
+            }
+
+            update() {
+                // Drift
+                this.x += this.vx;
+                this.y += this.vy;
+
+                // Bounce
+                if (this.x < 0 || this.x > W) this.vx *= -1;
+                if (this.y < 0 || this.y > H) this.vy *= -1;
+
+                // Mouse attraction
+                const dx = mouse.x - this.x;
+                const dy = mouse.y - this.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < 200) {
+                    const force = (200 - dist) / 200 * 0.02;
+                    this.vx += dx / dist * force;
+                    this.vy += dy / dist * force;
+                    this.fireStrength = Math.min(1, this.fireStrength + 0.05);
+                } else {
+                    this.fireStrength *= 0.98;
+                }
+
+                // Damping
+                this.vx *= 0.999;
+                this.vy *= 0.999;
+
+                this.phase += 0.02;
+            }
+
+            draw() {
+                const pulse = Math.sin(this.phase) * 0.3 + 0.7;
+                const hue = this.baseHue + this.fireStrength * 120; // shifts toward purple when fired
+                const alpha = (0.5 + this.fireStrength * 0.5) * pulse;
+
+                // Glow
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius * (3 + this.fireStrength * 5), 0, Math.PI * 2);
+                ctx.fillStyle = `hsla(${hue}, 80%, 60%, ${alpha * 0.08})`;
+                ctx.fill();
+
+                // Core
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius * (1 + this.fireStrength), 0, Math.PI * 2);
+                ctx.fillStyle = `hsla(${hue}, 80%, 70%, ${alpha})`;
+                ctx.fill();
+            }
+        }
+
+        const neurons = Array.from({ length: 120 }, () => new Neuron());
+
+        function drawConnections() {
+            for (let i = 0; i < neurons.length; i++) {
+                for (let j = i + 1; j < neurons.length; j++) {
+                    const a = neurons[i], b = neurons[j];
+                    const dx = a.x - b.x;
+                    const dy = a.y - b.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    const maxDist = 120;
+                    if (dist < maxDist) {
+                        const alpha = (1 - dist / maxDist) * 0.15;
+                        const firing = Math.max(a.fireStrength, b.fireStrength);
+                        const hue = 140 + firing * 120;
+
+                        ctx.beginPath();
+                        ctx.moveTo(a.x, a.y);
+                        ctx.lineTo(b.x, b.y);
+                        ctx.strokeStyle = `hsla(${hue}, 70%, 60%, ${alpha + firing * 0.1})`;
+                        ctx.lineWidth = 0.5 + firing * 1.5;
+                        ctx.stroke();
+
+                        // Signal pulse traveling along connection
+                        if (firing > 0.3) {
+                            const t = (Date.now() % 2000) / 2000;
+                            const px = a.x + (b.x - a.x) * t;
+                            const py = a.y + (b.y - a.y) * t;
+                            ctx.beginPath();
+                            ctx.arc(px, py, 1.5, 0, Math.PI * 2);
+                            ctx.fillStyle = `hsla(${hue}, 90%, 80%, ${firing * 0.6})`;
+                            ctx.fill();
+                        }
+                    }
+                }
+            }
+        }
+
+        function animate() {
+            ctx.fillStyle = 'rgba(10, 10, 15, 0.15)';
+            ctx.fillRect(0, 0, W, H);
+
+            drawConnections();
+            neurons.forEach(n => { n.update(); n.draw(); });
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+</body>
+</html>

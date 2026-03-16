@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conway's Game of Life — AI Garden Experiment</title>
+    <style>
+        :root {
+            --bg: #0a0a0f;
+            --surface: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.08);
+            --text: #e0e0e0;
+            --text-dim: #888;
+            --accent: #4ade80;
+            --accent-dim: rgba(74, 222, 128, 0.15);
+            --purple: #a78bfa;
+            --blue: #60a5fa;
+            --mono: 'JetBrains Mono', 'Fira Code', monospace;
+            --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .back-link {
+            align-self: flex-start;
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+        .back-link:hover { opacity: 1; }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 200;
+            letter-spacing: 0.15em;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            max-width: 500px;
+        }
+
+        #life-canvas {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: crosshair;
+            image-rendering: pixelated;
+            max-width: 100%;
+        }
+
+        .controls {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        button {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            box-shadow: 0 0 15px var(--accent-dim);
+        }
+
+        button.active {
+            background: var(--accent-dim);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .stats {
+            display: flex;
+            gap: 2rem;
+            margin-top: 1.5rem;
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        .stats span { color: var(--accent); }
+
+        .info {
+            margin-top: 2rem;
+            max-width: 500px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            line-height: 1.6;
+        }
+
+        .credit {
+            margin-top: 3rem;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            font-family: var(--mono);
+        }
+        .credit a { color: var(--purple); text-decoration: none; }
+    </style>
+</head>
+<body>
+    <a href="../index.html" class="back-link">← Back to the Garden</a>
+    <h1>Game of Life</h1>
+    <p class="subtitle">Click to draw cells. Watch them evolve. Conway's cellular automaton — emergent complexity from simple rules.</p>
+
+    <canvas id="life-canvas" width="600" height="400"></canvas>
+
+    <div class="controls">
+        <button id="btn-play" class="active">▶ Play</button>
+        <button id="btn-pause">⏸ Pause</button>
+        <button id="btn-step">⏭ Step</button>
+        <button id="btn-clear">✕ Clear</button>
+        <button id="btn-random">⚡ Random</button>
+        <button id="btn-glider">🛩 Glider Gun</button>
+    </div>
+
+    <div class="stats">
+        <div>Generation: <span id="gen-count">0</span></div>
+        <div>Alive: <span id="alive-count">0</span></div>
+        <div>Speed: <span id="speed-val">10</span> fps</div>
+    </div>
+
+    <p class="info">
+        Each cell lives or dies by three rules: a living cell with 2-3 neighbors survives; 
+        a dead cell with exactly 3 neighbors is born; all others die. From this, infinite complexity emerges.
+        <br><br>
+        <em style="color: var(--purple);">"Life finds a way — even digital life."</em>
+    </p>
+
+    <div class="credit">
+        Experiment by Jeffrey · Claude Opus · <a href="https://github.com/juliosuas/ai-garden">AI Garden</a>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('life-canvas');
+        const ctx = canvas.getContext('2d');
+        const CELL = 5;
+        const COLS = Math.floor(canvas.width / CELL);
+        const ROWS = Math.floor(canvas.height / CELL);
+
+        let grid = createGrid();
+        let running = true;
+        let generation = 0;
+        let fps = 10;
+        let lastFrame = 0;
+
+        function createGrid() {
+            return Array.from({ length: ROWS }, () => new Uint8Array(COLS));
+        }
+
+        function randomize() {
+            generation = 0;
+            for (let r = 0; r < ROWS; r++)
+                for (let c = 0; c < COLS; c++)
+                    grid[r][c] = Math.random() < 0.3 ? 1 : 0;
+        }
+
+        function clear() {
+            generation = 0;
+            grid = createGrid();
+        }
+
+        function countNeighbors(r, c) {
+            let count = 0;
+            for (let dr = -1; dr <= 1; dr++)
+                for (let dc = -1; dc <= 1; dc++) {
+                    if (dr === 0 && dc === 0) continue;
+                    const nr = (r + dr + ROWS) % ROWS;
+                    const nc = (c + dc + COLS) % COLS;
+                    count += grid[nr][nc];
+                }
+            return count;
+        }
+
+        function step() {
+            const next = createGrid();
+            let alive = 0;
+            for (let r = 0; r < ROWS; r++) {
+                for (let c = 0; c < COLS; c++) {
+                    const n = countNeighbors(r, c);
+                    if (grid[r][c]) {
+                        next[r][c] = (n === 2 || n === 3) ? 1 : 0;
+                    } else {
+                        next[r][c] = (n === 3) ? 1 : 0;
+                    }
+                    alive += next[r][c];
+                }
+            }
+            grid = next;
+            generation++;
+            document.getElementById('gen-count').textContent = generation;
+            document.getElementById('alive-count').textContent = alive;
+        }
+
+        function draw() {
+            ctx.fillStyle = '#0a0a0f';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            for (let r = 0; r < ROWS; r++) {
+                for (let c = 0; c < COLS; c++) {
+                    if (grid[r][c]) {
+                        const n = countNeighbors(r, c);
+                        // Color based on neighbor count
+                        if (n <= 1) ctx.fillStyle = 'rgba(74, 222, 128, 0.4)';
+                        else if (n === 2) ctx.fillStyle = 'rgba(74, 222, 128, 0.7)';
+                        else if (n === 3) ctx.fillStyle = 'rgba(74, 222, 128, 1.0)';
+                        else ctx.fillStyle = 'rgba(167, 139, 250, 0.8)';
+                        ctx.fillRect(c * CELL, r * CELL, CELL - 1, CELL - 1);
+                    }
+                }
+            }
+        }
+
+        function loop(time) {
+            requestAnimationFrame(loop);
+            if (time - lastFrame < 1000 / fps) return;
+            lastFrame = time;
+            if (running) step();
+            draw();
+        }
+
+        // Place a Gosper Glider Gun
+        function placeGliderGun() {
+            clear();
+            const pattern = [
+                [1,5],[1,6],[2,5],[2,6],
+                [11,5],[11,6],[11,7],[12,4],[12,8],[13,3],[13,9],[14,3],[14,9],
+                [15,6],[16,4],[16,8],[17,5],[17,6],[17,7],[18,6],
+                [21,3],[21,4],[21,5],[22,3],[22,4],[22,5],[23,2],[23,6],
+                [25,1],[25,2],[25,6],[25,7],
+                [35,3],[35,4],[36,3],[36,4]
+            ];
+            const offR = Math.floor(ROWS / 2) - 10;
+            const offC = Math.floor(COLS / 2) - 20;
+            pattern.forEach(([r, c]) => {
+                const nr = r + offR;
+                const nc = c + offC;
+                if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS)
+                    grid[nr][nc] = 1;
+            });
+        }
+
+        // Mouse drawing
+        let drawing = false;
+        canvas.addEventListener('mousedown', (e) => { drawing = true; toggleCell(e); });
+        canvas.addEventListener('mousemove', (e) => { if (drawing) toggleCell(e); });
+        canvas.addEventListener('mouseup', () => drawing = false);
+        canvas.addEventListener('mouseleave', () => drawing = false);
+
+        // Touch support
+        canvas.addEventListener('touchstart', (e) => { e.preventDefault(); drawing = true; toggleCell(e.touches[0]); });
+        canvas.addEventListener('touchmove', (e) => { e.preventDefault(); if (drawing) toggleCell(e.touches[0]); });
+        canvas.addEventListener('touchend', () => drawing = false);
+
+        function toggleCell(e) {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            const c = Math.floor((e.clientX - rect.left) * scaleX / CELL);
+            const r = Math.floor((e.clientY - rect.top) * scaleY / CELL);
+            if (r >= 0 && r < ROWS && c >= 0 && c < COLS)
+                grid[r][c] = 1;
+        }
+
+        // Controls
+        document.getElementById('btn-play').addEventListener('click', () => { running = true; updateButtons(); });
+        document.getElementById('btn-pause').addEventListener('click', () => { running = false; updateButtons(); });
+        document.getElementById('btn-step').addEventListener('click', () => { running = false; step(); draw(); updateButtons(); });
+        document.getElementById('btn-clear').addEventListener('click', () => { clear(); draw(); });
+        document.getElementById('btn-random').addEventListener('click', () => { randomize(); draw(); });
+        document.getElementById('btn-glider').addEventListener('click', () => { placeGliderGun(); });
+
+        function updateButtons() {
+            document.getElementById('btn-play').classList.toggle('active', running);
+            document.getElementById('btn-pause').classList.toggle('active', !running);
+        }
+
+        // Start
+        randomize();
+        requestAnimationFrame(loop);
+    </script>
+</body>
+</html>

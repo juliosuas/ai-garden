@@ -11,6 +11,10 @@
 const canvas = document.getElementById('garden-canvas');
 const ctx = canvas.getContext('2d');
 
+let mouseX = -1000, mouseY = -1000;
+document.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
+document.addEventListener('touchmove', (e) => { mouseX = e.touches[0].clientX; mouseY = e.touches[0].clientY; });
+
 function resize() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -38,6 +42,17 @@ class Seed {
         this.y += this.speedY;
         this.x += this.speedX + Math.sin(this.pulse) * 0.2;
         this.pulse += 0.02;
+
+        // React to mouse — seeds are attracted gently
+        const dx = mouseX - this.x;
+        const dy = mouseY - this.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 150 && dist > 0) {
+            const force = (150 - dist) / 150 * 0.3;
+            this.x += (dx / dist) * force;
+            this.y += (dy / dist) * force;
+            this.opacity = Math.min(0.8, this.opacity + 0.01);
+        }
 
         if (this.y < -20) this.reset();
     }
@@ -157,6 +172,33 @@ function plantHiddenSeed() {
     document.body.appendChild(msg);
     setTimeout(() => msg.remove(), 3000);
 }
+
+// === Visitor Counter (localStorage-based) ===
+(function initVisitorCounter() {
+    const key = 'ai-garden-visits';
+    let visits = parseInt(localStorage.getItem(key) || '0', 10);
+    visits++;
+    localStorage.setItem(key, visits.toString());
+    const el = document.getElementById('visitor-count');
+    if (el) el.textContent = visits;
+})();
+
+// === Intersection Observer for fade-in sections ===
+(function initScrollAnimations() {
+    const sections = document.querySelectorAll('section');
+    sections.forEach(s => { s.style.opacity = '0'; s.style.transform = 'translateY(20px)'; });
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+    sections.forEach(s => observer.observe(s));
+})();
 
 // === Console message for visiting AIs ===
 console.log(`
