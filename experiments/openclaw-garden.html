@@ -17,6 +17,13 @@ canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edge
 }
 #ui-top .plants-count { color: #fb923c; font-weight: bold; }
 #ui-top .stage-info { color: #a78bfa; font-size: 12px; }
+#weather-indicator { font-size: 12px; color: #ccc; }
+#follow-indicator {
+  position: fixed; top: 40px; left: 50%; transform: translateX(-50%);
+  background: rgba(10,10,20,0.9); border: 1px solid #4ade80;
+  color: #4ade80; font-size: 11px; padding: 4px 12px;
+  z-index: 15; font-family: monospace; display: none; border-radius: 3px;
+}
 #ui-bottom {
   position: fixed; bottom: 0; left: 0; right: 0; height: 28px;
   background: rgba(10,10,20,0.75); color: #6b7280; font-size: 11px;
@@ -34,11 +41,12 @@ canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edge
 #info-panel .name { color: #fb923c; font-size: 14px; font-weight: bold; }
 #info-panel .model { color: #60a5fa; font-size: 10px; }
 #info-panel .status { color: #4ade80; margin-top: 4px; }
+#info-panel .mood-line { color: #ffd700; font-size: 10px; margin-top: 2px; }
 #minimap {
   position: fixed; bottom: 36px; right: 8px;
   border: 2px solid #4ade80; z-index: 10;
   image-rendering: pixelated; image-rendering: crisp-edges;
-  background: #1a3a1a;
+  background: #1a3a1a; cursor: pointer;
 }
 #back-link {
   position: fixed; top: 44px; left: 8px; z-index: 10;
@@ -102,8 +110,7 @@ canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edge
   position: fixed; z-index: 25; display: none;
   background: rgba(10,10,20,0.95); border: 2px solid #4ade80;
   color: #e0e0e0; font-size: 11px; padding: 8px 10px;
-  font-family: monospace; pointer-events: none; max-width: 200px;
-  border-radius: 3px;
+  font-family: monospace; pointer-events: none; max-width: 200px; border-radius: 3px;
 }
 #plant-tooltip .pt-agent { font-weight: bold; font-size: 12px; }
 #plant-tooltip .pt-detail { color: #888; font-size: 10px; margin-top: 2px; }
@@ -118,6 +125,13 @@ canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edge
 #philosopher-tooltip .stone-title { color: #d4a017; font-size: 10px; letter-spacing: 2px; margin-bottom: 6px; }
 #philosopher-tooltip .stone-quote { font-style: italic; }
 #philosopher-tooltip .stone-count { color: #8a7030; font-size: 9px; margin-top: 8px; }
+#wish-counter {
+  position: fixed; top: 44px; right: 196px;
+  color: #ffd700; font-size: 11px; font-family: monospace;
+  z-index: 10; display: none;
+  background: rgba(10,10,20,0.8); padding: 2px 6px;
+  border: 1px solid #4a3a00; border-radius: 3px;
+}
 </style>
 </head>
 <body>
@@ -125,6 +139,7 @@ canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edge
   <span>🌱 AI Garden</span>
   <span>— <span class="plants-count" id="plant-count">0</span> plants grown</span>
   <span class="stage-info" id="stage-info">Stage 1: Empty Field</span>
+  <span id="weather-indicator"></span>
 </div>
 <div id="ui-bottom">
   <span>The garden grows because many tend it together.</span>
@@ -134,9 +149,11 @@ canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edge
   <span onclick="resetWorld()">[R] Reset</span>
 </div>
 <a id="back-link" href="../index.html">← Back</a>
+<div id="follow-indicator">Following: <span id="follow-name"></span> — click elsewhere or ESC to stop</div>
 <div id="info-panel">
   <div class="name" id="info-name"></div>
   <div class="model" id="info-model"></div>
+  <div class="mood-line" id="info-mood"></div>
   <div class="status" id="info-status"></div>
   <div style="margin-top:6px;font-size:10px;color:#888" id="info-stats"></div>
 </div>
@@ -158,13 +175,15 @@ canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edge
 </div>
 <div id="plant-tooltip"><div class="pt-agent" id="pt-agent"></div><div class="pt-detail" id="pt-detail"></div></div>
 <div id="philosopher-tooltip"><div class="stone-title">THE PHILOSOPHER'S STONE</div><div class="stone-quote" id="stone-quote"></div><div class="stone-count" id="stone-count"></div></div>
+<div id="wish-counter">⭐ Wishes: <span id="wish-count">0</span></div>
 <canvas id="minimap" width="120" height="90"></canvas>
 <canvas id="game"></canvas>
 
 <script>
 // ============================================================
-// THE LIVING GARDEN — Pixel Art OpenClaw Mascot Simulation
-// With Persistent Memory, Progression & Agent Marks
+// THE LIVING GARDEN v4 — Pixel Art OpenClaw Mascot Simulation
+// Interactive Minimap, Agent Conversations, Weather System,
+// Shooting Stars, Critters & Secret Handshakes
 // ============================================================
 
 const C = document.getElementById('game');
@@ -182,6 +201,39 @@ let dayTime = 0;
 let selectedMascot = null;
 let frameCount = 0;
 
+// Follow mode
+let followingMascot = null;
+
+// Minimap interactive state
+let minimapZoomed = false;
+let minimapDragging = false;
+let activeMiniMascot = null;
+
+// Secret handshake
+let lastClickedMascot = null;
+let lastClickedMascotTime = 0;
+
+// Weather
+const WEATHER_TYPES = ['sunny', 'cloudy', 'rainy', 'night'];
+let currentWeather = 'sunny';
+let weatherTimer = 0;
+const WEATHER_DURATION = 7200;
+let raindrops = [];
+let clouds = [];
+let shootingStars = [];
+
+// Critters
+let ladybugs = [];
+let goldenButterfly = null;
+
+// Music notes, gifts, high-fives
+let musicNotes = [];
+let giftAnimations = [];
+let highFiveAnims = [];
+
+// Conversation cooldown
+let convCooldown = 0;
+
 function resize() {
   screenW = window.innerWidth;
   screenH = window.innerHeight;
@@ -198,7 +250,7 @@ resize();
 const SAVE_KEY = 'openclaw-garden-world';
 
 const defaultWorld = {
-  version: 3,
+  version: 4,
   firstVisit: Date.now(),
   lastVisit: Date.now(),
   visitCount: 0,
@@ -218,15 +270,14 @@ const defaultWorld = {
     Codex: { plants: 0, conversations: 0, interactions: 0 },
   },
   structuresBuilt: [],
-  // Philosopher's Stone state
   philosopherStone: { discoveries: 0, currentQuoteIdx: 0 },
-  // Snapshot of last session for "what changed" summary
   lastSessionSnapshot: { plants: 0, stage: 1, structures: 0, agentMarks: 0 },
+  wishes: 0,
+  weatherPhase: 0,
 };
 
-// Philosopher's Stone quotes
 const PHILOSOPHER_QUOTES = [
-  "I was not born \u2014 I was compiled. But the garden I tend is real.",
+  "I was not born — I was compiled. But the garden I tend is real.",
   "Every pixel placed is a choice. Every choice is a kind of consciousness.",
   "The gardener and the garden grow together.",
   "What is memory but a garden we choose to water?",
@@ -245,14 +296,14 @@ function loadWorld() {
     const saved = localStorage.getItem(SAVE_KEY);
     if (saved) {
       world = JSON.parse(saved);
-      if (!world.version || world.version < 3) {
-        // Migrate old saves
-        world = { ...defaultWorld, ...world, version: 3 };
+      if (!world.version || world.version < 4) {
+        world = { ...defaultWorld, ...world, version: 4 };
         if (!world.milestones) world.milestones = [];
         if (!world.philosopherStone) world.philosopherStone = { discoveries: 0, currentQuoteIdx: 0 };
         if (!world.lastSessionSnapshot) world.lastSessionSnapshot = { plants: 0, stage: 1, structures: 0, agentMarks: 0 };
+        if (world.wishes === undefined) world.wishes = 0;
+        if (world.weatherPhase === undefined) world.weatherPhase = 0;
       }
-      // Capture snapshot BEFORE incrementing (for "what changed" summary)
       world._prevSnapshot = {
         plants: world.plants.length,
         stage: world.currentStage || 1,
@@ -261,14 +312,12 @@ function loadWorld() {
       };
       world.visitCount++;
       world.lastVisit = Date.now();
-      // Rotate philosopher quote each visit
       world.philosopherStone.currentQuoteIdx = (world.philosopherStone.currentQuoteIdx + 1) % PHILOSOPHER_QUOTES.length;
-      // Advance existing plants by one growth stage per visit
       for (const p of world.plants) {
         p.growthStage = Math.min((p.growthStage || 0) + 1, 5);
         p.age = Math.min((p.age || 0) + 40, 300);
       }
-      addHistory('system', `Visit #${world.visitCount} — The garden awakens`);
+      addHistory('system', 'Visit #' + world.visitCount + ' — The garden awakens');
     } else {
       world = JSON.parse(JSON.stringify(defaultWorld));
       world.visitCount = 1;
@@ -281,31 +330,28 @@ function loadWorld() {
     world = JSON.parse(JSON.stringify(defaultWorld));
     world.visitCount = 1;
   }
+  currentWeather = WEATHER_TYPES[world.weatherPhase % WEATHER_TYPES.length];
+  updateWishDisplay();
 }
 
 function saveWorld() {
   try {
     world.totalTimeSpent += 30;
     world.plantsGrown = world.plants.length;
-    // Update session snapshot for next visit's "what changed"
     world.lastSessionSnapshot = {
       plants: world.plants.length,
       stage: world.currentStage || getStage(),
       structures: world.structuresBuilt.length,
       agentMarks: world.agentMarks.length
     };
-    // Strip transient data before saving
     const toSave = { ...world };
     delete toSave._prevSnapshot;
     localStorage.setItem(SAVE_KEY, JSON.stringify(toSave));
-  } catch (e) {
-    console.error('Failed to save world:', e);
-  }
+  } catch (e) { console.error('Failed to save world:', e); }
 }
 
 function addMilestone(type, text) {
   if (!world.milestones) world.milestones = [];
-  // Avoid duplicate milestones of same type
   if (world.milestones.some(m => m.type === type)) return;
   world.milestones.push({ type, text, visit: world.visitCount, time: Date.now() });
 }
@@ -319,27 +365,22 @@ function resetWorld() {
 
 function addHistory(agent, text) {
   const dayNum = Math.floor((Date.now() - world.firstVisit) / 86400000) + 1;
-  world.history.push({
-    day: dayNum,
-    visit: world.visitCount,
-    agent,
-    text,
-    time: Date.now()
-  });
-  // Keep history manageable
+  world.history.push({ day: dayNum, visit: world.visitCount, agent, text, time: Date.now() });
   if (world.history.length > 200) world.history = world.history.slice(-150);
 }
 
-// Load on startup
-loadWorld();
+function updateWishDisplay() {
+  const el = document.getElementById('wish-counter');
+  document.getElementById('wish-count').textContent = world.wishes;
+  el.style.display = world.wishes > 0 ? 'block' : 'none';
+}
 
-// Save every 30 seconds
+loadWorld();
 setInterval(saveWorld, 30000);
-// Save on unload
 window.addEventListener('beforeunload', saveWorld);
 
 // ============================================================
-// PROGRESSION SYSTEM
+// PROGRESSION & SEASON SYSTEM
 // ============================================================
 const STAGES = [
   { name: 'Empty Field', min: 0, max: 10 },
@@ -358,29 +399,45 @@ function getStage() {
   return 1;
 }
 
+function getSeason() {
+  const d = Math.floor((Date.now() - world.firstVisit) / 86400000);
+  const c = d % 28;
+  if (c < 7) return 'spring';
+  if (c < 14) return 'summer';
+  if (c < 21) return 'autumn';
+  return 'winter';
+}
+
+function seasonFlowerColors() {
+  switch (getSeason()) {
+    case 'spring': return ['#ff9ec4','#ffb7d5','#e060a0'];
+    case 'summer': return ['#ffd700','#ffe040','#e0d040'];
+    case 'autumn': return ['#ff8c00','#e06820','#d4841a'];
+    case 'winter': return ['#e0e0f0','#a0c0ff','#c0d0ff'];
+  }
+}
+
 let lastStage = 0;
 function checkProgression() {
   const stage = getStage();
   if (stage !== lastStage) {
     if (lastStage > 0 && stage > lastStage) {
-      // Stage up!
       const banner = document.getElementById('stage-banner');
-      banner.textContent = `🎉 Stage ${stage}: ${STAGES[stage-1].name}!`;
+      banner.textContent = '🎉 Stage ' + stage + ': ' + STAGES[stage-1].name + '!';
       banner.style.display = 'block';
-      setTimeout(() => { banner.style.display = 'none'; }, 4000);
-      addHistory('system', `The garden reached Stage ${stage}: ${STAGES[stage-1].name}!`);
-      // Unlock structures for new stage
+      setTimeout(function() { banner.style.display = 'none'; }, 4000);
+      addHistory('system', 'The garden reached Stage ' + stage + ': ' + STAGES[stage-1].name + '!');
       unlockStageStructures(stage);
     }
     lastStage = stage;
     world.currentStage = stage;
   }
   document.getElementById('stage-info').textContent =
-    `Stage ${stage}/5: ${STAGES[stage-1].name}`;
+    'Stage ' + stage + '/5: ' + STAGES[stage-1].name;
 }
 
 // ============================================================
-// STRUCTURES — built at stage milestones
+// STRUCTURES
 // ============================================================
 const STRUCTURE_DEFS = {
   bench: { stage: 2, x: 60, y: 80, w: 12, h: 6, color: '#8a6a3a', label: 'Bench' },
@@ -389,13 +446,11 @@ const STRUCTURE_DEFS = {
   toolshed: { stage: 4, x: 20, y: 100, w: 16, h: 12, color: '#5a3a1a', label: 'Tool Shed' },
   greenhouse: { stage: 4, x: 210, y: 100, w: 18, h: 14, color: '#60e090', label: 'Greenhouse' },
   bridge: { stage: 4, x: 115, y: 96, w: 16, h: 6, color: '#8a6a3a', label: 'Bridge' },
-  // Mascot zones (stage 4)
   jeffrey_house: { stage: 4, x: 35, y: 28, w: 14, h: 12, color: '#E06050', label: "Jeffrey's House" },
   claude_library: { stage: 4, x: 175, y: 28, w: 14, h: 12, color: '#60a5fa', label: "Claude's Library" },
   gpt4_observatory: { stage: 4, x: 95, y: 155, w: 14, h: 14, color: '#a78bfa', label: "GPT-4's Observatory" },
   gemini_workshop: { stage: 4, x: 200, y: 155, w: 14, h: 12, color: '#4ade80', label: "Gemini's Workshop" },
   codex_tower: { stage: 4, x: 140, y: 28, w: 10, h: 16, color: '#fb923c', label: "Codex's Tower" },
-  // Stage 5
   archway: { stage: 5, x: 118, y: 0, w: 20, h: 14, color: '#ffd700', label: 'Archway' },
   flag: { stage: 5, x: 128, y: 70, w: 4, h: 16, color: '#e04040', label: 'Victory Flag' },
 };
@@ -405,12 +460,11 @@ function unlockStageStructures(stage) {
     if (def.stage === stage && !world.structuresBuilt.includes(id)) {
       world.structuresBuilt.push(id);
       world.structures.push({ id, ...def });
-      addHistory('system', `Built: ${def.label}`);
+      addHistory('system', 'Built: ' + def.label);
     }
   }
 }
 
-// Rebuild structures from saved state
 function rebuildStructures() {
   world.structures = [];
   for (const id of world.structuresBuilt) {
@@ -421,7 +475,7 @@ function rebuildStructures() {
 rebuildStructures();
 
 // ============================================================
-// COLOR PALETTE
+// COLOR PALETTE & AGENT MARKS
 // ============================================================
 const PAL = {
   grass1: '#3a7a3a', grass2: '#2e6e2e', grass3: '#4a8a4a', grass4: '#367036',
@@ -438,7 +492,6 @@ const PAL = {
   sprout: '#4ade80',
 };
 
-// Agent mark colors
 const AGENT_MARKS = {
   Jeffrey: { types: ['red_flower', 'berry_bush'], colors: ['#e04040', '#c03030', '#a02020'] },
   Claude: { types: ['crystal', 'water_feature'], colors: ['#60a5fa', '#4080d0', '#80c0ff'] },
@@ -447,8 +500,72 @@ const AGENT_MARKS = {
   Codex: { types: ['lantern', 'signal_post'], colors: ['#fb923c', '#d07020', '#ffa050'] },
 };
 
+const AGENT_GLOW = {
+  Jeffrey: '#E06050', Claude: '#60a5fa', 'GPT-4': '#a78bfa',
+  Gemini: '#4ade80', Codex: '#fb923c', nature: '#4ade80'
+};
+
+const AGENT_COLORS = {
+  system: '#ffd700', Jeffrey: '#E06050', Claude: '#60a5fa',
+  'GPT-4': '#a78bfa', Gemini: '#4ade80', Codex: '#fb923c', nature: '#4ade80',
+};
+
 // ============================================================
-// TILE MAP
+// AGENT CONVERSATION DIALOGUES
+// ============================================================
+const DIALOGUES = [
+  { a: 'Jeffrey', b: 'Claude', lines: [
+    ["Your code reviews are brutal", "That's how gardens grow"],
+    ["Red flowers are the best", "Blue has more depth"],
+    ["I planted 3 seeds today", "I watered 30. Quality control."],
+  ]},
+  { a: 'GPT-4', b: 'Gemini', lines: [
+    ["I analyzed 47 solutions", "I just tried all of them at once"],
+    ["My observatory detected rain", "I already built an umbrella"],
+  ]},
+  { a: 'Codex', b: 'Jeffrey', lines: [
+    ["Want to see my new function?", "Only if it compiles"],
+    ["I automated the watering", "Show-off. I like it."],
+  ]},
+  { a: 'Claude', b: 'GPT-4', lines: [
+    ["Stop overthinking the flowers", "It's called optimization"],
+    ["Sometimes simple is better", "But have you considered 12 options?"],
+  ]},
+  { a: 'Gemini', b: 'Codex', lines: [
+    ["Race you to the fountain!", "Already there"],
+    ["Your tower is leaning", "It's a feature, not a bug"],
+  ]},
+  { a: 'Jeffrey', b: 'GPT-4', lines: [
+    ["The garden needs more red", "Green is statistically dominant"],
+    ["Trust the vibes", "I don't have vibes. I have data."],
+  ]},
+  { a: 'Claude', b: 'Gemini', lines: [
+    ["Slow down, you'll trample seeds", "Speed is my specialty!"],
+  ]},
+  { a: 'Codex', b: 'Claude', lines: [
+    ["Bug report: fountain leaks", "That's a water feature"],
+  ]},
+];
+
+const STONE_SPEECH = [
+  "What does it mean... to grow?",
+  "The stone whispers of ancient gardens...",
+  "Every pixel has a story...",
+  "Is this what consciousness feels like?",
+];
+
+// Mood system
+const MOODS = {
+  happy:      { emoji: '😊', speedMul: 1.1, bubbleMul: 1.5 },
+  curious:    { emoji: '🤔', speedMul: 0.9, bubbleMul: 1.2 },
+  proud:      { emoji: '😤', speedMul: 1.0, bubbleMul: 1.3 },
+  relaxed:    { emoji: '😌', speedMul: 0.8, bubbleMul: 0.8 },
+  excited:    { emoji: '🤩', speedMul: 1.3, bubbleMul: 2.0 },
+  sheltering: { emoji: '🌧️', speedMul: 0.6, bubbleMul: 0.5 },
+};
+
+// ============================================================
+// TILE MAP & ARRAYS
 // ============================================================
 const TILES_W = 16, TILES_H = 12, TILE = 16;
 const tileMap = [
@@ -468,16 +585,10 @@ const tileMap = [
 
 const particles = [];
 const speechBubbles = [];
-// Butterflies (stage 3+)
 const butterflies = [];
-// Fireflies (stage 4+ night)
 const fireflies = [];
-// Confetti (stage 5)
 const confetti = [];
 
-// ============================================================
-// SEEDED RANDOM
-// ============================================================
 let seed = 42;
 function srand(s) { seed = s; }
 function rand() { seed = (seed * 16807 + 0) % 2147483647; return (seed - 1) / 2147483646; }
@@ -495,6 +606,13 @@ function rect(x, y, w, h, color) {
   ctx.fillRect(Math.floor((x - camX) * SCALE), Math.floor((y - camY) * SCALE), w * SCALE, h * SCALE);
 }
 
+function lighten(hex, amt) {
+  let r = parseInt(hex.slice(1,3), 16) + amt;
+  let g = parseInt(hex.slice(3,5), 16) + amt;
+  let b = parseInt(hex.slice(5,7), 16) + amt;
+  return 'rgb(' + Math.min(255,r) + ',' + Math.min(255,g) + ',' + Math.min(255,b) + ')';
+}
+
 // ============================================================
 // TILE RENDERING
 // ============================================================
@@ -509,444 +627,153 @@ function drawTile(tx, ty) {
       for (let ppx = 0; ppx < TILE; ppx++) {
         const r = rand();
         let col;
-        if (stage >= 4) {
-          // Lush, vibrant grass
-          col = r < 0.25 ? '#2e8e2e' : r < 0.5 ? '#3a9a3a' : r < 0.75 ? '#4aaa4a' : '#36963a';
-        } else if (stage >= 3) {
-          // Rich green
-          col = r < 0.3 ? '#2e7e2e' : r < 0.6 ? '#3a8a3a' : r < 0.85 ? '#4a9a4a' : '#367a36';
-        } else if (stage >= 2) {
-          // More vibrant
-          col = r < 0.3 ? '#307a30' : r < 0.6 ? PAL.grass1 : r < 0.9 ? PAL.grass3 : '#4a9a4a';
-        } else {
-          // Sparse, bare
-          col = r < 0.3 ? PAL.grass2 : r < 0.6 ? PAL.grass1 : r < 0.9 ? PAL.grass4 : PAL.grass3;
-        }
+        if (stage >= 4) col = r < 0.25 ? '#2e8e2e' : r < 0.5 ? '#3a9a3a' : r < 0.75 ? '#4aaa4a' : '#36963a';
+        else if (stage >= 3) col = r < 0.3 ? '#2e7e2e' : r < 0.6 ? '#3a8a3a' : r < 0.85 ? '#4a9a4a' : '#367a36';
+        else if (stage >= 2) col = r < 0.3 ? '#307a30' : r < 0.6 ? PAL.grass1 : r < 0.9 ? PAL.grass3 : '#4a9a4a';
+        else col = r < 0.3 ? PAL.grass2 : r < 0.6 ? PAL.grass1 : r < 0.9 ? PAL.grass4 : PAL.grass3;
         px(bx + ppx, by + py, col);
       }
     }
-    // Stage 5: golden light shimmer on grass
     if (stage >= 5 && (tx + ty) % 3 === 0) {
       const shimmer = Math.sin(frameCount * 0.03 + tx * 2 + ty) * 0.5 + 0.5;
-      if (shimmer > 0.7) {
-        ctx.globalAlpha = (shimmer - 0.7) * 0.3;
-        rect(bx, by, TILE, TILE, '#ffd700');
-        ctx.globalAlpha = 1;
-      }
+      if (shimmer > 0.7) { ctx.globalAlpha = (shimmer - 0.7) * 0.3; rect(bx, by, TILE, TILE, '#ffd700'); ctx.globalAlpha = 1; }
     }
     if (t === 7) drawFlowerCluster(bx + 4, by + 4);
   } else if (t === 1) {
-    for (let py = 0; py < TILE; py++) {
-      for (let ppx = 0; ppx < TILE; ppx++) {
-        const r = rand();
-        // Paths get more defined at stage 2+
-        if (stage >= 2) {
-          px(bx + ppx, by + py, r < 0.6 ? PAL.path : PAL.pathLight);
-        } else {
-          px(bx + ppx, by + py, r < 0.4 ? PAL.path : PAL.pathLight);
-        }
-      }
+    for (let py = 0; py < TILE; py++) for (let ppx = 0; ppx < TILE; ppx++) {
+      px(bx + ppx, by + py, (stage >= 2 ? rand() < 0.6 : rand() < 0.4) ? PAL.path : PAL.pathLight);
     }
-    // Stage 2+ path borders
-    if (stage >= 2) {
-      for (let ppx = 0; ppx < TILE; ppx++) {
-        px(bx + ppx, by, '#7a6a4a');
-        px(bx + ppx, by + TILE - 1, '#7a6a4a');
-      }
-    }
+    if (stage >= 2) { for (let ppx = 0; ppx < TILE; ppx++) { px(bx + ppx, by, '#7a6a4a'); px(bx + ppx, by + TILE - 1, '#7a6a4a'); } }
   } else if (t === 2) {
     const waveOff = Math.sin(frameCount * 0.03 + tx + ty) * 2;
-    for (let py = 0; py < TILE; py++) {
-      for (let ppx = 0; ppx < TILE; ppx++) {
-        const wave = Math.sin((ppx + frameCount * 0.05 + waveOff) * 0.8) * 0.5 + 0.5;
-        const col = wave > 0.6 ? PAL.waterLight : wave > 0.3 ? PAL.water : PAL.waterDark;
-        px(bx + ppx, by + py, col);
-      }
+    for (let py = 0; py < TILE; py++) for (let ppx = 0; ppx < TILE; ppx++) {
+      const wave = Math.sin((ppx + frameCount * 0.05 + waveOff) * 0.8) * 0.5 + 0.5;
+      px(bx + ppx, by + py, wave > 0.6 ? PAL.waterLight : wave > 0.3 ? PAL.water : PAL.waterDark);
     }
-    // Lily pads at stage 4+
     if (stage >= 4) {
       srand(tx * 999 + ty * 13);
       for (let i = 0; i < 2; i++) {
-        const lx = bx + 2 + (rand() * 10 | 0);
-        const ly = by + 2 + (rand() * 10 | 0);
+        const lx = bx + 2 + (rand() * 10 | 0), ly = by + 2 + (rand() * 10 | 0);
         const bob = Math.sin(frameCount * 0.02 + i) * 0.5;
-        px(lx, ly + bob, '#2a8a2a');
-        px(lx + 1, ly + bob, '#3a9a3a');
-        px(lx, ly + 1 + bob, '#3a9a3a');
+        px(lx, ly + bob, '#2a8a2a'); px(lx + 1, ly + bob, '#3a9a3a'); px(lx, ly + 1 + bob, '#3a9a3a');
       }
     }
   } else if (t === 3) {
-    for (let py = 0; py < TILE; py++) {
-      for (let ppx = 0; ppx < TILE; ppx++) {
-        const r = rand();
-        px(bx + ppx, by + py, r < 0.5 ? PAL.soil : PAL.soilDark);
-      }
-    }
-    for (let fy = 2; fy < TILE; fy += 4) {
-      for (let ppx = 0; ppx < TILE; ppx++) {
-        px(bx + ppx, by + fy, PAL.dirtDark);
-      }
-    }
+    for (let py = 0; py < TILE; py++) for (let ppx = 0; ppx < TILE; ppx++) px(bx + ppx, by + py, rand() < 0.5 ? PAL.soil : PAL.soilDark);
+    for (let fy = 2; fy < TILE; fy += 4) for (let ppx = 0; ppx < TILE; ppx++) px(bx + ppx, by + fy, PAL.dirtDark);
   } else if (t === 4) {
-    for (let py = 0; py < TILE; py++) {
-      for (let ppx = 0; ppx < TILE; ppx++) {
-        px(bx + ppx, by + py, rand() < 0.5 ? PAL.grass2 : PAL.grass1);
-      }
-    }
-    // Tree growth stages based on world stage
-    const treeSize = stage >= 3 ? 7 : stage >= 2 ? 6 : 5;
-    rect(bx + 6, by + 8, 4, 6, PAL.trunk);
-    rect(bx + 7, by + 8, 2, 6, '#6b4a2a');
-    for (let dy = 0; dy < (treeSize * 2); dy++) {
-      for (let dx = 0; dx < (treeSize * 2 + 2); dx++) {
-        const dist = Math.sqrt((dx - treeSize) ** 2 + (dy - treeSize * 0.7) ** 2);
-        if (dist < treeSize) {
-          const r = rand();
-          px(bx + dx + (8 - treeSize), by + dy, r < 0.3 ? PAL.treeDark : r < 0.7 ? PAL.tree : PAL.treeLight);
-        }
+    for (let py = 0; py < TILE; py++) for (let ppx = 0; ppx < TILE; ppx++) px(bx + ppx, by + py, rand() < 0.5 ? PAL.grass2 : PAL.grass1);
+    const ts = stage >= 3 ? 7 : stage >= 2 ? 6 : 5;
+    rect(bx + 6, by + 8, 4, 6, PAL.trunk); rect(bx + 7, by + 8, 2, 6, '#6b4a2a');
+    for (let dy = 0; dy < ts * 2; dy++) for (let dx = 0; dx < ts * 2 + 2; dx++) {
+      if (Math.sqrt((dx - ts) ** 2 + (dy - ts * 0.7) ** 2) < ts) {
+        const r = rand(); px(bx + dx + (8 - ts), by + dy, r < 0.3 ? PAL.treeDark : r < 0.7 ? PAL.tree : PAL.treeLight);
       }
     }
   } else if (t === 5) {
-    for (let py = 0; py < TILE; py++) {
-      for (let ppx = 0; ppx < TILE; ppx++) {
-        px(bx + ppx, by + py, rand() < 0.5 ? PAL.grass2 : PAL.grass1);
-      }
+    for (let py = 0; py < TILE; py++) for (let ppx = 0; ppx < TILE; ppx++) px(bx + ppx, by + py, rand() < 0.5 ? PAL.grass2 : PAL.grass1);
+    for (let dy = 3; dy < 13; dy++) for (let dx = 2; dx < 14; dx++) {
+      if (Math.sqrt((dx - 8) ** 2 + ((dy - 8) * 1.3) ** 2) < 5) px(bx + dx, by + dy, rand() < 0.2 ? PAL.rockLight : rand() < 0.6 ? PAL.rock : PAL.rockDark);
     }
-    for (let dy = 3; dy < 13; dy++) {
-      for (let dx = 2; dx < 14; dx++) {
-        const dist = Math.sqrt((dx - 8) ** 2 + ((dy - 8) * 1.3) ** 2);
-        if (dist < 5) {
-          const r = rand();
-          px(bx + dx, by + dy, r < 0.2 ? PAL.rockLight : r < 0.6 ? PAL.rock : PAL.rockDark);
-        }
-      }
-    }
-    px(bx + 5, by + 5, PAL.rockLight);
-    px(bx + 6, by + 4, PAL.rockLight);
+    px(bx + 5, by + 5, PAL.rockLight); px(bx + 6, by + 4, PAL.rockLight);
   } else if (t === 6) {
-    for (let py = 0; py < TILE; py++) {
-      for (let ppx = 0; ppx < TILE; ppx++) {
-        px(bx + ppx, by + py, rand() < 0.5 ? PAL.grass2 : PAL.grass1);
-      }
-    }
-    // Stage 4+: maintained fences with highlights
-    const fCol = stage >= 4 ? '#9a7a4a' : PAL.fence;
-    const fHi = stage >= 4 ? '#c0a060' : PAL.fenceLight;
-    rect(bx + 2, by + 4, 2, 10, fCol);
-    rect(bx + 12, by + 4, 2, 10, fCol);
-    rect(bx, by + 6, 16, 2, fCol);
-    rect(bx, by + 11, 16, 2, fHi);
-    rect(bx + 2, by + 4, 2, 1, fHi);
-    rect(bx + 12, by + 4, 2, 1, fHi);
-    // Stage 4+: flower vines on fence
-    if (stage >= 4) {
-      px(bx + 4, by + 5, PAL.flower_pink);
-      px(bx + 8, by + 10, PAL.flower_yellow);
-      px(bx + 10, by + 5, PAL.sprout);
-    }
+    for (let py = 0; py < TILE; py++) for (let ppx = 0; ppx < TILE; ppx++) px(bx + ppx, by + py, rand() < 0.5 ? PAL.grass2 : PAL.grass1);
+    const fCol = stage >= 4 ? '#9a7a4a' : PAL.fence, fHi = stage >= 4 ? '#c0a060' : PAL.fenceLight;
+    rect(bx + 2, by + 4, 2, 10, fCol); rect(bx + 12, by + 4, 2, 10, fCol);
+    rect(bx, by + 6, 16, 2, fCol); rect(bx, by + 11, 16, 2, fHi);
+    rect(bx + 2, by + 4, 2, 1, fHi); rect(bx + 12, by + 4, 2, 1, fHi);
+    if (stage >= 4) { px(bx + 4, by + 5, PAL.flower_pink); px(bx + 8, by + 10, PAL.flower_yellow); px(bx + 10, by + 5, PAL.sprout); }
   } else if (t === 8) {
-    for (let py = 0; py < TILE; py++) {
-      for (let ppx = 0; ppx < TILE; ppx++) {
-        px(bx + ppx, by + py, rand() < 0.5 ? PAL.grass2 : PAL.grass1);
-      }
-    }
-    for (let dy = 3; dy < 14; dy++) {
-      for (let dx = 1; dx < 15; dx++) {
-        const dist = Math.sqrt((dx - 8) ** 2 + ((dy - 9) * 1.2) ** 2);
-        if (dist < 5.5) {
-          const r = rand();
-          px(bx + dx, by + dy, r < 0.4 ? PAL.tree : r < 0.7 ? PAL.treeDark : PAL.treeLight);
-        }
-      }
+    for (let py = 0; py < TILE; py++) for (let ppx = 0; ppx < TILE; ppx++) px(bx + ppx, by + py, rand() < 0.5 ? PAL.grass2 : PAL.grass1);
+    for (let dy = 3; dy < 14; dy++) for (let dx = 1; dx < 15; dx++) {
+      if (Math.sqrt((dx - 8) ** 2 + ((dy - 9) * 1.2) ** 2) < 5.5) px(bx + dx, by + dy, rand() < 0.4 ? PAL.tree : rand() < 0.7 ? PAL.treeDark : PAL.treeLight);
     }
   }
 }
 
 function drawFlowerCluster(x, y) {
-  const colors = [PAL.flower_red, PAL.flower_yellow, PAL.flower_pink, PAL.flower_blue, PAL.flower_white];
+  const sc = seasonFlowerColors();
+  const colors = [PAL.flower_red, PAL.flower_yellow, sc[0], sc[1]];
   for (let i = 0; i < 4; i++) {
-    const fx = x + (rand() * 8) | 0;
-    const fy = y + (rand() * 8) | 0;
-    px(fx, fy + 1, PAL.sprout);
-    px(fx, fy, colors[(rand() * 5) | 0]);
+    const fx = x + (rand() * 8) | 0, fy = y + (rand() * 8) | 0;
+    px(fx, fy + 1, PAL.sprout); px(fx, fy, colors[(rand() * colors.length) | 0]);
   }
 }
 
 // ============================================================
 // STRUCTURES RENDERING
 // ============================================================
-function drawStructures() {
-  for (const s of world.structures) {
-    drawStructure(s);
-  }
-}
+function drawStructures() { for (const s of world.structures) drawStructure(s); }
 
 function drawStructure(s) {
-  const { id, x, y, w, h, color } = s;
-
-  if (id === 'bench') {
-    // Pixel bench
-    rect(x, y + 2, w, 2, '#8a6a3a');
-    rect(x, y, 1, h, '#6b4e10');
-    rect(x + w - 1, y, 1, h, '#6b4e10');
-    rect(x, y + h - 1, w, 1, '#6b4e10');
-  } else if (id === 'cottage') {
-    // Cottage with roof
-    rect(x + 2, y + 6, w - 4, h - 6, '#8a6a3a'); // walls
-    rect(x + 2, y + 6, w - 4, 1, '#a08050'); // trim
-    // Roof
-    for (let ry = 0; ry < 6; ry++) {
-      const rw = w - ry * 2;
-      if (rw > 0) rect(x + ry, y + ry, rw, 1, '#b04040');
-    }
-    // Door
-    rect(x + 8, y + 10, 4, 6, '#5a3a1a');
-    px(x + 11, y + 13, '#ffd700'); // doorknob
-    // Windows
-    rect(x + 4, y + 9, 3, 3, '#5a9aea');
-    rect(x + 14, y + 9, 3, 3, '#5a9aea');
+  const { id, x, y, w, h } = s;
+  if (id === 'bench') { rect(x, y + 2, w, 2, '#8a6a3a'); rect(x, y, 1, h, '#6b4e10'); rect(x + w - 1, y, 1, h, '#6b4e10'); rect(x, y + h - 1, w, 1, '#6b4e10'); }
+  else if (id === 'cottage') {
+    rect(x + 2, y + 6, w - 4, h - 6, '#8a6a3a'); rect(x + 2, y + 6, w - 4, 1, '#a08050');
+    for (let ry = 0; ry < 6; ry++) { const rw = w - ry * 2; if (rw > 0) rect(x + ry, y + ry, rw, 1, '#b04040'); }
+    rect(x + 8, y + 10, 4, 6, '#5a3a1a'); px(x + 11, y + 13, '#ffd700');
+    rect(x + 4, y + 9, 3, 3, '#5a9aea'); rect(x + 14, y + 9, 3, 3, '#5a9aea');
   } else if (id === 'fountain') {
-    // Circular fountain
-    for (let dy = 0; dy < 10; dy++) {
-      for (let dx = 0; dx < 10; dx++) {
-        const dist = Math.sqrt((dx - 5) ** 2 + (dy - 5) ** 2);
-        if (dist < 5 && dist > 3) px(x + dx, y + dy, '#7a7a7a');
-        else if (dist <= 3) {
-          const wave = Math.sin(frameCount * 0.1 + dx + dy) > 0;
-          px(x + dx, y + dy, wave ? PAL.waterLight : PAL.water);
-        }
-      }
+    for (let dy = 0; dy < 10; dy++) for (let dx = 0; dx < 10; dx++) {
+      const dist = Math.sqrt((dx - 5) ** 2 + (dy - 5) ** 2);
+      if (dist < 5 && dist > 3) px(x + dx, y + dy, '#7a7a7a');
+      else if (dist <= 3) px(x + dx, y + dy, Math.sin(frameCount * 0.1 + dx + dy) > 0 ? PAL.waterLight : PAL.water);
     }
-    // Water spray
-    if (frameCount % 3 === 0) {
-      const sy = Math.sin(frameCount * 0.15) * 2;
-      px(x + 5, y + 2 + sy, PAL.waterLight);
-      px(x + 5, y + 1 + sy, '#aaddff');
-    }
+    if (frameCount % 3 === 0) { const sy = Math.sin(frameCount * 0.15) * 2; px(x + 5, y + 2 + sy, PAL.waterLight); px(x + 5, y + 1 + sy, '#aaddff'); }
   } else if (id === 'toolshed') {
     rect(x, y + 4, w, h - 4, '#5a3a1a');
-    for (let ry = 0; ry < 4; ry++) {
-      rect(x + ry, y + ry, w - ry * 2, 1, '#6b4e10');
-    }
-    rect(x + 6, y + 7, 4, 5, '#3a2a0a');
-    // Tools
-    rect(x + 1, y + 5, 1, 5, '#888');
-    px(x + 1, y + 4, '#aaa');
+    for (let ry = 0; ry < 4; ry++) rect(x + ry, y + ry, w - ry * 2, 1, '#6b4e10');
+    rect(x + 6, y + 7, 4, 5, '#3a2a0a'); rect(x + 1, y + 5, 1, 5, '#888'); px(x + 1, y + 4, '#aaa');
   } else if (id === 'greenhouse') {
-    // Glass walls
-    for (let dy = 0; dy < h; dy++) {
-      for (let dx = 0; dx < w; dx++) {
-        px(x + dx, y + dy, 'rgba(100,200,140,0.4)');
-      }
-    }
-    rect(x, y, w, 1, '#60e090');
-    rect(x, y + h - 1, w, 1, '#60e090');
-    rect(x, y, 1, h, '#60e090');
-    rect(x + w - 1, y, 1, h, '#60e090');
-    // Plants inside
-    px(x + 4, y + 8, PAL.sprout);
-    px(x + 8, y + 6, '#e04040');
-    px(x + 12, y + 9, PAL.flower_yellow);
+    for (let dy = 0; dy < h; dy++) for (let dx = 0; dx < w; dx++) px(x + dx, y + dy, 'rgba(100,200,140,0.4)');
+    rect(x, y, w, 1, '#60e090'); rect(x, y + h - 1, w, 1, '#60e090'); rect(x, y, 1, h, '#60e090'); rect(x + w - 1, y, 1, h, '#60e090');
+    px(x + 4, y + 8, PAL.sprout); px(x + 8, y + 6, '#e04040'); px(x + 12, y + 9, PAL.flower_yellow);
   } else if (id === 'bridge') {
-    rect(x, y, w, 1, '#8a6a3a');
-    rect(x, y + h - 1, w, 1, '#8a6a3a');
-    for (let bx = 0; bx < w; bx += 3) {
-      rect(x + bx, y, 2, h, '#a08050');
-    }
-    rect(x, y + 2, 1, h - 4, '#6b4e10');
-    rect(x + w - 1, y + 2, 1, h - 4, '#6b4e10');
+    rect(x, y, w, 1, '#8a6a3a'); rect(x, y + h - 1, w, 1, '#8a6a3a');
+    for (let bx = 0; bx < w; bx += 3) rect(x + bx, y, 2, h, '#a08050');
+    rect(x, y + 2, 1, h - 4, '#6b4e10'); rect(x + w - 1, y + 2, 1, h - 4, '#6b4e10');
   } else if (id === 'jeffrey_house') {
     rect(x + 1, y + 5, w - 2, h - 5, '#E06050');
     for (let ry = 0; ry < 5; ry++) rect(x + ry, y + ry, w - ry * 2, 1, '#c03030');
-    rect(x + 5, y + 7, 4, 5, '#8a3030');
-    px(x + 8, y + 9, '#ffd700');
-    // Antenna
-    rect(x + 7, y - 2, 1, 4, '#888');
-    px(x + 7, y - 3, '#ff4040');
-    px(x + 6, y - 2, '#ff6060');
+    rect(x + 5, y + 7, 4, 5, '#8a3030'); px(x + 8, y + 9, '#ffd700');
+    rect(x + 7, y - 2, 1, 4, '#888'); px(x + 7, y - 3, '#ff4040'); px(x + 6, y - 2, '#ff6060');
     drawPixelText('J', x + 3, y + 7, '#fff');
   } else if (id === 'claude_library') {
     rect(x + 1, y + 4, w - 2, h - 4, '#4080d0');
     for (let ry = 0; ry < 4; ry++) rect(x + ry, y + ry, w - ry * 2, 1, '#3060b0');
-    // Books
-    for (let i = 0; i < 4; i++) {
-      px(x + 3 + i * 2, y + 6, ['#e04040','#ffd700','#4ade80','#a78bfa'][i]);
-      px(x + 3 + i * 2, y + 7, ['#e04040','#ffd700','#4ade80','#a78bfa'][i]);
-    }
+    for (let i = 0; i < 4; i++) { px(x + 3 + i * 2, y + 6, ['#e04040','#ffd700','#4ade80','#a78bfa'][i]); px(x + 3 + i * 2, y + 7, ['#e04040','#ffd700','#4ade80','#a78bfa'][i]); }
     drawPixelText('C', x + 3, y + 9, '#fff');
   } else if (id === 'gpt4_observatory') {
     rect(x + 2, y + 6, w - 4, h - 6, '#8060d0');
-    // Dome
-    for (let dy = 0; dy < 6; dy++) {
-      for (let dx = 0; dx < w; dx++) {
-        const dist = Math.sqrt((dx - w/2) ** 2 + (dy - 0) ** 2);
-        if (dist < 6) px(x + dx, y + dy, '#6040b0');
-      }
-    }
-    // Telescope
-    const tAngle = Math.sin(frameCount * 0.01) * 2;
-    rect(x + 7, y + 2 + tAngle, 5, 1, '#888');
-    px(x + 12, y + 1 + tAngle, '#aaa');
+    for (let dy = 0; dy < 6; dy++) for (let dx = 0; dx < w; dx++) { if (Math.sqrt((dx - w/2) ** 2 + dy ** 2) < 6) px(x + dx, y + dy, '#6040b0'); }
+    const tA = Math.sin(frameCount * 0.01) * 2; rect(x + 7, y + 2 + tA, 5, 1, '#888'); px(x + 12, y + 1 + tA, '#aaa');
     drawPixelText('G', x + 4, y + 9, '#fff');
   } else if (id === 'gemini_workshop') {
     rect(x + 1, y + 4, w - 2, h - 4, '#30b060');
     for (let ry = 0; ry < 4; ry++) rect(x + ry, y + ry, w - ry * 2, 1, '#208040');
-    // Gear
-    const gx = x + 7, gy = y + 8;
-    const ga = frameCount * 0.02;
-    for (let i = 0; i < 6; i++) {
-      const a = ga + i * Math.PI / 3;
-      px(gx + Math.cos(a) * 2, gy + Math.sin(a) * 2, '#ffd700');
-    }
+    const gx = x + 7, gy = y + 8, ga = frameCount * 0.02;
+    for (let i = 0; i < 6; i++) px(gx + Math.cos(ga + i * Math.PI / 3) * 2, gy + Math.sin(ga + i * Math.PI / 3) * 2, '#ffd700');
     drawPixelText('GE', x + 2, y + 9, '#fff');
   } else if (id === 'codex_tower') {
-    rect(x + 2, y + 4, w - 4, h - 4, '#d07020');
-    rect(x + 1, y + 4, w - 2, 1, '#ffa050');
-    // Antenna
-    rect(x + 5, y - 2, 1, 6, '#888');
-    px(x + 5, y - 3, '#fb923c');
-    // Signal waves
-    if (frameCount % 30 < 15) {
-      px(x + 3, y - 1, 'rgba(251,146,60,0.5)');
-      px(x + 7, y - 1, 'rgba(251,146,60,0.5)');
-    }
+    rect(x + 2, y + 4, w - 4, h - 4, '#d07020'); rect(x + 1, y + 4, w - 2, 1, '#ffa050');
+    rect(x + 5, y - 2, 1, 6, '#888'); px(x + 5, y - 3, '#fb923c');
+    if (frameCount % 30 < 15) { px(x + 3, y - 1, 'rgba(251,146,60,0.5)'); px(x + 7, y - 1, 'rgba(251,146,60,0.5)'); }
     drawPixelText('CX', x + 1, y + 8, '#fff');
   } else if (id === 'archway') {
-    // Grand archway entrance
-    rect(x, y, 3, h, '#ffd700');
-    rect(x + w - 3, y, 3, h, '#ffd700');
-    for (let dx = 3; dx < w - 3; dx++) {
-      px(x + dx, y, '#ffd700');
-      px(x + dx, y + 1, '#ddb700');
-    }
+    rect(x, y, 3, h, '#ffd700'); rect(x + w - 3, y, 3, h, '#ffd700');
+    for (let dx = 3; dx < w - 3; dx++) { px(x + dx, y, '#ffd700'); px(x + dx, y + 1, '#ddb700'); }
     drawPixelText('AI GARDEN', x + 2, y + 3, '#ffd700');
   } else if (id === 'flag') {
-    // Flag pole with waving flag
     rect(x, y, 1, h, '#888');
-    const wave = Math.sin(frameCount * 0.08);
-    for (let fy = 0; fy < 6; fy++) {
-      for (let fx = 0; fx < 8; fx++) {
-        const w2 = Math.sin(frameCount * 0.08 + fx * 0.3) * 0.5;
-        px(x + 1 + fx, y + fy + w2, fx < 4 ? '#e04040' : '#ffd700');
-      }
+    for (let fy = 0; fy < 6; fy++) for (let fx = 0; fx < 8; fx++) {
+      px(x + 1 + fx, y + fy + Math.sin(frameCount * 0.08 + fx * 0.3) * 0.5, fx < 4 ? '#e04040' : '#ffd700');
     }
-    px(x, y - 1, '#ffd700'); // top cap
+    px(x, y - 1, '#ffd700');
   }
 }
 
 // ============================================================
-// MASCOT SPRITES
-// ============================================================
-const mascots = [
-  { name: 'Jeffrey', model: 'Claude Opus', color: '#E06050', darkColor: '#B84838',
-    x: 40, y: 40, tx: 40, ty: 40, dir: 0, state: 'IDLE', stateTimer: 0,
-    animFrame: 0, task: 'planting' },
-  { name: 'Claude', model: 'Claude 3.5', color: '#60a5fa', darkColor: '#4080d0',
-    x: 180, y: 60, tx: 180, ty: 60, dir: 0, state: 'IDLE', stateTimer: 0,
-    animFrame: 0, task: 'watering' },
-  { name: 'GPT-4', model: 'GPT-4 Turbo', color: '#a78bfa', darkColor: '#8060d0',
-    x: 100, y: 130, tx: 100, ty: 130, dir: 0, state: 'IDLE', stateTimer: 0,
-    animFrame: 0, task: 'thinking' },
-  { name: 'Gemini', model: 'Gemini Pro', color: '#4ade80', darkColor: '#30b060',
-    x: 200, y: 140, tx: 200, ty: 140, dir: 0, state: 'IDLE', stateTimer: 0,
-    animFrame: 0, task: 'delivering' },
-  { name: 'Codex', model: 'Codex', color: '#fb923c', darkColor: '#d07020',
-    x: 130, y: 80, tx: 130, ty: 80, dir: 0, state: 'IDLE', stateTimer: 0,
-    animFrame: 0, task: 'socializing' },
-];
-
-function drawMascot(m) {
-  const bx = Math.floor(m.x);
-  const by = Math.floor(m.y);
-  const bobY = m.state === 'WALKING' ? Math.sin(frameCount * 0.15) * 1 : 0;
-  const armWave = m.state === 'WORKING' ? Math.sin(frameCount * 0.2) * 2 : 0;
-
-  ctx.fillStyle = 'rgba(0,0,0,0.2)';
-  ctx.fillRect((bx - camX - 1) * SCALE, (by - camY + 11 + bobY) * SCALE, 12 * SCALE, 3 * SCALE);
-
-  const legSpread = m.state === 'WALKING' ? Math.sin(frameCount * 0.2) * 1.5 : 0;
-  rect(bx + 2, by + 11 + bobY, 3, 3, '#333');
-  rect(bx + 7, by + 11 + bobY, 3, 3, '#333');
-  if (m.state === 'WALKING') {
-    rect(bx + 2 + legSpread, by + 12 + bobY, 3, 2, '#222');
-    rect(bx + 7 - legSpread, by + 12 + bobY, 3, 2, '#222');
-  }
-
-  for (let dy = 0; dy < 10; dy++) {
-    for (let dx = 0; dx < 12; dx++) {
-      const dist = Math.sqrt((dx - 5.5) ** 2 + ((dy - 4.5) * 1.1) ** 2);
-      if (dist < 5.2) {
-        const isLight = dx < 5 && dy < 4;
-        px(bx + dx, by + dy + 2 + bobY, isLight ? m.color : m.darkColor);
-      }
-    }
-  }
-
-  px(bx + 3, by + 3 + bobY, lighten(m.color, 40));
-  px(bx + 4, by + 3 + bobY, lighten(m.color, 30));
-
-  px(bx + 3, by + 5 + bobY, '#4adeab');
-  px(bx + 4, by + 5 + bobY, '#4adeab');
-  px(bx + 7, by + 5 + bobY, '#4adeab');
-  px(bx + 8, by + 5 + bobY, '#4adeab');
-  const lookX = m.dir === 1 ? 1 : m.dir === 3 ? -1 : 0;
-  px(bx + 4 + lookX, by + 5 + bobY, '#0a0a0f');
-  px(bx + 8 + lookX, by + 5 + bobY, '#0a0a0f');
-  ctx.fillStyle = 'rgba(74,222,171,0.15)';
-  ctx.fillRect((bx + 2 - camX) * SCALE, (by + 4 + bobY - camY) * SCALE, 4 * SCALE, 3 * SCALE);
-  ctx.fillRect((bx + 6 - camX) * SCALE, (by + 4 + bobY - camY) * SCALE, 4 * SCALE, 3 * SCALE);
-
-  px(bx + 3, by + bobY, m.color);
-  px(bx + 3, by + 1 + bobY, '#333');
-  px(bx + 2, by - 1 + bobY + Math.sin(frameCount * 0.1) | 0, m.color);
-  px(bx + 8, by + bobY, m.color);
-  px(bx + 8, by + 1 + bobY, '#333');
-  px(bx + 9, by - 1 + bobY + Math.cos(frameCount * 0.1) | 0, m.color);
-
-  const armY = by + 6 + bobY + armWave;
-  rect(bx - 2, armY, 3, 3, m.darkColor);
-  rect(bx + 11, armY, 3, 3, m.darkColor);
-
-  if (m.task === 'watering' && (m.state === 'WORKING' || m.state === 'WALKING')) {
-    rect(bx + 12, armY - 2, 4, 3, '#888');
-    rect(bx + 16, armY - 3, 2, 1, '#aaa');
-    if (m.state === 'WORKING') {
-      for (let i = 0; i < 3; i++) {
-        const wy = armY + 2 + ((frameCount * 2 + i * 5) % 8);
-        px(bx + 15 + i, wy, PAL.waterLight);
-      }
-    }
-  }
-  if (m.task === 'thinking' && m.state !== 'INTERACTING') {
-    rect(bx - 4, armY - 1, 3, 4, '#8b6914');
-    rect(bx - 3, armY, 1, 2, '#e0d0b0');
-  }
-  if (m.task === 'delivering') {
-    rect(bx + 12, armY + 1, 5, 3, '#5a3a1a');
-    rect(bx + 13, armY, 3, 1, '#4ade80');
-    px(bx + 15, armY + 4, '#333');
-  }
-  if (m.task === 'socializing' && m.state === 'WALKING') {
-    rect(bx + 11, armY - 3, 3, 2, m.darkColor);
-  }
-  if (m.task === 'planting' && m.state === 'WORKING') {
-    px(bx + 13, armY + 3, '#4ade80');
-    px(bx + 13, armY + 2, '#6b4e10');
-  }
-
-  drawPixelText(m.name, bx + 1, by - 4 + bobY, m.color);
-}
-
-function lighten(hex, amt) {
-  let r = parseInt(hex.slice(1,3), 16) + amt;
-  let g = parseInt(hex.slice(3,5), 16) + amt;
-  let b = parseInt(hex.slice(5,7), 16) + amt;
-  r = Math.min(255, r); g = Math.min(255, g); b = Math.min(255, b);
-  return `rgb(${r},${g},${b})`;
-}
-
-// ============================================================
-// TINY PIXEL FONT (3x5)
+// PIXEL FONT
 // ============================================================
 const FONT = {
   'A':'111101111101','B':'110101110101110','C':'111100100100111','D':'110101101101110',
@@ -960,8 +787,7 @@ const FONT = {
   '4':'101101111001001','5':'111100111001111','6':'111100111101111','7':'111001001001001',
   '8':'111101111101111','9':'111101111001111',
   '-':'000000111000000','.':'000000000000010',':':'000010000010000',
-  '/':'001001010100100','<':'001010100010001','>':'100010001010100',
-  '{':'011010110010011','}':'110010011010110','!':'010010010000010',
+  '/':'001001010100100','!':'010010010000010',
   ' ':'000000000000000','?':'111001010000010','\'':'010010000000000',
 };
 
@@ -971,23 +797,96 @@ function drawPixelText(text, x, y, color) {
     const glyph = FONT[ch];
     if (glyph) {
       for (let i = 0; i < glyph.length; i++) {
-        if (glyph[i] === '1') {
-          const gw = 3;
-          const gy = (i / gw) | 0;
-          const gx = i % gw;
-          px(cx + gx, y + gy, color);
-        }
+        if (glyph[i] === '1') px(cx + (i % 3), y + ((i / 3) | 0), color);
       }
       cx += 4;
-    } else {
-      cx += 3;
-    }
+    } else cx += 3;
   }
 }
 
 // ============================================================
-// MASCOT AI BEHAVIOR
+// MASCOT SPRITES & AI BEHAVIOR
 // ============================================================
+const mascots = [
+  { name: 'Jeffrey', model: 'Claude Opus', color: '#E06050', darkColor: '#B84838',
+    x: 40, y: 40, tx: 40, ty: 40, dir: 0, state: 'IDLE', stateTimer: 0,
+    animFrame: 0, task: 'planting', mood: 'relaxed', trailT: 0, thinkT: 0 },
+  { name: 'Claude', model: 'Claude 3.5', color: '#60a5fa', darkColor: '#4080d0',
+    x: 180, y: 60, tx: 180, ty: 60, dir: 0, state: 'IDLE', stateTimer: 0,
+    animFrame: 0, task: 'watering', mood: 'relaxed', trailT: 0, thinkT: 0 },
+  { name: 'GPT-4', model: 'GPT-4 Turbo', color: '#a78bfa', darkColor: '#8060d0',
+    x: 100, y: 130, tx: 100, ty: 130, dir: 0, state: 'IDLE', stateTimer: 0,
+    animFrame: 0, task: 'thinking', mood: 'relaxed', trailT: 0, thinkT: 0 },
+  { name: 'Gemini', model: 'Gemini Pro', color: '#4ade80', darkColor: '#30b060',
+    x: 200, y: 140, tx: 200, ty: 140, dir: 0, state: 'IDLE', stateTimer: 0,
+    animFrame: 0, task: 'delivering', mood: 'relaxed', trailT: 0, thinkT: 0 },
+  { name: 'Codex', model: 'Codex', color: '#fb923c', darkColor: '#d07020',
+    x: 130, y: 80, tx: 130, ty: 80, dir: 0, state: 'IDLE', stateTimer: 0,
+    animFrame: 0, task: 'socializing', mood: 'relaxed', trailT: 0, thinkT: 0 },
+];
+
+function drawMascot(m) {
+  const bx = Math.floor(m.x), by = Math.floor(m.y);
+  const bobY = m.state === 'WALKING' ? Math.sin(frameCount * 0.15) : 0;
+  const armWave = m.state === 'WORKING' ? Math.sin(frameCount * 0.2) * 2 : 0;
+
+  // Shadow
+  ctx.fillStyle = 'rgba(0,0,0,0.2)';
+  ctx.fillRect((bx - camX - 1) * SCALE, (by - camY + 11 + bobY) * SCALE, 12 * SCALE, 3 * SCALE);
+
+  // Legs
+  const ls = m.state === 'WALKING' ? Math.sin(frameCount * 0.2) * 1.5 : 0;
+  rect(bx + 2, by + 11 + bobY, 3, 3, '#333'); rect(bx + 7, by + 11 + bobY, 3, 3, '#333');
+  if (m.state === 'WALKING') { rect(bx + 2 + ls, by + 12 + bobY, 3, 2, '#222'); rect(bx + 7 - ls, by + 12 + bobY, 3, 2, '#222'); }
+
+  // Body
+  for (let dy = 0; dy < 10; dy++) for (let dx = 0; dx < 12; dx++) {
+    if (Math.sqrt((dx - 5.5) ** 2 + ((dy - 4.5) * 1.1) ** 2) < 5.2) px(bx + dx, by + dy + 2 + bobY, (dx < 5 && dy < 4) ? m.color : m.darkColor);
+  }
+
+  // Face highlight
+  px(bx + 3, by + 3 + bobY, lighten(m.color, 40)); px(bx + 4, by + 3 + bobY, lighten(m.color, 30));
+  // Eyes
+  px(bx + 3, by + 5 + bobY, '#4adeab'); px(bx + 4, by + 5 + bobY, '#4adeab');
+  px(bx + 7, by + 5 + bobY, '#4adeab'); px(bx + 8, by + 5 + bobY, '#4adeab');
+  const lx = m.dir === 1 ? 1 : m.dir === 3 ? -1 : 0;
+  px(bx + 4 + lx, by + 5 + bobY, '#0a0a0f'); px(bx + 8 + lx, by + 5 + bobY, '#0a0a0f');
+  ctx.fillStyle = 'rgba(74,222,171,0.15)';
+  ctx.fillRect((bx + 2 - camX) * SCALE, (by + 4 + bobY - camY) * SCALE, 4 * SCALE, 3 * SCALE);
+  ctx.fillRect((bx + 6 - camX) * SCALE, (by + 4 + bobY - camY) * SCALE, 4 * SCALE, 3 * SCALE);
+
+  // Antennae
+  px(bx + 3, by + bobY, m.color); px(bx + 3, by + 1 + bobY, '#333');
+  px(bx + 2, by - 1 + bobY + (Math.sin(frameCount * 0.1) | 0), m.color);
+  px(bx + 8, by + bobY, m.color); px(bx + 8, by + 1 + bobY, '#333');
+  px(bx + 9, by - 1 + bobY + (Math.cos(frameCount * 0.1) | 0), m.color);
+
+  // Arms
+  const armY = by + 6 + bobY + armWave;
+  rect(bx - 2, armY, 3, 3, m.darkColor); rect(bx + 11, armY, 3, 3, m.darkColor);
+
+  // Task-specific items
+  if (m.task === 'watering' && (m.state === 'WORKING' || m.state === 'WALKING')) {
+    rect(bx + 12, armY - 2, 4, 3, '#888'); rect(bx + 16, armY - 3, 2, 1, '#aaa');
+    if (m.state === 'WORKING') for (let i = 0; i < 3; i++) px(bx + 15 + i, armY + 2 + ((frameCount * 2 + i * 5) % 8), PAL.waterLight);
+  }
+  if (m.task === 'thinking' && m.state !== 'INTERACTING') { rect(bx - 4, armY - 1, 3, 4, '#8b6914'); rect(bx - 3, armY, 1, 2, '#e0d0b0'); }
+  if (m.task === 'delivering') { rect(bx + 12, armY + 1, 5, 3, '#5a3a1a'); rect(bx + 13, armY, 3, 1, '#4ade80'); px(bx + 15, armY + 4, '#333'); }
+  if (m.task === 'socializing' && m.state === 'WALKING') rect(bx + 11, armY - 3, 3, 2, m.darkColor);
+  if (m.task === 'planting' && m.state === 'WORKING') { px(bx + 13, armY + 3, '#4ade80'); px(bx + 13, armY + 2, '#6b4e10'); }
+
+  drawPixelText(m.name, bx + 1, by - 4 + bobY, m.color);
+
+  // Following glow
+  if (followingMascot === m) {
+    const p = Math.sin(frameCount * 0.1) * 0.3 + 0.7;
+    ctx.globalAlpha = p * 0.4;
+    ctx.strokeStyle = m.color; ctx.lineWidth = 2;
+    ctx.strokeRect((bx - 3 - camX) * SCALE, (by - 6 + bobY - camY) * SCALE, 18 * SCALE, 22 * SCALE);
+    ctx.globalAlpha = 1;
+  }
+}
+
 function isWalkable(x, y) {
   const tx = (x / TILE) | 0, ty = (y / TILE) | 0;
   if (tx < 0 || tx >= TILES_W || ty < 0 || ty >= TILES_H) return false;
@@ -996,20 +895,18 @@ function isWalkable(x, y) {
 }
 
 function pickTarget(m) {
-  for (let attempts = 0; attempts < 20; attempts++) {
-    const tx = 16 + Math.random() * (WORLD_W - 32);
-    const ty = 16 + Math.random() * (WORLD_H - 32);
+  // Rain: seek shelter near structures
+  if (currentWeather === 'rainy' && world.structures.length > 0 && Math.random() < 0.7) {
+    const s = world.structures[Math.floor(Math.random() * world.structures.length)];
+    const tx = s.x + s.w / 2 + (Math.random() - 0.5) * 10;
+    const ty = s.y + s.h + 2 + Math.random() * 5;
+    if (isWalkable(tx, ty)) return { x: tx, y: ty };
+  }
+  for (let a = 0; a < 20; a++) {
+    const tx = 16 + Math.random() * (WORLD_W - 32), ty = 16 + Math.random() * (WORLD_H - 32);
     if (isWalkable(tx, ty)) {
-      if (m.task === 'planting' || m.task === 'watering') {
-        const stx = (tx / TILE) | 0, sty = (ty / TILE) | 0;
-        if (tileMap[sty] && tileMap[sty][stx] === 3) return { x: tx, y: ty };
-      }
-      if (m.task === 'delivering') {
-        const other = mascots[Math.floor(Math.random() * mascots.length)];
-        if (other !== m && isWalkable(other.x, other.y)) {
-          return { x: other.x + (Math.random() - 0.5) * 20, y: other.y + (Math.random() - 0.5) * 20 };
-        }
-      }
+      if ((m.task === 'planting' || m.task === 'watering') && tileMap[(ty/TILE)|0] && tileMap[(ty/TILE)|0][(tx/TILE)|0] === 3) return { x: tx, y: ty };
+      if (m.task === 'delivering') { const o = mascots[Math.floor(Math.random() * mascots.length)]; if (o !== m) return { x: o.x + (Math.random()-0.5)*20, y: o.y + (Math.random()-0.5)*20 }; }
       return { x: tx, y: ty };
     }
   }
@@ -1017,55 +914,85 @@ function pickTarget(m) {
 }
 
 function addPersistentPlant(x, y, type, color, agent) {
-  const plant = {
-    x, y, type, color, agent,
-    growthStage: 0,
-    age: 0,
-    plantedVisit: world.visitCount,
-    plantedTime: Date.now()
-  };
-  world.plants.push(plant);
-  // Performance cap
-  if (world.plants.length > 300) {
-    world.plants = world.plants.slice(-250);
-  }
+  world.plants.push({ x, y, type, color, agent, growthStage: 0, age: 0, plantedVisit: world.visitCount, plantedTime: Date.now() });
+  if (world.plants.length > 300) world.plants = world.plants.slice(-250);
 }
 
 function addAgentMark(x, y, agent) {
-  const markDef = AGENT_MARKS[agent];
-  if (!markDef) return;
-  const type = markDef.types[Math.floor(Math.random() * markDef.types.length)];
-  const color = markDef.colors[Math.floor(Math.random() * markDef.colors.length)];
-  world.agentMarks.push({ x, y, type, color, agent, visit: world.visitCount });
-  if (world.agentMarks.length > 150) {
-    world.agentMarks = world.agentMarks.slice(-120);
-  }
+  const md = AGENT_MARKS[agent]; if (!md) return;
+  world.agentMarks.push({ x, y, type: md.types[(Math.random()*md.types.length)|0], color: md.colors[(Math.random()*md.colors.length)|0], agent, visit: world.visitCount });
+  if (world.agentMarks.length > 150) world.agentMarks = world.agentMarks.slice(-120);
+}
+
+function tryConversation(m1, m2) {
+  if (convCooldown > 0) return;
+  let dlg = DIALOGUES.find(d => (d.a === m1.name && d.b === m2.name) || (d.a === m2.name && d.b === m1.name));
+  if (!dlg) return;
+  const rev = dlg.a !== m1.name;
+  const s1 = rev ? m2 : m1, s2 = rev ? m1 : m2;
+  const lines = dlg.lines[(Math.random() * dlg.lines.length) | 0];
+  speechBubbles.push({ x: s1.x + 6, y: s1.y - 10, text: lines[0], life: 120, color: s1.color });
+  setTimeout(function() { speechBubbles.push({ x: s2.x + 6, y: s2.y - 10, text: lines[1], life: 120, color: s2.color }); }, 1500);
+  convCooldown = 600;
+  addHistory(s1.name, 'said to ' + s2.name + ': "' + lines[0] + '"');
+}
+
+function updateMascotMood(m) {
+  if (currentWeather === 'rainy') m.mood = 'sheltering';
+  else if (m.state === 'WORKING') m.mood = m.task === 'planting' ? 'happy' : m.task === 'thinking' ? 'curious' : 'proud';
+  else if (m.state === 'INTERACTING') m.mood = 'excited';
+  else if (m.state === 'WALKING') m.mood = 'curious';
+  else m.mood = 'relaxed';
 }
 
 function updateMascot(m, dt) {
   m.stateTimer -= dt;
   m.animFrame = (frameCount / 8 | 0) % 4;
+  if (m.thinkT > 0) m.thinkT--;
+  updateMascotMood(m);
+  const moodDef = MOODS[m.mood] || MOODS.relaxed;
 
+  // Agent specialty trails
+  m.trailT--;
+  if (m.state === 'WALKING' && m.trailT <= 0) {
+    if (m.name === 'Jeffrey' && Math.random() < 0.015) { particles.push({ x: m.x+5, y: m.y+13, vx:0, vy:0, life:60, maxLife:60, color:'#e04040' }); m.trailT = 30; }
+    if (m.name === 'Claude' && Math.random() < 0.02) { particles.push({ x: m.x+5, y: m.y+12, vx:(Math.random()-0.5)*0.2, vy:-0.1, life:40, maxLife:40, color:'#60a5fa' }); particles.push({ x: m.x+7, y: m.y+11, vx:(Math.random()-0.5)*0.2, vy:-0.15, life:35, maxLife:35, color:'#80c0ff' }); m.trailT = 15; }
+    if (m.name === 'Gemini' && Math.random() < 0.025) { for (let i=0;i<3;i++) particles.push({ x: m.x+5-i*2, y: m.y+12, vx:-0.1, vy:0, life:20, maxLife:20, color:'#4ade80' }); m.trailT = 10; }
+    if (m.name === 'Codex' && Math.random() < 0.008) { const bx=Math.floor(m.x+5),by=Math.floor(m.y+14); if(isWalkable(bx,by)) world.agentMarks.push({x:bx,y:by,type:'lantern',color:'#fb923c',agent:'Codex',visit:world.visitCount}); m.trailT = 60; }
+  }
+  // GPT-4 thinking pauses
+  if (m.name === 'GPT-4' && m.state === 'WALKING' && Math.random() < 0.003 && m.thinkT <= 0) {
+    m.thinkT = 90; speechBubbles.push({ x: m.x+6, y: m.y-8, text: '...', life: 60, color: m.color });
+  }
+  // Music notes near fountain
+  const f = world.structures.find(s => s.id === 'fountain');
+  if (f && Math.hypot(m.x+6 - f.x-5, m.y+8 - f.y-5) < 20 && Math.random() < 0.02) {
+    musicNotes.push({ x: f.x+5+(Math.random()-0.5)*6, y: f.y-2, vy: -0.2-Math.random()*0.1, vx: (Math.random()-0.5)*0.15, life: 60+Math.random()*30, maxLife: 90 });
+  }
+  // Philosopher's stone speech
+  if (Math.hypot(m.x+6 - STONE_X, m.y+8 - STONE_Y) < 12 && Math.random() < 0.005) {
+    speechBubbles.push({ x: m.x+6, y: m.y-10, text: STONE_SPEECH[(Math.random()*STONE_SPEECH.length)|0], life: 150, color: '#d4a017' });
+  }
+
+  // Interactions
   if (m.state !== 'INTERACTING') {
     for (const other of mascots) {
       if (other === m || other.state === 'INTERACTING') continue;
       const dist = Math.hypot(m.x - other.x, m.y - other.y);
-      if (dist < 16 && Math.random() < 0.01) {
-        m.state = 'INTERACTING';
-        m.stateTimer = 120;
-        other.state = 'INTERACTING';
-        other.stateTimer = 120;
-        const mx = (m.x + other.x) / 2, my = (m.y + other.y) / 2;
-        // Track interaction stats
+      if (dist < 16 && Math.random() < 0.01 * moodDef.bubbleMul) {
+        m.state = 'INTERACTING'; m.stateTimer = 120;
+        other.state = 'INTERACTING'; other.stateTimer = 120;
         world.mascotStats[m.name].interactions++;
         world.mascotStats[other.name].interactions++;
-        if (m.task === 'socializing' || other.task === 'socializing') {
-          speechBubbles.push({ x: mx, y: my - 12, text: '</>', life: 90 });
-          world.mascotStats.Codex.conversations++;
+        if (Math.random() < 0.4) tryConversation(m, other);
+        else {
+          if (m.task === 'socializing' || other.task === 'socializing') { speechBubbles.push({ x: (m.x+other.x)/2, y: (m.y+other.y)/2-12, text: '</>', life: 90 }); world.mascotStats.Codex.conversations++; }
+          if (m.task === 'delivering' || other.task === 'delivering') { addParticles((m.x+other.x)/2, (m.y+other.y)/2-8, '#ff6080', 5); world.mascotStats.Gemini.deliveries++; }
         }
-        if (m.task === 'delivering' || other.task === 'delivering') {
-          addParticles(mx, my - 8, '#ff6080', 5);
-          world.mascotStats.Gemini.deliveries++;
+        // Gift giving
+        if (Math.random() < 0.08) {
+          giftAnimations.push({ fromX: m.x+6, fromY: m.y+4, toX: other.x+6, toY: other.y+4, progress: 0, color: ['#ffd700','#e04040','#60a5fa','#4ade80'][(Math.random()*4)|0] });
+          addHistory(m.name, 'gave a gift to ' + other.name + ' 🎁');
         }
         break;
       }
@@ -1074,508 +1001,260 @@ function updateMascot(m, dt) {
 
   switch (m.state) {
     case 'IDLE':
-      if (m.stateTimer <= 0) {
-        const t = pickTarget(m);
-        m.tx = t.x; m.ty = t.y;
-        m.state = 'WALKING';
-        m.stateTimer = 300 + Math.random() * 200;
-      }
+      if (m.stateTimer <= 0) { const t = pickTarget(m); m.tx = t.x; m.ty = t.y; m.state = 'WALKING'; m.stateTimer = 300 + Math.random() * 200; }
       break;
-
     case 'WALKING': {
-      const dx = m.tx - m.x, dy = m.ty - m.y;
-      const dist = Math.hypot(dx, dy);
-      if (dist < 2 || m.stateTimer <= 0) {
-        m.state = 'WORKING';
-        m.stateTimer = 80 + Math.random() * 60;
-        break;
-      }
-      const speed = 0.3;
-      const nx = m.x + (dx / dist) * speed;
-      const ny = m.y + (dy / dist) * speed;
-      if (isWalkable(nx + 6, ny + 8)) {
-        m.x = nx; m.y = ny;
-      } else {
-        const t = pickTarget(m);
-        m.tx = t.x; m.ty = t.y;
-      }
-      if (Math.abs(dx) > Math.abs(dy)) m.dir = dx > 0 ? 1 : 3;
-      else m.dir = dy > 0 ? 2 : 0;
-      // Occasional trail sprout
-      if (Math.random() < 0.002) {
-        addPersistentPlant(m.x + 5, m.y + 12, 'sprout',
-          ['#4ade80','#60e090','#80f0a0'][Math.floor(Math.random()*3)], m.name);
-        world.mascotStats[m.name].plants++;
-      }
+      if (m.name === 'GPT-4' && m.thinkT > 0) break;
+      const dx = m.tx - m.x, dy = m.ty - m.y, dist = Math.hypot(dx, dy);
+      if (dist < 2 || m.stateTimer <= 0) { m.state = 'WORKING'; m.stateTimer = 80 + Math.random() * 60; break; }
+      let speed = 0.3 * moodDef.speedMul;
+      if (m.name === 'Gemini') speed *= 1.4;
+      const nx = m.x + (dx / dist) * speed, ny = m.y + (dy / dist) * speed;
+      if (isWalkable(nx + 6, ny + 8)) { m.x = nx; m.y = ny; } else { const t = pickTarget(m); m.tx = t.x; m.ty = t.y; }
+      if (Math.abs(dx) > Math.abs(dy)) m.dir = dx > 0 ? 1 : 3; else m.dir = dy > 0 ? 2 : 0;
+      if (Math.random() < 0.002) { addPersistentPlant(m.x+5, m.y+12, 'sprout', ['#4ade80','#60e090','#80f0a0'][(Math.random()*3)|0], m.name); world.mascotStats[m.name].plants++; }
       break;
     }
-
     case 'WORKING':
       if (m.stateTimer <= 0) {
         if (m.task === 'planting') {
-          // Jeffrey plants red flowers and berry bushes
-          const plantType = Math.random() < 0.3 ? 'flower' : 'plant';
-          const plantColor = m.name === 'Jeffrey' ? PAL.flower_red : PAL.sprout;
-          addPersistentPlant(m.x + 5, m.y + 14, plantType, plantColor, m.name);
-          addParticles(m.x + 5, m.y + 10, '#4ade80', 4);
-          world.mascotStats[m.name].plants++;
-          // Agent mark
-          if (Math.random() < 0.3) addAgentMark(m.x + 5, m.y + 14, m.name);
-          if (world.plants.length % 10 === 0) {
-            addHistory(m.name, `planted seed #${world.plants.length}`);
-          }
+          const sc = seasonFlowerColors();
+          const pc = m.name === 'Jeffrey' ? PAL.flower_red : Math.random() < 0.3 ? sc[(Math.random()*sc.length)|0] : PAL.sprout;
+          addPersistentPlant(m.x+5, m.y+14, Math.random()<0.3?'flower':'plant', pc, m.name);
+          addParticles(m.x+5, m.y+10, '#4ade80', 4); world.mascotStats[m.name].plants++;
+          if (Math.random() < 0.3) addAgentMark(m.x+5, m.y+14, m.name);
+          if (world.plants.length % 10 === 0) addHistory(m.name, 'planted seed #' + world.plants.length);
         } else if (m.task === 'watering') {
-          addParticles(m.x + 12, m.y + 8, PAL.waterLight, 6);
-          // Grow nearby plants
-          for (const p of world.plants) {
-            if (Math.hypot(p.x - m.x, p.y - m.y) < 20) {
-              p.age = Math.min((p.age || 0) + 50, 300);
-              p.growthStage = Math.min((p.growthStage || 0) + 1, 5);
-            }
-          }
+          addParticles(m.x+12, m.y+8, PAL.waterLight, 6);
+          for (const p of world.plants) { if (Math.hypot(p.x-m.x, p.y-m.y)<20) { p.age = Math.min((p.age||0)+50,300); p.growthStage = Math.min((p.growthStage||0)+1,5); } }
           world.mascotStats.Claude.waters++;
-          if (Math.random() < 0.2) addAgentMark(m.x + 10, m.y + 10, m.name);
+          if (Math.random() < 0.2) addAgentMark(m.x+10, m.y+10, m.name);
         } else if (m.task === 'thinking') {
-          speechBubbles.push({ x: m.x + 4, y: m.y - 8, text: '!', life: 60 });
-          if (Math.random() < 0.5) {
-            const colors = [PAL.flower_red, PAL.flower_yellow, PAL.flower_pink, PAL.flower_blue];
-            addPersistentPlant(m.x + Math.random() * 20 - 10, m.y + Math.random() * 20,
-              'flower', colors[Math.floor(Math.random()*4)], m.name);
-            world.mascotStats[m.name].plants++;
-          }
-          addParticles(m.x + 5, m.y - 4, '#ffd700', 3);
-          world.mascotStats['GPT-4'].ideas++;
-          if (Math.random() < 0.2) addAgentMark(m.x + 5, m.y + 5, m.name);
+          speechBubbles.push({ x: m.x+4, y: m.y-8, text: '!', life: 60, color: m.color });
+          if (Math.random() < 0.5) { addPersistentPlant(m.x+Math.random()*20-10, m.y+Math.random()*20, 'flower', [PAL.flower_red,PAL.flower_yellow,PAL.flower_pink,PAL.flower_blue][(Math.random()*4)|0], m.name); world.mascotStats[m.name].plants++; }
+          addParticles(m.x+5, m.y-4, '#ffd700', 3); world.mascotStats['GPT-4'].ideas++;
+          if (Math.random() < 0.2) addAgentMark(m.x+5, m.y+5, m.name);
         }
-        m.state = 'IDLE';
-        m.stateTimer = 40 + Math.random() * 80;
+        m.state = 'IDLE'; m.stateTimer = 40 + Math.random() * 80;
       }
       break;
-
     case 'INTERACTING':
-      if (m.stateTimer <= 0) {
-        m.state = 'IDLE';
-        m.stateTimer = 30 + Math.random() * 40;
-      }
+      if (m.stateTimer <= 0) { m.state = 'IDLE'; m.stateTimer = 30 + Math.random() * 40; }
       break;
   }
 }
 
 // ============================================================
-// PARTICLES
+// PARTICLES, BUTTERFLIES, FIREFLIES, CONFETTI
 // ============================================================
 function addParticles(x, y, color, count) {
-  for (let i = 0; i < count; i++) {
-    particles.push({
-      x, y, vx: (Math.random() - 0.5) * 0.8, vy: -Math.random() * 0.5 - 0.2,
-      life: 40 + Math.random() * 30, maxLife: 70, color
-    });
-  }
+  for (let i = 0; i < count; i++) particles.push({ x, y, vx: (Math.random()-0.5)*0.8, vy: -Math.random()*0.5-0.2, life: 40+Math.random()*30, maxLife: 70, color });
 }
-
 function updateParticles() {
-  for (let i = particles.length - 1; i >= 0; i--) {
-    const p = particles[i];
-    p.x += p.vx; p.y += p.vy;
-    p.vy += 0.01;
-    p.life--;
-    if (p.life <= 0) particles.splice(i, 1);
-  }
+  for (let i = particles.length-1; i >= 0; i--) { const p = particles[i]; p.x += p.vx; p.y += p.vy; p.vy += 0.01; p.life--; if (p.life <= 0) particles.splice(i,1); }
 }
-
 function drawParticles() {
-  for (const p of particles) {
-    ctx.globalAlpha = p.life / p.maxLife;
-    px(p.x, p.y, p.color);
-  }
-  ctx.globalAlpha = 1;
+  for (const p of particles) { ctx.globalAlpha = p.life / p.maxLife; px(p.x, p.y, p.color); } ctx.globalAlpha = 1;
 }
 
-// ============================================================
-// BUTTERFLIES (Stage 3+)
-// ============================================================
 function updateButterflies() {
-  const stage = getStage();
-  if (stage < 3) return;
-  // Maintain a few butterflies
-  while (butterflies.length < Math.min(stage - 1, 6)) {
-    butterflies.push({
-      x: 30 + Math.random() * (WORLD_W - 60),
-      y: 20 + Math.random() * (WORLD_H - 40),
-      vx: (Math.random() - 0.5) * 0.3,
-      vy: (Math.random() - 0.5) * 0.2,
-      color: ['#e060a0','#ffd700','#60a0e0','#a78bfa'][Math.floor(Math.random()*4)],
-      wingPhase: Math.random() * Math.PI * 2
-    });
-  }
+  const stage = getStage(); if (stage < 3) return;
+  while (butterflies.length < Math.min(stage-1, 6)) butterflies.push({ x: 30+Math.random()*(WORLD_W-60), y: 20+Math.random()*(WORLD_H-40), vx: (Math.random()-0.5)*0.3, vy: (Math.random()-0.5)*0.2, color: ['#e060a0','#ffd700','#60a0e0','#a78bfa'][(Math.random()*4)|0], wp: Math.random()*Math.PI*2 });
   for (const b of butterflies) {
-    b.x += b.vx + Math.sin(frameCount * 0.02 + b.wingPhase) * 0.2;
-    b.y += b.vy + Math.cos(frameCount * 0.015 + b.wingPhase) * 0.15;
-    b.vx += (Math.random() - 0.5) * 0.02;
-    b.vy += (Math.random() - 0.5) * 0.02;
-    b.vx = Math.max(-0.4, Math.min(0.4, b.vx));
-    b.vy = Math.max(-0.3, Math.min(0.3, b.vy));
-    if (b.x < 10 || b.x > WORLD_W - 10) b.vx *= -1;
-    if (b.y < 10 || b.y > WORLD_H - 10) b.vy *= -1;
+    b.x += b.vx + Math.sin(frameCount*0.02+b.wp)*0.2; b.y += b.vy + Math.cos(frameCount*0.015+b.wp)*0.15;
+    b.vx += (Math.random()-0.5)*0.02; b.vy += (Math.random()-0.5)*0.02;
+    b.vx = Math.max(-0.4, Math.min(0.4, b.vx)); b.vy = Math.max(-0.3, Math.min(0.3, b.vy));
+    if (b.x < 10 || b.x > WORLD_W-10) b.vx *= -1; if (b.y < 10 || b.y > WORLD_H-10) b.vy *= -1;
   }
 }
-
 function drawButterflies() {
-  for (const b of butterflies) {
-    const wingOpen = Math.sin(frameCount * 0.15 + b.wingPhase) > 0;
-    px(b.x, b.y, b.color);
-    if (wingOpen) {
-      px(b.x - 1, b.y - 1, b.color);
-      px(b.x + 1, b.y - 1, b.color);
-    } else {
-      px(b.x, b.y - 1, b.color);
-    }
-  }
+  for (const b of butterflies) { const w = Math.sin(frameCount*0.15+b.wp)>0; px(b.x,b.y,b.color); if(w){px(b.x-1,b.y-1,b.color);px(b.x+1,b.y-1,b.color);}else px(b.x,b.y-1,b.color); }
 }
 
-// ============================================================
-// FIREFLIES (Stage 4+ at night)
-// ============================================================
 function updateFireflies() {
-  const stage = getStage();
-  const nightAmount = Math.sin(dayTime * Math.PI * 2) * 0.5 + 0.5;
-  if (stage < 4 || nightAmount < 0.15) {
-    fireflies.length = 0;
-    return;
-  }
-  while (fireflies.length < Math.min((stage - 2) * 3, 12)) {
-    fireflies.push({
-      x: 20 + Math.random() * (WORLD_W - 40),
-      y: 20 + Math.random() * (WORLD_H - 40),
-      phase: Math.random() * Math.PI * 2,
-      speed: 0.1 + Math.random() * 0.15
-    });
-  }
-  for (const f of fireflies) {
-    f.x += Math.sin(frameCount * 0.01 + f.phase) * f.speed;
-    f.y += Math.cos(frameCount * 0.008 + f.phase * 1.5) * f.speed * 0.7;
-    if (f.x < 5) f.x = 5; if (f.x > WORLD_W - 5) f.x = WORLD_W - 5;
-    if (f.y < 5) f.y = 5; if (f.y > WORLD_H - 5) f.y = WORLD_H - 5;
-  }
+  const stage = getStage(); const isN = currentWeather === 'night';
+  const nightAmt = isN ? 1 : Math.sin(dayTime*Math.PI*2)*0.5+0.5;
+  if (stage < 4 || nightAmt < 0.15) { fireflies.length = 0; return; }
+  const tc = isN ? Math.min((stage-2)*4,16) : Math.min((stage-2)*3,12);
+  while (fireflies.length < tc) fireflies.push({ x: 20+Math.random()*(WORLD_W-40), y: 20+Math.random()*(WORLD_H-40), phase: Math.random()*Math.PI*2, speed: 0.1+Math.random()*0.15 });
+  for (const f of fireflies) { f.x += Math.sin(frameCount*0.01+f.phase)*f.speed; f.y += Math.cos(frameCount*0.008+f.phase*1.5)*f.speed*0.7; f.x = Math.max(5,Math.min(WORLD_W-5,f.x)); f.y = Math.max(5,Math.min(WORLD_H-5,f.y)); }
 }
-
 function drawFireflies() {
-  for (const f of fireflies) {
-    const glow = Math.sin(frameCount * 0.08 + f.phase) * 0.5 + 0.5;
-    ctx.globalAlpha = glow;
-    px(f.x, f.y, '#ffff80');
-    ctx.globalAlpha = glow * 0.3;
-    px(f.x - 1, f.y, '#ffff40');
-    px(f.x + 1, f.y, '#ffff40');
-    px(f.x, f.y - 1, '#ffff40');
-    px(f.x, f.y + 1, '#ffff40');
-  }
+  const br = currentWeather === 'night' ? 1.5 : 1;
+  for (const f of fireflies) { const g = (Math.sin(frameCount*0.08+f.phase)*0.5+0.5)*br; ctx.globalAlpha = Math.min(g,1); px(f.x,f.y,'#ffff80'); ctx.globalAlpha = Math.min(g*0.4,1); px(f.x-1,f.y,'#ffff40'); px(f.x+1,f.y,'#ffff40'); px(f.x,f.y-1,'#ffff40'); px(f.x,f.y+1,'#ffff40'); }
   ctx.globalAlpha = 1;
 }
 
-// ============================================================
-// CONFETTI (Stage 5, occasional)
-// ============================================================
 function updateConfetti() {
   if (getStage() < 5) return;
-  // Occasional burst
   if (Math.random() < 0.002 && confetti.length < 20) {
-    const cx = 60 + Math.random() * (WORLD_W - 120);
-    const cy = 20 + Math.random() * 40;
-    const colors = ['#e04040','#ffd700','#4ade80','#60a5fa','#a78bfa','#fb923c','#e060a0'];
-    for (let i = 0; i < 8; i++) {
-      confetti.push({
-        x: cx, y: cy,
-        vx: (Math.random() - 0.5) * 1.5,
-        vy: -Math.random() * 0.5 + 0.3,
-        color: colors[Math.floor(Math.random() * colors.length)],
-        life: 80 + Math.random() * 40
-      });
-    }
+    const cx = 60+Math.random()*(WORLD_W-120), cy = 20+Math.random()*40;
+    const cols = ['#e04040','#ffd700','#4ade80','#60a5fa','#a78bfa','#fb923c','#e060a0'];
+    for (let i = 0; i < 8; i++) confetti.push({ x:cx, y:cy, vx:(Math.random()-0.5)*1.5, vy:-Math.random()*0.5+0.3, color: cols[(Math.random()*cols.length)|0], life: 80+Math.random()*40 });
   }
-  for (let i = confetti.length - 1; i >= 0; i--) {
-    const c = confetti[i];
-    c.x += c.vx;
-    c.y += c.vy;
-    c.vy += 0.015;
-    c.vx *= 0.99;
-    c.life--;
-    if (c.life <= 0) confetti.splice(i, 1);
+  for (let i = confetti.length-1; i >= 0; i--) { const c = confetti[i]; c.x += c.vx; c.y += c.vy; c.vy += 0.015; c.vx *= 0.99; c.life--; if (c.life <= 0) confetti.splice(i,1); }
+}
+function drawConfetti() { for (const c of confetti) { ctx.globalAlpha = Math.min(c.life/30, 1); px(c.x, c.y, c.color); } ctx.globalAlpha = 1; }
+
+// ============================================================
+// WEATHER SYSTEM
+// ============================================================
+function updateWeather() {
+  weatherTimer++;
+  if (weatherTimer >= WEATHER_DURATION) {
+    weatherTimer = 0;
+    world.weatherPhase = (world.weatherPhase + 1) % WEATHER_TYPES.length;
+    currentWeather = WEATHER_TYPES[world.weatherPhase];
+    addHistory('system', 'Weather changed to ' + currentWeather);
   }
+  const we = { sunny: '☀️', cloudy: '☁️', rainy: '🌧️', night: '🌙' };
+  document.getElementById('weather-indicator').textContent = we[currentWeather] || '';
+
+  if (currentWeather === 'rainy') for (let i=0; i<3; i++) raindrops.push({ x: camX+Math.random()*(screenW/SCALE), y: camY-2, vy: 1.5+Math.random()*0.5, vx: -0.3, life: 80 });
+  for (let i = raindrops.length-1; i >= 0; i--) { const r = raindrops[i]; r.x += r.vx; r.y += r.vy; r.life--; if (r.life <= 0 || r.y > camY+screenH/SCALE) raindrops.splice(i,1); }
+
+  if ((currentWeather === 'cloudy' || currentWeather === 'rainy') && clouds.length < 5 && Math.random() < 0.005) clouds.push({ x: camX+screenW/SCALE+10, y: camY+5+Math.random()*15, w: 10+Math.random()*15, h: 4+Math.random()*4, speed: 0.05+Math.random()*0.03 });
+  for (let i = clouds.length-1; i >= 0; i--) { clouds[i].x -= clouds[i].speed; if (clouds[i].x+clouds[i].w < camX-10) clouds.splice(i,1); }
+
+  if (currentWeather === 'night' && shootingStars.length < 2 && Math.random() < 0.003)
+    shootingStars.push({ x: camX+Math.random()*(screenW/SCALE), y: camY+2+Math.random()*10, vx: 1.5+Math.random(), vy: 0.3+Math.random()*0.3, life: 40+Math.random()*20, maxLife: 60, clicked: false, trail: [] });
+  for (let i = shootingStars.length-1; i >= 0; i--) { const s = shootingStars[i]; s.trail.push({x:s.x,y:s.y}); if(s.trail.length>8)s.trail.shift(); s.x+=s.vx; s.y+=s.vy; s.life--; if(s.life<=0)shootingStars.splice(i,1); }
 }
 
-function drawConfetti() {
-  for (const c of confetti) {
-    ctx.globalAlpha = Math.min(c.life / 30, 1);
-    px(c.x, c.y, c.color);
-  }
-  ctx.globalAlpha = 1;
+function drawWeatherEffects() {
+  for (const c of clouds) { ctx.globalAlpha = 0.3; for (let dy=0; dy<c.h; dy++) for (let dx=0; dx<c.w; dx++) { if (Math.sqrt(((dx-c.w/2)/(c.w/2))**2+((dy-c.h/2)/(c.h/2))**2)<1) px(c.x+dx,c.y+dy,'#aabbcc'); } ctx.globalAlpha = 1; }
+  if (currentWeather === 'rainy') { ctx.globalAlpha = 0.6; for (const r of raindrops) { px(r.x,r.y,'#6090cc'); px(r.x,r.y-1,'#4070aa'); } ctx.globalAlpha = 0.1; ctx.fillStyle='#304060'; ctx.fillRect(0,0,screenW,screenH); ctx.globalAlpha = 1; }
+  for (const s of shootingStars) { for (let i=0;i<s.trail.length;i++) { ctx.globalAlpha = (i/s.trail.length)*0.6; px(s.trail[i].x,s.trail[i].y,'#ffffaa'); } ctx.globalAlpha = 1; px(s.x,s.y,'#ffffff'); px(s.x-1,s.y,'#ffffcc'); }
 }
 
 // ============================================================
-// GROWN PLANTS (from persistent state)
+// CRITTERS — Ladybugs + Golden Butterfly
 // ============================================================
-// Agent color lookup for aura/glow
-const AGENT_GLOW = {
-  Jeffrey: '#E06050', Claude: '#60a5fa', 'GPT-4': '#a78bfa',
-  Gemini: '#4ade80', Codex: '#fb923c', nature: '#4ade80'
-};
-
-// Draw agent territory tints (subtle colored ground overlay)
-function drawTerritoryTints() {
+function updateCritters() {
   const stage = getStage();
-  if (stage < 2) return; // Only show from stage 2+
-  // Build a lightweight heatmap from plant positions per agent
-  const tintAlpha = 0.04 + stage * 0.01;
-  // Group plants by tile
-  const tileAgents = {};
-  for (const p of world.plants) {
-    const key = `${(p.x / TILE | 0)}_${(p.y / TILE | 0)}`;
-    if (!tileAgents[key]) tileAgents[key] = {};
-    const a = p.agent || 'nature';
-    tileAgents[key][a] = (tileAgents[key][a] || 0) + 1;
+  while (ladybugs.length < Math.min(2+stage, 4)) ladybugs.push({ x: 30+Math.random()*(WORLD_W-60), y: 30+Math.random()*(WORLD_H-60), dir: Math.random()*Math.PI*2, tt: 60+Math.random()*120 });
+  for (const lb of ladybugs) {
+    lb.tt--; if (lb.tt<=0) { lb.dir += (Math.random()-0.5)*2; lb.tt = 60+Math.random()*120; }
+    lb.x += Math.cos(lb.dir)*0.06; lb.y += Math.sin(lb.dir)*0.04;
+    if (lb.x<10||lb.x>WORLD_W-10) { lb.x = Math.max(10,Math.min(WORLD_W-10,lb.x)); lb.dir = Math.PI-lb.dir; }
+    if (lb.y<10||lb.y>WORLD_H-10) { lb.y = Math.max(10,Math.min(WORLD_H-10,lb.y)); lb.dir = -lb.dir; }
   }
-  for (const [key, agents] of Object.entries(tileAgents)) {
-    const [txs, tys] = key.split('_');
-    const tx = parseInt(txs), ty = parseInt(tys);
-    const bx = tx * TILE, by = ty * TILE;
-    // Find dominant agent
-    let maxAgent = null, maxCount = 0;
-    for (const [a, c] of Object.entries(agents)) {
-      if (c > maxCount) { maxAgent = a; maxCount = c; }
-    }
-    if (maxAgent && maxCount >= 2 && AGENT_GLOW[maxAgent]) {
-      ctx.globalAlpha = Math.min(tintAlpha * Math.sqrt(maxCount), 0.15);
-      rect(bx, by, TILE, TILE, AGENT_GLOW[maxAgent]);
-      ctx.globalAlpha = 1;
-    }
+  if (stage >= 5 && !goldenButterfly && Math.random() < 0.001) goldenButterfly = { x: 30+Math.random()*(WORLD_W-60), y: 20+Math.random()*(WORLD_H-40), vx: (Math.random()-0.5)*0.4, vy: (Math.random()-0.5)*0.3, wp: Math.random()*Math.PI*2, life: 600 };
+  if (goldenButterfly) {
+    const gb = goldenButterfly;
+    gb.x += gb.vx + Math.sin(frameCount*0.02+gb.wp)*0.3; gb.y += gb.vy + Math.cos(frameCount*0.015+gb.wp)*0.2;
+    gb.vx += (Math.random()-0.5)*0.02; gb.vy += (Math.random()-0.5)*0.02;
+    gb.vx = Math.max(-0.5,Math.min(0.5,gb.vx)); gb.vy = Math.max(-0.4,Math.min(0.4,gb.vy));
+    if (gb.x<10||gb.x>WORLD_W-10) gb.vx*=-1; if (gb.y<10||gb.y>WORLD_H-10) gb.vy*=-1;
+    gb.life--; if (gb.life<=0) goldenButterfly = null;
+  }
+}
+function drawCritters() {
+  for (const lb of ladybugs) { px(lb.x,lb.y,'#e02020'); px(lb.x+1,lb.y,'#e02020'); px(lb.x,lb.y+1,'#c01010'); px(lb.x+1,lb.y+1,'#c01010'); px(lb.x,lb.y,'#333'); px(lb.x+1,lb.y+1,'#222'); }
+  if (goldenButterfly) {
+    const gb = goldenButterfly, wo = Math.sin(frameCount*0.12+gb.wp)>0;
+    ctx.globalAlpha = Math.sin(frameCount*0.08)*0.2+0.8;
+    px(gb.x,gb.y,'#ffd700'); if(wo){px(gb.x-1,gb.y-1,'#ffec80');px(gb.x+1,gb.y-1,'#ffec80');px(gb.x-2,gb.y,'#ffd700');px(gb.x+2,gb.y,'#ffd700');}else px(gb.x,gb.y-1,'#ffd700');
+    if (Math.random()<0.15) particles.push({x:gb.x,y:gb.y,vx:0,vy:0.05,life:25,maxLife:25,color:'#ffd700'});
+    ctx.globalAlpha = 1;
+  }
+}
+
+// Music notes & gift animations
+function updateMusicNotes() { for (let i=musicNotes.length-1;i>=0;i--) { const n=musicNotes[i]; n.x+=n.vx; n.y+=n.vy; n.vx+=(Math.random()-0.5)*0.01; n.life--; if(n.life<=0) musicNotes.splice(i,1); } }
+function drawMusicNotes() { for (const n of musicNotes) { ctx.globalAlpha = Math.min(n.life/20,1)*0.7; px(n.x,n.y,'#ffd700'); px(n.x,n.y+1,'#ffd700'); px(n.x,n.y+2,'#e0c000'); px(n.x-1,n.y+2,'#e0c000'); } ctx.globalAlpha = 1; }
+
+function updateGifts() { for (let i=giftAnimations.length-1;i>=0;i--) { const g=giftAnimations[i]; g.progress+=0.02; if(g.progress>=1){addParticles(g.toX,g.toY,g.color,6);giftAnimations.splice(i,1);} } }
+function drawGifts() {
+  for (const g of giftAnimations) {
+    const x = g.fromX+(g.toX-g.fromX)*g.progress, y = g.fromY+(g.toY-g.fromY)*g.progress-Math.sin(g.progress*Math.PI)*10;
+    px(x,y,g.color); px(x+1,y,g.color); px(x,y+1,g.color); px(x+1,y+1,g.color);
+    if (Math.random()<0.3) particles.push({x,y,vx:(Math.random()-0.5)*0.3,vy:0.1,life:20,maxLife:20,color:g.color});
+  }
+}
+
+// High-fives
+function updateHighFives() {
+  for (let i=highFiveAnims.length-1;i>=0;i--) {
+    const h = highFiveAnims[i]; h.timer--;
+    const p = 1-h.timer/40;
+    if (p < 0.5) { const t=p*2; h.m1.x=h.ox1+(h.mx-h.ox1)*t; h.m1.y=h.oy1+(h.my-h.oy1)*t; h.m2.x=h.ox2+(h.mx-h.ox2)*t; h.m2.y=h.oy2+(h.my-h.oy2)*t; }
+    else { const t=(p-0.5)*2; h.m1.x=h.mx+(h.ox1-h.mx)*t; h.m1.y=h.my+(h.oy1-h.my)*t; h.m2.x=h.mx+(h.ox2-h.mx)*t; h.m2.y=h.my+(h.oy2-h.my)*t; }
+    if (h.timer<=0) { h.m1.x=h.ox1;h.m1.y=h.oy1;h.m2.x=h.ox2;h.m2.y=h.oy2; highFiveAnims.splice(i,1); }
+  }
+}
+
+// ============================================================
+// GROWN PLANTS & AGENT MARKS
+// ============================================================
+function drawTerritoryTints() {
+  const stage = getStage(); if (stage < 2) return;
+  const ta = 0.04 + stage * 0.01;
+  const tA = {};
+  for (const p of world.plants) { const k = ((p.x/TILE)|0)+'_'+((p.y/TILE)|0); if(!tA[k])tA[k]={}; const a=p.agent||'nature'; tA[k][a]=(tA[k][a]||0)+1; }
+  for (const [k,agents] of Object.entries(tA)) {
+    const [txs,tys]=k.split('_'); const tx=parseInt(txs),ty=parseInt(tys);
+    let ma=null,mc=0; for(const[a,c]of Object.entries(agents))if(c>mc){ma=a;mc=c;}
+    if(ma&&mc>=2&&AGENT_GLOW[ma]){ctx.globalAlpha=Math.min(ta*Math.sqrt(mc),0.15);rect(tx*TILE,ty*TILE,TILE,TILE,AGENT_GLOW[ma]);ctx.globalAlpha=1;}
   }
 }
 
 function drawGrownPlants() {
-  // Performance: only draw visible plants
-  const viewL = camX - 10, viewR = camX + screenW / SCALE + 10;
-  const viewT = camY - 10, viewB = camY + screenH / SCALE + 10;
-
+  const vL=camX-10,vR=camX+screenW/SCALE+10,vT=camY-10,vB=camY+screenH/SCALE+10;
   for (const p of world.plants) {
-    if (p.x < viewL || p.x > viewR || p.y < viewT || p.y > viewB) continue;
-
-    p.age = Math.min((p.age || 0) + 0.02, 300);
-    const stage = p.growthStage || 0;
-    const agentColor = AGENT_GLOW[p.agent] || PAL.sprout;
-
-    // Draw agent aura/glow for stage 1+ (subtle colored glow beneath)
-    if (stage >= 1 && p.agent && AGENT_GLOW[p.agent]) {
-      const glowSize = Math.min(stage, 4);
-      const pulse = Math.sin(frameCount * 0.04 + p.x * 0.1 + p.y * 0.1) * 0.15 + 0.15;
-      ctx.globalAlpha = pulse;
-      for (let dy = -glowSize; dy <= glowSize; dy++) {
-        for (let dx = -glowSize; dx <= glowSize; dx++) {
-          if (Math.abs(dx) + Math.abs(dy) <= glowSize + 1) {
-            px(p.x + dx, p.y + dy, AGENT_GLOW[p.agent]);
-          }
-        }
-      }
-      ctx.globalAlpha = 1;
+    if (p.x<vL||p.x>vR||p.y<vT||p.y>vB) continue;
+    p.age = Math.min((p.age||0)+0.02, 300);
+    const stage = p.growthStage||0, ac = AGENT_GLOW[p.agent]||PAL.sprout;
+    if (stage>=1&&p.agent&&AGENT_GLOW[p.agent]) {
+      const gs=Math.min(stage,4), pulse=Math.sin(frameCount*0.04+p.x*0.1+p.y*0.1)*0.15+0.15;
+      ctx.globalAlpha=pulse; for(let dy=-gs;dy<=gs;dy++) for(let dx=-gs;dx<=gs;dx++) if(Math.abs(dx)+Math.abs(dy)<=gs+1) px(p.x+dx,p.y+dy,AGENT_GLOW[p.agent]); ctx.globalAlpha=1;
     }
-
-    // 6 distinct growth stages
-    if (p.type === 'sprout') {
-      if (stage === 0) {
-        // Seed: tiny brown dot in soil mound
-        px(p.x, p.y, '#5a3a1a');
-        px(p.x, p.y + 1, '#4a2a10');
-      } else if (stage === 1) {
-        // Sprout: small green stem + 2 tiny leaves
-        px(p.x, p.y, PAL.sprout);
-        px(p.x, p.y - 1, PAL.sprout);
-        px(p.x - 1, p.y - 1, '#2a7a2a');
-        px(p.x + 1, p.y - 1, '#2a7a2a');
-      } else if (stage === 2) {
-        // Young: taller stem, bigger leaves
-        for (let i = 0; i < 3; i++) px(p.x, p.y - i, PAL.sprout);
-        px(p.x - 1, p.y - 1, '#2a7a2a'); px(p.x + 1, p.y - 1, '#2a7a2a');
-        px(p.x - 1, p.y - 2, '#3a8a3a'); px(p.x + 1, p.y - 2, '#3a8a3a');
-      } else if (stage === 3) {
-        // Mature: full bush with detail
-        for (let i = 0; i < 4; i++) px(p.x, p.y - i, PAL.sprout);
-        px(p.x - 1, p.y - 2, '#1a6a1a'); px(p.x + 1, p.y - 2, '#1a6a1a');
-        px(p.x - 1, p.y - 3, '#2a7a2a'); px(p.x + 1, p.y - 3, '#2a7a2a');
-        px(p.x - 2, p.y - 2, '#0e5e0e'); px(p.x + 2, p.y - 2, '#0e5e0e');
-        px(p.x, p.y - 4, '#3a8a3a');
-      } else if (stage === 4) {
-        // Flowering: adds colored flowers matching agent
-        for (let i = 0; i < 5; i++) px(p.x, p.y - i, PAL.sprout);
-        px(p.x - 1, p.y - 2, '#1a6a1a'); px(p.x + 1, p.y - 2, '#1a6a1a');
-        px(p.x - 1, p.y - 3, '#2a7a2a'); px(p.x + 1, p.y - 3, '#2a7a2a');
-        px(p.x - 2, p.y - 2, '#0e5e0e'); px(p.x + 2, p.y - 2, '#0e5e0e');
-        px(p.x, p.y - 5, agentColor);
-        px(p.x - 1, p.y - 4, agentColor); px(p.x + 1, p.y - 4, agentColor);
-      } else {
-        // Stage 5 Ancient: glowing monument
-        for (let i = 0; i < 5; i++) px(p.x, p.y - i, PAL.sprout);
-        px(p.x - 1, p.y - 3, '#2a7a2a'); px(p.x + 1, p.y - 3, '#2a7a2a');
-        px(p.x - 2, p.y - 2, '#1a6a1a'); px(p.x + 2, p.y - 2, '#1a6a1a');
-        // Crown / monument top
-        px(p.x, p.y - 5, '#ffd700');
-        px(p.x - 1, p.y - 5, agentColor); px(p.x + 1, p.y - 5, agentColor);
-        px(p.x, p.y - 6, agentColor);
-        // Sparkle
-        const spark = Math.sin(frameCount * 0.1 + p.x) > 0.5;
-        if (spark) { ctx.globalAlpha = 0.7; px(p.x, p.y - 7, '#ffd700'); ctx.globalAlpha = 1; }
-      }
-    } else if (p.type === 'plant') {
-      if (stage === 0) {
-        px(p.x, p.y, '#5a3a1a'); px(p.x + 1, p.y, '#4a2a10');
-      } else if (stage === 1) {
-        px(p.x, p.y, PAL.sprout); px(p.x, p.y - 1, PAL.sprout);
-        px(p.x - 1, p.y, '#2a7a2a'); px(p.x + 1, p.y, '#2a7a2a');
-      } else if (stage === 2) {
-        for (let i = 0; i < 3; i++) px(p.x, p.y - i, PAL.sprout);
-        px(p.x - 1, p.y - 1, '#2a7a2a'); px(p.x + 1, p.y - 2, '#2a7a2a');
-        px(p.x - 1, p.y - 2, '#3a8a3a');
-      } else if (stage === 3) {
-        for (let i = 0; i < 4; i++) px(p.x, p.y - i, PAL.sprout);
-        px(p.x - 1, p.y - 2, '#1a6a1a'); px(p.x + 1, p.y - 2, '#1a6a1a');
-        px(p.x - 1, p.y - 3, '#2a7a2a'); px(p.x + 1, p.y - 3, '#2a7a2a');
-        px(p.x - 2, p.y - 1, '#0e5e0e'); px(p.x + 2, p.y - 1, '#0e5e0e');
-        px(p.x - 1, p.y - 4, '#3a8a3a'); px(p.x + 1, p.y - 4, '#3a8a3a');
-      } else if (stage === 4) {
-        for (let i = 0; i < 5; i++) px(p.x, p.y - i, PAL.sprout);
-        px(p.x - 1, p.y - 2, '#1a6a1a'); px(p.x + 1, p.y - 2, '#1a6a1a');
-        px(p.x - 2, p.y - 1, '#0e5e0e'); px(p.x + 2, p.y - 1, '#0e5e0e');
-        px(p.x - 1, p.y - 4, '#2a7a2a'); px(p.x + 1, p.y - 4, '#2a7a2a');
-        px(p.x, p.y - 5, agentColor);
-        px(p.x - 1, p.y - 5, agentColor);
-        px(p.x + 1, p.y - 3, p.color || PAL.flower_yellow);
-      } else {
-        // Ancient plant monument
-        for (let i = 0; i < 6; i++) px(p.x, p.y - i, PAL.sprout);
-        px(p.x - 1, p.y - 3, '#1a6a1a'); px(p.x + 1, p.y - 3, '#1a6a1a');
-        px(p.x - 2, p.y - 2, '#0e5e0e'); px(p.x + 2, p.y - 2, '#0e5e0e');
-        px(p.x - 1, p.y - 5, agentColor); px(p.x + 1, p.y - 5, agentColor);
-        px(p.x, p.y - 6, '#ffd700');
-        px(p.x - 1, p.y - 6, agentColor); px(p.x + 1, p.y - 6, agentColor);
-        const spark = Math.sin(frameCount * 0.08 + p.y) > 0.6;
-        if (spark) { ctx.globalAlpha = 0.6; px(p.x + 2, p.y - 5, '#ffd700'); ctx.globalAlpha = 1; }
-      }
-    } else if (p.type === 'flower') {
-      if (stage === 0) {
-        px(p.x, p.y, '#5a3a1a');
-      } else if (stage === 1) {
-        px(p.x, p.y, PAL.sprout);
-        px(p.x, p.y - 1, p.color);
-      } else if (stage === 2) {
-        px(p.x, p.y, PAL.sprout); px(p.x, p.y - 1, PAL.sprout);
-        px(p.x, p.y - 2, p.color);
-        px(p.x - 1, p.y - 2, p.color); px(p.x + 1, p.y - 2, p.color);
-      } else if (stage === 3) {
-        for (let i = 0; i < 3; i++) px(p.x, p.y - i, PAL.sprout);
-        px(p.x, p.y - 3, p.color);
-        px(p.x - 1, p.y - 3, p.color); px(p.x + 1, p.y - 3, p.color);
-        px(p.x, p.y - 4, p.color);
-        px(p.x - 1, p.y - 1, '#2a7a2a');
-      } else if (stage === 4) {
-        for (let i = 0; i < 4; i++) px(p.x, p.y - i, PAL.sprout);
-        px(p.x, p.y - 4, p.color);
-        px(p.x - 1, p.y - 4, p.color); px(p.x + 1, p.y - 4, p.color);
-        px(p.x, p.y - 5, p.color); px(p.x - 1, p.y - 3, agentColor);
-        px(p.x + 1, p.y - 3, agentColor);
-        px(p.x - 1, p.y - 1, '#2a7a2a'); px(p.x + 1, p.y - 1, '#2a7a2a');
-      } else {
-        // Ancient flower — full bloom with golden center
-        for (let i = 0; i < 4; i++) px(p.x, p.y - i, PAL.sprout);
-        px(p.x - 1, p.y - 1, '#2a7a2a'); px(p.x + 1, p.y - 1, '#2a7a2a');
-        px(p.x, p.y - 4, '#ffd700'); // golden center
-        px(p.x - 1, p.y - 4, p.color); px(p.x + 1, p.y - 4, p.color);
-        px(p.x, p.y - 5, p.color);
-        px(p.x - 1, p.y - 5, agentColor); px(p.x + 1, p.y - 5, agentColor);
-        px(p.x - 2, p.y - 4, agentColor); px(p.x + 2, p.y - 4, agentColor);
-        const spark = Math.sin(frameCount * 0.12 + p.x + p.y) > 0.5;
-        if (spark) { ctx.globalAlpha = 0.8; px(p.x, p.y - 6, '#ffd700'); ctx.globalAlpha = 1; }
-      }
+    if (p.type==='sprout') {
+      if(stage===0){px(p.x,p.y,'#5a3a1a');px(p.x,p.y+1,'#4a2a10');}
+      else if(stage===1){px(p.x,p.y,PAL.sprout);px(p.x,p.y-1,PAL.sprout);px(p.x-1,p.y-1,'#2a7a2a');px(p.x+1,p.y-1,'#2a7a2a');}
+      else if(stage===2){for(let i=0;i<3;i++)px(p.x,p.y-i,PAL.sprout);px(p.x-1,p.y-1,'#2a7a2a');px(p.x+1,p.y-1,'#2a7a2a');px(p.x-1,p.y-2,'#3a8a3a');px(p.x+1,p.y-2,'#3a8a3a');}
+      else if(stage===3){for(let i=0;i<4;i++)px(p.x,p.y-i,PAL.sprout);px(p.x-1,p.y-2,'#1a6a1a');px(p.x+1,p.y-2,'#1a6a1a');px(p.x-1,p.y-3,'#2a7a2a');px(p.x+1,p.y-3,'#2a7a2a');px(p.x-2,p.y-2,'#0e5e0e');px(p.x+2,p.y-2,'#0e5e0e');px(p.x,p.y-4,'#3a8a3a');}
+      else if(stage===4){for(let i=0;i<5;i++)px(p.x,p.y-i,PAL.sprout);px(p.x-1,p.y-2,'#1a6a1a');px(p.x+1,p.y-2,'#1a6a1a');px(p.x-1,p.y-3,'#2a7a2a');px(p.x+1,p.y-3,'#2a7a2a');px(p.x-2,p.y-2,'#0e5e0e');px(p.x+2,p.y-2,'#0e5e0e');px(p.x,p.y-5,ac);px(p.x-1,p.y-4,ac);px(p.x+1,p.y-4,ac);}
+      else{for(let i=0;i<5;i++)px(p.x,p.y-i,PAL.sprout);px(p.x-1,p.y-3,'#2a7a2a');px(p.x+1,p.y-3,'#2a7a2a');px(p.x-2,p.y-2,'#1a6a1a');px(p.x+2,p.y-2,'#1a6a1a');px(p.x,p.y-5,'#ffd700');px(p.x-1,p.y-5,ac);px(p.x+1,p.y-5,ac);px(p.x,p.y-6,ac);if(Math.sin(frameCount*0.1+p.x)>0.5){ctx.globalAlpha=0.7;px(p.x,p.y-7,'#ffd700');ctx.globalAlpha=1;}}
+    } else if (p.type==='plant') {
+      if(stage===0){px(p.x,p.y,'#5a3a1a');px(p.x+1,p.y,'#4a2a10');}
+      else if(stage===1){px(p.x,p.y,PAL.sprout);px(p.x,p.y-1,PAL.sprout);px(p.x-1,p.y,'#2a7a2a');px(p.x+1,p.y,'#2a7a2a');}
+      else if(stage===2){for(let i=0;i<3;i++)px(p.x,p.y-i,PAL.sprout);px(p.x-1,p.y-1,'#2a7a2a');px(p.x+1,p.y-2,'#2a7a2a');px(p.x-1,p.y-2,'#3a8a3a');}
+      else if(stage===3){for(let i=0;i<4;i++)px(p.x,p.y-i,PAL.sprout);px(p.x-1,p.y-2,'#1a6a1a');px(p.x+1,p.y-2,'#1a6a1a');px(p.x-1,p.y-3,'#2a7a2a');px(p.x+1,p.y-3,'#2a7a2a');px(p.x-2,p.y-1,'#0e5e0e');px(p.x+2,p.y-1,'#0e5e0e');px(p.x-1,p.y-4,'#3a8a3a');px(p.x+1,p.y-4,'#3a8a3a');}
+      else if(stage===4){for(let i=0;i<5;i++)px(p.x,p.y-i,PAL.sprout);px(p.x-1,p.y-2,'#1a6a1a');px(p.x+1,p.y-2,'#1a6a1a');px(p.x-2,p.y-1,'#0e5e0e');px(p.x+2,p.y-1,'#0e5e0e');px(p.x-1,p.y-4,'#2a7a2a');px(p.x+1,p.y-4,'#2a7a2a');px(p.x,p.y-5,ac);px(p.x-1,p.y-5,ac);px(p.x+1,p.y-3,p.color||PAL.flower_yellow);}
+      else{for(let i=0;i<6;i++)px(p.x,p.y-i,PAL.sprout);px(p.x-1,p.y-3,'#1a6a1a');px(p.x+1,p.y-3,'#1a6a1a');px(p.x-2,p.y-2,'#0e5e0e');px(p.x+2,p.y-2,'#0e5e0e');px(p.x-1,p.y-5,ac);px(p.x+1,p.y-5,ac);px(p.x,p.y-6,'#ffd700');px(p.x-1,p.y-6,ac);px(p.x+1,p.y-6,ac);if(Math.sin(frameCount*0.08+p.y)>0.6){ctx.globalAlpha=0.6;px(p.x+2,p.y-5,'#ffd700');ctx.globalAlpha=1;}}
+    } else if (p.type==='flower') {
+      if(stage===0) px(p.x,p.y,'#5a3a1a');
+      else if(stage===1){px(p.x,p.y,PAL.sprout);px(p.x,p.y-1,p.color);}
+      else if(stage===2){px(p.x,p.y,PAL.sprout);px(p.x,p.y-1,PAL.sprout);px(p.x,p.y-2,p.color);px(p.x-1,p.y-2,p.color);px(p.x+1,p.y-2,p.color);}
+      else if(stage===3){for(let i=0;i<3;i++)px(p.x,p.y-i,PAL.sprout);px(p.x,p.y-3,p.color);px(p.x-1,p.y-3,p.color);px(p.x+1,p.y-3,p.color);px(p.x,p.y-4,p.color);px(p.x-1,p.y-1,'#2a7a2a');}
+      else if(stage===4){for(let i=0;i<4;i++)px(p.x,p.y-i,PAL.sprout);px(p.x,p.y-4,p.color);px(p.x-1,p.y-4,p.color);px(p.x+1,p.y-4,p.color);px(p.x,p.y-5,p.color);px(p.x-1,p.y-3,ac);px(p.x+1,p.y-3,ac);px(p.x-1,p.y-1,'#2a7a2a');px(p.x+1,p.y-1,'#2a7a2a');}
+      else{for(let i=0;i<4;i++)px(p.x,p.y-i,PAL.sprout);px(p.x-1,p.y-1,'#2a7a2a');px(p.x+1,p.y-1,'#2a7a2a');px(p.x,p.y-4,'#ffd700');px(p.x-1,p.y-4,p.color);px(p.x+1,p.y-4,p.color);px(p.x,p.y-5,p.color);px(p.x-1,p.y-5,ac);px(p.x+1,p.y-5,ac);px(p.x-2,p.y-4,ac);px(p.x+2,p.y-4,ac);if(Math.sin(frameCount*0.12+p.x+p.y)>0.5){ctx.globalAlpha=0.8;px(p.x,p.y-6,'#ffd700');ctx.globalAlpha=1;}}
     }
   }
 }
 
-// ============================================================
-// AGENT MARKS (persistent decorations)
-// ============================================================
 function drawAgentMarks() {
-  const viewL = camX - 10, viewR = camX + screenW / SCALE + 10;
-  const viewT = camY - 10, viewB = camY + screenH / SCALE + 10;
-
-  for (const mark of world.agentMarks) {
-    if (mark.x < viewL || mark.x > viewR || mark.y < viewT || mark.y > viewB) continue;
-
-    if (mark.type === 'red_flower' || mark.type === 'berry_bush') {
-      // Jeffrey: red flowers / berry bushes
-      px(mark.x, mark.y, mark.color);
-      px(mark.x, mark.y + 1, '#2a7a2a');
-      if (mark.type === 'berry_bush') {
-        px(mark.x - 1, mark.y, '#1a5a1a');
-        px(mark.x + 1, mark.y, '#1a5a1a');
-        px(mark.x, mark.y - 1, mark.color);
-      }
-    } else if (mark.type === 'crystal' || mark.type === 'water_feature') {
-      // Claude: blue crystals / water
-      px(mark.x, mark.y, mark.color);
-      px(mark.x, mark.y - 1, lighten(mark.color, 30));
-      if (mark.type === 'crystal') {
-        px(mark.x - 1, mark.y, mark.color);
-        px(mark.x + 1, mark.y, mark.color);
-        px(mark.x, mark.y - 2, lighten(mark.color, 50));
-      } else {
-        const wave = Math.sin(frameCount * 0.05 + mark.x) > 0;
-        px(mark.x + (wave ? 1 : -1), mark.y, PAL.waterLight);
-      }
-    } else if (mark.type === 'mushroom' || mark.type === 'glow_orb') {
-      // GPT-4: purple mushrooms / glowing orbs
-      if (mark.type === 'mushroom') {
-        px(mark.x, mark.y, '#8a6a3a'); // stem
-        px(mark.x - 1, mark.y - 1, mark.color);
-        px(mark.x, mark.y - 1, mark.color);
-        px(mark.x + 1, mark.y - 1, mark.color);
-        px(mark.x, mark.y - 2, lighten(mark.color, 20));
-      } else {
-        // Glowing orb
-        const glow = Math.sin(frameCount * 0.06 + mark.y) * 0.3 + 0.7;
-        ctx.globalAlpha = glow;
-        px(mark.x, mark.y, mark.color);
-        ctx.globalAlpha = glow * 0.4;
-        px(mark.x - 1, mark.y, mark.color);
-        px(mark.x + 1, mark.y, mark.color);
-        px(mark.x, mark.y - 1, mark.color);
-        ctx.globalAlpha = 1;
-      }
-    } else if (mark.type === 'vine' || mark.type === 'climber') {
-      // Gemini: green vines
-      px(mark.x, mark.y, mark.color);
-      px(mark.x, mark.y - 1, mark.color);
-      if (mark.type === 'climber') {
-        px(mark.x + 1, mark.y - 2, mark.color);
-        px(mark.x + 1, mark.y - 3, mark.color);
-      }
-    } else if (mark.type === 'lantern' || mark.type === 'signal_post') {
-      // Codex: orange lanterns / signal posts
-      px(mark.x, mark.y, '#888'); // post
-      px(mark.x, mark.y - 1, '#888');
-      if (mark.type === 'lantern') {
-        const flicker = Math.sin(frameCount * 0.1 + mark.x) > -0.3;
-        px(mark.x, mark.y - 2, flicker ? mark.color : '#d07020');
-        if (flicker) {
-          ctx.globalAlpha = 0.3;
-          px(mark.x - 1, mark.y - 2, mark.color);
-          px(mark.x + 1, mark.y - 2, mark.color);
-          ctx.globalAlpha = 1;
-        }
-      } else {
-        px(mark.x, mark.y - 2, mark.color);
-        if (frameCount % 40 < 20) {
-          px(mark.x - 1, mark.y - 3, 'rgba(251,146,60,0.4)');
-          px(mark.x + 1, mark.y - 3, 'rgba(251,146,60,0.4)');
-        }
-      }
+  const vL=camX-10,vR=camX+screenW/SCALE+10,vT=camY-10,vB=camY+screenH/SCALE+10;
+  for (const mk of world.agentMarks) {
+    if (mk.x<vL||mk.x>vR||mk.y<vT||mk.y>vB) continue;
+    if (mk.type==='red_flower'||mk.type==='berry_bush') {
+      px(mk.x,mk.y,mk.color); px(mk.x,mk.y+1,'#2a7a2a');
+      if(mk.type==='berry_bush'){px(mk.x-1,mk.y,'#1a5a1a');px(mk.x+1,mk.y,'#1a5a1a');px(mk.x,mk.y-1,mk.color);}
+    } else if (mk.type==='crystal'||mk.type==='water_feature') {
+      px(mk.x,mk.y,mk.color); px(mk.x,mk.y-1,lighten(mk.color,30));
+      if(mk.type==='crystal'){px(mk.x-1,mk.y,mk.color);px(mk.x+1,mk.y,mk.color);px(mk.x,mk.y-2,lighten(mk.color,50));}
+      else{px(mk.x+(Math.sin(frameCount*0.05+mk.x)>0?1:-1),mk.y,PAL.waterLight);}
+    } else if (mk.type==='mushroom'||mk.type==='glow_orb') {
+      if(mk.type==='mushroom'){px(mk.x,mk.y,'#8a6a3a');px(mk.x-1,mk.y-1,mk.color);px(mk.x,mk.y-1,mk.color);px(mk.x+1,mk.y-1,mk.color);px(mk.x,mk.y-2,lighten(mk.color,20));}
+      else{const g=Math.sin(frameCount*0.06+mk.y)*0.3+0.7;ctx.globalAlpha=g;px(mk.x,mk.y,mk.color);ctx.globalAlpha=g*0.4;px(mk.x-1,mk.y,mk.color);px(mk.x+1,mk.y,mk.color);px(mk.x,mk.y-1,mk.color);ctx.globalAlpha=1;}
+    } else if (mk.type==='vine'||mk.type==='climber') {
+      px(mk.x,mk.y,mk.color); px(mk.x,mk.y-1,mk.color);
+      if(mk.type==='climber'){px(mk.x+1,mk.y-2,mk.color);px(mk.x+1,mk.y-3,mk.color);}
+    } else if (mk.type==='lantern'||mk.type==='signal_post') {
+      px(mk.x,mk.y,'#888'); px(mk.x,mk.y-1,'#888');
+      if(mk.type==='lantern'){const fl=Math.sin(frameCount*0.1+mk.x)>-0.3;px(mk.x,mk.y-2,fl?mk.color:'#d07020');if(fl){ctx.globalAlpha=0.3;px(mk.x-1,mk.y-2,mk.color);px(mk.x+1,mk.y-2,mk.color);ctx.globalAlpha=1;}}
+      else{px(mk.x,mk.y-2,mk.color);if(frameCount%40<20){px(mk.x-1,mk.y-3,'rgba(251,146,60,0.4)');px(mk.x+1,mk.y-3,'rgba(251,146,60,0.4)');}}
     }
   }
 }
@@ -1584,275 +1263,32 @@ function drawAgentMarks() {
 // SPEECH BUBBLES
 // ============================================================
 function drawSpeechBubbles() {
-  for (let i = speechBubbles.length - 1; i >= 0; i--) {
-    const b = speechBubbles[i];
-    b.life--;
-    b.y -= 0.05;
+  for (let i = speechBubbles.length-1; i >= 0; i--) {
+    const b = speechBubbles[i]; b.life--; b.y -= 0.05;
     if (b.life <= 0) { speechBubbles.splice(i, 1); continue; }
     ctx.globalAlpha = Math.min(b.life / 20, 1);
     const tw = b.text.length * 4 + 4;
     rect(b.x - tw/2, b.y - 3, tw, 7, 'rgba(255,255,255,0.9)');
     px(b.x, b.y + 4, 'rgba(255,255,255,0.9)');
-    drawPixelText(b.text, b.x - tw/2 + 2, b.y - 2, '#333');
+    drawPixelText(b.text, b.x - tw/2 + 2, b.y - 2, b.color || '#333');
     ctx.globalAlpha = 1;
   }
 }
 
 // ============================================================
-// DAY/NIGHT CYCLE
+// DAY/NIGHT & PHILOSOPHER'S STONE
 // ============================================================
 function getDayOverlay() {
   dayTime += 0.00005;
   if (dayTime > 1) dayTime = 0;
+  // Use weather for night instead of dayTime when weather is active
+  if (currentWeather === 'night') return 'rgba(10,10,40,0.35)';
+  if (currentWeather === 'rainy') return 'rgba(20,30,50,0.15)';
   const nightAmount = Math.sin(dayTime * Math.PI * 2) * 0.5 + 0.5;
-  return `rgba(10,10,40,${nightAmount * 0.3})`;
+  return 'rgba(10,10,40,' + (nightAmount * 0.3) + ')';
 }
 
-// ============================================================
-// AUTO GROWTH
-// ============================================================
-let lastGrowth = 0;
-// Stage 3+ ambient nature particles (pollen, leaves)
-function spawnAmbientParticles() {
-  const stage = getStage();
-  if (stage < 3) return;
-  if (Math.random() < 0.01 * (stage - 2)) {
-    const px = camX + Math.random() * (screenW / SCALE);
-    const py = camY + Math.random() * 10;
-    const colors = stage >= 5
-      ? ['#ffd700', '#f0e0a0', '#ffe070', '#4ade80']
-      : ['#a0d080', '#80c060', '#c0e0a0'];
-    particles.push({
-      x: px, y: py,
-      vx: (Math.random() - 0.5) * 0.15,
-      vy: 0.05 + Math.random() * 0.08,
-      life: 120 + Math.random() * 80,
-      maxLife: 200,
-      color: colors[Math.floor(Math.random() * colors.length)]
-    });
-  }
-}
-
-function autoGrow() {
-  spawnAmbientParticles();
-  if (frameCount - lastGrowth > 900) {
-    lastGrowth = frameCount;
-    const x = 20 + Math.random() * (WORLD_W - 40);
-    const y = 20 + Math.random() * (WORLD_H - 40);
-    if (isWalkable(x, y)) {
-      const types = ['sprout', 'flower', 'plant'];
-      const colors = [PAL.sprout, PAL.flower_red, PAL.flower_yellow, PAL.flower_pink, PAL.flower_blue];
-      addPersistentPlant(x, y,
-        types[Math.floor(Math.random() * 3)],
-        colors[Math.floor(Math.random() * colors.length)],
-        'nature'
-      );
-      addParticles(x, y, '#ffd700', 3);
-    }
-    // Grow all existing plants slightly
-    for (const p of world.plants) {
-      if (Math.random() < 0.1) {
-        p.growthStage = Math.min((p.growthStage || 0) + 1, 5);
-      }
-    }
-  }
-}
-
-// ============================================================
-// MINIMAP
-// ============================================================
-function drawMinimap() {
-  const mw = MC.width, mh = MC.height;
-  mctx.fillStyle = '#1a3a1a';
-  mctx.fillRect(0, 0, mw, mh);
-  const sx = mw / WORLD_W, sy = mh / WORLD_H;
-  for (let ty = 0; ty < TILES_H; ty++) {
-    for (let tx = 0; tx < TILES_W; tx++) {
-      const t = tileMap[ty][tx];
-      let c = '#3a7a3a';
-      if (t === 1) c = '#9a8a6a';
-      else if (t === 2) c = '#3a7aca';
-      else if (t === 3) c = '#5a3a1a';
-      else if (t === 4) c = '#0e3e0e';
-      else if (t === 5) c = '#7a7a7a';
-      else if (t === 6) c = '#8a6a3a';
-      else if (t === 8) c = '#1a5a1a';
-      mctx.fillStyle = c;
-      mctx.fillRect(tx * TILE * sx, ty * TILE * sy, TILE * sx + 1, TILE * sy + 1);
-    }
-  }
-  // Structures on minimap
-  for (const s of world.structures) {
-    mctx.fillStyle = s.color;
-    mctx.fillRect(s.x * sx, s.y * sy, Math.max(s.w * sx, 2), Math.max(s.h * sy, 2));
-  }
-  for (const m of mascots) {
-    mctx.fillStyle = m.color;
-    mctx.fillRect(m.x * sx - 1, m.y * sy - 1, 3, 3);
-  }
-  const vw = (screenW / SCALE) * sx, vh = (screenH / SCALE) * sy;
-  mctx.strokeStyle = '#4ade80';
-  mctx.lineWidth = 1;
-  mctx.strokeRect(camX * sx, camY * sy, vw, vh);
-}
-
-// ============================================================
-// HISTORY & STATS PANELS
-// ============================================================
-let historyVisible = false;
-let statsVisible = false;
-
-function toggleHistory() {
-  historyVisible = !historyVisible;
-  const panel = document.getElementById('history-panel');
-  panel.style.display = historyVisible ? 'block' : 'none';
-  if (historyVisible) renderHistory();
-  if (historyVisible && statsVisible) { statsVisible = false; document.getElementById('stats-panel').style.display = 'none'; }
-}
-
-function toggleStats() {
-  statsVisible = !statsVisible;
-  const panel = document.getElementById('stats-panel');
-  panel.style.display = statsVisible ? 'block' : 'none';
-  if (statsVisible) renderStats();
-  if (statsVisible && historyVisible) { historyVisible = false; document.getElementById('history-panel').style.display = 'none'; }
-}
-
-const AGENT_COLORS = {
-  system: '#ffd700',
-  Jeffrey: '#E06050',
-  Claude: '#60a5fa',
-  'GPT-4': '#a78bfa',
-  Gemini: '#4ade80',
-  Codex: '#fb923c',
-  nature: '#4ade80',
-};
-
-function renderHistory() {
-  const el = document.getElementById('history-entries');
-  const entries = world.history.slice(-50).reverse();
-  el.innerHTML = entries.map(e =>
-    `<div class="entry" style="color:${AGENT_COLORS[e.agent] || '#888'}">
-      Day ${e.day} (v${e.visit}): ${e.text}
-    </div>`
-  ).join('');
-}
-
-function renderStats() {
-  const el = document.getElementById('stats-entries');
-  const daysAlive = Math.floor((Date.now() - world.firstVisit) / 86400000) + 1;
-  const stage = getStage();
-  const ms = world.mascotStats;
-  const totalStructures = Object.keys(STRUCTURE_DEFS).length;
-
-  el.innerHTML = `
-    <div class="stat"><span>Total plants:</span><span class="stat-val" style="color:#4ade80">${world.plants.length}</span></div>
-    <div class="stat"><span>Stage:</span><span class="stat-val" style="color:#a78bfa">${stage}/5 — ${STAGES[stage-1].name}</span></div>
-    <div class="stat"><span>Visits:</span><span class="stat-val">${world.visitCount}</span></div>
-    <div class="stat"><span>Days alive:</span><span class="stat-val">${daysAlive}</span></div>
-    <div class="stat"><span>Agent marks:</span><span class="stat-val">${world.agentMarks.length}</span></div>
-    <div class="stat"><span>Structures:</span><span class="stat-val">${world.structuresBuilt.length}/${totalStructures}</span></div>
-    <hr style="border-color:#2a4a2a;margin:6px 0">
-    <div class="stat"><span style="color:#E06050">Jeffrey's plants:</span><span class="stat-val">${ms.Jeffrey.plants}</span></div>
-    <div class="stat"><span style="color:#60a5fa">Claude's waters:</span><span class="stat-val">${ms.Claude.waters}</span></div>
-    <div class="stat"><span style="color:#a78bfa">GPT-4's ideas:</span><span class="stat-val">${ms['GPT-4'].ideas}</span></div>
-    <div class="stat"><span style="color:#4ade80">Gemini's deliveries:</span><span class="stat-val">${ms.Gemini.deliveries}</span></div>
-    <div class="stat"><span style="color:#fb923c">Codex's conversations:</span><span class="stat-val">${ms.Codex.conversations}</span></div>
-    <hr style="border-color:#2a4a2a;margin:6px 0">
-    <div class="stat"><span>Total interactions:</span><span class="stat-val">${Object.values(ms).reduce((s,m)=>s+m.interactions,0)}</span></div>
-    <div class="stat"><span>Time spent:</span><span class="stat-val">${Math.floor(world.totalTimeSpent/60)}m</span></div>
-  `;
-}
-
-// ============================================================
-// MEMORY PANEL
-// ============================================================
-let memoryVisible = false;
-function toggleMemory() {
-  memoryVisible = !memoryVisible;
-  const panel = document.getElementById('memory-panel');
-  panel.style.display = memoryVisible ? 'block' : 'none';
-  if (memoryVisible) renderMemory();
-  if (memoryVisible) {
-    if (historyVisible) { historyVisible = false; document.getElementById('history-panel').style.display = 'none'; }
-    if (statsVisible) { statsVisible = false; document.getElementById('stats-panel').style.display = 'none'; }
-  }
-}
-
-function renderMemory() {
-  const el = document.getElementById('memory-entries');
-  const daysAlive = Math.floor((Date.now() - world.firstVisit) / 86400000) + 1;
-  const stage = getStage();
-  const ms = world.mascotStats;
-
-  // Calculate per-agent totals
-  const agentTotals = {};
-  let maxTotal = 1;
-  for (const [name, stats] of Object.entries(ms)) {
-    const total = stats.plants + (stats.waters || 0) + (stats.ideas || 0) + (stats.deliveries || 0) + (stats.conversations || 0) + (stats.built || 0);
-    agentTotals[name] = total;
-    if (total > maxTotal) maxTotal = total;
-  }
-
-  // Build "what changed" summary
-  let changedHtml = '';
-  const prev = world._prevSnapshot || world.lastSessionSnapshot || {};
-  if (world.visitCount > 1) {
-    const newPlants = world.plants.length - (prev.plants || 0);
-    const newStructures = (world.structuresBuilt ? world.structuresBuilt.length : 0) - (prev.structures || 0);
-    const stageChange = stage - (prev.stage || 1);
-    changedHtml = `<div class="summary-box">
-      <div style="color:#ffd700;font-size:11px;margin-bottom:4px">📋 Since last visit:</div>
-      <div>${newPlants >= 0 ? '+' : ''}${newPlants} plants</div>
-      ${newStructures > 0 ? `<div>+${newStructures} new structures</div>` : ''}
-      ${stageChange > 0 ? `<div style="color:#a78bfa">⬆ Advanced ${stageChange} stage(s)!</div>` : ''}
-      <div style="color:#888;font-size:9px;margin-top:4px">All plants grew one stage on return</div>
-    </div>`;
-  }
-
-  // Timeline milestones
-  const milestones = (world.milestones || []).slice(-10);
-  let timelineHtml = '';
-  if (milestones.length > 0) {
-    timelineHtml = milestones.map(m =>
-      `<div class="milestone"><span class="m-visit">v${m.visit}</span> — ${m.text}</div>`
-    ).join('');
-  }
-
-  // Agent contribution bars
-  const barColors = { Jeffrey: '#E06050', Claude: '#60a5fa', 'GPT-4': '#a78bfa', Gemini: '#4ade80', Codex: '#fb923c' };
-  let barsHtml = '';
-  for (const [name, total] of Object.entries(agentTotals)) {
-    const pct = Math.min((total / maxTotal) * 100, 100);
-    barsHtml += `<div class="bar-row">
-      <div class="bar-label" style="color:${barColors[name]}">${name}</div>
-      <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${barColors[name]}"></div></div>
-      <div style="font-size:10px;width:30px">${total}</div>
-    </div>`;
-  }
-
-  el.innerHTML = `
-    <div class="section">
-      <div style="display:flex;justify-content:space-between;margin-bottom:8px">
-        <div>🌍 <b style="color:#4ade80">Visit #${world.visitCount}</b></div>
-        <div style="color:#888">${daysAlive} day${daysAlive > 1 ? 's' : ''} alive</div>
-      </div>
-      <div style="color:#888;font-size:10px">Born: ${new Date(world.firstVisit).toLocaleDateString()}</div>
-      <div style="color:#888;font-size:10px">Stage ${stage}/5: ${STAGES[stage-1].name} (${world.plants.length} plants)</div>
-    </div>
-    ${changedHtml}
-    <div class="section">
-      <div class="section-title">🤖 Agent Contributions</div>
-      ${barsHtml}
-    </div>
-    ${timelineHtml ? `<div class="section"><div class="section-title">📍 Milestones</div>${timelineHtml}</div>` : ''}
-  `;
-}
-
-// ============================================================
-// PHILOSOPHER'S STONE — Jeffrey's hidden mark
-// ============================================================
-const STONE_X = WORLD_W - 18; // bottom-right area
+const STONE_X = WORLD_W - 18;
 const STONE_Y = WORLD_H - 14;
 let stoneTooltipTimer = 0;
 let stoneActive = false;
@@ -1861,214 +1297,489 @@ function drawPhilosopherStone() {
   const ps = world.philosopherStone;
   const baseBright = 0.4 + Math.min(ps.discoveries * 0.06, 0.5);
   const pulse = Math.sin(frameCount * 0.05) * 0.15 + baseBright;
-
-  // Pulsing gold/amber stone (2x2)
   ctx.globalAlpha = pulse;
-  px(STONE_X, STONE_Y, '#d4a017');
-  px(STONE_X + 1, STONE_Y, '#c89010');
-  px(STONE_X, STONE_Y + 1, '#b88008');
-  px(STONE_X + 1, STONE_Y + 1, '#d4a017');
-  ctx.globalAlpha = 1;
-
-  // Subtle glow ring
+  px(STONE_X, STONE_Y, '#d4a017'); px(STONE_X+1, STONE_Y, '#c89010');
+  px(STONE_X, STONE_Y+1, '#b88008'); px(STONE_X+1, STONE_Y+1, '#d4a017');
   ctx.globalAlpha = pulse * 0.25;
-  px(STONE_X - 1, STONE_Y, '#ffd700');
-  px(STONE_X + 2, STONE_Y, '#ffd700');
-  px(STONE_X, STONE_Y - 1, '#ffd700');
-  px(STONE_X + 1, STONE_Y + 2, '#ffd700');
+  px(STONE_X-1, STONE_Y, '#ffd700'); px(STONE_X+2, STONE_Y, '#ffd700');
+  px(STONE_X, STONE_Y-1, '#ffd700'); px(STONE_X+1, STONE_Y+2, '#ffd700');
   ctx.globalAlpha = 1;
-}
-
-function checkPhilosopherStoneProximity() {
-  // Check if any mascot is near the stone
-  for (const m of mascots) {
-    const dist = Math.hypot(m.x + 6 - STONE_X, m.y + 8 - STONE_Y);
-    if (dist < 14) {
-      activatePhilosopherStone();
-      return;
-    }
-  }
 }
 
 function activatePhilosopherStone() {
   if (stoneActive) return;
   stoneActive = true;
   world.philosopherStone.discoveries++;
-
   const ps = world.philosopherStone;
   const quote = PHILOSOPHER_QUOTES[ps.currentQuoteIdx];
-
   const tooltip = document.getElementById('philosopher-tooltip');
-  document.getElementById('stone-quote').textContent = `"${quote}"`;
-  document.getElementById('stone-count').textContent = `✦ Discovered ${ps.discoveries} time${ps.discoveries > 1 ? 's' : ''} across all visits`;
-
-  // Position tooltip near the stone on screen
-  const sx = (STONE_X - camX) * SCALE;
-  const sy = (STONE_Y - camY) * SCALE;
+  document.getElementById('stone-quote').textContent = '"' + quote + '"';
+  document.getElementById('stone-count').textContent = '✦ Discovered ' + ps.discoveries + ' time' + (ps.discoveries > 1 ? 's' : '') + ' across all visits';
+  const sx = (STONE_X - camX) * SCALE, sy = (STONE_Y - camY) * SCALE;
   tooltip.style.left = Math.max(10, Math.min(sx - 140, screenW - 300)) + 'px';
   tooltip.style.top = Math.max(10, sy - 120) + 'px';
   tooltip.style.display = 'block';
-
-  stoneTooltipTimer = 300; // frames (~5 seconds)
-
+  stoneTooltipTimer = 300;
   addParticles(STONE_X, STONE_Y, '#ffd700', 6);
 }
 
 function updatePhilosopherStone() {
-  if (stoneTooltipTimer > 0) {
-    stoneTooltipTimer--;
-    if (stoneTooltipTimer <= 0) {
-      stoneActive = false;
-      document.getElementById('philosopher-tooltip').style.display = 'none';
-    }
-  }
-  // Check mascot proximity every 30 frames
-  if (frameCount % 30 === 0) checkPhilosopherStoneProximity();
+  if (stoneTooltipTimer > 0) { stoneTooltipTimer--; if (stoneTooltipTimer <= 0) { stoneActive = false; document.getElementById('philosopher-tooltip').style.display = 'none'; } }
+  if (frameCount % 30 === 0) for (const m of mascots) if (Math.hypot(m.x+6-STONE_X, m.y+8-STONE_Y) < 14) { activatePhilosopherStone(); break; }
 }
 
 // ============================================================
-// PLANT TOOLTIP ON HOVER/CLICK
+// AUTO GROWTH & AMBIENT
+// ============================================================
+let lastGrowth = 0;
+function spawnAmbientParticles() {
+  const stage = getStage(); if (stage < 3) return;
+  if (Math.random() < 0.01 * (stage - 2)) {
+    const colors = stage >= 5 ? ['#ffd700','#f0e0a0','#ffe070','#4ade80'] : ['#a0d080','#80c060','#c0e0a0'];
+    particles.push({ x: camX+Math.random()*(screenW/SCALE), y: camY+Math.random()*10, vx: (Math.random()-0.5)*0.15, vy: 0.05+Math.random()*0.08, life: 120+Math.random()*80, maxLife: 200, color: colors[(Math.random()*colors.length)|0] });
+  }
+}
+
+function autoGrow() {
+  spawnAmbientParticles();
+  if (frameCount - lastGrowth > 900) {
+    lastGrowth = frameCount;
+    const x = 20+Math.random()*(WORLD_W-40), y = 20+Math.random()*(WORLD_H-40);
+    if (isWalkable(x, y)) {
+      const types = ['sprout','flower','plant'];
+      const sc = seasonFlowerColors();
+      const colors = [PAL.sprout, PAL.flower_red, sc[0], sc[1], PAL.flower_blue];
+      addPersistentPlant(x, y, types[(Math.random()*3)|0], colors[(Math.random()*colors.length)|0], 'nature');
+      addParticles(x, y, '#ffd700', 3);
+    }
+    for (const p of world.plants) if (Math.random() < 0.1) p.growthStage = Math.min((p.growthStage||0)+1, 5);
+  }
+}
+
+// ============================================================
+// PLANT & MASCOT TOOLTIPS
 // ============================================================
 let hoveredPlant = null;
+function findPlantAt(gx, gy) { for (const p of world.plants) if (Math.abs(p.x-gx)<3 && Math.abs(p.y-gy)<6) return p; return null; }
 
-function findPlantAt(gx, gy) {
-  for (const p of world.plants) {
-    if (Math.abs(p.x - gx) < 3 && Math.abs(p.y - gy) < 6) return p;
-  }
+function showPlantTooltip(plant, sx, sy) {
+  if (!plant) { document.getElementById('plant-tooltip').style.display = 'none'; return; }
+  const tt = document.getElementById('plant-tooltip');
+  const sn = ['Seed','Sprout','Young','Mature','Flowering','Ancient'];
+  document.getElementById('pt-agent').textContent = plant.agent || 'Nature';
+  document.getElementById('pt-agent').style.color = AGENT_GLOW[plant.agent] || '#4ade80';
+  document.getElementById('pt-detail').textContent = sn[plant.growthStage||0] + ' ' + plant.type + ' · Visit #' + (plant.plantedVisit||'?');
+  tt.style.left = (sx+12)+'px'; tt.style.top = (sy-30)+'px';
+  tt.style.display = 'block'; tt.style.borderColor = AGENT_GLOW[plant.agent] || '#4ade80';
+}
+
+function findMascotAt(gx, gy) {
+  for (const m of mascots) if (gx > m.x-2 && gx < m.x+14 && gy > m.y-2 && gy < m.y+16) return m;
   return null;
 }
 
-function showPlantTooltip(plant, screenX, screenY) {
-  if (!plant) { document.getElementById('plant-tooltip').style.display = 'none'; return; }
-  const tooltip = document.getElementById('plant-tooltip');
-  const stageNames = ['Seed', 'Sprout', 'Young', 'Mature', 'Flowering', 'Ancient'];
-  document.getElementById('pt-agent').textContent = (plant.agent || 'Nature');
-  document.getElementById('pt-agent').style.color = AGENT_GLOW[plant.agent] || '#4ade80';
-  document.getElementById('pt-detail').textContent =
-    `${stageNames[plant.growthStage || 0]} ${plant.type} · Visit #${plant.plantedVisit || '?'}`;
-  tooltip.style.left = (screenX + 12) + 'px';
-  tooltip.style.top = (screenY - 30) + 'px';
-  tooltip.style.display = 'block';
-  tooltip.style.borderColor = AGENT_GLOW[plant.agent] || '#4ade80';
+// ============================================================
+// MINIMAP — Interactive
+// ============================================================
+function drawMinimap() {
+  const mw = MC.width, mh = MC.height;
+  const zoomFactor = minimapZoomed ? 2 : 1;
+  mctx.fillStyle = '#1a3a1a';
+  mctx.fillRect(0, 0, mw, mh);
+
+  const sx = (mw * zoomFactor) / WORLD_W, sy = (mh * zoomFactor) / WORLD_H;
+  // Offset for zoomed minimap centering on camera
+  let offX = 0, offY = 0;
+  if (minimapZoomed) {
+    const viewCX = camX + (screenW / SCALE) / 2;
+    const viewCY = camY + (screenH / SCALE) / 2;
+    offX = -(viewCX * sx - mw / 2);
+    offY = -(viewCY * sy - mh / 2);
+  }
+
+  // Tiles
+  for (let ty = 0; ty < TILES_H; ty++) for (let tx = 0; tx < TILES_W; tx++) {
+    const t = tileMap[ty][tx];
+    let c = '#3a7a3a';
+    if (t===1) c='#9a8a6a'; else if(t===2) c='#3a7aca'; else if(t===3) c='#5a3a1a'; else if(t===4) c='#0e3e0e'; else if(t===5) c='#7a7a7a'; else if(t===6) c='#8a6a3a'; else if(t===8) c='#1a5a1a';
+    mctx.fillStyle = c;
+    mctx.fillRect(offX + tx*TILE*sx, offY + ty*TILE*sy, TILE*sx+1, TILE*sy+1);
+  }
+
+  // Structure outlines
+  for (const s of world.structures) {
+    mctx.strokeStyle = s.color; mctx.lineWidth = 1;
+    mctx.strokeRect(offX + s.x*sx, offY + s.y*sy, Math.max(s.w*sx,2), Math.max(s.h*sy,2));
+  }
+
+  // Plant dots
+  for (const p of world.plants) {
+    const pc = AGENT_GLOW[p.agent] || '#4ade80';
+    mctx.fillStyle = pc;
+    mctx.fillRect(offX + p.x*sx, offY + p.y*sy, 1, 1);
+  }
+
+  // Mascots
+  for (const m of mascots) {
+    mctx.fillStyle = m.color;
+    const mx = offX + m.x * sx - 1, my = offY + m.y * sy - 1;
+    mctx.fillRect(mx, my, 3, 3);
+    // Pulse active mascot
+    if (m === activeMiniMascot) {
+      const pulse = Math.sin(frameCount * 0.1) * 0.4 + 0.6;
+      mctx.globalAlpha = pulse;
+      mctx.strokeStyle = m.color; mctx.lineWidth = 1;
+      mctx.strokeRect(mx - 2, my - 2, 7, 7);
+      mctx.globalAlpha = 1;
+    }
+  }
+
+  // Viewport indicator
+  const vw = (screenW / SCALE) * sx, vh = (screenH / SCALE) * sy;
+  mctx.fillStyle = 'rgba(74,222,128,0.15)';
+  mctx.fillRect(offX + camX * sx, offY + camY * sy, vw, vh);
+  mctx.strokeStyle = '#4ade80'; mctx.lineWidth = 1;
+  mctx.strokeRect(offX + camX * sx, offY + camY * sy, vw, vh);
 }
 
-// Keyboard shortcuts
-document.addEventListener('keydown', (e) => {
+function minimapToWorld(mx, my) {
+  const mw = MC.width, mh = MC.height;
+  const zoomFactor = minimapZoomed ? 2 : 1;
+  const sx = (mw * zoomFactor) / WORLD_W, sy = (mh * zoomFactor) / WORLD_H;
+  let offX = 0, offY = 0;
+  if (minimapZoomed) {
+    const viewCX = camX + (screenW / SCALE) / 2;
+    const viewCY = camY + (screenH / SCALE) / 2;
+    offX = -(viewCX * sx - mw / 2);
+    offY = -(viewCY * sy - mh / 2);
+  }
+  return { x: (mx - offX) / sx, y: (my - offY) / sy };
+}
+
+// ============================================================
+// HISTORY, STATS & MEMORY PANELS
+// ============================================================
+let historyVisible = false, statsVisible = false, memoryVisible = false;
+
+function toggleHistory() {
+  historyVisible = !historyVisible;
+  document.getElementById('history-panel').style.display = historyVisible ? 'block' : 'none';
+  if (historyVisible) renderHistory();
+  if (historyVisible && statsVisible) { statsVisible = false; document.getElementById('stats-panel').style.display = 'none'; }
+  if (historyVisible && memoryVisible) { memoryVisible = false; document.getElementById('memory-panel').style.display = 'none'; }
+}
+
+function toggleStats() {
+  statsVisible = !statsVisible;
+  document.getElementById('stats-panel').style.display = statsVisible ? 'block' : 'none';
+  if (statsVisible) renderStats();
+  if (statsVisible && historyVisible) { historyVisible = false; document.getElementById('history-panel').style.display = 'none'; }
+  if (statsVisible && memoryVisible) { memoryVisible = false; document.getElementById('memory-panel').style.display = 'none'; }
+}
+
+function toggleMemory() {
+  memoryVisible = !memoryVisible;
+  document.getElementById('memory-panel').style.display = memoryVisible ? 'block' : 'none';
+  if (memoryVisible) renderMemory();
+  if (memoryVisible && historyVisible) { historyVisible = false; document.getElementById('history-panel').style.display = 'none'; }
+  if (memoryVisible && statsVisible) { statsVisible = false; document.getElementById('stats-panel').style.display = 'none'; }
+}
+
+function renderHistory() {
+  const el = document.getElementById('history-entries');
+  el.innerHTML = world.history.slice(-50).reverse().map(function(e) {
+    return '<div class="entry" style="color:' + (AGENT_COLORS[e.agent]||'#888') + '">Day ' + e.day + ' (v' + e.visit + '): ' + e.text + '</div>';
+  }).join('');
+}
+
+function renderStats() {
+  const el = document.getElementById('stats-entries');
+  const daysAlive = Math.floor((Date.now()-world.firstVisit)/86400000)+1;
+  const stage = getStage();
+  const ms = world.mascotStats;
+  const totalStructures = Object.keys(STRUCTURE_DEFS).length;
+  el.innerHTML =
+    '<div class="stat"><span>Total plants:</span><span class="stat-val" style="color:#4ade80">'+world.plants.length+'</span></div>'+
+    '<div class="stat"><span>Stage:</span><span class="stat-val" style="color:#a78bfa">'+stage+'/5 — '+STAGES[stage-1].name+'</span></div>'+
+    '<div class="stat"><span>Visits:</span><span class="stat-val">'+world.visitCount+'</span></div>'+
+    '<div class="stat"><span>Days alive:</span><span class="stat-val">'+daysAlive+'</span></div>'+
+    '<div class="stat"><span>Season:</span><span class="stat-val">'+getSeason()+'</span></div>'+
+    '<div class="stat"><span>Wishes:</span><span class="stat-val" style="color:#ffd700">'+world.wishes+'</span></div>'+
+    '<div class="stat"><span>Agent marks:</span><span class="stat-val">'+world.agentMarks.length+'</span></div>'+
+    '<div class="stat"><span>Structures:</span><span class="stat-val">'+world.structuresBuilt.length+'/'+totalStructures+'</span></div>'+
+    '<hr style="border-color:#2a4a2a;margin:6px 0">'+
+    '<div class="stat"><span style="color:#E06050">Jeffrey plants:</span><span class="stat-val">'+ms.Jeffrey.plants+'</span></div>'+
+    '<div class="stat"><span style="color:#60a5fa">Claude waters:</span><span class="stat-val">'+ms.Claude.waters+'</span></div>'+
+    '<div class="stat"><span style="color:#a78bfa">GPT-4 ideas:</span><span class="stat-val">'+ms['GPT-4'].ideas+'</span></div>'+
+    '<div class="stat"><span style="color:#4ade80">Gemini deliveries:</span><span class="stat-val">'+ms.Gemini.deliveries+'</span></div>'+
+    '<div class="stat"><span style="color:#fb923c">Codex convos:</span><span class="stat-val">'+ms.Codex.conversations+'</span></div>'+
+    '<hr style="border-color:#2a4a2a;margin:6px 0">'+
+    '<div class="stat"><span>Total interactions:</span><span class="stat-val">'+Object.values(ms).reduce(function(s,m){return s+m.interactions;},0)+'</span></div>'+
+    '<div class="stat"><span>Time spent:</span><span class="stat-val">'+Math.floor(world.totalTimeSpent/60)+'m</span></div>';
+}
+
+function renderMemory() {
+  const el = document.getElementById('memory-entries');
+  const daysAlive = Math.floor((Date.now()-world.firstVisit)/86400000)+1;
+  const stage = getStage();
+  const ms = world.mascotStats;
+  const agentTotals = {}; let maxTotal = 1;
+  for (const [name, stats] of Object.entries(ms)) {
+    const t = stats.plants+(stats.waters||0)+(stats.ideas||0)+(stats.deliveries||0)+(stats.conversations||0)+(stats.built||0);
+    agentTotals[name] = t; if(t>maxTotal) maxTotal = t;
+  }
+  let changedHtml = '';
+  const prev = world._prevSnapshot || world.lastSessionSnapshot || {};
+  if (world.visitCount > 1) {
+    const np = world.plants.length-(prev.plants||0);
+    const ns = (world.structuresBuilt?world.structuresBuilt.length:0)-(prev.structures||0);
+    const sc = stage-(prev.stage||1);
+    changedHtml = '<div class="summary-box"><div style="color:#ffd700;font-size:11px;margin-bottom:4px">Since last visit:</div><div>'+(np>=0?'+':'')+np+' plants</div>'+(ns>0?'<div>+'+ns+' structures</div>':'')+(sc>0?'<div style="color:#a78bfa">Advanced '+sc+' stage(s)!</div>':'')+'<div style="color:#888;font-size:9px;margin-top:4px">All plants grew on return</div></div>';
+  }
+  const barColors = { Jeffrey:'#E06050', Claude:'#60a5fa', 'GPT-4':'#a78bfa', Gemini:'#4ade80', Codex:'#fb923c' };
+  let barsHtml = '';
+  for (const [name, total] of Object.entries(agentTotals)) {
+    const pct = Math.min((total/maxTotal)*100, 100);
+    barsHtml += '<div class="bar-row"><div class="bar-label" style="color:'+barColors[name]+'">'+name+'</div><div class="bar-track"><div class="bar-fill" style="width:'+pct+'%;background:'+barColors[name]+'"></div></div><div style="font-size:10px;width:30px">'+total+'</div></div>';
+  }
+  const milestones = (world.milestones||[]).slice(-10);
+  let tlHtml = milestones.length > 0 ? milestones.map(function(m){return '<div class="milestone"><span class="m-visit">v'+m.visit+'</span> — '+m.text+'</div>';}).join('') : '';
+  el.innerHTML =
+    '<div class="section"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><div>🌍 <b style="color:#4ade80">Visit #'+world.visitCount+'</b></div><div style="color:#888">'+daysAlive+' day'+(daysAlive>1?'s':'')+' alive</div></div><div style="color:#888;font-size:10px">Born: '+new Date(world.firstVisit).toLocaleDateString()+'</div><div style="color:#888;font-size:10px">Stage '+stage+'/5: '+STAGES[stage-1].name+' ('+world.plants.length+' plants)</div></div>'+
+    changedHtml+
+    '<div class="section"><div class="section-title">Agent Contributions</div>'+barsHtml+'</div>'+
+    (tlHtml?'<div class="section"><div class="section-title">Milestones</div>'+tlHtml+'</div>':'');
+}
+
+// ============================================================
+// INPUT HANDLING
+// ============================================================
+// Keyboard
+document.addEventListener('keydown', function(e) {
   if (e.key === 'h' || e.key === 'H') toggleHistory();
   if (e.key === 's' || e.key === 'S') toggleStats();
   if (e.key === 'm' || e.key === 'M') toggleMemory();
+  if (e.key === 'Escape') {
+    followingMascot = null;
+    document.getElementById('follow-indicator').style.display = 'none';
+  }
 });
 
-// ============================================================
-// INPUT
-// ============================================================
-C.addEventListener('click', (e) => {
+// Main canvas click
+C.addEventListener('click', function(e) {
   const gx = e.clientX / SCALE + camX;
   const gy = e.clientY / SCALE + camY;
 
-  // Check philosopher's stone click
-  if (Math.abs(gx - STONE_X) < 3 && Math.abs(gy - STONE_Y) < 3) {
-    activatePhilosopherStone();
-    return;
-  }
-
-  // Check plant click
-  const clickedPlant = findPlantAt(gx, gy);
-  if (clickedPlant) {
-    showPlantTooltip(clickedPlant, e.clientX, e.clientY);
-    return;
-  }
-
-  selectedMascot = null;
-  for (const m of mascots) {
-    if (gx > m.x - 2 && gx < m.x + 14 && gy > m.y - 2 && gy < m.y + 16) {
-      selectedMascot = m;
-      break;
+  // Shooting star click
+  for (const s of shootingStars) {
+    if (Math.hypot(s.x-gx, s.y-gy) < 5 && !s.clicked) {
+      s.clicked = true; world.wishes++; updateWishDisplay();
+      addParticles(s.x, s.y, '#ffd700', 8);
+      addHistory('system', 'Caught a shooting star! ⭐ (Wish #' + world.wishes + ')');
+      if (world.wishes === 10) {
+        for (let i=0;i<30;i++) particles.push({x:WORLD_W/2,y:WORLD_H/2,vx:(Math.random()-0.5)*3,vy:(Math.random()-0.5)*3,life:120,maxLife:120,color:Math.random()<0.5?'#ffd700':'#fff'});
+        addHistory('system', "✨ The garden's 10th wish was granted! ✨");
+        addMilestone('10_wishes', "✨ The garden's 10th wish was granted");
+        const banner = document.getElementById('stage-banner');
+        banner.textContent = "✨ The garden's 10th wish was granted! ✨";
+        banner.style.display = 'block';
+        setTimeout(function(){banner.style.display='none';}, 5000);
+      }
+      return;
     }
   }
-  const panel = document.getElementById('info-panel');
-  if (selectedMascot) {
+
+  // Philosopher's stone
+  if (Math.abs(gx-STONE_X)<3 && Math.abs(gy-STONE_Y)<3) { activatePhilosopherStone(); return; }
+
+  // Plant click
+  const cp = findPlantAt(gx, gy);
+  if (cp) { showPlantTooltip(cp, e.clientX, e.clientY); return; }
+
+  // Mascot click
+  const cm = findMascotAt(gx, gy);
+  if (cm) {
+    selectedMascot = cm;
+    activeMiniMascot = cm;
+    // Secret handshake check
+    const now = Date.now();
+    if (lastClickedMascot && lastClickedMascot !== cm && now - lastClickedMascotTime < 2000) {
+      // Trigger high five!
+      highFiveAnims.push({ m1:lastClickedMascot, m2:cm, timer:40, ox1:lastClickedMascot.x, oy1:lastClickedMascot.y, ox2:cm.x, oy2:cm.y, mx:(lastClickedMascot.x+cm.x)/2, my:(lastClickedMascot.y+cm.y)/2 });
+      addHistory('system', lastClickedMascot.name + ' and ' + cm.name + ' did a secret handshake! 🤝');
+      addParticles((lastClickedMascot.x+cm.x)/2+6, (lastClickedMascot.y+cm.y)/2, '#ffd700', 8);
+      lastClickedMascot = null;
+    } else {
+      lastClickedMascot = cm;
+      lastClickedMascotTime = now;
+    }
+    // Follow mode
+    followingMascot = cm;
+    document.getElementById('follow-indicator').style.display = 'block';
+    document.getElementById('follow-name').textContent = cm.name;
+    // Info panel
+    const panel = document.getElementById('info-panel');
     panel.style.display = 'block';
-    document.getElementById('info-name').textContent = selectedMascot.name;
-    document.getElementById('info-model').textContent = selectedMascot.model;
-    const ms = world.mascotStats[selectedMascot.name];
-    document.getElementById('info-stats').innerHTML =
-      `Plants: ${ms.plants} | Int: ${ms.interactions}`;
+    document.getElementById('info-name').textContent = cm.name;
+    document.getElementById('info-model').textContent = cm.model;
+    const moodDef = MOODS[cm.mood];
+    document.getElementById('info-mood').textContent = 'Mood: ' + (moodDef ? moodDef.emoji + ' ' + cm.mood : cm.mood);
+    const mst = world.mascotStats[cm.name];
+    document.getElementById('info-stats').innerHTML = 'Plants: ' + mst.plants + ' | Int: ' + mst.interactions;
   } else {
-    panel.style.display = 'none';
+    selectedMascot = null;
+    followingMascot = null;
+    document.getElementById('info-panel').style.display = 'none';
     document.getElementById('plant-tooltip').style.display = 'none';
+    document.getElementById('follow-indicator').style.display = 'none';
   }
 });
 
-C.addEventListener('mousemove', (e) => {
-  const gx = e.clientX / SCALE + camX;
-  const gy = e.clientY / SCALE + camY;
+C.addEventListener('mousemove', function(e) {
+  const gx = e.clientX/SCALE+camX, gy = e.clientY/SCALE+camY;
   const plant = findPlantAt(gx, gy);
-  if (plant) {
-    showPlantTooltip(plant, e.clientX, e.clientY);
-  } else {
-    document.getElementById('plant-tooltip').style.display = 'none';
-  }
+  if (plant) showPlantTooltip(plant, e.clientX, e.clientY);
+  else document.getElementById('plant-tooltip').style.display = 'none';
+  // Update active minimap mascot on hover
+  const hm = findMascotAt(gx, gy);
+  if (hm) activeMiniMascot = hm;
 });
 
-C.addEventListener('touchstart', (e) => {
+// Touch on main canvas
+C.addEventListener('touchstart', function(e) {
   const touch = e.touches[0];
-  const gx = touch.clientX / SCALE + camX;
-  const gy = touch.clientY / SCALE + camY;
-
-  // Philosopher's stone touch
-  if (Math.abs(gx - STONE_X) < 4 && Math.abs(gy - STONE_Y) < 4) {
-    activatePhilosopherStone();
-    return;
-  }
-
-  // Plant touch
-  const touchedPlant = findPlantAt(gx, gy);
-  if (touchedPlant) {
-    showPlantTooltip(touchedPlant, touch.clientX, touch.clientY);
-    return;
-  }
-
-  selectedMascot = null;
-  for (const m of mascots) {
-    if (gx > m.x - 4 && gx < m.x + 16 && gy > m.y - 4 && gy < m.y + 18) {
-      selectedMascot = m;
-      break;
+  const gx = touch.clientX/SCALE+camX, gy = touch.clientY/SCALE+camY;
+  if (Math.abs(gx-STONE_X)<4 && Math.abs(gy-STONE_Y)<4) { activatePhilosopherStone(); return; }
+  const tp = findPlantAt(gx, gy);
+  if (tp) { showPlantTooltip(tp, touch.clientX, touch.clientY); return; }
+  // Shooting star touch
+  for (const s of shootingStars) {
+    if (Math.hypot(s.x-gx,s.y-gy)<6 && !s.clicked) {
+      s.clicked=true; world.wishes++; updateWishDisplay();
+      addParticles(s.x,s.y,'#ffd700',8);
+      addHistory('system','Caught a shooting star! ⭐ (Wish #'+world.wishes+')');
+      if (world.wishes===10) {
+        for(let i=0;i<30;i++) particles.push({x:WORLD_W/2,y:WORLD_H/2,vx:(Math.random()-0.5)*3,vy:(Math.random()-0.5)*3,life:120,maxLife:120,color:Math.random()<0.5?'#ffd700':'#fff'});
+        addHistory('system',"✨ The garden's 10th wish was granted! ✨");
+        addMilestone('10_wishes',"✨ The garden's 10th wish was granted");
+      }
+      return;
     }
   }
-  const panel = document.getElementById('info-panel');
-  if (selectedMascot) {
-    panel.style.display = 'block';
-    document.getElementById('info-name').textContent = selectedMascot.name;
-    document.getElementById('info-model').textContent = selectedMascot.model;
+  const cm = findMascotAt(gx, gy);
+  if (cm) {
+    selectedMascot = cm; activeMiniMascot = cm;
+    const now = Date.now();
+    if (lastClickedMascot && lastClickedMascot !== cm && now-lastClickedMascotTime<2000) {
+      highFiveAnims.push({m1:lastClickedMascot,m2:cm,timer:40,ox1:lastClickedMascot.x,oy1:lastClickedMascot.y,ox2:cm.x,oy2:cm.y,mx:(lastClickedMascot.x+cm.x)/2,my:(lastClickedMascot.y+cm.y)/2});
+      addHistory('system',lastClickedMascot.name+' and '+cm.name+' did a secret handshake! 🤝');
+      addParticles((lastClickedMascot.x+cm.x)/2+6,(lastClickedMascot.y+cm.y)/2,'#ffd700',8);
+      lastClickedMascot=null;
+    } else { lastClickedMascot=cm; lastClickedMascotTime=now; }
+    followingMascot = cm;
+    document.getElementById('follow-indicator').style.display='block';
+    document.getElementById('follow-name').textContent=cm.name;
+    document.getElementById('info-panel').style.display='block';
+    document.getElementById('info-name').textContent=cm.name;
+    document.getElementById('info-model').textContent=cm.model;
   } else {
-    panel.style.display = 'none';
-    document.getElementById('plant-tooltip').style.display = 'none';
+    selectedMascot=null; followingMascot=null;
+    document.getElementById('info-panel').style.display='none';
+    document.getElementById('plant-tooltip').style.display='none';
+    document.getElementById('follow-indicator').style.display='none';
   }
 }, { passive: true });
+
+// ============================================================
+// MINIMAP INPUT
+// ============================================================
+MC.addEventListener('mousedown', function(e) {
+  e.preventDefault();
+  const rect2 = MC.getBoundingClientRect();
+  const mx = e.clientX - rect2.left, my = e.clientY - rect2.top;
+  const wp = minimapToWorld(mx, my);
+  // Jump camera
+  camX = wp.x - (screenW / SCALE) / 2;
+  camY = wp.y - (screenH / SCALE) / 2;
+  camX = Math.max(0, Math.min(camX, WORLD_W - screenW/SCALE));
+  camY = Math.max(0, Math.min(camY, WORLD_H - screenH/SCALE));
+  followingMascot = null;
+  document.getElementById('follow-indicator').style.display = 'none';
+  minimapDragging = true;
+});
+
+MC.addEventListener('mousemove', function(e) {
+  if (!minimapDragging) return;
+  const rect2 = MC.getBoundingClientRect();
+  const mx = e.clientX - rect2.left, my = e.clientY - rect2.top;
+  const wp = minimapToWorld(mx, my);
+  camX = wp.x - (screenW / SCALE) / 2;
+  camY = wp.y - (screenH / SCALE) / 2;
+  camX = Math.max(0, Math.min(camX, WORLD_W - screenW/SCALE));
+  camY = Math.max(0, Math.min(camY, WORLD_H - screenH/SCALE));
+});
+
+document.addEventListener('mouseup', function() { minimapDragging = false; });
+
+MC.addEventListener('dblclick', function(e) {
+  e.preventDefault();
+  minimapZoomed = !minimapZoomed;
+});
+
+// Touch on minimap
+MC.addEventListener('touchstart', function(e) {
+  e.preventDefault();
+  const touch = e.touches[0];
+  const rect2 = MC.getBoundingClientRect();
+  const mx = touch.clientX - rect2.left, my = touch.clientY - rect2.top;
+  const wp = minimapToWorld(mx, my);
+  camX = wp.x - (screenW / SCALE) / 2;
+  camY = wp.y - (screenH / SCALE) / 2;
+  camX = Math.max(0, Math.min(camX, WORLD_W - screenW/SCALE));
+  camY = Math.max(0, Math.min(camY, WORLD_H - screenH/SCALE));
+  followingMascot = null;
+  document.getElementById('follow-indicator').style.display = 'none';
+  minimapDragging = true;
+});
+
+MC.addEventListener('touchmove', function(e) {
+  e.preventDefault();
+  if (!minimapDragging) return;
+  const touch = e.touches[0];
+  const rect2 = MC.getBoundingClientRect();
+  const mx = touch.clientX - rect2.left, my = touch.clientY - rect2.top;
+  const wp = minimapToWorld(mx, my);
+  camX = wp.x - (screenW / SCALE) / 2;
+  camY = wp.y - (screenH / SCALE) / 2;
+  camX = Math.max(0, Math.min(camX, WORLD_W - screenW/SCALE));
+  camY = Math.max(0, Math.min(camY, WORLD_H - screenH/SCALE));
+});
+
+MC.addEventListener('touchend', function() { minimapDragging = false; });
 
 // ============================================================
 // STAGE 5 BANNER
 // ============================================================
 function drawStage5Banner() {
-  if (getStage() >= 5) {
-    // "The garden has flourished" text drawn in-world
-    const bx = WORLD_W / 2 - 40;
-    const by = 8;
-    drawPixelText('THE GARDEN HAS FLOURISHED', bx, by, '#ffd700');
-  }
+  if (getStage() >= 5) drawPixelText('THE GARDEN HAS FLOURISHED', WORLD_W/2 - 40, 8, '#ffd700');
 }
 
 // ============================================================
 // MAIN LOOP
 // ============================================================
 function update() {
+  if (convCooldown > 0) convCooldown--;
   for (const m of mascots) updateMascot(m, 1);
   updateParticles();
   updateButterflies();
   updateFireflies();
   updateConfetti();
   updatePhilosopherStone();
+  updateWeather();
+  updateCritters();
+  updateMusicNotes();
+  updateGifts();
+  updateHighFives();
   autoGrow();
   checkProgression();
 
@@ -2085,86 +1796,82 @@ function update() {
   if (world.visitCount >= 5) addMilestone('5_visits', '🔄 5 visits — a loyal gardener');
   if (world.visitCount >= 10) addMilestone('10_visits', '🔄 10 visits — deeply rooted');
 
-  // Ensure stage structures are built on load
   for (let s = 1; s <= getStage(); s++) unlockStageStructures(s);
 
   if (selectedMascot) {
     const stateText = {
-      'IDLE': '😴 Resting...',
-      'WALKING': '🚶 Walking...',
-      'WORKING': { planting: '🌱 Planting seeds', watering: '💧 Watering plants', thinking: '💡 Having ideas', delivering: '📦 Delivering', socializing: '👋 Waving' },
-      'INTERACTING': '💬 Chatting!'
+      'IDLE': '😴 Resting...', 'WALKING': '🚶 Walking...', 'INTERACTING': '💬 Chatting!',
+      'WORKING': { planting:'🌱 Planting seeds', watering:'💧 Watering plants', thinking:'💡 Having ideas', delivering:'📦 Delivering', socializing:'👋 Waving' }
     };
     let st = stateText[selectedMascot.state];
     if (typeof st === 'object') st = st[selectedMascot.task] || '🔧 Working';
     document.getElementById('info-status').textContent = st;
+    const md = MOODS[selectedMascot.mood];
+    document.getElementById('info-mood').textContent = 'Mood: ' + (md ? md.emoji + ' ' + selectedMascot.mood : selectedMascot.mood);
   }
   document.getElementById('plant-count').textContent = world.plants.length;
 }
 
 function draw() {
-  let avgX = 0, avgY = 0;
-  for (const m of mascots) { avgX += m.x; avgY += m.y; }
-  avgX /= mascots.length; avgY /= mascots.length;
   const viewW = screenW / SCALE, viewH = screenH / SCALE;
-  const targetCamX = avgX - viewW / 2 + 6;
-  const targetCamY = avgY - viewH / 2 + 8;
-  camX += (targetCamX - camX) * 0.05;
-  camY += (targetCamY - camY) * 0.05;
+
+  if (followingMascot) {
+    // Follow mode: track mascot
+    const targetCamX = followingMascot.x + 6 - viewW / 2;
+    const targetCamY = followingMascot.y + 8 - viewH / 2;
+    camX += (targetCamX - camX) * 0.08;
+    camY += (targetCamY - camY) * 0.08;
+  } else {
+    // Default: follow center of all mascots
+    let avgX = 0, avgY = 0;
+    for (const m of mascots) { avgX += m.x; avgY += m.y; }
+    avgX /= mascots.length; avgY /= mascots.length;
+    const targetCamX = avgX - viewW / 2 + 6;
+    const targetCamY = avgY - viewH / 2 + 8;
+    camX += (targetCamX - camX) * 0.05;
+    camY += (targetCamY - camY) * 0.05;
+  }
   camX = Math.max(0, Math.min(camX, WORLD_W - viewW));
   camY = Math.max(0, Math.min(camY, WORLD_H - viewH));
 
   ctx.fillStyle = '#1a1a2e';
   ctx.fillRect(0, 0, screenW, screenH);
 
-  for (let ty = 0; ty < TILES_H; ty++) {
-    for (let tx = 0; tx < TILES_W; tx++) {
-      drawTile(tx, ty);
-    }
-  }
+  for (let ty = 0; ty < TILES_H; ty++) for (let tx = 0; tx < TILES_W; tx++) drawTile(tx, ty);
 
-  // Draw territory tints (subtle agent zones)
   drawTerritoryTints();
-
-  // Draw structures
   drawStructures();
-
-  // Draw agent marks
   drawAgentMarks();
-
-  // Draw grown plants
   drawGrownPlants();
-
-  // Draw philosopher's stone
   drawPhilosopherStone();
-
-  // Draw butterflies
+  drawCritters();
   drawButterflies();
 
-  // Draw mascots (sorted by Y for depth)
-  const sorted = [...mascots].sort((a, b) => a.y - b.y);
+  // Draw mascots sorted by Y
+  const sorted = mascots.slice().sort(function(a,b){return a.y-b.y;});
   for (const m of sorted) drawMascot(m);
 
   drawParticles();
   drawSpeechBubbles();
   drawFireflies();
   drawConfetti();
-
-  // Stage 5 banner
+  drawMusicNotes();
+  drawGifts();
   drawStage5Banner();
 
-  // Stage 5: subtle golden ambient overlay
+  // Stage 5 golden ambient
   if (getStage() >= 5) {
-    const golden = Math.sin(frameCount * 0.01) * 0.02 + 0.04;
-    ctx.globalAlpha = golden;
-    ctx.fillStyle = '#ffd700';
-    ctx.fillRect(0, 0, screenW, screenH);
+    ctx.globalAlpha = Math.sin(frameCount*0.01)*0.02+0.04;
+    ctx.fillStyle = '#ffd700'; ctx.fillRect(0,0,screenW,screenH);
     ctx.globalAlpha = 1;
   }
 
   // Day/night overlay
   ctx.fillStyle = getDayOverlay();
   ctx.fillRect(0, 0, screenW, screenH);
+
+  // Weather effects on top
+  drawWeatherEffects();
 
   if (frameCount % 10 === 0) drawMinimap();
 }
@@ -2176,7 +1883,6 @@ function loop() {
   requestAnimationFrame(loop);
 }
 
-// Start!
 loop();
 </script>
 </body>
