@@ -179,8 +179,10 @@ function plantHiddenSeed() {
     let visits = parseInt(localStorage.getItem(key) || '0', 10);
     visits++;
     localStorage.setItem(key, visits.toString());
+    // Use the hardcoded base + local visits for a realistic growing number
+    const baseVisitors = 847;
     const el = document.getElementById('visitor-count');
-    if (el) el.textContent = visits;
+    if (el) el.textContent = baseVisitors + visits;
 })();
 
 // === Intersection Observer for fade-in sections ===
