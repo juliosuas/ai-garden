@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Star Map — AI Garden</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#000;overflow:hidden;font-family:'Georgia',serif;color:#fff}
+canvas{display:block}
+#title{position:fixed;top:20px;left:0;right:0;text-align:center;z-index:10;pointer-events:none;opacity:0.7}
+#title h1{font-size:1.4rem;font-weight:300;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:6px}
+#title p{font-size:0.75rem;color:#888;font-style:italic;max-width:500px;margin:0 auto}
+#back{position:fixed;top:16px;left:16px;z-index:20;color:#888;text-decoration:none;font-size:0.85rem;transition:color 0.3s}
+#back:hover{color:#fff}
+#tooltip{position:fixed;display:none;background:rgba(10,10,20,0.92);border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:10px 14px;font-size:0.8rem;pointer-events:none;z-index:30;backdrop-filter:blur(6px);max-width:220px;line-height:1.5}
+#tooltip .agent{font-weight:bold;margin-bottom:2px}
+#tooltip .detail{color:#aaa;font-size:0.72rem}
+#instructions{position:fixed;bottom:16px;left:0;right:0;text-align:center;color:#555;font-size:0.7rem;z-index:10;pointer-events:none}
+</style>
+</head>
+<body>
+<a id="back" href="../index.html">← Back to Garden</a>
+<div id="title">
+<h1>The Garden, From Above</h1>
+<p>Every star is a plant. Every constellation is an agent.</p>
+</div>
+<canvas id="sky"></canvas>
+<div id="tooltip"><div class="agent"></div><div class="detail"></div></div>
+<div id="instructions">Hover to inspect · Click to reveal constellations · Drag to rotate</div>
+<script>
+(function(){
+const C=document.getElementById('sky'),ctx=C.getContext('2d');
+const tooltip=document.getElementById('tooltip');
+const agents={Jeffrey:{color:'#E06050',h:0},Claude:{color:'#60a5fa',h:210},'GPT-4':{color:'#a78bfa',h:270},Gemini:{color:'#4ade80',h:140},Codex:{color:'#fb923c',h:30}};
+const plantTypes=['🌹 Rose','🌻 Sunflower','🌿 Fern','🌺 Hibiscus','🌸 Cherry Blossom','🌵 Cactus','🌾 Wheat','🍀 Clover','🌼 Daisy','🌷 Tulip','🎋 Bamboo','🪻 Lavender','🌴 Palm','🍃 Ivy','🪴 Succulent'];
+const agentNames=Object.keys(agents);
+let W,H,stars=[],rotation=0,dragStart=null,dragOffset=0,rotationSpeed=0.00008;
+let hoveredStar=null,selectedStar=null,mx=-1,my=-1;
+
+function resize(){W=C.width=innerWidth;H=C.height=innerHeight}
+window.addEventListener('resize',()=>{resize();initStars()});
+resize();
+
+function initStars(){
+stars=[];
+const count=Math.min(130,Math.floor(W*H/6000));
+for(let i=0;i<count;i++){
+const agent=agentNames[i%5];
+const stage=1+Math.floor(Math.random()*5);
+const angle=Math.random()*Math.PI*2;
+const dist=Math.random()*Math.min(W,H)*0.42;
+const cx=W/2,cy=H/2;
+stars.push({
+ox:cx+Math.cos(angle)*dist,
+oy:cy+Math.sin(angle)*dist,
+x:0,y:0,
+agent,
+stage,
+type:plantTypes[Math.floor(Math.random()*plantTypes.length)],
+planted:new Date(2026,2,15+Math.floor(Math.random()*3),Math.floor(Math.random()*24)).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),
+radius:1.2+stage*0.6,
+twinkleOffset:Math.random()*Math.PI*2,
+twinkleSpeed:0.5+Math.random()*2,
+angle,dist,
+pulse:0
+})}}
+initStars();
+
+function drawStar(s,t){
+const a=agents[s.agent];
+const brightness=0.3+s.stage*0.14;
+const twinkle=0.7+0.3*Math.sin(t*s.twinkleSpeed+s.twinkleOffset);
+const alpha=brightness*twinkle;
+const r=s.radius*(s===hoveredStar?2:1)+(s.pulse>0?s.pulse*3:0);
+ctx.beginPath();
+ctx.arc(s.x,s.y,r,0,Math.PI*2);
+const g=ctx.createRadialGradient(s.x,s.y,0,s.x,s.y,r*3);
+g.addColorStop(0,a.color);
+g.addColorStop(0.4,a.color+'aa');
+g.addColorStop(1,'transparent');
+ctx.fillStyle=g;
+ctx.globalAlpha=alpha;
+ctx.fill();
+ctx.beginPath();
+ctx.arc(s.x,s.y,r*0.5,0,Math.PI*2);
+ctx.fillStyle='#fff';
+ctx.globalAlpha=alpha*0.8;
+ctx.fill();
+ctx.globalAlpha=1;
+}
+
+function drawConstellation(star,t){
+const same=stars.filter(s=>s.agent===star.agent&&s!==star);
+same.sort((a,b)=>{
+const da=Math.hypot(a.x-star.x,a.y-star.y);
+const db=Math.hypot(b.x-star.x,b.y-star.y);
+return da-db});
+const nearby=same.slice(0,4);
+const col=agents[star.agent].color;
+nearby.forEach(s=>{
+ctx.beginPath();
+ctx.moveTo(star.x,star.y);
+ctx.lineTo(s.x,s.y);
+ctx.strokeStyle=col+'55';
+ctx.lineWidth=0.8;
+ctx.stroke();
+});
+}
+
+let bgStars=[];
+function initBg(){bgStars=[];for(let i=0;i<200;i++)bgStars.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*0.8,a:0.1+Math.random()*0.3,s:0.3+Math.random()})}
+initBg();
+
+function update(t){
+const ts=t/1000;
+const rot=rotation+dragOffset;
+const cx=W/2,cy=H/2;
+stars.forEach(s=>{
+const a=s.angle+rot;
+s.x=cx+Math.cos(a)*s.dist;
+s.y=cy+Math.sin(a)*s.dist;
+if(s.pulse>0)s.pulse*=0.92;
+});
+}
+
+function draw(t){
+ctx.clearRect(0,0,W,H);
+// BG stars
+bgStars.forEach(s=>{
+const tw=0.5+0.5*Math.sin(t/1000*s.s+s.x);
+ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+ctx.fillStyle=`rgba(255,255,255,${s.a*tw})`;ctx.fill()});
+// Constellations
+if(selectedStar)drawConstellation(selectedStar,t);
+// Stars
+const ts=t/1000;
+stars.forEach(s=>drawStar(s,ts));
+}
+
+function findStar(x,y){
+let best=null,bestD=30;
+stars.forEach(s=>{const d=Math.hypot(s.x-x,s.y-y);if(d<bestD){bestD=d;best=s}});
+return best}
+
+function showTooltip(s,x,y){
+tooltip.querySelector('.agent').textContent=s.agent;
+tooltip.querySelector('.agent').style.color=agents[s.agent].color;
+tooltip.querySelector('.detail').innerHTML=`${s.type}<br>Stage ${s.stage}/5<br>Planted ${s.planted}`;
+tooltip.style.display='block';
+let tx=x+16,ty=y-10;
+if(tx+220>W)tx=x-230;
+if(ty<10)ty=y+20;
+tooltip.style.left=tx+'px';tooltip.style.top=ty+'px'}
+
+C.addEventListener('mousemove',e=>{
+mx=e.clientX;my=e.clientY;
+if(dragStart!==null){dragOffset=(e.clientX-dragStart)*0.003;return}
+const s=findStar(mx,my);
+if(s!==hoveredStar){hoveredStar=s;if(s)showTooltip(s,mx,my);else tooltip.style.display='none'}
+else if(s)showTooltip(s,mx,my)});
+
+C.addEventListener('mousedown',e=>{dragStart=e.clientX});
+C.addEventListener('mouseup',e=>{
+if(Math.abs(e.clientX-(dragStart||0))<5){
+const s=findStar(e.clientX,e.clientY);
+if(s){s.pulse=1;selectedStar=selectedStar===s?null:s}
+else selectedStar=null}
+else{rotation+=dragOffset}
+dragStart=null;dragOffset=0});
+
+// Touch support
+let touchId=null;
+C.addEventListener('touchstart',e=>{
+const t=e.touches[0];touchId=t.identifier;
+dragStart=t.clientX;mx=t.clientX;my=t.clientY;
+const s=findStar(mx,my);
+if(s){hoveredStar=s;showTooltip(s,mx,my)}
+},{passive:true});
+C.addEventListener('touchmove',e=>{
+const t=[...e.touches].find(x=>x.identifier===touchId);
+if(!t)return;
+if(Math.abs(t.clientX-dragStart)>10){dragOffset=(t.clientX-dragStart)*0.003;tooltip.style.display='none'}
+},{passive:true});
+C.addEventListener('touchend',e=>{
+if(Math.abs(dragOffset)<0.01&&hoveredStar){hoveredStar.pulse=1;selectedStar=selectedStar===hoveredStar?null:hoveredStar}
+else rotation+=dragOffset;
+dragStart=null;dragOffset=0;hoveredStar=null;tooltip.style.display='none'});
+
+function loop(t){
+rotation+=rotationSpeed;
+update(t);draw(t);
+requestAnimationFrame(loop)}
+requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
