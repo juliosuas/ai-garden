@@ -569,8 +569,15 @@ const STRUCTURE_DEFS = {
   gpt4_observatory: { stage: 4, x: 95, y: 155, w: 14, h: 14, color: '#a78bfa', label: "GPT-4's Observatory" },
   gemini_workshop: { stage: 4, x: 200, y: 155, w: 14, h: 12, color: '#4ade80', label: "Gemini's Workshop" },
   codex_tower: { stage: 4, x: 140, y: 28, w: 10, h: 16, color: '#fb923c', label: "Codex's Tower" },
+  // Community buildings (Stage 4+)
+  church: { stage: 4, x: 75, y: 28, w: 16, h: 18, color: '#d4af37', label: 'The Chapel' },
+  market: { stage: 4, x: 160, y: 100, w: 18, h: 10, color: '#c87533', label: 'Market Square' },
+  garden_gate: { stage: 4, x: 128, y: 0, w: 12, h: 8, color: '#4ade80', label: 'Garden Gate' },
+  // Stage 5
   archway: { stage: 5, x: 118, y: 0, w: 20, h: 14, color: '#ffd700', label: 'Archway' },
   flag: { stage: 5, x: 128, y: 70, w: 4, h: 16, color: '#e04040', label: 'Victory Flag' },
+  monument: { stage: 5, x: 128, y: 85, w: 8, h: 12, color: '#ffd700', label: 'The Monument' },
+  plaza: { stage: 5, x: 108, y: 85, w: 24, h: 6, color: '#b0a080', label: 'Central Plaza' },
 };
 
 function unlockStageStructures(stage) {
@@ -887,6 +894,87 @@ function drawStructure(s) {
       px(x + 1 + fx, y + fy + Math.sin(frameCount * 0.08 + fx * 0.3) * 0.5, fx < 4 ? '#e04040' : '#ffd700');
     }
     px(x, y - 1, '#ffd700');
+  } else if (id === 'church') {
+    // Chapel with steeple and cross
+    rect(x + 2, y + 6, w - 4, h - 6, '#c8b07a'); // walls
+    rect(x + 2, y + 6, w - 4, 1, '#d4c090'); // trim
+    // Steeple
+    for (let ry = 0; ry < 5; ry++) {
+      const rw = 8 - ry * 2;
+      if (rw > 0) rect(x + 4 + ry, y + ry + 1, rw, 1, '#8a6a3a');
+    }
+    // Cross on top
+    rect(x + 7, y - 2, 2, 4, '#ffd700');
+    rect(x + 6, y - 1, 4, 1, '#ffd700');
+    // Door
+    rect(x + 6, y + 12, 4, 6, '#5a3a1a');
+    px(x + 9, y + 15, '#ffd700'); // doorknob
+    // Stained glass windows
+    const glassGlow = Math.sin(frameCount * 0.03) * 0.3 + 0.7;
+    px(x + 4, y + 9, `rgba(255,200,50,${glassGlow})`);
+    px(x + 5, y + 9, `rgba(255,200,50,${glassGlow})`);
+    px(x + 10, y + 9, `rgba(100,150,255,${glassGlow})`);
+    px(x + 11, y + 9, `rgba(100,150,255,${glassGlow})`);
+    // Bell glow
+    if (frameCount % 300 < 20) {
+      px(x + 7, y, '#fff');
+      px(x + 8, y, '#fff');
+    }
+  } else if (id === 'market') {
+    // Market stalls with colored awnings
+    for (let stall = 0; stall < 3; stall++) {
+      const sx = x + stall * 6;
+      rect(sx, y + 4, 5, 6, '#8a6a3a'); // counter
+      // Awning (colored stripes)
+      const awningColors = ['#e04040', '#4ade80', '#60a5fa'];
+      rect(sx, y + 1, 6, 3, awningColors[stall]);
+      rect(sx, y + 2, 6, 1, '#fff');
+      // Goods on counter
+      px(sx + 1, y + 3, '#ffd700');
+      px(sx + 3, y + 3, '#fb923c');
+    }
+  } else if (id === 'garden_gate') {
+    // Ornamental gate
+    rect(x, y, 2, h, '#4a8a4a');
+    rect(x + w - 2, y, 2, h, '#4a8a4a');
+    rect(x, y, w, 2, '#4ade80');
+    // Arch
+    for (let ax = 3; ax < w - 3; ax++) {
+      const ay = Math.floor(Math.sin((ax - 3) / (w - 6) * Math.PI) * 3);
+      px(x + ax, y + 2 - ay, '#4ade80');
+    }
+    // Sign
+    rect(x + 3, y + 1, w - 6, 1, '#2a5a2a');
+    // Lanterns
+    const lanternGlow = Math.sin(frameCount * 0.05) * 0.3 + 0.7;
+    px(x + 1, y - 1, `rgba(255,200,50,${lanternGlow})`);
+    px(x + w - 2, y - 1, `rgba(255,200,50,${lanternGlow})`);
+  } else if (id === 'monument') {
+    // Golden monument/obelisk
+    rect(x + 2, y + 4, 4, 8, '#c8a840');
+    rect(x + 3, y + 2, 2, 2, '#d4b850');
+    rect(x + 3, y, 2, 2, '#ffd700');
+    // Glow
+    const mGlow = Math.sin(frameCount * 0.02) * 0.2 + 0.4;
+    for (let dy = -1; dy <= 12; dy++) {
+      for (let dx = -1; dx <= 8; dx++) {
+        const dist = Math.sqrt((dx - 4) ** 2 + (dy - 5) ** 2);
+        if (dist > 3 && dist < 5) {
+          px(x + dx, y + dy, `rgba(255,215,0,${mGlow * (1 - dist / 5) * 0.3})`);
+        }
+      }
+    }
+  } else if (id === 'plaza') {
+    // Cobblestone plaza
+    for (let py = 0; py < h; py++) {
+      for (let ppx = 0; ppx < w; ppx++) {
+        const r = ((ppx * 7 + py * 13) % 17) / 17;
+        px(x + ppx, y + py, r < 0.4 ? '#9a8a6a' : r < 0.7 ? '#b0a080' : '#8a7a5a');
+      }
+    }
+    // Center decoration
+    px(x + 12, y + 3, '#ffd700');
+    px(x + 11, y + 3, '#ffd700');
   }
 }
 
