@@ -72,8 +72,8 @@ class Seed {
     }
 }
 
-// Create seeds
-const seeds = Array.from({ length: 60 }, () => new Seed());
+// Create seeds — more particles for a lush feel
+const seeds = Array.from({ length: 90 }, () => new Seed());
 
 // Occasionally spawn a "special" seed (brighter, larger)
 class SpecialSeed extends Seed {
