@@ -202,7 +202,7 @@ canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edge
   <div class="loading-sub">Synchronizing world state</div>
 </div>
 <div id="offline-toast">🌐 Sin conexión — mostrando última versión guardada</div>
-<canvas id="minimap" width="120" height="90"></canvas>
+<canvas id="minimap" width="144" height="108"></canvas>
 <canvas id="game"></canvas>
 
 <script>
@@ -218,8 +218,8 @@ const MC = document.getElementById('minimap');
 const mctx = MC.getContext('2d');
 
 const SCALE = 4;
-const WORLD_W = 256;
-const WORLD_H = 192;
+const WORLD_W = 384;
+const WORLD_H = 288;
 
 let screenW, screenH;
 let camX = 0, camY = 0;
@@ -573,6 +573,12 @@ const STRUCTURE_DEFS = {
   church: { stage: 4, x: 75, y: 28, w: 16, h: 18, color: '#d4af37', label: 'The Chapel' },
   market: { stage: 4, x: 160, y: 100, w: 18, h: 10, color: '#c87533', label: 'Market Square' },
   garden_gate: { stage: 4, x: 128, y: 0, w: 12, h: 8, color: '#4ade80', label: 'Garden Gate' },
+  // Expanded area structures (Stage 3-4)
+  farm: { stage: 3, x: 280, y: 80, w: 20, h: 16, color: '#8b6914', label: 'The Farm' },
+  lighthouse: { stage: 4, x: 350, y: 40, w: 8, h: 20, color: '#e0e0d0', label: 'Lighthouse' },
+  dock: { stage: 4, x: 310, y: 195, w: 16, h: 8, color: '#8a6a3a', label: 'The Dock' },
+  windmill: { stage: 4, x: 260, y: 200, w: 12, h: 18, color: '#c8b07a', label: 'Windmill' },
+  tavern: { stage: 4, x: 300, y: 130, w: 16, h: 12, color: '#6b4e10', label: 'The Tavern' },
   // Stage 5
   archway: { stage: 5, x: 118, y: 0, w: 20, h: 14, color: '#ffd700', label: 'Archway' },
   flag: { stage: 5, x: 128, y: 70, w: 4, h: 16, color: '#e04040', label: 'Victory Flag' },
@@ -692,20 +698,26 @@ const MOODS = {
 // ============================================================
 // TILE MAP & ARRAYS
 // ============================================================
-const TILES_W = 16, TILES_H = 12, TILE = 16;
+const TILES_W = 24, TILES_H = 18, TILE = 16;
 const tileMap = [
-  [4,4,8,4,0,0,0,0,1,0,0,0,0,8,4,4],
-  [4,0,0,0,0,7,0,0,1,0,0,7,0,0,0,4],
-  [8,0,3,3,3,0,0,0,1,0,0,0,0,5,0,8],
-  [0,0,3,3,3,0,0,1,1,1,0,0,0,0,0,0],
-  [0,7,0,0,0,0,1,1,0,1,1,0,0,3,3,0],
-  [0,0,0,5,0,0,1,0,0,0,1,0,0,3,3,0],
-  [6,6,0,0,0,0,1,0,2,2,1,0,0,0,0,6],
-  [0,0,0,0,7,0,1,0,2,2,0,0,7,0,0,0],
-  [0,0,0,0,0,0,1,1,1,1,1,0,0,0,5,0],
-  [8,0,7,0,0,0,0,0,1,0,0,0,0,7,0,8],
-  [4,0,0,0,5,0,0,0,1,0,0,5,0,0,0,4],
-  [4,4,8,4,0,0,0,0,1,0,0,0,0,8,4,4],
+  [4,4,8,4,0,0,0,0,1,0,0,0,0,8,4,4, 4,0,0,7,0,0,0,4],
+  [4,0,0,0,0,7,0,0,1,0,0,7,0,0,0,4, 0,0,3,3,0,7,0,8],
+  [8,0,3,3,3,0,0,0,1,0,0,0,0,5,0,8, 0,0,3,3,0,0,0,0],
+  [0,0,3,3,3,0,0,1,1,1,0,0,0,0,0,0, 0,7,0,0,0,5,0,0],
+  [0,7,0,0,0,0,1,1,0,1,1,0,0,3,3,0, 0,0,0,0,0,0,7,0],
+  [0,0,0,5,0,0,1,0,0,0,1,0,0,3,3,0, 0,0,0,0,0,0,0,8],
+  [6,6,0,0,0,0,1,0,2,2,1,0,0,0,0,6, 0,0,0,0,0,0,0,0],
+  [0,0,0,0,7,0,1,0,2,2,0,0,7,0,0,0, 0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,1,1,1,1,1,0,0,0,5,0, 0,0,7,0,0,0,0,0],
+  [8,0,7,0,0,0,0,0,1,0,0,0,0,7,0,8, 0,0,0,0,0,0,0,4],
+  [4,0,0,0,5,0,0,0,1,0,0,5,0,0,0,4, 0,0,0,0,0,0,0,4],
+  [4,4,8,4,0,0,0,0,1,0,0,0,0,8,4,4, 0,0,0,0,0,0,4,8],
+  [0,0,0,7,0,0,0,0,1,0,0,0,0,0,0,0, 0,3,3,0,2,2,2,0],
+  [0,7,0,0,0,0,0,0,1,0,0,7,0,0,0,0, 0,3,3,0,2,2,2,0],
+  [8,0,0,0,0,7,0,0,1,0,0,0,0,0,7,0, 0,0,0,0,2,2,2,0],
+  [4,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0, 7,0,0,0,0,0,0,0],
+  [0,7,0,0,0,7,0,0,1,0,0,7,0,0,0,7, 0,0,7,0,0,7,0,0],
+  [6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6, 6,6,6,6,6,6,6,6],
 ];
 
 const particles = [];
