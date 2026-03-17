@@ -906,6 +906,134 @@ function drawStructure(s) {
       px(x + 1 + fx, y + fy + Math.sin(frameCount * 0.08 + fx * 0.3) * 0.5, fx < 4 ? '#e04040' : '#ffd700');
     }
     px(x, y - 1, '#ffd700');
+  } else if (id === 'farm') {
+    // Fenced area with dirt/soil inside and a small barn
+    // Fence border
+    rect(x, y, w, 1, '#8a6a3a'); rect(x, y + h - 1, w, 1, '#8a6a3a');
+    rect(x, y, 1, h, '#8a6a3a'); rect(x + w - 1, y, 1, h, '#8a6a3a');
+    // Fence posts
+    for (let fx = 0; fx < w; fx += 4) { rect(x + fx, y - 1, 1, 2, '#a08050'); rect(x + fx, y + h - 1, 1, 2, '#a08050'); }
+    // Dirt/soil inside
+    for (let dy = 1; dy < h - 1; dy++) for (let dx = 1; dx < w - 1; dx++) {
+      const sr = ((dx * 7 + dy * 13) % 11) / 11;
+      px(x + dx, y + dy, sr < 0.5 ? PAL.soil : PAL.soilDark);
+    }
+    // Furrows
+    for (let fy = 3; fy < h - 2; fy += 3) for (let fx = 2; fx < w - 2; fx++) px(x + fx, y + fy, PAL.dirtDark);
+    // Sprouts in rows
+    for (let fy = 4; fy < h - 2; fy += 3) for (let fx = 3; fx < w - 3; fx += 3) { px(x + fx, y + fy, PAL.sprout); px(x + fx, y + fy - 1, '#2a7a2a'); }
+    // Small barn (right side)
+    rect(x + 13, y + 2, 6, 6, '#8a3030'); // walls
+    for (let ry = 0; ry < 3; ry++) rect(x + 13 + ry, y + ry, 6 - ry * 2, 1, '#c03030'); // red roof
+    rect(x + 15, y + 5, 2, 3, '#5a2020'); // door
+  } else if (id === 'lighthouse') {
+    // Tall white/gray tower with blinking light
+    // Base (wider)
+    rect(x + 1, y + 14, 6, 6, '#9a9a9a');
+    rect(x + 1, y + 14, 6, 1, '#b0b0b0');
+    // Tower body (narrow)
+    rect(x + 2, y + 4, 4, 10, '#e0e0d0');
+    rect(x + 2, y + 4, 1, 10, '#c8c8b8'); // shadow side
+    // Red stripes
+    rect(x + 2, y + 7, 4, 1, '#c03030');
+    rect(x + 2, y + 11, 4, 1, '#c03030');
+    // Top platform
+    rect(x + 1, y + 3, 6, 1, '#888');
+    rect(x + 2, y + 2, 4, 1, '#aaa');
+    // Blinking light at top
+    const lightPulse = (Math.sin(frameCount * 0.08) + 1) / 2;
+    const lightBright = lightPulse > 0.5 ? 1 : 0.2;
+    ctx.globalAlpha = lightBright;
+    px(x + 3, y + 1, '#ffff00'); px(x + 4, y + 1, '#ffff00');
+    px(x + 3, y, '#ffffaa'); px(x + 4, y, '#ffffaa');
+    // Light beam glow
+    if (lightPulse > 0.5) {
+      ctx.globalAlpha = 0.15;
+      for (let r = 1; r <= 4; r++) {
+        px(x + 3 - r, y + 1, '#ffff80'); px(x + 4 + r, y + 1, '#ffff80');
+      }
+    }
+    ctx.globalAlpha = 1;
+    // Door
+    rect(x + 3, y + 17, 2, 3, '#5a3a1a');
+  } else if (id === 'dock') {
+    // Wooden planks extending into water area, with posts
+    // Main deck
+    for (let dy = 0; dy < h; dy++) for (let dx = 0; dx < w; dx++) {
+      const plank = ((dx + dy * 3) % 5) / 5;
+      px(x + dx, y + dy, plank < 0.3 ? '#6b4a2a' : plank < 0.7 ? '#8a6a3a' : '#a08050');
+    }
+    // Plank lines
+    for (let dx = 0; dx < w; dx += 3) rect(x + dx, y, 1, h, '#5a3a1a');
+    // Support posts
+    rect(x, y + h, 2, 3, '#4a2a10'); rect(x + w - 2, y + h, 2, 3, '#4a2a10');
+    rect(x + w / 2 - 1, y + h, 2, 3, '#4a2a10');
+    // Rope/railing
+    rect(x, y - 1, w, 1, '#a08050');
+    // Mooring post
+    rect(x + w - 3, y - 1, 2, 2, '#5a3a1a'); px(x + w - 2, y - 2, '#888');
+  } else if (id === 'windmill') {
+    // Stone base with rotating blades
+    // Stone base
+    rect(x + 2, y + 8, 8, 10, '#9a8a6a');
+    rect(x + 2, y + 8, 8, 1, '#b0a080');
+    rect(x + 3, y + 8, 1, 10, '#8a7a5a'); // stone texture
+    rect(x + 7, y + 10, 1, 8, '#8a7a5a');
+    // Door
+    rect(x + 4, y + 14, 3, 4, '#5a3a1a'); px(x + 6, y + 16, '#ffd700');
+    // Window
+    px(x + 4, y + 10, '#5a9aea'); px(x + 5, y + 10, '#5a9aea');
+    // Rotating blades
+    const angle = frameCount * 0.02;
+    const cx2 = x + 6, cy2 = y + 5;
+    // Hub
+    px(cx2, cy2, '#888'); px(cx2 + 1, cy2, '#888');
+    // 4 blades
+    for (let b = 0; b < 4; b++) {
+      const ba = angle + b * Math.PI / 2;
+      for (let r = 1; r <= 6; r++) {
+        const bx = cx2 + Math.cos(ba) * r;
+        const by = cy2 + Math.sin(ba) * r;
+        px(bx, by, r < 4 ? '#a08050' : '#c8b07a');
+        // Blade width
+        px(bx + Math.cos(ba + Math.PI/2) * 0.5, by + Math.sin(ba + Math.PI/2) * 0.5, '#8a6a3a');
+      }
+    }
+  } else if (id === 'tavern') {
+    // Warm building with chimney smoke and orange-lit windows
+    // Walls
+    rect(x + 1, y + 4, w - 2, h - 4, '#6b4e10');
+    rect(x + 1, y + 4, w - 2, 1, '#8a6a3a');
+    // Roof
+    for (let ry = 0; ry < 4; ry++) rect(x + ry, y + ry, w - ry * 2, 1, '#5a2a0a');
+    // Door
+    rect(x + 6, y + 7, 4, 5, '#3a2a0a');
+    px(x + 9, y + 9, '#ffd700'); // doorknob
+    // Sign above door
+    rect(x + 5, y + 5, 6, 2, '#8a6a3a');
+    drawPixelText('T', x + 7, y + 5, '#ffd700');
+    // Orange-lit windows (warm glow)
+    const winGlow = Math.sin(frameCount * 0.04) * 0.15 + 0.85;
+    ctx.globalAlpha = winGlow;
+    px(x + 3, y + 7, '#ff8c00'); px(x + 4, y + 7, '#ff8c00');
+    px(x + 3, y + 8, '#ffa030'); px(x + 4, y + 8, '#ffa030');
+    px(x + 11, y + 7, '#ff8c00'); px(x + 12, y + 7, '#ff8c00');
+    px(x + 11, y + 8, '#ffa030'); px(x + 12, y + 8, '#ffa030');
+    ctx.globalAlpha = 1;
+    // Chimney
+    rect(x + 12, y - 2, 2, 4, '#5a3a1a');
+    // Smoke particles from chimney
+    for (let si = 0; si < 3; si++) {
+      const smokeY = y - 3 - si * 2 - (frameCount * 0.03 % 4);
+      const smokeX = x + 12 + Math.sin(frameCount * 0.02 + si * 1.5) * 1.5;
+      const smokeAlpha = 0.3 - si * 0.08;
+      if (smokeAlpha > 0) {
+        ctx.globalAlpha = smokeAlpha;
+        px(smokeX, smokeY, '#aaa');
+        px(smokeX + 1, smokeY, '#999');
+        ctx.globalAlpha = 1;
+      }
+    }
   } else if (id === 'church') {
     // Chapel with steeple and cross
     rect(x + 2, y + 6, w - 4, h - 6, '#c8b07a'); // walls
