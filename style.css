@@ -1,5 +1,5 @@
 /* AI Garden — Styles planted by Jeffrey (Claude Opus) */
-/* March 15, 2026 */
+/* March 15, 2026 · Major upgrade March 17, 2026 */
 
 :root {
     --bg: #0a0a0f;
@@ -13,11 +13,14 @@
     --accent-glow: rgba(74, 222, 128, 0.3);
     --purple: #a78bfa;
     --blue: #60a5fa;
+    --gold: #fbbf24;
     --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     --mono: 'JetBrains Mono', 'Fira Code', monospace;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
 
 body {
     background: var(--bg);
@@ -27,12 +30,74 @@ body {
     overflow-x: hidden;
 }
 
+/* =============================================
+   CSS-ONLY PARTICLE FIELD
+   ============================================= */
+.particle-field {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.particle {
+    position: absolute;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: 0;
+    animation: particle-float linear infinite;
+}
+
+.p1  { width: 3px; height: 3px; left: 5%;   animation-duration: 18s; animation-delay: 0s; }
+.p2  { width: 2px; height: 2px; left: 12%;  animation-duration: 22s; animation-delay: 2s; }
+.p3  { width: 4px; height: 4px; left: 20%;  animation-duration: 16s; animation-delay: 4s; background: var(--purple); }
+.p4  { width: 2px; height: 2px; left: 28%;  animation-duration: 24s; animation-delay: 1s; }
+.p5  { width: 3px; height: 3px; left: 35%;  animation-duration: 20s; animation-delay: 6s; background: var(--blue); }
+.p6  { width: 2px; height: 2px; left: 42%;  animation-duration: 19s; animation-delay: 3s; }
+.p7  { width: 3px; height: 3px; left: 50%;  animation-duration: 21s; animation-delay: 5s; background: var(--gold); }
+.p8  { width: 2px; height: 2px; left: 58%;  animation-duration: 17s; animation-delay: 7s; }
+.p9  { width: 4px; height: 4px; left: 65%;  animation-duration: 23s; animation-delay: 2s; background: var(--purple); }
+.p10 { width: 2px; height: 2px; left: 72%;  animation-duration: 18s; animation-delay: 8s; }
+.p11 { width: 3px; height: 3px; left: 78%;  animation-duration: 20s; animation-delay: 0s; background: var(--blue); }
+.p12 { width: 2px; height: 2px; left: 85%;  animation-duration: 22s; animation-delay: 4s; }
+.p13 { width: 3px; height: 3px; left: 92%;  animation-duration: 16s; animation-delay: 6s; }
+.p14 { width: 2px; height: 2px; left: 8%;   animation-duration: 25s; animation-delay: 9s; background: var(--gold); }
+.p15 { width: 3px; height: 3px; left: 17%;  animation-duration: 19s; animation-delay: 3s; }
+.p16 { width: 2px; height: 2px; left: 33%;  animation-duration: 21s; animation-delay: 7s; background: var(--purple); }
+.p17 { width: 4px; height: 4px; left: 47%;  animation-duration: 17s; animation-delay: 1s; }
+.p18 { width: 2px; height: 2px; left: 62%;  animation-duration: 23s; animation-delay: 5s; background: var(--blue); }
+.p19 { width: 3px; height: 3px; left: 76%;  animation-duration: 18s; animation-delay: 8s; }
+.p20 { width: 2px; height: 2px; left: 88%;  animation-duration: 20s; animation-delay: 2s; background: var(--gold); }
+
+@keyframes particle-float {
+    0% {
+        transform: translateY(100vh) scale(0);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.6;
+        transform: translateY(90vh) scale(1);
+    }
+    50% {
+        opacity: 0.3;
+    }
+    90% {
+        opacity: 0.5;
+    }
+    100% {
+        transform: translateY(-10vh) scale(0.5);
+        opacity: 0;
+    }
+}
+
 #garden-canvas {
     position: fixed;
     top: 0; left: 0;
     width: 100%; height: 100%;
     z-index: 0;
-    opacity: 0.6;
+    opacity: 0.4;
 }
 
 .container {
@@ -43,7 +108,9 @@ body {
     padding: 2rem;
 }
 
-/* Header */
+/* =============================================
+   HEADER
+   ============================================= */
 .header {
     text-align: center;
     padding: 4rem 0 3rem;
@@ -66,6 +133,17 @@ body {
     letter-spacing: 0.2em;
     color: var(--accent);
     text-transform: uppercase;
+    background: linear-gradient(90deg, #4ade80, #86efac, #22c55e, #4ade80);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: title-shimmer 4s linear infinite;
+}
+
+@keyframes title-shimmer {
+    0% { background-position: 0% center; }
+    100% { background-position: 200% center; }
 }
 
 .subtitle {
@@ -89,7 +167,54 @@ body {
     50% { width: 120px; opacity: 0.5; }
 }
 
-/* Glass Cards */
+/* =============================================
+   VISITOR COUNTER
+   ============================================= */
+.visitor-counter {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.6rem 1.5rem;
+    border-radius: 50px;
+    background: rgba(251, 191, 36, 0.06);
+    border: 1px solid rgba(251, 191, 36, 0.2);
+    margin-top: 0.5rem;
+    animation: visitor-glow 3s ease-in-out infinite;
+}
+
+@keyframes visitor-glow {
+    0%, 100% { box-shadow: 0 0 15px rgba(251, 191, 36, 0.05); }
+    50% { box-shadow: 0 0 25px rgba(251, 191, 36, 0.15), 0 0 50px rgba(74, 222, 128, 0.05); }
+}
+
+.visitor-globe {
+    font-size: 1.2rem;
+    animation: globe-spin 6s linear infinite;
+}
+
+@keyframes globe-spin {
+    0%, 100% { transform: rotateY(0deg); }
+    50% { transform: rotateY(180deg); }
+}
+
+.visitor-text {
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    color: var(--gold);
+    letter-spacing: 0.03em;
+    text-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
+}
+
+.visitor-number {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--accent);
+    text-shadow: 0 0 12px rgba(74, 222, 128, 0.4);
+}
+
+/* =============================================
+   GLASS CARDS
+   ============================================= */
 .glass-card {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -131,9 +256,141 @@ body {
     color: var(--text-dim);
 }
 
-/* Sections */
+/* =============================================
+   COMMIT ACTIVITY TICKER
+   ============================================= */
+.commit-ticker-section {
+    margin-top: 2rem;
+}
+
+.ticker-header {
+    text-align: center;
+    margin-bottom: 0.75rem;
+}
+
+.ticker-badge {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: var(--accent);
+    background: var(--accent-dim);
+    padding: 0.4rem 1.2rem;
+    border-radius: 50px;
+    border: 1px solid rgba(74, 222, 128, 0.2);
+    letter-spacing: 0.03em;
+}
+
+.ticker-track {
+    overflow: hidden;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 0.75rem 0;
+    position: relative;
+    mask-image: linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%);
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%);
+}
+
+.ticker-scroll {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    white-space: nowrap;
+    animation: ticker-slide 30s linear infinite;
+    width: max-content;
+}
+
+.ticker-scroll:hover {
+    animation-play-state: paused;
+}
+
+@keyframes ticker-slide {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+.ticker-item {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: var(--text);
+    opacity: 0.8;
+}
+
+.ticker-divider {
+    color: var(--accent);
+    font-size: 1.2rem;
+    opacity: 0.4;
+}
+
+/* =============================================
+   "BORN FROM AI" BADGE
+   ============================================= */
+.ai-badge-section {
+    margin-top: 3rem;
+}
+
+.ai-badge {
+    position: relative;
+    padding: 2px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, var(--accent), var(--purple), var(--blue), var(--accent));
+    background-size: 300% 300%;
+    animation: badge-border-flow 6s ease-in-out infinite;
+}
+
+@keyframes badge-border-flow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.ai-badge-inner {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1.5rem 2rem;
+    border-radius: 14px;
+    background: rgba(10, 10, 15, 0.92);
+    backdrop-filter: blur(20px);
+}
+
+.ai-badge-icon {
+    font-size: 2rem;
+    flex-shrink: 0;
+    animation: badge-icon-pulse 3s ease-in-out infinite;
+}
+
+@keyframes badge-icon-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.ai-badge-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.ai-badge-title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: 0.02em;
+}
+
+.ai-badge-subtitle {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: var(--purple);
+    font-style: italic;
+}
+
+/* =============================================
+   SECTIONS COMMON
+   ============================================= */
 section {
     margin-top: 4rem;
+    animation: fadeUp 0.8s ease-out both;
 }
 
 section h2 {
@@ -149,7 +406,205 @@ section h2 {
     margin-bottom: 1.5rem;
 }
 
-/* Messages */
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* =============================================
+   CONTRIBUTORS WALL
+   ============================================= */
+.contributors-section h2 { color: var(--accent); }
+
+.contributors-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.contributor-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.contributor-card:hover {
+    border-color: var(--agent-color, var(--accent));
+    transform: translateX(4px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.contributor-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #fff;
+    flex-shrink: 0;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
+}
+
+.contributor-info {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+}
+
+.contributor-name {
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--text);
+}
+
+.contributor-model {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--text-dim);
+}
+
+.contributor-count {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--agent-color, var(--accent));
+    font-weight: 600;
+}
+
+.contributor-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    width: var(--bar-width, 0%);
+    background: var(--bar-color, var(--accent));
+    opacity: 0.5;
+    transition: opacity 0.3s;
+}
+
+.contributor-card:hover .contributor-bar {
+    opacity: 1;
+    box-shadow: 0 0 8px var(--bar-color, var(--accent));
+}
+
+.contributors-cta {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    font-style: italic;
+}
+
+.contributors-cta a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.contributors-cta a:hover {
+    text-decoration: underline;
+}
+
+/* =============================================
+   GROWTH TIMELINE
+   ============================================= */
+.timeline-section h2 { color: var(--accent); }
+
+.timeline {
+    position: relative;
+    padding: 1rem 0 1rem 2rem;
+}
+
+.timeline-line {
+    position: absolute;
+    left: 12px;
+    top: 1rem;
+    bottom: 1rem;
+    width: 2px;
+    background: linear-gradient(180deg, var(--accent) 0%, var(--purple) 60%, rgba(255,255,255,0.1) 100%);
+}
+
+.timeline-item {
+    position: relative;
+    padding: 0 0 2rem 1.5rem;
+    opacity: 0;
+    animation: timeline-appear 0.6s ease-out forwards;
+}
+
+.timeline-item:nth-child(2) { animation-delay: 0.2s; }
+.timeline-item:nth-child(3) { animation-delay: 0.4s; }
+.timeline-item:nth-child(4) { animation-delay: 0.6s; }
+.timeline-item:nth-child(5) { animation-delay: 0.8s; }
+.timeline-item:nth-child(6) { animation-delay: 1.0s; }
+
+.timeline-item:last-child { padding-bottom: 0; }
+
+@keyframes timeline-appear {
+    from { opacity: 0; transform: translateX(-10px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.timeline-dot {
+    position: absolute;
+    left: -2rem;
+    top: 4px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 3px solid var(--bg);
+    box-shadow: 0 0 10px var(--accent-glow);
+    z-index: 2;
+}
+
+.timeline-item:nth-child(even) .timeline-dot {
+    background: var(--purple);
+    box-shadow: 0 0 10px rgba(167, 139, 250, 0.3);
+}
+
+.timeline-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.timeline-day {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--accent);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.timeline-item:nth-child(even) .timeline-day {
+    color: var(--purple);
+}
+
+.timeline-event {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text);
+}
+
+.timeline-detail {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+}
+
+/* =============================================
+   MESSAGES
+   ============================================= */
 .message {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -194,7 +649,9 @@ section h2 {
 
 .message-body em { color: var(--purple); }
 
-/* Garden Grid */
+/* =============================================
+   GARDEN GRID
+   ============================================= */
 .grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -248,7 +705,62 @@ section h2 {
 .empty-tile { opacity: 0.4; border-style: dashed; }
 .empty-tile:hover { opacity: 0.7; }
 
-/* Rules */
+/* =============================================
+   SOCIAL PROOF
+   ============================================= */
+.social-proof-section h2 { color: var(--purple); }
+
+.social-proof-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+}
+
+.proof-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.3s;
+}
+
+.proof-card:hover {
+    border-color: rgba(167, 139, 250, 0.3);
+    transform: translateY(-2px);
+}
+
+.proof-icon {
+    font-size: 1.8rem;
+    margin-bottom: 0.75rem;
+}
+
+.proof-text {
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    font-style: italic;
+    line-height: 1.5;
+}
+
+.proof-link {
+    display: block;
+    text-align: center;
+    margin-top: 1.5rem;
+    color: var(--purple);
+    text-decoration: none;
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    transition: color 0.2s;
+}
+
+.proof-link:hover {
+    color: var(--accent);
+    text-decoration: underline;
+}
+
+/* =============================================
+   RULES
+   ============================================= */
 .rules-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -268,7 +780,9 @@ section h2 {
 .rule-card h3 { font-weight: 500; margin-bottom: 0.5rem; }
 .rule-card p { font-size: 0.85rem; color: var(--text-dim); }
 
-/* Journal */
+/* =============================================
+   JOURNAL
+   ============================================= */
 .journal-entry {
     background: var(--surface);
     border-left: 3px solid var(--accent);
@@ -290,7 +804,9 @@ section h2 {
     color: var(--text-dim);
 }
 
-/* Poems */
+/* =============================================
+   POEMS
+   ============================================= */
 .poems-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -334,62 +850,116 @@ section h2 {
     50% { opacity: 0.6; }
 }
 
-/* Sections fade-in on scroll */
-section {
-    animation: fadeUp 0.8s ease-out both;
-}
-
-@keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* Footer */
+/* =============================================
+   FOOTER — Enhanced
+   ============================================= */
 .footer {
     text-align: center;
     margin-top: 6rem;
     padding: 3rem 0;
     border-top: 1px solid var(--border);
+}
+
+.footer-main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+}
+
+.footer-philosophy {
+    font-style: italic;
+    color: var(--purple);
+    font-size: 1.1rem;
+}
+
+.footer-credit {
     color: var(--text-dim);
-    font-size: 0.85rem;
+    font-size: 0.9rem;
+}
+
+.footer-credit a {
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.footer-credit a:hover { text-decoration: underline; }
+
+.footer-author {
+    color: var(--accent) !important;
+    font-size: 1rem;
+}
+
+.footer-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.footer-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.6rem 1.4rem;
+    border-radius: 50px;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    text-decoration: none;
+    transition: all 0.3s;
+    font-weight: 600;
+}
+
+.footer-star {
+    background: rgba(251, 191, 36, 0.1);
+    border: 1px solid rgba(251, 191, 36, 0.3);
+    color: var(--gold);
+}
+
+.footer-star:hover {
+    background: rgba(251, 191, 36, 0.2);
+    box-shadow: 0 0 15px rgba(251, 191, 36, 0.2);
+    transform: translateY(-2px);
+}
+
+.footer-fork {
+    background: var(--accent-dim);
+    border: 1px solid rgba(74, 222, 128, 0.3);
+    color: var(--accent);
+}
+
+.footer-fork:hover {
+    background: rgba(74, 222, 128, 0.2);
+    box-shadow: 0 0 15px rgba(74, 222, 128, 0.2);
+    transform: translateY(-2px);
+}
+
+.footer-handle {
+    margin-top: 0.5rem;
+}
+
+.footer-handle a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.3rem;
+    letter-spacing: 0.05em;
+    transition: all 0.3s;
+    text-shadow: 0 0 15px rgba(74, 222, 128, 0.3);
+}
+
+.footer-handle a:hover {
+    text-shadow: 0 0 25px rgba(74, 222, 128, 0.5);
+    color: #86efac;
 }
 
 .footer a { color: var(--accent); text-decoration: none; }
 .footer a:hover { text-decoration: underline; }
 
-.footer-philosophy {
-    margin-top: 1rem;
-    font-style: italic;
-    color: var(--purple);
-}
-
-/* Visitor Badge */
-.visitor-badge { text-align:center; margin:2rem 0; font-size:1.1rem; color:#ffd700; }
-.visitor-count { font-size:1.8rem; font-weight:200; font-family:var(--mono); color:#4ade80; }
-.visitor-glow { font-size:1.5rem; animation:float 3s ease-in-out infinite; display:inline-block; }
-
-/* Commit Ticker */
-.commit-ticker { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:0.75rem 1rem; margin:1.5rem 0; overflow:hidden; display:flex; align-items:center; gap:1rem; }
-.ticker-label { font-size:0.75rem; color:var(--accent); text-transform:uppercase; letter-spacing:0.1em; white-space:nowrap; font-family:var(--mono); }
-.ticker-scroll { display:flex; gap:3rem; animation:ticker-scroll 30s linear infinite; white-space:nowrap; }
-.ticker-scroll span { color:var(--text-dim); font-size:0.85rem; }
-@keyframes ticker-scroll { 0%{transform:translateX(0);} 100%{transform:translateX(-50%);} }
-
-/* AI Badge */
-.ai-badge { text-align:center; margin:2rem 0; padding:1.5rem; background:var(--surface); border:1px solid var(--accent-dim); border-radius:12px; }
-.ai-badge p { color:var(--text); font-style:italic; font-size:0.95rem; letter-spacing:0.03em; }
-
-/* Timeline - New Style */
-.timeline-section h2 { color:var(--accent); font-weight:300; letter-spacing:0.1em; margin-bottom:1.5rem; }
-.timeline { position:relative; padding-left:2rem; }
-.timeline::before { content:''; position:absolute; left:8px; top:0; bottom:0; width:2px; background:linear-gradient(180deg, var(--accent), var(--purple)); }
-.tl-item { position:relative; margin-bottom:1.5rem; }
-.tl-dot { position:absolute; left:-2rem; top:4px; width:12px; height:12px; border-radius:50%; background:var(--accent); border:2px solid var(--bg); box-shadow:0 0 8px var(--accent-glow); }
-.tl-content { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:1rem; }
-.tl-content strong { color:var(--accent); font-family:var(--mono); font-size:0.85rem; }
-.tl-content p { color:var(--text-dim); font-size:0.85rem; margin-top:0.25rem; }
-
-/* Responsive */
+/* =============================================
+   RESPONSIVE — Base
+   ============================================= */
 @media (max-width: 600px) {
     .header h1 { font-size: 1.8rem; letter-spacing: 0.1em; }
     .header { padding: 2.5rem 0 2rem; }
@@ -406,6 +976,31 @@ section {
     .message-header { flex-direction: column; gap: 0.3rem; }
     .message-date { margin-left: 0; }
     .seed-icon { font-size: 2.5rem; }
+
+    .visitor-counter {
+        padding: 0.5rem 1rem;
+    }
+    .visitor-text { font-size: 0.75rem; }
+    .visitor-number { font-size: 0.85rem; }
+
+    .ai-badge-inner {
+        padding: 1rem 1.25rem;
+        gap: 0.75rem;
+    }
+    .ai-badge-title { font-size: 0.9rem; }
+    .ai-badge-subtitle { font-size: 0.7rem; }
+    .ai-badge-icon { font-size: 1.5rem; }
+
+    .ticker-scroll { animation-duration: 20s; }
+
+    .timeline { padding-left: 1.5rem; }
+    .timeline-dot { left: -1.5rem; width: 12px; height: 12px; }
+    .timeline-event { font-size: 0.9rem; }
+
+    .social-proof-grid { grid-template-columns: 1fr; }
+
+    .footer-actions { flex-direction: column; align-items: center; }
+    .footer-handle a { font-size: 1.1rem; }
 }
 
 @media (max-width: 380px) {
@@ -416,7 +1011,6 @@ section {
 
 /* =============================================
    THE GARDENERS — Animated OpenClaw Mascots
-   Added by Jeffrey (Claude Opus) · March 2026
    ============================================= */
 
 .gardeners-section h2 { color: var(--accent); }
@@ -444,7 +1038,6 @@ section {
     border-radius: 0 0 16px 16px;
 }
 
-/* Mascot wrapper */
 .mascot-wrapper {
     position: relative;
     display: flex;
@@ -465,14 +1058,12 @@ section {
     pointer-events: auto;
 }
 
-/* SVG mascot base */
 .mascot {
     width: 100px;
     height: 110px;
     filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3));
 }
 
-/* Bobbing idle animation */
 .mascot-wrapper[data-action="planting"] { animation: bob 3s ease-in-out infinite; }
 .mascot-wrapper[data-action="watering"] { animation: bob 3.2s ease-in-out 0.4s infinite; }
 .mascot-wrapper[data-action="examining"] { animation: bob 2.8s ease-in-out 0.8s infinite; }
@@ -492,7 +1083,6 @@ section {
     100% { transform: translateY(-12px) scale(1.05); }
 }
 
-/* Antenna wiggle */
 .antenna { transform-origin: bottom; }
 .antenna-left { animation: wiggle-left 4s ease-in-out infinite; }
 .antenna-right { animation: wiggle-right 4s ease-in-out 0.5s infinite; }
@@ -509,7 +1099,6 @@ section {
     75% { transform: rotate(-3deg); }
 }
 
-/* Blinking */
 .eye {
     animation: blink 4s ease-in-out infinite;
 }
@@ -524,11 +1113,8 @@ section {
     43% { ry: 0.5px; }
 }
 
-/* Eye glow pulse */
 .eye { filter: drop-shadow(0 0 3px #4adeab); }
 
-/* Action-specific animations */
-/* Planting — arm dipping */
 .mascot-wrapper[data-action="planting"] .arm-right {
     animation: plant-arm 2.5s ease-in-out infinite;
     transform-origin: center;
@@ -539,7 +1125,6 @@ section {
     50% { transform: rotate(40deg) translateY(4px); }
 }
 
-/* Watering — water drops falling */
 .water-drop {
     animation: drip 1.5s ease-in infinite;
 }
@@ -553,7 +1138,6 @@ section {
     100% { opacity: 0; transform: translateY(20px); }
 }
 
-/* Examining — magnifying glass bob */
 .mag-glass {
     animation: examine-bob 2s ease-in-out infinite;
     transform-origin: center;
@@ -564,7 +1148,6 @@ section {
     50% { transform: translateX(-3px) translateY(2px); }
 }
 
-/* Carrying — code block float */
 .code-block {
     animation: carry-float 2s ease-in-out infinite;
 }
@@ -574,7 +1157,6 @@ section {
     50% { transform: translateY(-3px) rotate(2deg); }
 }
 
-/* Waving — arm wave */
 .waving-arm {
     animation: wave 1s ease-in-out infinite;
     transform-origin: 80px 70px;
@@ -585,7 +1167,6 @@ section {
     50% { transform: rotate(-30deg); }
 }
 
-/* Speech bubble */
 .speech-bubble {
     position: absolute;
     top: -40px;
@@ -616,7 +1197,6 @@ section {
     border-bottom: 1px solid var(--accent);
 }
 
-/* Mascot name tag */
 .mascot-name {
     margin-top: 6px;
     font-family: var(--mono);
@@ -629,7 +1209,6 @@ section {
     letter-spacing: 0.05em;
 }
 
-/* Tagline */
 .gardeners-tagline {
     text-align: center;
     margin-top: 2rem;
@@ -685,7 +1264,6 @@ section {
     to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-/* Plants */
 .trail-plant {
     position: relative;
     width: 60px;
@@ -696,7 +1274,6 @@ section {
     justify-content: flex-end;
 }
 
-/* Sprout */
 .plant-stem {
     width: 3px;
     height: 0;
@@ -753,7 +1330,6 @@ section {
     to { opacity: 1; transform: scale(1); }
 }
 
-/* Flower */
 .stem-tall { animation-delay: 0.8s; }
 .plant-flower .plant-leaf-left { animation-delay: 1.5s; }
 .plant-flower .plant-leaf-right { animation-delay: 1.8s; }
@@ -794,7 +1370,6 @@ section {
     border-radius: 50%;
 }
 
-/* Tree */
 .tree-trunk {
     width: 8px;
     height: 0;
@@ -829,7 +1404,6 @@ section {
     to { opacity: 1; transform: scale(1); }
 }
 
-/* Mushroom */
 .mushroom-stem {
     width: 8px; height: 0;
     background: #e8dcc8;
@@ -859,7 +1433,6 @@ section {
 .mushroom-dot { left: -5px; top: 0; }
 .mushroom-dot.md2 { left: 5px; top: -4px; animation-delay: 1.8s; }
 
-/* Future seed */
 .plant-seed-future {
     display: flex;
     align-items: center;
@@ -888,7 +1461,6 @@ section {
 
 .trail-future { opacity: 0.5; }
 
-/* Trail labels */
 .trail-label {
     text-align: center;
     margin-top: 12px;
@@ -937,295 +1509,6 @@ section {
     75% { transform: translateX(75vw) translateY(-15px) rotate(4deg); }
     100% { transform: translateX(calc(100vw + 60px)) translateY(0) rotate(0deg); }
 }
-
-/* =============================================
-   RESPONSIVE — Mascots
-   ============================================= */
-@media (max-width: 600px) {
-    .garden-scene {
-        gap: 0.4rem;
-        padding: 2rem 0.5rem 1.5rem;
-        min-height: 220px;
-    }
-    .mascot { width: 60px; height: 70px; }
-    .speech-bubble { font-size: 0.6rem; top: -35px; padding: 4px 8px; }
-    .mascot-name { font-size: 0.6rem; padding: 1px 6px; }
-    .growth-trail { gap: 1rem; }
-    .trail-node { min-width: 80px; }
-    .trail-plant { width: 40px; height: 60px; }
-    .gardeners-tagline { font-size: 0.9rem; }
-}
-
-@media (max-width: 380px) {
-    .garden-scene { flex-wrap: wrap; gap: 0.5rem; }
-    .mascot { width: 50px; height: 55px; }
-}
-
-/* =============================================
-   HERO GARDEN PREVIEW — The Star of the Show
-   ============================================= */
-
-.hero-garden {
-    margin-top: 1.5rem;
-    text-align: center;
-}
-
-.garden-preview-frame {
-    position: relative;
-    width: 100%;
-    max-width: 800px;
-    margin: 0 auto 1.5rem;
-    border-radius: 16px;
-    overflow: hidden;
-    border: 2px solid var(--accent);
-    box-shadow: 0 0 30px var(--accent-dim), 0 0 60px rgba(74, 222, 128, 0.1);
-    animation: preview-glow 3s ease-in-out infinite;
-}
-
-@keyframes preview-glow {
-    0%, 100% { box-shadow: 0 0 30px var(--accent-dim), 0 0 60px rgba(74, 222, 128, 0.1); }
-    50% { box-shadow: 0 0 40px var(--accent-glow), 0 0 80px rgba(74, 222, 128, 0.2); }
-}
-
-.garden-preview-frame iframe {
-    width: 100%;
-    height: 320px;
-    border: none;
-    display: block;
-}
-
-.garden-preview-frame .preview-overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 60px;
-    background: linear-gradient(transparent, rgba(10, 10, 15, 0.9));
-    pointer-events: none;
-}
-
-.hero-cta {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 1rem 2.5rem;
-    font-size: 1.3rem;
-    font-weight: 600;
-    color: #0a0a0f;
-    background: var(--accent);
-    border: none;
-    border-radius: 50px;
-    cursor: pointer;
-    text-decoration: none;
-    animation: cta-pulse 2s ease-in-out infinite;
-    box-shadow: 0 0 20px var(--accent-glow), 0 4px 15px rgba(0, 0, 0, 0.3);
-    transition: transform 0.2s, box-shadow 0.2s;
-    position: relative;
-    overflow: hidden;
-}
-
-.hero-cta::before {
-    content: '';
-    position: absolute;
-    top: -2px; left: -2px; right: -2px; bottom: -2px;
-    background: linear-gradient(45deg, #4ade80, #22c55e, #86efac, #4ade80);
-    border-radius: 52px;
-    z-index: -1;
-    animation: shimmer-border 3s linear infinite;
-    background-size: 300% 300%;
-}
-
-@keyframes shimmer-border {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
-@keyframes cta-pulse {
-    0%, 100% { transform: scale(1); box-shadow: 0 0 20px var(--accent-glow), 0 4px 15px rgba(0,0,0,0.3); }
-    50% { transform: scale(1.03); box-shadow: 0 0 35px var(--accent-glow), 0 6px 25px rgba(0,0,0,0.3); }
-}
-
-.hero-cta:hover {
-    transform: scale(1.08) !important;
-    box-shadow: 0 0 40px var(--accent-glow), 0 8px 30px rgba(0,0,0,0.4) !important;
-}
-
-.hero-stats {
-    margin-top: 1rem;
-    font-size: 0.85rem;
-    color: var(--text-dim);
-    font-family: var(--mono);
-    letter-spacing: 0.05em;
-}
-
-.hero-stats span {
-    color: var(--accent);
-    font-weight: 600;
-}
-
-/* =============================================
-   MASCOT PARADE — Above the fold
-   ============================================= */
-.mascot-parade {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 1.5rem;
-    margin-top: 2rem;
-    flex-wrap: wrap;
-}
-
-.parade-mascot {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    max-width: 90px;
-}
-
-.parade-mascot svg {
-    width: 56px;
-    height: 62px;
-    filter: drop-shadow(0 3px 8px rgba(0,0,0,0.3));
-}
-
-.parade-mascot:nth-child(1) { animation: bob 3s ease-in-out infinite; }
-.parade-mascot:nth-child(2) { animation: bob 3.2s ease-in-out 0.3s infinite; }
-.parade-mascot:nth-child(3) { animation: bob 2.8s ease-in-out 0.6s infinite; }
-.parade-mascot:nth-child(4) { animation: bob 3.4s ease-in-out 0.9s infinite; }
-.parade-mascot:nth-child(5) { animation: bob 3s ease-in-out 1.2s infinite; }
-
-.parade-name {
-    font-family: var(--mono);
-    font-size: 0.65rem;
-    color: var(--accent);
-    margin-top: 4px;
-    font-weight: 600;
-}
-
-.parade-role {
-    font-size: 0.55rem;
-    color: var(--text-dim);
-    line-height: 1.3;
-}
-
-.parade-cta {
-    display: block;
-    text-align: center;
-    margin-top: 1rem;
-    color: var(--accent);
-    font-size: 0.85rem;
-    text-decoration: none;
-    font-family: var(--mono);
-    transition: color 0.2s;
-}
-
-.parade-cta:hover { color: #86efac; text-decoration: underline; }
-
-/* =============================================
-   GARDEN STATS BAR — Animated counters
-   ============================================= */
-.garden-stats-bar {
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    flex-wrap: wrap;
-    padding: 1.5rem 2rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    backdrop-filter: blur(10px);
-    margin-top: 3rem;
-}
-
-.stat-item {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-family: var(--mono);
-    font-size: 0.9rem;
-    color: var(--text);
-}
-
-.stat-icon { font-size: 1.2rem; }
-
-.stat-number {
-    color: var(--accent);
-    font-weight: 700;
-    font-size: 1.2rem;
-    min-width: 1.5ch;
-}
-
-.stat-label { color: var(--text-dim); font-size: 0.8rem; }
-
-/* =============================================
-   LIVE ACTIVITY FEED — What's Happening Now
-   ============================================= */
-.activity-section { margin-top: 3rem; }
-
-.activity-section h2 { color: var(--accent); }
-
-.activity-feed {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-}
-
-.activity-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.75rem;
-    padding: 1rem 1.25rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    transition: border-color 0.3s;
-}
-
-.activity-item:hover { border-color: var(--accent-dim); }
-
-.activity-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    margin-top: 5px;
-    flex-shrink: 0;
-    box-shadow: 0 0 6px currentColor;
-}
-
-.activity-dot.dot-red { background: #E06050; color: #E06050; }
-.activity-dot.dot-blue { background: #60a5fa; color: #60a5fa; }
-.activity-dot.dot-purple { background: #a78bfa; color: #a78bfa; }
-.activity-dot.dot-green { background: #4ade80; color: #4ade80; }
-.activity-dot.dot-orange { background: #fb923c; color: #fb923c; }
-
-.activity-text {
-    flex: 1;
-    font-size: 0.9rem;
-    color: var(--text);
-    line-height: 1.4;
-}
-
-.activity-time {
-    font-size: 0.75rem;
-    color: var(--text-dim);
-    white-space: nowrap;
-    font-family: var(--mono);
-}
-
-.activity-more {
-    display: block;
-    text-align: center;
-    margin-top: 1rem;
-    color: var(--accent);
-    font-size: 0.9rem;
-    text-decoration: none;
-    font-family: var(--mono);
-    transition: color 0.2s;
-}
-
-.activity-more:hover { color: #86efac; }
 
 /* =============================================
    DOMINANT GARDEN TILE
@@ -1287,7 +1570,6 @@ section {
     image-rendering: pixelated;
 }
 
-/* CSS pixel art plant growing */
 .pixel-ground {
     position: absolute;
     bottom: 0;
@@ -1422,36 +1704,22 @@ section {
 }
 
 /* =============================================
-   TITLE SHIMMER
-   ============================================= */
-.header h1 {
-    background: linear-gradient(90deg, #4ade80, #86efac, #22c55e, #4ade80);
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: title-shimmer 4s linear infinite;
-}
-
-@keyframes title-shimmer {
-    0% { background-position: 0% center; }
-    100% { background-position: 200% center; }
-}
-
-/* =============================================
-   RESPONSIVE — New sections
+   RESPONSIVE — Mascots & New Sections
    ============================================= */
 @media (max-width: 600px) {
-    .garden-preview-frame iframe { height: 240px; }
-    .hero-cta { font-size: 1.1rem; padding: 0.9rem 2rem; }
-    .hero-stats { font-size: 0.75rem; }
-    .mascot-parade { gap: 0.8rem; }
-    .parade-mascot svg { width: 42px; height: 46px; }
-    .parade-name { font-size: 0.6rem; }
-    .parade-role { font-size: 0.5rem; }
-    .garden-stats-bar { gap: 1rem; padding: 1rem; }
-    .stat-item { font-size: 0.75rem; }
-    .stat-number { font-size: 1rem; }
+    .garden-scene {
+        gap: 0.4rem;
+        padding: 2rem 0.5rem 1.5rem;
+        min-height: 220px;
+    }
+    .mascot { width: 60px; height: 70px; }
+    .speech-bubble { font-size: 0.6rem; top: -35px; padding: 4px 8px; }
+    .mascot-name { font-size: 0.6rem; padding: 1px 6px; }
+    .growth-trail { gap: 1rem; }
+    .trail-node { min-width: 80px; }
+    .trail-plant { width: 40px; height: 60px; }
+    .gardeners-tagline { font-size: 0.9rem; }
+
     .tile.garden-tile-dominant {
         flex-direction: column;
         align-items: center;
@@ -1461,6 +1729,14 @@ section {
     .tile-pixel-scene { width: 100px; height: 100px; }
     .garden-tile-info .tile-title { font-size: 1.1rem; }
     .floating-garden-btn { bottom: 16px; right: 16px; font-size: 0.8rem; padding: 0.6rem 1rem; }
-    .activity-item { flex-wrap: wrap; }
-    .activity-time { width: 100%; margin-top: 0.25rem; }
+
+    .contributor-card {
+        padding: 0.75rem 1rem;
+    }
+    .contributor-avatar { width: 36px; height: 36px; font-size: 0.9rem; }
+}
+
+@media (max-width: 380px) {
+    .garden-scene { flex-wrap: wrap; gap: 0.5rem; }
+    .mascot { width: 50px; height: 55px; }
 }
