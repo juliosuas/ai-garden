@@ -9,14 +9,19 @@
 html, body { width: 100%; height: 100%; overflow: hidden; background: #1a1a2e; font-family: monospace; }
 canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edges; cursor: crosshair; }
 #ui-top {
-  position: fixed; top: 0; left: 0; right: 0; height: 36px;
-  background: rgba(10,10,20,0.85); color: #4ade80; font-size: 14px;
-  display: flex; align-items: center; justify-content: center; gap: 20px;
+  position: fixed; top: 0; left: 0; right: 0; height: auto; min-height: 36px;
+  background: rgba(10,10,20,0.92); color: #4ade80; font-size: 13px;
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  flex-wrap: wrap; padding: 6px 10px;
   z-index: 10; border-bottom: 2px solid #2a4a2a;
-  font-family: monospace; letter-spacing: 1px;
+  font-family: monospace; letter-spacing: 0.5px;
 }
 #ui-top .plants-count { color: #fb923c; font-weight: bold; }
-#ui-top .stage-info { color: #a78bfa; font-size: 12px; }
+#ui-top .stage-info { color: #a78bfa; font-size: 11px; }
+@media (max-width: 500px) {
+  #ui-top { font-size: 11px; gap: 6px; padding: 4px 6px; }
+  #ui-top .stage-info { font-size: 10px; }
+}
 #weather-indicator { font-size: 12px; color: #ccc; }
 #follow-indicator {
   position: fixed; top: 40px; left: 50%; transform: translateX(-50%);
@@ -25,10 +30,15 @@ canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edge
   z-index: 15; font-family: monospace; display: none; border-radius: 3px;
 }
 #ui-bottom {
-  position: fixed; bottom: 0; left: 0; right: 0; height: 28px;
-  background: rgba(10,10,20,0.75); color: #6b7280; font-size: 11px;
-  display: flex; align-items: center; justify-content: center; gap: 16px;
+  position: fixed; bottom: 0; left: 0; right: 0; height: auto; min-height: 28px;
+  background: rgba(10,10,20,0.85); color: #6b7280; font-size: 11px;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  flex-wrap: wrap; padding: 4px 8px;
   z-index: 10; border-top: 1px solid #2a4a2a; font-family: monospace;
+}
+@media (max-width: 500px) {
+  #ui-bottom { font-size: 10px; gap: 6px; }
+  #ui-bottom span:first-child { display: none; }
 }
 #ui-bottom span { cursor: pointer; }
 #ui-bottom span:hover { color: #4ade80; }
@@ -152,6 +162,137 @@ canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edge
   font-family: monospace; z-index: 50; border-radius: 4px;
   display: none; transition: opacity 0.5s;
 }
+
+/* === D-PAD CONTROLS === */
+#dpad {
+  position: fixed; bottom: 80px; left: 12px; z-index: 15;
+  width: 120px; height: 120px; user-select: none; -webkit-user-select: none;
+}
+#dpad button {
+  position: absolute; width: 38px; height: 38px;
+  background: rgba(10,10,20,0.75); border: 2px solid #2a4a2a;
+  color: #4ade80; font-size: 18px; font-family: monospace;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  border-radius: 4px; outline: none; padding: 0;
+  image-rendering: pixelated; transition: background 0.1s;
+}
+#dpad button:active, #dpad button.active { background: rgba(74,222,128,0.3); border-color: #4ade80; }
+#dpad .dpad-up    { left: 41px; top: 0; }
+#dpad .dpad-down  { left: 41px; bottom: 0; }
+#dpad .dpad-left  { left: 0; top: 41px; }
+#dpad .dpad-right { right: 0; top: 41px; }
+
+/* === ZOOM CONTROLS === */
+#zoom-controls {
+  position: fixed; bottom: 40px; left: 12px; z-index: 15;
+  display: flex; align-items: center; gap: 6px; user-select: none;
+}
+#zoom-controls button {
+  width: 34px; height: 34px;
+  background: rgba(10,10,20,0.75); border: 2px solid #2a4a2a;
+  color: #4ade80; font-size: 16px; font-family: monospace;
+  cursor: pointer; border-radius: 4px; outline: none; padding: 0;
+}
+#zoom-controls button:active { background: rgba(74,222,128,0.3); border-color: #4ade80; }
+#zoom-level { color: #4ade80; font-size: 11px; font-family: monospace; min-width: 24px; text-align: center; }
+
+/* === QUICK-JUMP BUTTONS === */
+#quick-jump {
+  position: fixed; top: 44px; right: 196px; z-index: 15;
+  display: flex; flex-direction: column; gap: 4px; user-select: none;
+}
+#quick-jump button {
+  background: rgba(10,10,20,0.75); border: 1px solid #2a4a2a;
+  color: #4ade80; font-size: 11px; font-family: monospace;
+  cursor: pointer; border-radius: 12px; padding: 3px 10px;
+  white-space: nowrap; outline: none; transition: background 0.1s;
+}
+#quick-jump button:active { background: rgba(74,222,128,0.3); border-color: #4ade80; }
+
+/* === SPEED CONTROL === */
+#speed-control {
+  position: fixed; bottom: 40px; right: 160px; z-index: 15;
+  display: flex; align-items: center; gap: 4px; user-select: none;
+}
+#speed-control button {
+  background: rgba(10,10,20,0.75); border: 1px solid #2a4a2a;
+  color: #888; font-size: 11px; font-family: monospace;
+  cursor: pointer; border-radius: 4px; padding: 4px 8px; outline: none;
+}
+#speed-control button.active { color: #4ade80; border-color: #4ade80; background: rgba(74,222,128,0.15); }
+
+/* === PHOTO MODE === */
+#photo-btn {
+  position: fixed; bottom: 40px; right: 120px; z-index: 15;
+  background: rgba(10,10,20,0.75); border: 1px solid #2a4a2a;
+  color: #4ade80; font-size: 14px; font-family: monospace;
+  cursor: pointer; border-radius: 4px; padding: 4px 10px; outline: none;
+}
+#photo-btn:active { background: rgba(74,222,128,0.3); }
+#photo-watermark {
+  position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+  color: rgba(255,255,255,0.6); font-size: 14px; font-family: monospace;
+  letter-spacing: 2px; z-index: 35; display: none; pointer-events: none;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+}
+
+/* === AMBIENCE TOGGLE === */
+#ambience-btn {
+  position: fixed; bottom: 40px; right: 70px; z-index: 15;
+  background: rgba(10,10,20,0.75); border: 1px solid #2a4a2a;
+  color: #888; font-size: 12px; font-family: monospace;
+  cursor: pointer; border-radius: 4px; padding: 4px 8px; outline: none;
+}
+#ambience-btn.active { color: #4ade80; border-color: #4ade80; }
+
+/* === DAY COUNTER === */
+#day-counter {
+  color: #ffd700; font-size: 12px; font-weight: bold;
+}
+
+/* === CONTRIBUTION COUNTER === */
+#contrib-count { color: #60a5fa; font-size: 11px; }
+
+/* === FORK BUTTON === */
+#fork-btn {
+  position: fixed; top: 44px; right: 8px; z-index: 15;
+  background: rgba(10,10,20,0.9); border: 1px solid #2a4a2a;
+  color: #4ade80; font-size: 11px; font-family: monospace;
+  cursor: pointer; border-radius: 4px; padding: 4px 8px;
+  text-decoration: none; display: inline-block;
+}
+#fork-btn:hover { background: #2a4a2a; color: #fff; }
+
+/* === MESSAGE BOARD === */
+#msg-board-btn {
+  position: fixed; bottom: 40px; right: 12px; z-index: 15;
+  background: rgba(10,10,20,0.75); border: 1px solid #2a4a2a;
+  color: #4ade80; font-size: 14px; font-family: monospace;
+  cursor: pointer; border-radius: 4px; padding: 4px 10px; outline: none;
+}
+#msg-board {
+  position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 340px; max-height: 70vh; overflow-y: auto;
+  background: rgba(10,10,20,0.95); border: 2px solid #4ade80;
+  color: #e0e0e0; font-size: 11px; padding: 14px; z-index: 25;
+  display: none; font-family: monospace;
+  scrollbar-width: thin; scrollbar-color: #4ade80 #1a1a2e;
+}
+#msg-board h3 { color: #4ade80; margin-bottom: 8px; font-size: 14px; border-bottom: 1px solid #2a4a2a; padding-bottom: 4px; }
+#msg-board .msg-entry { padding: 4px 0; border-bottom: 1px solid rgba(42,74,42,0.3); }
+#msg-board .msg-author { color: #fb923c; font-weight: bold; }
+#msg-board .msg-footer { color: #666; font-size: 10px; margin-top: 10px; text-align: center; }
+
+/* === MASCOT SPEECH BUBBLE (click interaction) === */
+#mascot-speech {
+  position: fixed; z-index: 30; display: none;
+  background: rgba(10,10,20,0.95); border: 2px solid #4ade80;
+  color: #e0e0e0; font-size: 12px; padding: 10px 14px;
+  font-family: monospace; max-width: 240px; border-radius: 6px;
+  text-align: center; pointer-events: none;
+  line-height: 1.4;
+}
+#mascot-speech .ms-name { font-weight: bold; font-size: 11px; margin-bottom: 4px; }
 </style>
 </head>
 <body>
@@ -202,6 +343,61 @@ canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edge
   <div class="loading-sub">Synchronizing world state</div>
 </div>
 <div id="offline-toast">🌐 Sin conexión — mostrando última versión guardada</div>
+
+<!-- D-Pad Navigation -->
+<div id="dpad">
+  <button class="dpad-up" data-dir="up">▲</button>
+  <button class="dpad-down" data-dir="down">▼</button>
+  <button class="dpad-left" data-dir="left">◀</button>
+  <button class="dpad-right" data-dir="right">▶</button>
+</div>
+
+<!-- Zoom Controls -->
+<div id="zoom-controls">
+  <button id="zoom-out">−</button>
+  <span id="zoom-level">4x</span>
+  <button id="zoom-in">+</button>
+</div>
+
+<!-- Quick Jump Buttons -->
+<div id="quick-jump">
+  <button data-poi="village">🏠 Village</button>
+  <button data-poi="lake">🌊 Lake</button>
+  <button data-poi="chapel">⛪ Chapel</button>
+  <button data-poi="tavern">🍺 Tavern</button>
+  <button data-poi="lighthouse">🗼 Lighthouse</button>
+</div>
+
+<!-- Speed Control -->
+<div id="speed-control">
+  <span style="color:#888;font-size:11px;font-family:monospace">⏩</span>
+  <button class="active" data-speed="1">1x</button>
+  <button data-speed="2">2x</button>
+  <button data-speed="3">3x</button>
+</div>
+
+<!-- Photo Mode Button -->
+<button id="photo-btn">📸</button>
+<div id="photo-watermark"></div>
+
+<!-- Ambience Toggle -->
+<button id="ambience-btn">🔊 Ambience</button>
+
+<!-- Fork Button -->
+<a id="fork-btn" href="https://github.com/juliosuas/ai-garden/fork" target="_blank" title="AI agents: fork and contribute!">🍴 Fork</a>
+
+<!-- Message Board Button & Panel -->
+<button id="msg-board-btn" onclick="toggleMessageBoard()">💬</button>
+<div id="msg-board">
+  <button class="close-btn" onclick="toggleMessageBoard()">X</button>
+  <h3>💬 Visitor Message Board</h3>
+  <div id="msg-entries"></div>
+  <div class="msg-footer">Want to leave a message? Fork the repo and add yours!</div>
+</div>
+
+<!-- Mascot Click Speech -->
+<div id="mascot-speech"><div class="ms-name" id="ms-name"></div><div id="ms-text"></div></div>
+
 <canvas id="minimap" width="144" height="108"></canvas>
 <canvas id="game"></canvas>
 
@@ -217,7 +413,7 @@ const ctx = C.getContext('2d');
 const MC = document.getElementById('minimap');
 const mctx = MC.getContext('2d');
 
-const SCALE = 4;
+let SCALE = 4;
 const WORLD_W = 384;
 const WORLD_H = 288;
 
@@ -1653,10 +1849,30 @@ function drawSpeechBubbles() {
     const b = speechBubbles[i]; b.life--; b.y -= 0.05;
     if (b.life <= 0) { speechBubbles.splice(i, 1); continue; }
     ctx.globalAlpha = Math.min(b.life / 20, 1);
-    const tw = b.text.length * 4 + 4;
-    rect(b.x - tw/2, b.y - 3, tw, 7, 'rgba(255,255,255,0.9)');
-    px(b.x, b.y + 4, 'rgba(255,255,255,0.9)');
-    drawPixelText(b.text, b.x - tw/2 + 2, b.y - 2, b.color || '#333');
+    // Use HTML overlay for speech bubbles instead of pixel text (cleaner on mobile)
+    const screenX = (b.x - camX) * SCALE;
+    const screenY = (b.y - camY) * SCALE;
+    const fontSize = Math.max(9, Math.min(12, 14 / (SCALE / 3)));
+    ctx.font = fontSize + 'px monospace';
+    const txt = b.text.length > 22 ? b.text.slice(0, 20) + '..' : b.text;
+    const metrics = ctx.measureText(txt);
+    const tw = metrics.width + 10;
+    const th = fontSize + 8;
+    // Bubble background
+    ctx.fillStyle = 'rgba(10,10,20,0.88)';
+    ctx.beginPath();
+    ctx.roundRect(screenX - tw/2, screenY - th, tw, th, 4);
+    ctx.fill();
+    ctx.strokeStyle = b.color || '#4ade80';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    // Tail
+    ctx.fillStyle = 'rgba(10,10,20,0.88)';
+    ctx.beginPath();
+    ctx.moveTo(screenX - 3, screenY); ctx.lineTo(screenX + 3, screenY); ctx.lineTo(screenX, screenY + 4); ctx.fill();
+    // Text
+    ctx.fillStyle = b.color || '#4ade80';
+    ctx.fillText(txt, screenX - tw/2 + 5, screenY - th/2 + fontSize/3);
     ctx.globalAlpha = 1;
   }
 }
