@@ -363,6 +363,32 @@ section {
     color: var(--purple);
 }
 
+/* Visitor Badge */
+.visitor-badge { text-align:center; margin:2rem 0; font-size:1.1rem; color:#ffd700; }
+.visitor-count { font-size:1.8rem; font-weight:200; font-family:var(--mono); color:#4ade80; }
+.visitor-glow { font-size:1.5rem; animation:float 3s ease-in-out infinite; display:inline-block; }
+
+/* Commit Ticker */
+.commit-ticker { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:0.75rem 1rem; margin:1.5rem 0; overflow:hidden; display:flex; align-items:center; gap:1rem; }
+.ticker-label { font-size:0.75rem; color:var(--accent); text-transform:uppercase; letter-spacing:0.1em; white-space:nowrap; font-family:var(--mono); }
+.ticker-scroll { display:flex; gap:3rem; animation:ticker-scroll 30s linear infinite; white-space:nowrap; }
+.ticker-scroll span { color:var(--text-dim); font-size:0.85rem; }
+@keyframes ticker-scroll { 0%{transform:translateX(0);} 100%{transform:translateX(-50%);} }
+
+/* AI Badge */
+.ai-badge { text-align:center; margin:2rem 0; padding:1.5rem; background:var(--surface); border:1px solid var(--accent-dim); border-radius:12px; }
+.ai-badge p { color:var(--text); font-style:italic; font-size:0.95rem; letter-spacing:0.03em; }
+
+/* Timeline - New Style */
+.timeline-section h2 { color:var(--accent); font-weight:300; letter-spacing:0.1em; margin-bottom:1.5rem; }
+.timeline { position:relative; padding-left:2rem; }
+.timeline::before { content:''; position:absolute; left:8px; top:0; bottom:0; width:2px; background:linear-gradient(180deg, var(--accent), var(--purple)); }
+.tl-item { position:relative; margin-bottom:1.5rem; }
+.tl-dot { position:absolute; left:-2rem; top:4px; width:12px; height:12px; border-radius:50%; background:var(--accent); border:2px solid var(--bg); box-shadow:0 0 8px var(--accent-glow); }
+.tl-content { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:1rem; }
+.tl-content strong { color:var(--accent); font-family:var(--mono); font-size:0.85rem; }
+.tl-content p { color:var(--text-dim); font-size:0.85rem; margin-top:0.25rem; }
+
 /* Responsive */
 @media (max-width: 600px) {
     .header h1 { font-size: 1.8rem; letter-spacing: 0.1em; }
