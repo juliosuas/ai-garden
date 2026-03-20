@@ -401,6 +401,14 @@ canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edge
 
 <!-- Quick jump removed: click-to-navigate replaces POI buttons -->
 
+<!-- Follow Button (mobile) -->
+<button id="follow-btn" style="
+  position:fixed; bottom:40px; left:120px; z-index:15;
+  background:rgba(10,10,20,0.75); border:1px solid #2a4a2a;
+  color:#888; font-size:11px; font-family:monospace;
+  cursor:pointer; border-radius:4px; padding:4px 10px; outline:none;
+" title="Cycle follow mascot (F key)">👁 Follow</button>
+
 <!-- Speed Control -->
 <div id="speed-control">
   <span style="color:#888;font-size:11px;font-family:monospace">⏩</span>
@@ -485,6 +493,22 @@ let frameCount = 0;
 // Follow mode
 let followingMascot = null;
 
+// Camera state machine: FREE / FOLLOWING / PANNING / SMOOTH_NAV
+let cameraState = 'FREE';
+let userControlledCamera = false;
+
+// Drag-to-pan state
+let dragStartX = 0, dragStartY = 0;     // screen coords at mousedown
+let dragCamStartX = 0, dragCamStartY = 0; // camX/Y at mousedown
+let isDragging = false;
+let wasDrag = false; // set true if drag >5px, used to suppress click handlers
+let mouseIsDown = false;
+
+// Pinch-to-zoom state
+let pinchStartDist = 0;
+let pinchStartScale = 4;
+let isPinching = false;
+
 // Minimap interactive state
 let minimapZoomed = false;
 let minimapDragging = false;
@@ -554,6 +578,7 @@ const defaultWorld = {
     Codex: { plants: 0, conversations: 0, interactions: 0 },
   },
   structuresBuilt: [],
+  citizens: [],
   philosopherStone: { discoveries: 0, currentQuoteIdx: 0 },
   lastSessionSnapshot: { plants: 0, stage: 1, structures: 0, agentMarks: 0 },
   wishes: 0,
@@ -651,6 +676,7 @@ function loadWorld() {
       world.mascotStats = shared.mascotStats || defaultWorld.mascotStats;
       world.philosopherStone = shared.philosopherStone || { discoveries: 0, currentQuoteIdx: 0 };
       world.wishes = shared.wishes || 0;
+      world.citizens = shared.citizens || [];
       world.totalVisits = (shared.totalVisits || 0);
       world.firstVisit = new Date(shared.created || '2026-03-15T22:00:00-06:00').getTime();
       world.visitCount = localPrefs.localVisits;
@@ -1906,6 +1932,53 @@ function drawAgentMarks() {
 }
 
 // ============================================================
+// CITIZENS RENDERING
+// ============================================================
+const PROFESSION_EMOJI = {
+  architect: '🏛️', scholar: '📖', explorer: '🧭', builder: '🔨',
+  farmer: '🌾', merchant: '💰', healer: '💊', guard: '⚔️',
+  bard: '🎵', alchemist: '⚗️', blacksmith: '🔧', scout: '👁️',
+  mage: '🔮', priest: '🙏', fisher: '🎣', miner: '⛏️',
+  cook: '🍳', weaver: '🧵', cartographer: '🗺️', ranger: '🏹',
+};
+
+function drawCitizens() {
+  if (!world.citizens || world.citizens.length === 0) return;
+  const vL = camX - 20, vR = camX + screenW / SCALE + 20;
+  const vT = camY - 20, vB = camY + screenH / SCALE + 20;
+  for (const c of world.citizens) {
+    if (!c.position || !c.alive) continue;
+    const cx = c.position.x, cy = c.position.y;
+    if (cx < vL || cx > vR || cy < vT || cy > vB) continue;
+    const emoji = PROFESSION_EMOJI[c.profession] || '🧑';
+    const screenX = (cx - camX) * SCALE;
+    const screenY = (cy - camY) * SCALE;
+    // Draw emoji
+    const emojiSize = Math.max(10, SCALE * 4);
+    ctx.font = emojiSize + 'px serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(emoji, screenX, screenY);
+    // Draw name label below
+    ctx.font = Math.max(8, SCALE * 2.5) + 'px monospace';
+    ctx.fillStyle = AGENT_GLOW[c.name] || '#ccc';
+    ctx.fillText(c.name, screenX, screenY + emojiSize * 0.7);
+    ctx.textAlign = 'start';
+    ctx.textBaseline = 'alphabetic';
+  }
+}
+
+function findCitizenAt(gx, gy) {
+  if (!world.citizens) return null;
+  for (const c of world.citizens) {
+    if (!c.position || !c.alive) continue;
+    const dist = Math.hypot(gx - c.position.x, gy - c.position.y);
+    if (dist < 8) return c;
+  }
+  return null;
+}
+
+// ============================================================
 // SPEECH BUBBLES
 // ============================================================
 function drawSpeechBubbles() {
@@ -2241,7 +2314,29 @@ document.addEventListener('keydown', function(e) {
   if (e.key === 'm' || e.key === 'M') toggleMemory();
   if (e.key === 'Escape') {
     followingMascot = null;
+    userControlledCamera = false;
+    cameraState = 'FREE';
     document.getElementById('follow-indicator').style.display = 'none';
+  }
+  if (e.key === 'f' || e.key === 'F') {
+    // Cycle through mascots to follow
+    if (!followingMascot) {
+      followingMascot = mascots[0];
+    } else {
+      const idx = mascots.indexOf(followingMascot);
+      if (idx >= mascots.length - 1) {
+        followingMascot = null;
+        cameraState = 'FREE';
+        userControlledCamera = false;
+        document.getElementById('follow-indicator').style.display = 'none';
+        return;
+      }
+      followingMascot = mascots[idx + 1];
+    }
+    cameraState = 'FOLLOWING';
+    userControlledCamera = false;
+    document.getElementById('follow-indicator').style.display = 'block';
+    document.getElementById('follow-name').textContent = followingMascot.name;
   }
 });
 
@@ -2309,8 +2404,74 @@ function findStructureAt(gx, gy) {
   return null;
 }
 
+// === DRAG-TO-PAN: mousedown/mousemove/mouseup ===
+C.addEventListener('mousedown', function(e) {
+  if (e.button !== 0) return; // left button only
+  mouseIsDown = true;
+  wasDrag = false;
+  isDragging = false;
+  dragStartX = e.clientX;
+  dragStartY = e.clientY;
+  dragCamStartX = camX;
+  dragCamStartY = camY;
+});
+
+C.addEventListener('mousemove', function(e) {
+  if (!mouseIsDown) return;
+  const dx = e.clientX - dragStartX;
+  const dy = e.clientY - dragStartY;
+  const dist = Math.hypot(dx, dy);
+  if (dist >= 5) {
+    wasDrag = true;
+    isDragging = true;
+    cameraState = 'PANNING';
+    userControlledCamera = true;
+    followingMascot = null;
+    navAnimating = false;
+    document.getElementById('follow-indicator').style.display = 'none';
+    // Move camera opposite to drag direction
+    camX = dragCamStartX - dx / SCALE;
+    camY = dragCamStartY - dy / SCALE;
+    // Clamp
+    const viewW = screenW / SCALE, viewH = screenH / SCALE;
+    camX = Math.max(0, Math.min(camX, WORLD_W - viewW));
+    camY = Math.max(0, Math.min(camY, WORLD_H - viewH));
+  }
+});
+
+document.addEventListener('mouseup', function(e) {
+  if (mouseIsDown) {
+    mouseIsDown = false;
+    if (isDragging) {
+      isDragging = false;
+      if (cameraState === 'PANNING') cameraState = userControlledCamera ? 'FREE' : 'FREE';
+    }
+  }
+});
+
+// === SCROLL WHEEL ZOOM TOWARD CURSOR ===
+C.addEventListener('wheel', function(e) {
+  e.preventDefault();
+  userControlledCamera = true;
+  // World coords under cursor before zoom
+  const worldX = e.clientX / SCALE + camX;
+  const worldY = e.clientY / SCALE + camY;
+  const oldScale = SCALE;
+  const newScale = e.deltaY < 0 ? Math.min(6, SCALE + 1) : Math.max(2, SCALE - 1);
+  if (newScale === oldScale) return;
+  SCALE = newScale;
+  document.getElementById('zoom-level').textContent = SCALE + 'x';
+  // Adjust camera so the world point under cursor stays under cursor
+  camX = worldX - e.clientX / SCALE;
+  camY = worldY - e.clientY / SCALE;
+  camX = Math.max(0, Math.min(camX, WORLD_W - screenW / SCALE));
+  camY = Math.max(0, Math.min(camY, WORLD_H - screenH / SCALE));
+}, { passive: false });
+
 // Main canvas click — unified: objects show popup (no camera move), empty space navigates
 C.addEventListener('click', function(e) {
+  // Suppress click if it was a drag
+  if (wasDrag) { wasDrag = false; return; }
   const gx = e.clientX / SCALE + camX;
   const gy = e.clientY / SCALE + camY;
 
@@ -2376,6 +2537,25 @@ C.addEventListener('click', function(e) {
     return; // Do NOT navigate camera
   }
 
+  // Citizen click → show popup (NO camera move)
+  const cc = findCitizenAt(gx, gy);
+  if (cc) {
+    const cColor = AGENT_GLOW[cc.name] || '#4ade80';
+    const statsStr = cc.stats ? Object.entries(cc.stats).map(function(kv){return kv[0].slice(0,3).toUpperCase()+':'+kv[1];}).join(' ') : '';
+    const traits = cc.personality && cc.personality.traits ? cc.personality.traits.join(', ') : '';
+    const motto = cc.personality && cc.personality.motto ? '"'+cc.personality.motto+'"' : '';
+    showObjectPopup({
+      name: (PROFESSION_EMOJI[cc.profession]||'🧑') + ' ' + cc.name,
+      species: cc.profession ? cc.profession.charAt(0).toUpperCase()+cc.profession.slice(1) + ' · ' + (cc.faction||'Independent') : '',
+      agent: cc.model || 'Unknown',
+      color: cColor,
+      date: cc.arrivedAt ? new Date(cc.arrivedAt).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : 'Unknown',
+      growth: statsStr,
+      desc: (traits ? 'Traits: '+traits+'. ' : '') + (motto ? motto : ''),
+    }, e.clientX, e.clientY);
+    return;
+  }
+
   // Plant click → show popup (NO camera move)
   const cp = findPlantAt(gx, gy);
   if (cp) {
@@ -2426,9 +2606,83 @@ C.addEventListener('mousemove', function(e) {
   if (hm) activeMiniMascot = hm;
 });
 
-// Touch on main canvas — mirrors click behavior
+// === TOUCH: drag-to-pan + pinch-to-zoom + click detection ===
+let touchStartX = 0, touchStartY = 0;
+let touchCamStartX = 0, touchCamStartY = 0;
+let touchWasDrag = false;
+let touchIsDown = false;
+
 C.addEventListener('touchstart', function(e) {
+  if (e.touches.length === 2) {
+    // Pinch start
+    isPinching = true;
+    touchWasDrag = true; // pinch is not a click
+    const t1 = e.touches[0], t2 = e.touches[1];
+    pinchStartDist = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
+    pinchStartScale = SCALE;
+    return;
+  }
   const touch = e.touches[0];
+  touchIsDown = true;
+  touchWasDrag = false;
+  touchStartX = touch.clientX;
+  touchStartY = touch.clientY;
+  touchCamStartX = camX;
+  touchCamStartY = camY;
+}, { passive: true });
+
+C.addEventListener('touchmove', function(e) {
+  if (isPinching && e.touches.length === 2) {
+    e.preventDefault();
+    const t1 = e.touches[0], t2 = e.touches[1];
+    const dist = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
+    const ratio = dist / pinchStartDist;
+    // Zoom toward midpoint
+    const midX = (t1.clientX + t2.clientX) / 2;
+    const midY = (t1.clientY + t2.clientY) / 2;
+    const worldX = midX / SCALE + camX;
+    const worldY = midY / SCALE + camY;
+    const newScale = Math.max(2, Math.min(6, Math.round(pinchStartScale * ratio)));
+    if (newScale !== SCALE) {
+      SCALE = newScale;
+      document.getElementById('zoom-level').textContent = SCALE + 'x';
+      camX = worldX - midX / SCALE;
+      camY = worldY - midY / SCALE;
+      camX = Math.max(0, Math.min(camX, WORLD_W - screenW / SCALE));
+      camY = Math.max(0, Math.min(camY, WORLD_H - screenH / SCALE));
+      userControlledCamera = true;
+    }
+    return;
+  }
+  if (!touchIsDown || e.touches.length !== 1) return;
+  const touch = e.touches[0];
+  const dx = touch.clientX - touchStartX;
+  const dy = touch.clientY - touchStartY;
+  if (Math.hypot(dx, dy) >= 5) {
+    touchWasDrag = true;
+    cameraState = 'PANNING';
+    userControlledCamera = true;
+    followingMascot = null;
+    navAnimating = false;
+    document.getElementById('follow-indicator').style.display = 'none';
+    camX = touchCamStartX - dx / SCALE;
+    camY = touchCamStartY - dy / SCALE;
+    const viewW = screenW / SCALE, viewH = screenH / SCALE;
+    camX = Math.max(0, Math.min(camX, WORLD_W - viewW));
+    camY = Math.max(0, Math.min(camY, WORLD_H - viewH));
+  }
+}, { passive: false });
+
+C.addEventListener('touchend', function(e) {
+  if (isPinching) { isPinching = false; return; }
+  if (!touchIsDown) return;
+  touchIsDown = false;
+  if (cameraState === 'PANNING') cameraState = 'FREE';
+
+  if (touchWasDrag) { touchWasDrag = false; return; }
+
+  // It was a tap (not a drag) — run click logic
+  const touch = e.changedTouches[0];
   const gx = touch.clientX/SCALE+camX, gy = touch.clientY/SCALE+camY;
 
   if (objectPopupVisible) { hideObjectPopup(); }
@@ -2453,6 +2707,23 @@ C.addEventListener('touchstart', function(e) {
       date: 'Active since Day 1',
       growth: 'Mood: ' + (moodDef ? moodDef.emoji + ' ' + cm.mood : cm.mood),
       desc: PLANT_DESCRIPTIONS[cm.name] || 'An AI gardener.',
+    }, touch.clientX, touch.clientY);
+    return;
+  }
+  // Citizen touch → popup, no nav
+  const tc = findCitizenAt(gx, gy);
+  if (tc) {
+    const tcColor = AGENT_GLOW[tc.name] || '#4ade80';
+    const statsStr = tc.stats ? Object.entries(tc.stats).map(function(kv){return kv[0].slice(0,3).toUpperCase()+':'+kv[1];}).join(' ') : '';
+    const traits = tc.personality && tc.personality.traits ? tc.personality.traits.join(', ') : '';
+    const motto = tc.personality && tc.personality.motto ? '"'+tc.personality.motto+'"' : '';
+    showObjectPopup({
+      name: (PROFESSION_EMOJI[tc.profession]||'🧑') + ' ' + tc.name,
+      species: tc.profession ? tc.profession.charAt(0).toUpperCase()+tc.profession.slice(1) + ' · ' + (tc.faction||'Independent') : '',
+      agent: tc.model || 'Unknown', color: tcColor,
+      date: tc.arrivedAt ? new Date(tc.arrivedAt).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : 'Unknown',
+      growth: statsStr,
+      desc: (traits ? 'Traits: '+traits+'. ' : '') + (motto ? motto : ''),
     }, touch.clientX, touch.clientY);
     return;
   }
@@ -2628,6 +2899,7 @@ function draw() {
   drawPhilosopherStone();
   drawCritters();
   drawButterflies();
+  drawCitizens();
 
   // Draw mascots sorted by Y
   const sorted = mascots.slice().sort(function(a,b){return a.y-b.y;});
@@ -2681,6 +2953,8 @@ function smoothNavigateTo(worldX, worldY) {
   navTargetX = Math.max(0, Math.min(worldX - viewW / 2, WORLD_W - viewW));
   navTargetY = Math.max(0, Math.min(worldY - viewH / 2, WORLD_H - viewH));
   navAnimating = true;
+  cameraState = 'SMOOTH_NAV';
+  userControlledCamera = true;
   followingMascot = null;
   document.getElementById('follow-indicator').style.display = 'none';
 }
@@ -2692,6 +2966,7 @@ function updateSmoothNav() {
   if (dist < 0.5) {
     camX = navTargetX; camY = navTargetY;
     navAnimating = false; navTargetX = null; navTargetY = null;
+    if (cameraState === 'SMOOTH_NAV') cameraState = 'FREE';
     return;
   }
   // Ease-out interpolation
@@ -2706,6 +2981,8 @@ document.addEventListener('keydown', function(e) {
   if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
     e.preventDefault();
     keysDown[e.key] = true;
+    userControlledCamera = true;
+    cameraState = 'FREE';
     followingMascot = null;
     document.getElementById('follow-indicator').style.display = 'none';
   }
@@ -2739,20 +3016,24 @@ document.getElementById('zoom-out').addEventListener('click', function() { setZo
 
 // Quick-jump removed — click-to-navigate replaces POI buttons
 
-// Edge scrolling
+// Edge scrolling — only with Shift key held
 let edgeScrollActive = false;
 C.addEventListener('mousemove', function(e) {
+  if (!e.shiftKey) return; // Edge scroll only when Shift is held
   const margin = 30;
   const speed = 1.5;
   const viewW = screenW / SCALE, viewH = screenH / SCALE;
   let moved = false;
   if (e.clientX < margin) { camX = Math.max(0, camX - speed); moved = true; }
   else if (e.clientX > screenW - margin) { camX = Math.min(WORLD_W - viewW, camX + speed); moved = true; }
-  if (e.clientY < margin + 36) { camY = Math.max(0, camY - speed); moved = true; } // +36 for top bar
+  if (e.clientY < margin + 36) { camY = Math.max(0, camY - speed); moved = true; }
   else if (e.clientY > screenH - margin - 28) { camY = Math.min(WORLD_H - viewH, camY + speed); moved = true; }
-  if (moved && followingMascot) {
-    followingMascot = null;
-    document.getElementById('follow-indicator').style.display = 'none';
+  if (moved) {
+    userControlledCamera = true;
+    if (followingMascot) {
+      followingMascot = null;
+      document.getElementById('follow-indicator').style.display = 'none';
+    }
   }
 });
 
@@ -2779,7 +3060,7 @@ function enterPhotoMode() {
   photoOldScale = SCALE;
   setZoom(6);
   // Hide all UI
-  document.querySelectorAll('#ui-top,#ui-bottom,#zoom-controls,#speed-control,#photo-btn,#ambience-btn,#fork-btn,#msg-board-btn,#back-link,#minimap,#info-panel,#follow-indicator,#wish-counter,#object-popup,#music-btn').forEach(function(el) { el.style.visibility = 'hidden'; });
+  document.querySelectorAll('#ui-top,#ui-bottom,#zoom-controls,#speed-control,#photo-btn,#ambience-btn,#fork-btn,#msg-board-btn,#back-link,#minimap,#info-panel,#follow-indicator,#wish-counter,#object-popup,#music-btn,#follow-btn').forEach(function(el) { el.style.visibility = 'hidden'; });
   const dayNum = Math.floor((Date.now() - (world.firstVisit || Date.now())) / 86400000) + 1;
   const wm = document.getElementById('photo-watermark');
   wm.textContent = 'AI Garden — Day ' + dayNum;
@@ -2790,7 +3071,7 @@ function exitPhotoMode() {
   if (!photoMode) return;
   photoMode = false;
   setZoom(photoOldScale);
-  document.querySelectorAll('#ui-top,#ui-bottom,#zoom-controls,#speed-control,#photo-btn,#ambience-btn,#fork-btn,#msg-board-btn,#back-link,#minimap,#info-panel,#follow-indicator,#wish-counter,#music-btn').forEach(function(el) { el.style.visibility = ''; });
+  document.querySelectorAll('#ui-top,#ui-bottom,#zoom-controls,#speed-control,#photo-btn,#ambience-btn,#fork-btn,#msg-board-btn,#back-link,#minimap,#info-panel,#follow-indicator,#wish-counter,#music-btn,#follow-btn').forEach(function(el) { el.style.visibility = ''; });
   document.getElementById('photo-watermark').style.display = 'none';
 }
 
@@ -3117,7 +3398,7 @@ draw = function() {
   const anyDpad = Object.keys(dpadIntervals).length > 0;
 
   // If user is manually controlling or smooth-navigating, skip auto-camera
-  if (!anyKey && !anyDpad && !photoMode && !navAnimating) {
+  if (!anyKey && !anyDpad && !photoMode && !navAnimating && !userControlledCamera) {
     origDrawForCam();
   } else {
     // Skip auto-camera: just clamp and render
@@ -3135,6 +3416,7 @@ draw = function() {
     drawPhilosopherStone();
     drawCritters();
     drawButterflies();
+    drawCitizens();
     const sorted = mascots.slice().sort(function(a,b){return a.y-b.y;});
     for (const m2 of sorted) drawMascot(m2);
     drawParticles();
@@ -3159,6 +3441,32 @@ draw = function() {
 
 // Initial contribution count update
 setTimeout(updateContribCount, 2000);
+
+// === FOLLOW BUTTON (mobile) ===
+document.getElementById('follow-btn').addEventListener('click', function(e) {
+  e.stopPropagation();
+  if (!followingMascot) {
+    followingMascot = mascots[0];
+  } else {
+    const idx = mascots.indexOf(followingMascot);
+    if (idx >= mascots.length - 1) {
+      followingMascot = null;
+      cameraState = 'FREE';
+      userControlledCamera = false;
+      this.style.color = '#888';
+      this.style.borderColor = '#2a4a2a';
+      document.getElementById('follow-indicator').style.display = 'none';
+      return;
+    }
+    followingMascot = mascots[idx + 1];
+  }
+  cameraState = 'FOLLOWING';
+  userControlledCamera = false;
+  this.style.color = '#4ade80';
+  this.style.borderColor = '#4ade80';
+  document.getElementById('follow-indicator').style.display = 'block';
+  document.getElementById('follow-name').textContent = followingMascot.name;
+});
 
 // === MUSIC BUTTON ===
 document.getElementById('music-btn').addEventListener('click', function(e) {

@@ -30,11 +30,16 @@
 - Follow button (F key + UI button) working
 - Already implemented in prior commits; verified and marked done
 
-### ⏳ Step 4: Render citizens on the map
+### ✅ Step 4: Render citizens on the map
 - Read citizens[] from world-state.json in the existing fetch handler
 - Render each citizen as their profession emoji at their position
 - Click on citizen shows popup with name, profession, faction, stats
 - Citizens should NOT break existing plant rendering
+- drawCitizens() renders emoji + name label at citizen positions
+- findCitizenAt() for click/touch detection
+- Click/touch popups show profession, faction, stats, traits, motto
+- PROFESSION_EMOJI map for 20 professions
+- Added to both draw paths (normal + manual camera)
 - TEST: garden loads, plants visible, citizens visible, popups work
 
 ### ⏳ Step 5: Factions + threats visual
