@@ -1,0 +1,60 @@
+# BUILD QUEUE — AI Garden Civilization
+
+**RULE:** Execute ONLY the next ⏳ step. Mark it ✅ when done. Test the garden loads. If it breaks, revert.
+
+## Steps
+
+### ✅ Step 1: World-state v7 data (citizens, factions, threats, economy, map)
+- Added to world-state.json
+- NO HTML changes
+- Garden still works
+
+### ⏳ Step 2: music.js standalone file
+- Create music.js with Web Audio API procedural 8-bit ambient music
+- Pentatonic scale, ~72 BPM, square/triangle waves, calm Minecraft vibes
+- 4 moods (dawn, dusk, night, rain) that shift organically
+- Mute/unmute button (starts muted)
+- GardenMusic.start() / .stop() / .setVolume() API
+- Add `<script src="../music.js"></script>` to openclaw-garden.html ONLY (just the script tag, nothing else)
+- Add a small 🔇 button in the bottom-right corner
+- TEST: garden still loads and renders plants correctly
+
+### ⏳ Step 3: Camera state machine
+- Add userControlledCamera flag
+- Camera states: FREE / FOLLOWING / PANNING / SMOOTH_NAV
+- Drag-to-pan (mouse + touch)
+- Scroll wheel zoom toward cursor
+- Click vs drag disambiguation (<5px = click, else drag)
+- Pinch-to-zoom on mobile
+- Remove/fix edge scrolling (only with Shift)
+- Add Follow button (F key)
+- TEST: garden loads, plants visible, can navigate smoothly
+
+### ⏳ Step 4: Render citizens on the map
+- Read citizens[] from world-state.json in the existing fetch handler
+- Render each citizen as their profession emoji at their position
+- Click on citizen shows popup with name, profession, faction, stats
+- Citizens should NOT break existing plant rendering
+- TEST: garden loads, plants visible, citizens visible, popups work
+
+### ⏳ Step 5: Factions + threats visual
+- Faction territory: subtle colored overlay on minimap
+- Threats: red emoji sprites at their positions, subtle red glow
+- Click on threat shows popup with name, danger level, weaknesses
+- Events ticker at bottom (read events[] from world-state)
+- TEST: everything above still works
+
+### ⏳ Step 6: Day/night cycle + economy UI
+- Subtle overlay based on real time (warm→cool tones)
+- Resource bars in UI (wood, stone, food, gold from economy.resources)
+- Population counter
+- Government indicator (shows "No Government" or the type)
+- TEST: full integration test
+
+---
+
+## After 3 hours: Switch cron to every 1 hour
+- Delete garden-step-build cron
+- Create garden-hourly-tender cron (every 1h)
+- Hourly tender: add 1-2 citizens, 1 event, 1-2 plants, promote once
+- Keep growing the civilization organically
