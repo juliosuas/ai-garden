@@ -772,14 +772,29 @@ function loadWorld() {
   updateWishDisplay();
   updateObserverCount();
 
-  // Fetch shared world state — try relative first, then absolute URL as fallback
-  var absoluteURL = 'https://juliosuas.github.io/ai-garden/experiments/world-state.json';
-  fetch(WORLD_STATE_URL + '?t=' + Date.now())
-    .then(function(r) { if (!r.ok) throw new Error(r.status); return r.json(); })
-    .catch(function() { 
-      console.warn('Relative fetch failed, trying absolute URL...');
-      return fetch(absoluteURL + '?t=' + Date.now()).then(function(r) { if (!r.ok) throw new Error(r.status); return r.json(); });
-    })
+  // Fetch shared world state — try multiple URLs, handle all failures
+  var urls = [
+    'world-state.json?t=' + Date.now(),
+    './world-state.json?t=' + Date.now(),
+    'https://juliosuas.github.io/ai-garden/experiments/world-state.json?t=' + Date.now(),
+    'https://raw.githubusercontent.com/juliosuas/ai-garden/main/experiments/world-state.json?t=' + Date.now()
+  ];
+  
+  function tryFetch(urlIndex) {
+    if (urlIndex >= urls.length) return Promise.reject(new Error('All URLs failed'));
+    console.log('Trying URL ' + urlIndex + ': ' + urls[urlIndex]);
+    return fetch(urls[urlIndex])
+      .then(function(r) { 
+        if (!r.ok) throw new Error('HTTP ' + r.status); 
+        return r.json(); 
+      })
+      .catch(function(err) {
+        console.warn('URL ' + urlIndex + ' failed:', err.message);
+        return tryFetch(urlIndex + 1);
+      });
+  }
+  
+  tryFetch(0)
     .then(function(shared) {
       console.log('Shared world loaded:', shared.plants.length, 'plants');
       sharedWorldLoaded = true;
@@ -815,7 +830,7 @@ function loadWorld() {
       updateWishDisplay();
       updateObserverCount();
       // Load civilization data from shared state
-      civLoadFromWorldState(shared);
+      try { civLoadFromWorldState(shared); } catch(civErr) { console.warn('Civ load error (non-fatal):', civErr); }
       dismissLoadingScreen();
     })
     .catch(function(err) {
