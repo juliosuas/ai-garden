@@ -772,9 +772,14 @@ function loadWorld() {
   updateWishDisplay();
   updateObserverCount();
 
-  // Fetch shared world state
+  // Fetch shared world state — try relative first, then absolute URL as fallback
+  var absoluteURL = 'https://juliosuas.github.io/ai-garden/experiments/world-state.json';
   fetch(WORLD_STATE_URL + '?t=' + Date.now())
     .then(function(r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .catch(function() { 
+      console.warn('Relative fetch failed, trying absolute URL...');
+      return fetch(absoluteURL + '?t=' + Date.now()).then(function(r) { if (!r.ok) throw new Error(r.status); return r.json(); });
+    })
     .then(function(shared) {
       console.log('Shared world loaded:', shared.plants.length, 'plants');
       sharedWorldLoaded = true;
