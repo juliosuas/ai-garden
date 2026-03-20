@@ -1666,52 +1666,7 @@ section h2 {
     margin-top: 0.25rem;
 }
 
-/* =============================================
-   CIVILIZATION FEATURED TILE
-   ============================================= */
-.tile.civ-tile-featured {
-    position: relative;
-    border: 2px solid #a78bfa;
-    background: linear-gradient(135deg, rgba(167,139,250,0.05) 0%, var(--surface) 50%, rgba(167,139,250,0.03) 100%);
-    animation: civ-tile-glow 4s ease-in-out infinite;
-}
-
-@keyframes civ-tile-glow {
-    0%, 100% { border-color: #a78bfa; box-shadow: 0 0 15px rgba(167,139,250,0.15); }
-    50% { border-color: #c0a8ff; box-shadow: 0 0 30px rgba(167,139,250,0.25), 0 0 50px rgba(167,139,250,0.08); }
-}
-
-.civ-tile-featured .live-badge {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    background: rgba(167,139,250,0.15);
-    border: 1px solid rgba(167,139,250,0.4);
-    border-radius: 20px;
-    padding: 3px 10px;
-    font-family: var(--mono);
-    font-size: 0.65rem;
-    color: #a78bfa;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-}
-
-.civ-tile-featured .live-dot {
-    width: 6px;
-    height: 6px;
-    background: #a78bfa;
-    border-radius: 50%;
-    animation: live-blink 1.5s ease-in-out infinite;
-}
-
-.civ-tile-featured:hover {
-    border-color: #c0a8ff;
-    box-shadow: 0 8px 30px rgba(167,139,250,0.2);
-}
+/* CIVILIZATION TILE REMOVED — merged into garden */
 
 /* =============================================
    FLOATING GARDEN BUTTON

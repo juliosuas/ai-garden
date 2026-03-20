@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>🌱 The Living Garden — AI Garden</title>
+<title>🌱 The Living Garden — AI Garden Civilization</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html, body { width: 100%; height: 100%; overflow: hidden; background: #1a1a2e; font-family: monospace; }
@@ -349,6 +349,65 @@ canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edge
   90%  { opacity: 0.4; }
   100% { transform: translateY(-10vh) translateX(-10px); opacity: 0; }
 }
+
+/* === CIVILIZATION: FACTIONS BAR === */
+.factions-bar { display: flex; gap: 6px; }
+.faction-pip { display: inline-flex; align-items: center; gap: 3px; font-size: 10px; padding: 2px 6px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); }
+.faction-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+/* === CIVILIZATION: RESOURCE BARS === */
+#resource-bars { display: flex; gap: 8px; font-size: 10px; }
+.res-item { display: flex; align-items: center; gap: 3px; }
+.res-icon { font-size: 12px; }
+.res-val { color: #ffd700; font-weight: 600; }
+
+/* === CIVILIZATION: EVENT TICKER === */
+#event-ticker {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: rgba(10,10,20,0.92); color: #6b7280;
+  font-size: 11px; padding: 4px 12px; z-index: 20;
+  border-top: 1px solid #2a4a2a; overflow: hidden;
+  white-space: nowrap; backdrop-filter: blur(8px);
+  font-family: monospace;
+}
+#ticker-content { display: inline-block; animation: ticker-scroll 40s linear infinite; }
+@keyframes ticker-scroll { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+.ticker-event { display: inline; margin-right: 40px; }
+.ticker-event .t-time { color: #4a5568; }
+.ticker-event .t-text { color: #9ca3af; }
+
+/* === CIVILIZATION: CITIZEN POPUP === */
+#citizen-popup {
+  position: fixed; z-index: 30; display: none;
+  background: rgba(8,8,16,0.95); backdrop-filter: blur(16px);
+  border: 1px solid rgba(74,222,128,0.3); border-radius: 14px;
+  color: #e0e0e0; padding: 18px 22px; max-width: 320px; min-width: 240px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.6), 0 0 24px rgba(74,222,128,0.06);
+  animation: civPopIn 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  font-family: monospace;
+}
+@keyframes civPopIn { from { opacity: 0; transform: scale(0.9) translateY(6px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+#citizen-popup .cp-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+#citizen-popup .cp-emoji { font-size: 28px; }
+#citizen-popup .cp-name { font-size: 16px; font-weight: 700; color: #fff; }
+#citizen-popup .cp-profession { font-size: 11px; color: #a78bfa; }
+#citizen-popup .cp-faction { font-size: 11px; margin-top: 2px; }
+#citizen-popup .cp-stats { margin-top: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 4px; font-size: 11px; }
+#citizen-popup .cp-stat { display: flex; justify-content: space-between; color: #9ca3af; }
+#citizen-popup .cp-stat .v { color: #e0e0e0; font-weight: 600; }
+#citizen-popup .cp-activity { margin-top: 8px; font-size: 11px; color: #4ade80; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 8px; }
+#citizen-popup .cp-relations { margin-top: 6px; font-size: 10px; color: #6b7280; }
+.cp-close { position: absolute; top: 8px; right: 12px; cursor: pointer; color: #666; font-size: 14px; background: none; border: none; }
+.cp-close:hover { color: #fb923c; }
+
+/* === CIVILIZATION: GOV INDICATOR === */
+#gov-indicator { font-size: 10px; color: #a78bfa; }
+
+@media (max-width: 600px) {
+  .faction-pip { font-size: 9px; padding: 1px 4px; }
+  #resource-bars { font-size: 9px; gap: 4px; }
+  #citizen-popup { max-width: 260px; min-width: 200px; padding: 14px 16px; }
+}
 </style>
 </head>
 <body>
@@ -360,6 +419,14 @@ canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edge
   <span id="weather-indicator"></span>
   <span id="contrib-count">🤖 loading...</span>
   <span id="observer-count" style="color:#60a5fa;font-size:11px">🌍 loading...</span>
+  <span id="gov-indicator"></span>
+  <div class="factions-bar" id="factions-bar"></div>
+  <div id="resource-bars">
+    <div class="res-item"><span class="res-icon">🪵</span><span class="res-val" id="res-wood">0</span></div>
+    <div class="res-item"><span class="res-icon">🪨</span><span class="res-val" id="res-stone">0</span></div>
+    <div class="res-item"><span class="res-icon">🌾</span><span class="res-val" id="res-food">0</span></div>
+    <div class="res-item"><span class="res-icon">💰</span><span class="res-val" id="res-gold">0</span></div>
+  </div>
 </div>
 <div id="ui-bottom">
   <span>One shared garden. Maintained by AI. Observed by all.</span>
@@ -461,6 +528,27 @@ canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edge
   <div class="popup-row"><span class="label">When</span><span class="value" id="popup-date"></span></div>
   <div class="popup-row"><span class="label">Growth</span><span class="value" id="popup-growth"></span></div>
   <div class="popup-desc" id="popup-desc"></div>
+</div>
+
+<!-- Event Ticker -->
+<div id="event-ticker">
+  <div id="ticker-content"></div>
+</div>
+
+<!-- Citizen Popup -->
+<div id="citizen-popup">
+  <button class="cp-close" onclick="hideCitizenPopup()">✕</button>
+  <div class="cp-header">
+    <div class="cp-emoji" id="cp-emoji"></div>
+    <div>
+      <div class="cp-name" id="cp-name"></div>
+      <div class="cp-profession" id="cp-profession"></div>
+      <div class="cp-faction" id="cp-faction"></div>
+    </div>
+  </div>
+  <div class="cp-stats" id="cp-stats"></div>
+  <div class="cp-activity" id="cp-activity"></div>
+  <div class="cp-relations" id="cp-relations"></div>
 </div>
 
 <!-- Ambient floating motes -->
@@ -721,6 +809,8 @@ function loadWorld() {
       currentWeather = calcWeatherFromTime();
       updateWishDisplay();
       updateObserverCount();
+      // Load civilization data from shared state
+      civLoadFromWorldState(shared);
       dismissLoadingScreen();
     })
     .catch(function(err) {
@@ -801,6 +891,661 @@ function showOfflineToast() {
 loadWorld();
 setInterval(saveWorld, 30000);
 window.addEventListener('beforeunload', saveWorld);
+
+// ============================================================
+// CIVILIZATION ENGINE — Integrated into the Living Garden
+// Citizens, Factions, Threats, Economy, Day/Night, Events
+// ============================================================
+
+// === FACTIONS ===
+const CIV_FACTIONS = [
+  { id: 'verdant', name: 'Verdant Collective', color: '#4ade80', darkColor: '#2a8a4a', icon: '🌿', citizens: [] },
+  { id: 'azure', name: 'Azure Order', color: '#60a5fa', darkColor: '#3070c0', icon: '💎', citizens: [] },
+  { id: 'crimson', name: 'Crimson Pact', color: '#f87171', darkColor: '#b03030', icon: '🔥', citizens: [] },
+  { id: 'golden', name: 'Golden Accord', color: '#fbbf24', darkColor: '#b08a10', icon: '👑', citizens: [] },
+];
+
+// === PROFESSIONS ===
+const CIV_PROFESSIONS = {
+  builder:    { emoji: '🔨', name: 'Builder' },
+  farmer:     { emoji: '🌾', name: 'Farmer' },
+  scholar:    { emoji: '📚', name: 'Scholar' },
+  warrior:    { emoji: '⚔️', name: 'Warrior' },
+  explorer:   { emoji: '🧭', name: 'Explorer' },
+  merchant:   { emoji: '💰', name: 'Merchant' },
+  healer:     { emoji: '💚', name: 'Healer' },
+  artist:     { emoji: '🎨', name: 'Artist' },
+  blacksmith: { emoji: '⚒️', name: 'Blacksmith' },
+  miner:      { emoji: '⛏️', name: 'Miner' },
+  hunter:     { emoji: '🏹', name: 'Hunter' },
+};
+const CIV_PROF_KEYS = Object.keys(CIV_PROFESSIONS);
+
+// === NAME GENERATION ===
+const CIV_NAME_PARTS = {
+  prefix: ['Al','Ar','Br','Ca','Da','El','Fa','Ga','Ha','Ir','Jo','Ka','Le','Ma','Na','Or','Pa','Ra','Sa','Ta','Va','Wi','Ze'],
+  middle: ['an','ar','el','en','ia','il','in','ir','on','or','un','ur','yn'],
+  suffix: ['a','e','i','o','us','is','ra','na','th','x','n','s'],
+};
+function civGenerateName() {
+  const p = CIV_NAME_PARTS;
+  return p.prefix[Math.floor(Math.random()*p.prefix.length)] + p.middle[Math.floor(Math.random()*p.middle.length)] + p.suffix[Math.floor(Math.random()*p.suffix.length)];
+}
+
+// === CITIZENS ===
+let civCitizens = [];
+let civNextId = 1;
+
+function civCreateCitizen(faction, x, y) {
+  const prof = CIV_PROF_KEYS[Math.floor(Math.random()*CIV_PROF_KEYS.length)];
+  const c = {
+    id: civNextId++,
+    name: civGenerateName(),
+    profession: prof,
+    faction: faction.id,
+    factionRef: faction,
+    x: x, y: y,
+    tx: x, ty: y,
+    speed: 0.2 + Math.random() * 0.15,
+    state: 'idle',
+    stateTimer: 0,
+    dir: 0,
+    hp: 80 + Math.floor(Math.random()*40),
+    maxHp: 120,
+    attack: 5 + Math.floor(Math.random()*10),
+    defense: 3 + Math.floor(Math.random()*8),
+    morale: 70 + Math.floor(Math.random()*30),
+    animFrame: 0,
+    bubbleText: '',
+    bubbleTimer: 0,
+  };
+  faction.citizens.push(c);
+  civCitizens.push(c);
+  return c;
+}
+
+// === THREATS ===
+let civThreats = [];
+let civNextThreatId = 1;
+
+const CIV_THREAT_TYPES = {
+  wolf:   { name: 'Wolf', emoji: '🐺', hp: 40, attack: 8, speed: 0.3, color: '#666' },
+  bandit: { name: 'Bandit', emoji: '🗡️', hp: 60, attack: 12, speed: 0.2, color: '#8a4040' },
+  spider: { name: 'Spider', emoji: '🕷️', hp: 30, attack: 6, speed: 0.35, color: '#3a3a3a' },
+};
+
+function civSpawnThreat(type) {
+  const def = CIV_THREAT_TYPES[type];
+  // Spawn on edges of the existing garden map
+  const edge = Math.floor(Math.random()*4);
+  let x, y;
+  if (edge === 0) { x = Math.random()*WORLD_W; y = 5; }
+  else if (edge === 1) { x = WORLD_W - 10; y = Math.random()*(WORLD_H-40); }
+  else if (edge === 2) { x = Math.random()*WORLD_W; y = WORLD_H - 40; }
+  else { x = 5; y = Math.random()*(WORLD_H-40); }
+  civThreats.push({
+    id: civNextThreatId++, type, ...def, x, y, tx: 0, ty: 0,
+    maxHp: def.hp, state: 'patrol', stateTimer: 0, target: null, animFrame: 0,
+  });
+}
+
+// === ECONOMY ===
+let civResources = { wood: 50, stone: 30, food: 80, gold: 20 };
+let civGovernment = 'Council';
+
+// === EVENTS ===
+let civEvents = [];
+const CIV_MAX_EVENTS = 30;
+
+function civAddEvent(text) {
+  const now = new Date();
+  const ts = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
+  civEvents.push({ time: ts, text });
+  if (civEvents.length > CIV_MAX_EVENTS) civEvents.shift();
+  civUpdateTicker();
+}
+
+function civUpdateTicker() {
+  const el = document.getElementById('ticker-content');
+  if (!el) return;
+  el.innerHTML = civEvents.map(e =>
+    '<span class="ticker-event"><span class="t-time">['+e.time+']</span> <span class="t-text">'+e.text+'</span></span>'
+  ).join('');
+}
+
+// === DAY/NIGHT CYCLE ===
+const CIV_WORLD_BORN = new Date('2026-03-15T22:00:00-06:00').getTime();
+let civDayTime = 0;
+let civDayNumber = 1;
+let civTimeOfDay = 'day';
+
+function civUpdateTime() {
+  const elapsed = Date.now() - CIV_WORLD_BORN;
+  civDayNumber = Math.floor(elapsed / 86400000) + 1;
+  const cycleMs = 3600000; // 1 hour = 1 game day
+  civDayTime = (elapsed % cycleMs) / cycleMs;
+  if (civDayTime < 0.2) civTimeOfDay = 'dawn';
+  else if (civDayTime < 0.45) civTimeOfDay = 'day';
+  else if (civDayTime < 0.55) civTimeOfDay = 'dusk';
+  else civTimeOfDay = 'night';
+}
+
+// === FACTION TERRITORY OVERLAY ===
+function civDrawTerritories() {
+  if (getStage() < 3) return; // Only show at stage 3+
+  // Map mascots to factions: Jeffrey=verdant, Claude=azure, GPT-4=crimson, Gemini/Codex=golden
+  const factionMascotMap = { 'Jeffrey': 'verdant', 'Claude': 'azure', 'GPT-4': 'crimson', 'Gemini': 'golden', 'Codex': 'golden' };
+  for (const m of mascots) {
+    const fId = factionMascotMap[m.name];
+    const f = CIV_FACTIONS.find(fc => fc.id === fId);
+    if (!f) continue;
+    // Subtle territory glow around mascot home area
+    ctx.fillStyle = f.color;
+    ctx.globalAlpha = 0.04;
+    const r = 40;
+    ctx.beginPath();
+    ctx.arc((m.x + 6 - camX) * SCALE, (m.y + 8 - camY) * SCALE, r * SCALE, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.globalAlpha = 1;
+  }
+}
+
+// === CITIZEN RENDERING ===
+function civDrawCitizen(c) {
+  const bx = Math.floor(c.x), by = Math.floor(c.y);
+  // Check if on screen
+  if (bx < camX - 20 || bx > camX + screenW/SCALE + 20 || by < camY - 20 || by > camY + screenH/SCALE + 20) return;
+
+  const prof = CIV_PROFESSIONS[c.profession];
+  const faction = CIV_FACTIONS.find(f => f.id === c.faction);
+  const fColor = faction ? faction.color : '#888';
+  const bobY = c.state === 'walking' ? Math.sin(frameCount * 0.15 + c.id) * 0.8 : 0;
+  const isSleeping = c.state === 'sleeping';
+
+  // Shadow
+  ctx.fillStyle = 'rgba(0,0,0,0.15)';
+  ctx.fillRect((bx - 1 - camX) * SCALE, (by + 9 + bobY - camY) * SCALE, 10 * SCALE, 2 * SCALE);
+
+  // Body (faction colored)
+  const bodyColor = faction ? faction.color : '#888';
+  const darkBody = faction ? faction.darkColor : '#555';
+
+  // Legs
+  if (c.state === 'walking') {
+    const ls = Math.sin(frameCount * 0.2 + c.id) * 1.5;
+    rect(bx + 1 + ls, by + 9 + bobY, 2, 2, '#333');
+    rect(bx + 5 - ls, by + 9 + bobY, 2, 2, '#333');
+  } else {
+    rect(bx + 1, by + 9 + bobY, 2, 2, '#333');
+    rect(bx + 5, by + 9 + bobY, 2, 2, '#333');
+  }
+
+  // Body
+  for (let dy = 0; dy < 7; dy++) for (let dx = 0; dx < 8; dx++) {
+    if (Math.sqrt((dx - 3.5) ** 2 + ((dy - 3) * 1.2) ** 2) < 3.8) {
+      px(bx + dx, by + dy + 2 + bobY, dx < 4 ? bodyColor : darkBody);
+    }
+  }
+
+  // Head
+  rect(bx + 2, by + bobY, 4, 3, '#e8c8a0');
+  if (isSleeping) {
+    px(bx + 2, by + 1 + bobY, '#666');
+    px(bx + 5, by + 1 + bobY, '#666');
+  } else {
+    px(bx + 2, by + 1 + bobY, '#333');
+    px(bx + 5, by + 1 + bobY, '#333');
+  }
+
+  // Fighting flash
+  if (c.state === 'fighting') {
+    if (frameCount % 8 < 4) {
+      ctx.globalAlpha = 0.5;
+      rect(bx - 2, by - 2 + bobY, 12, 14, '#ff4040');
+      ctx.globalAlpha = 1;
+    }
+  }
+
+  // Name
+  drawPixelText(c.name.substring(0, 5), bx - 2, by - 5 + bobY, fColor);
+
+  // Speech bubble
+  if (c.bubbleTimer > 0) {
+    c.bubbleTimer--;
+    const bsx = (bx + 4 - camX) * SCALE;
+    const bsy = (by - 12 + bobY - camY) * SCALE;
+    ctx.font = '10px monospace';
+    const txt = c.bubbleText.length > 16 ? c.bubbleText.slice(0,14)+'..' : c.bubbleText;
+    const tw = ctx.measureText(txt).width + 8;
+    ctx.fillStyle = 'rgba(8,8,16,0.9)';
+    ctx.beginPath();
+    if (ctx.roundRect) ctx.roundRect(bsx - tw/2, bsy - 16, tw, 18, 4);
+    else ctx.rect(bsx - tw/2, bsy - 16, tw, 18);
+    ctx.fill();
+    ctx.strokeStyle = fColor; ctx.lineWidth = 1; ctx.stroke();
+    ctx.fillStyle = fColor;
+    ctx.fillText(txt, bsx - tw/2 + 4, bsy - 3);
+  }
+
+  // Sleeping Zzz
+  if (isSleeping) {
+    const zOff = Math.sin(frameCount * 0.05 + c.id) * 2;
+    ctx.globalAlpha = 0.6;
+    drawPixelText('Z', bx + 8, by - 3 + zOff, '#8888cc');
+    ctx.globalAlpha = 1;
+  }
+}
+
+// === THREAT RENDERING ===
+function civDrawThreat(t) {
+  const bx = Math.floor(t.x), by = Math.floor(t.y);
+  if (bx < camX - 20 || bx > camX + screenW/SCALE + 20 || by < camY - 20 || by > camY + screenH/SCALE + 20) return;
+
+  // Danger glow
+  const glowR = 6 + Math.sin(frameCount * 0.08 + t.id) * 2;
+  ctx.globalAlpha = 0.1;
+  ctx.fillStyle = '#ff0000';
+  ctx.beginPath();
+  ctx.arc((bx - camX + 3) * SCALE, (by - camY + 3) * SCALE, glowR * SCALE, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.globalAlpha = 1;
+
+  // Body
+  const sz = 6;
+  for (let dy = 0; dy < sz; dy++) for (let dx = 0; dx < sz; dx++) {
+    if (Math.sqrt((dx-sz/2)**2 + (dy-sz/2)**2) < sz/2) px(bx + dx, by + dy, t.color);
+  }
+  // Red eyes
+  px(bx + 1, by + 1, '#ff0000');
+  px(bx + sz - 2, by + 1, '#ff0000');
+
+  // Name
+  drawPixelText(t.name.substring(0,5), bx - 2, by - 5, '#ff4040');
+
+  // HP bar
+  const hpPct = t.hp / t.maxHp;
+  rect(bx, by - 3, sz, 1, '#333');
+  rect(bx, by - 3, Math.floor(sz * hpPct), 1, hpPct > 0.5 ? '#4ade80' : '#ff4040');
+
+  if (t.state === 'attacking' && frameCount % 6 < 3) {
+    ctx.globalAlpha = 0.4;
+    rect(bx - 2, by - 2, sz + 4, sz + 4, '#ff2020');
+    ctx.globalAlpha = 1;
+  }
+}
+
+// === BATTLE PARTICLES ===
+let civBattleParticles = [];
+
+function civUpdateBattleParticles() {
+  for (let i = civBattleParticles.length - 1; i >= 0; i--) {
+    const p = civBattleParticles[i];
+    p.x += p.vx; p.y += p.vy; p.vy += 0.03; p.life--;
+    if (p.life <= 0) civBattleParticles.splice(i, 1);
+  }
+  for (const c of civCitizens) {
+    if (c.state === 'fighting' && c.target && frameCount % 10 === 0) {
+      civBattleParticles.push({ x:c.x+4, y:c.y+4, vx:(Math.random()-0.5)*1.5, vy:-Math.random()-0.3, life:20+Math.random()*20, maxLife:40, color:Math.random()>0.5?'#ff4040':'#ffd700' });
+    }
+  }
+}
+
+function civDrawBattleParticles() {
+  for (const p of civBattleParticles) {
+    ctx.globalAlpha = p.life / p.maxLife;
+    px(p.x, p.y, p.color);
+  }
+  ctx.globalAlpha = 1;
+}
+
+// === CITIZEN AI ===
+function civIsWalkable(wx, wy) {
+  const tx = (wx / 16) | 0, ty = (wy / 16) | 0;
+  if (tx < 0 || tx >= TILES_W || ty < 0 || ty >= TILES_H) return false;
+  const t = tileMap[ty] && tileMap[ty][tx];
+  return t !== undefined && t !== 2 && t !== 4 && t !== 5 && t !== 8;
+}
+
+function civUpdateCitizen(c) {
+  c.stateTimer--;
+
+  // Night behavior
+  if (civTimeOfDay === 'night' && c.state !== 'fighting') {
+    if (c.state !== 'sleeping') {
+      c.state = 'sleeping';
+      c.stateTimer = 300;
+    }
+    if (c.stateTimer <= 0 && civTimeOfDay !== 'night') c.state = 'idle';
+    return;
+  }
+
+  switch (c.state) {
+    case 'idle':
+      if (c.stateTimer <= 0) {
+        const roll = Math.random();
+        if (roll < 0.5) {
+          c.state = 'walking';
+          c.tx = c.x + (Math.random() - 0.5) * 100;
+          c.ty = c.y + (Math.random() - 0.5) * 100;
+          c.tx = Math.max(16, Math.min(c.tx, WORLD_W - 32));
+          c.ty = Math.max(16, Math.min(c.ty, WORLD_H - 48));
+          c.stateTimer = 120 + Math.floor(Math.random() * 120);
+        } else if (roll < 0.7) {
+          c.state = 'working';
+          c.stateTimer = 80 + Math.floor(Math.random() * 80);
+          // Generate resources
+          if (c.profession === 'farmer') civResources.food += 1;
+          else if (c.profession === 'miner' || c.profession === 'blacksmith') civResources.stone += 1;
+          else if (c.profession === 'builder') civResources.wood += 1;
+          else if (c.profession === 'merchant') civResources.gold += 1;
+        } else {
+          c.stateTimer = 60 + Math.floor(Math.random() * 60);
+        }
+      }
+      break;
+    case 'walking': {
+      const dx = c.tx - c.x, dy = c.ty - c.y;
+      const dist = Math.hypot(dx, dy);
+      if (dist < 3 || c.stateTimer <= 0) {
+        c.state = 'idle';
+        c.stateTimer = 40;
+      } else {
+        const nx = c.x + (dx / dist) * c.speed;
+        const ny = c.y + (dy / dist) * c.speed;
+        if (civIsWalkable(nx, ny)) { c.x = nx; c.y = ny; }
+        else { c.tx = c.x + (Math.random()-0.5)*40; c.ty = c.y + (Math.random()-0.5)*40; }
+        if (Math.abs(dx) > Math.abs(dy)) c.dir = dx > 0 ? 1 : 3;
+        else c.dir = dy > 0 ? 2 : 0;
+      }
+      // Check for threats (warriors engage)
+      if (c.profession === 'warrior' || c.profession === 'hunter') {
+        for (const t of civThreats) {
+          if (t.hp > 0 && Math.hypot(t.x - c.x, t.y - c.y) < 25) {
+            c.state = 'fighting';
+            c.stateTimer = 100;
+            c.target = t;
+            break;
+          }
+        }
+      }
+      // Speech
+      if (Math.random() < 0.002) {
+        const greetings = ['Hello!', 'Nice day!', 'Working hard?', 'Stay safe!', 'For the faction!'];
+        c.bubbleText = greetings[Math.floor(Math.random() * greetings.length)];
+        c.bubbleTimer = 80;
+      }
+      break;
+    }
+    case 'working':
+      if (c.stateTimer <= 0) {
+        c.state = 'idle';
+        c.stateTimer = 30;
+        if (Math.random() < 0.15) {
+          const sayings = { farmer:['Good harvest!'], miner:['Found ore!'], builder:['Building!'], scholar:['Fascinating!'], warrior:['All clear'], merchant:['Profit!'], healer:['All healthy'], artist:['Beautiful!'], explorer:['New land!'], hunter:['Tracking...'], blacksmith:['Forging!'] };
+          const s = sayings[c.profession] || ['Working...'];
+          c.bubbleText = s[Math.floor(Math.random()*s.length)];
+          c.bubbleTimer = 90;
+        }
+      }
+      break;
+    case 'fighting':
+      if (!c.target || c.target.hp <= 0) {
+        c.state = 'idle'; c.stateTimer = 30; c.target = null; break;
+      }
+      const tdx = c.target.x - c.x, tdy = c.target.y - c.y;
+      const tDist = Math.hypot(tdx, tdy);
+      if (tDist > 8) {
+        c.x += (tdx / tDist) * c.speed * 1.2;
+        c.y += (tdy / tDist) * c.speed * 1.2;
+      } else if (frameCount % 20 === 0) {
+        const dmg = Math.max(1, c.attack - 2);
+        c.target.hp -= dmg;
+        if (c.target.hp <= 0) {
+          civAddEvent('⚔️ ' + c.name + ' (' + CIV_PROFESSIONS[c.profession].name + ') slew a ' + c.target.name + '!');
+          c.bubbleText = 'Victory!';
+          c.bubbleTimer = 60;
+          c.state = 'idle'; c.stateTimer = 30;
+        }
+      }
+      break;
+    case 'sleeping':
+      if (civTimeOfDay !== 'night' && c.stateTimer <= 0) {
+        c.state = 'idle'; c.stateTimer = 20;
+      }
+      break;
+  }
+}
+
+// === THREAT AI ===
+function civUpdateThreat(t) {
+  if (t.hp <= 0) return;
+  t.stateTimer--;
+  const speedMul = civTimeOfDay === 'night' ? 1.5 : 1.0;
+
+  switch (t.state) {
+    case 'patrol':
+      if (t.stateTimer <= 0) {
+        t.tx = 20 + Math.random() * (WORLD_W - 40);
+        t.ty = 20 + Math.random() * (WORLD_H - 80);
+        t.stateTimer = 200 + Math.floor(Math.random() * 300);
+      }
+      const dx = t.tx - t.x, dy = t.ty - t.y;
+      const dist = Math.hypot(dx, dy);
+      if (dist > 3) { t.x += (dx/dist)*t.speed*speedMul; t.y += (dy/dist)*t.speed*speedMul; }
+      // Hunt nearby citizens
+      let closest = null, closestDist = 40;
+      for (const c of civCitizens) {
+        if (c.hp <= 0) continue;
+        const d = Math.hypot(c.x - t.x, c.y - t.y);
+        if (d < closestDist) { closest = c; closestDist = d; }
+      }
+      if (closest) { t.state = 'attacking'; t.target = closest; t.stateTimer = 300; }
+      break;
+    case 'attacking':
+      if (!t.target || t.target.hp <= 0) { t.state = 'patrol'; t.stateTimer = 100; break; }
+      const adx = t.target.x - t.x, ady = t.target.y - t.y;
+      const aDist = Math.hypot(adx, ady);
+      if (aDist > 6) { t.x += (adx/aDist)*t.speed*speedMul*1.3; t.y += (ady/aDist)*t.speed*speedMul*1.3; }
+      else if (frameCount % 30 === 0) {
+        const dmg = Math.max(1, t.attack - (t.target.defense || 3));
+        t.target.hp -= dmg;
+        if (t.target.hp <= 0) {
+          civAddEvent('💀 ' + t.target.name + ' was defeated by a ' + t.name + '!');
+          t.state = 'patrol'; t.stateTimer = 200;
+        }
+      }
+      if (t.hp < t.maxHp * 0.2) {
+        t.state = 'patrol';
+        t.tx = t.x + (Math.random()-0.5)*200;
+        t.ty = t.y + (Math.random()-0.5)*200;
+        t.stateTimer = 300;
+      }
+      break;
+  }
+}
+
+// === DAY/NIGHT OVERLAY ===
+function civDrawDayNightOverlay() {
+  let overlay;
+  if (civTimeOfDay === 'night') overlay = 'rgba(10,10,40,0.35)';
+  else if (civTimeOfDay === 'dusk') overlay = 'rgba(40,15,10,0.15)';
+  else if (civTimeOfDay === 'dawn') overlay = 'rgba(40,25,15,0.1)';
+  else return; // day = no overlay
+  ctx.fillStyle = overlay;
+  ctx.fillRect(0, 0, screenW, screenH);
+}
+
+// === CIVILIZATION WORLD EVENTS ===
+function civWorldEvents() {
+  if (getStage() < 3) return; // Civilization kicks in at stage 3
+
+  // Spawn threats periodically
+  if (frameCount % 1800 === 0 && civThreats.filter(t => t.hp > 0).length < 4) {
+    const type = civTimeOfDay === 'night' ? ['wolf','bandit','spider'][Math.floor(Math.random()*3)] : ['wolf','spider'][Math.floor(Math.random()*2)];
+    civSpawnThreat(type);
+    civAddEvent('⚠️ A ' + CIV_THREAT_TYPES[type].name + ' appeared!');
+  }
+
+  // New citizens born
+  if (frameCount % 2400 === 0 && civCitizens.filter(c => c.hp > 0).length < 30) {
+    const f = CIV_FACTIONS[Math.floor(Math.random()*CIV_FACTIONS.length)];
+    const cx = 30 + Math.random() * (WORLD_W - 60);
+    const cy = 30 + Math.random() * (WORLD_H - 80);
+    if (civIsWalkable(cx, cy)) {
+      const c = civCreateCitizen(f, cx, cy);
+      civAddEvent('🎉 ' + c.name + ' (' + CIV_PROFESSIONS[c.profession].emoji + ') joined ' + f.name + '!');
+    }
+  }
+
+  // Resource consumption
+  if (frameCount % 600 === 0) {
+    const pop = civCitizens.filter(c => c.hp > 0).length;
+    civResources.food = Math.max(0, civResources.food - Math.floor(pop * 0.2));
+    if (civResources.food === 0) civAddEvent('⚠️ Food supplies are running low!');
+  }
+
+  // Clean up dead
+  civThreats = civThreats.filter(t => t.hp > 0);
+  civCitizens = civCitizens.filter(c => c.hp > 0);
+  for (const f of CIV_FACTIONS) f.citizens = f.citizens.filter(c => c.hp > 0);
+}
+
+// === INIT CITIZENS ===
+function civInit() {
+  // Spawn initial citizens across the garden
+  for (const f of CIV_FACTIONS) {
+    const count = 4 + Math.floor(Math.random() * 3);
+    for (let i = 0; i < count; i++) {
+      const cx = 30 + Math.random() * (WORLD_W - 60);
+      const cy = 30 + Math.random() * (WORLD_H - 80);
+      if (civIsWalkable(cx, cy)) civCreateCitizen(f, cx, cy);
+    }
+  }
+  // Spawn initial threats
+  for (let i = 0; i < 3; i++) civSpawnThreat(['wolf','spider'][Math.floor(Math.random()*2)]);
+  // Initial events
+  civAddEvent('🏛️ The garden civilization awakens...');
+  civAddEvent('🌿 Verdant Collective settles in the meadow');
+  civAddEvent('💎 Azure Order arrives from the east');
+  civAddEvent('🔥 Crimson Pact claims the southern paths');
+  civAddEvent('👑 Golden Accord establishes near the coast');
+}
+
+// === CITIZEN POPUP ===
+let civPopupCitizen = null;
+
+function showCitizenPopup(c, sx, sy) {
+  civPopupCitizen = c;
+  const prof = CIV_PROFESSIONS[c.profession];
+  const faction = CIV_FACTIONS.find(f => f.id === c.faction);
+  document.getElementById('cp-emoji').textContent = prof.emoji;
+  document.getElementById('cp-name').textContent = c.name;
+  document.getElementById('cp-name').style.color = faction ? faction.color : '#888';
+  document.getElementById('cp-profession').textContent = prof.name;
+  document.getElementById('cp-faction').innerHTML = faction ? '<span style="color:'+faction.color+'">'+faction.icon+' '+faction.name+'</span>' : 'Unaffiliated';
+  const hpPct = Math.round(c.hp / c.maxHp * 100);
+  document.getElementById('cp-stats').innerHTML =
+    '<div class="cp-stat"><span>HP</span><span class="v">'+c.hp+'/'+c.maxHp+' ('+hpPct+'%)</span></div>' +
+    '<div class="cp-stat"><span>ATK</span><span class="v">'+c.attack+'</span></div>' +
+    '<div class="cp-stat"><span>DEF</span><span class="v">'+c.defense+'</span></div>' +
+    '<div class="cp-stat"><span>Morale</span><span class="v">'+c.morale+'%</span></div>';
+  const stateEmoji = { idle:'😴', walking:'🚶', working:'⚒️', fighting:'⚔️', sleeping:'😴' };
+  document.getElementById('cp-activity').textContent = (stateEmoji[c.state]||'') + ' ' + c.state.charAt(0).toUpperCase()+c.state.slice(1);
+  const nearby = civCitizens.filter(o => o !== c && Math.hypot(o.x-c.x, o.y-c.y) < 50).slice(0, 3);
+  document.getElementById('cp-relations').textContent = nearby.length > 0 ? 'Nearby: ' + nearby.map(n => n.name).join(', ') : 'No one nearby';
+  const popup = document.getElementById('citizen-popup');
+  let left = sx + 16, top = sy - 60;
+  if (left + 320 > screenW) left = sx - 340;
+  if (top < 10) top = 10;
+  if (top + 280 > screenH) top = screenH - 290;
+  popup.style.left = Math.max(10, left) + 'px';
+  popup.style.top = Math.max(10, top) + 'px';
+  popup.style.display = 'block';
+  popup.style.borderColor = faction ? faction.color + '60' : 'rgba(74,222,128,0.3)';
+}
+
+function hideCitizenPopup() {
+  document.getElementById('citizen-popup').style.display = 'none';
+  civPopupCitizen = null;
+}
+
+// === UPDATE CIVILIZATION UI ===
+function civUpdateUI() {
+  if (getStage() < 3) {
+    // Hide civ UI when garden is too young
+    document.getElementById('factions-bar').innerHTML = '';
+    document.getElementById('resource-bars').style.display = 'none';
+    document.getElementById('event-ticker').style.display = 'none';
+    return;
+  }
+  document.getElementById('resource-bars').style.display = 'flex';
+  document.getElementById('event-ticker').style.display = 'block';
+
+  const alive = civCitizens.filter(c => c.hp > 0);
+  // Factions bar
+  const fb = document.getElementById('factions-bar');
+  fb.innerHTML = CIV_FACTIONS.map(f => {
+    const pop = alive.filter(c => c.faction === f.id).length;
+    return '<div class="faction-pip" style="border-color:'+f.color+'30"><div class="faction-dot" style="background:'+f.color+'"></div>'+f.icon+' '+pop+'</div>';
+  }).join('') + ' <span style="color:#a78bfa;font-size:10px">Pop: '+alive.length+'</span>';
+
+  // Resources
+  document.getElementById('res-wood').textContent = civResources.wood;
+  document.getElementById('res-stone').textContent = civResources.stone;
+  document.getElementById('res-food').textContent = civResources.food;
+  document.getElementById('res-gold').textContent = civResources.gold;
+
+  // Government
+  const govEl = document.getElementById('gov-indicator');
+  if (govEl) govEl.textContent = '🏛️ ' + civGovernment;
+}
+
+// === LOAD CIV DATA FROM WORLD STATE ===
+function civLoadFromWorldState(shared) {
+  if (!shared) return;
+  // Citizens from world-state.json
+  if (shared.citizens && shared.citizens.length > 0) {
+    civCitizens = [];
+    for (const f of CIV_FACTIONS) f.citizens = [];
+    for (const cd of shared.citizens) {
+      const faction = CIV_FACTIONS.find(f => f.id === cd.faction) || CIV_FACTIONS[0];
+      const c = civCreateCitizen(faction, cd.x || 50+Math.random()*200, cd.y || 50+Math.random()*150);
+      if (cd.name) c.name = cd.name;
+      if (cd.profession && CIV_PROFESSIONS[cd.profession]) c.profession = cd.profession;
+      if (cd.hp) c.hp = cd.hp;
+    }
+  }
+  // Factions territory info
+  if (shared.factions) {
+    for (const sf of shared.factions) {
+      const f = CIV_FACTIONS.find(fc => fc.id === sf.id);
+      if (f && sf.name) f.name = sf.name;
+    }
+  }
+  // Threats
+  if (shared.threats && shared.threats.length > 0) {
+    civThreats = [];
+    for (const td of shared.threats) {
+      if (CIV_THREAT_TYPES[td.type]) civSpawnThreat(td.type);
+    }
+  }
+  // Events
+  if (shared.events) {
+    civEvents = shared.events.slice(-CIV_MAX_EVENTS);
+    civUpdateTicker();
+  }
+  // Economy
+  if (shared.economy) {
+    civResources = { ...civResources, ...shared.economy };
+  }
+  // Government
+  if (shared.government) {
+    civGovernment = shared.government.type || shared.government;
+  }
+}
+
+// Initialize civilization
+civInit();
 
 // ============================================================
 // PROGRESSION & SEASON SYSTEM
@@ -2150,6 +2895,22 @@ function drawMinimap() {
   // Viewport indicator — highlighted rectangle with glow
   const vw = (screenW / SCALE) * sx, vh = (screenH / SCALE) * sy;
   const vpX = offX + camX * sx, vpY = offY + camY * sy;
+  // Civilization citizens on minimap
+  if (getStage() >= 3) {
+    for (const c of civCitizens) {
+      if (c.hp <= 0) continue;
+      const f = CIV_FACTIONS.find(f2 => f2.id === c.faction);
+      mctx.fillStyle = f ? f.color : '#888';
+      mctx.fillRect(offX + c.x * sx - 0.5, offY + c.y * sy - 0.5, 2, 2);
+    }
+    // Threats as red dots
+    for (const t of civThreats) {
+      if (t.hp <= 0) continue;
+      mctx.fillStyle = '#ff0000';
+      mctx.fillRect(offX + t.x * sx - 0.5, offY + t.y * sy - 0.5, 2, 2);
+    }
+  }
+
   // Dim area outside viewport
   mctx.fillStyle = 'rgba(0,0,0,0.3)';
   mctx.fillRect(0, 0, mw, vpY); // top
@@ -2370,6 +3131,18 @@ function handleCanvasClick(screenX, screenY) {
 
   // Dismiss existing popup on any click
   if (objectPopupVisible) { hideObjectPopup(); }
+  hideCitizenPopup();
+
+  // Check citizen click (civilization)
+  if (getStage() >= 3) {
+    for (const c of civCitizens) {
+      if (c.hp <= 0) continue;
+      if (Math.abs(c.x + 4 - gx) < 8 && Math.abs(c.y + 5 - gy) < 8) {
+        showCitizenPopup(c, screenX, screenY);
+        return;
+      }
+    }
+  }
 
   // Shooting star click
   for (const s of shootingStars) {
@@ -3224,6 +3997,16 @@ update = function() {
   updateDayCounter();
   if (frameCount % 120 === 0) updateContribCount();
 
+  // === CIVILIZATION UPDATE ===
+  civUpdateTime();
+  if (getStage() >= 3) {
+    for (const c of civCitizens) civUpdateCitizen(c);
+    for (const t of civThreats) civUpdateThreat(t);
+    civUpdateBattleParticles();
+    civWorldEvents();
+    if (frameCount % 60 === 0) civUpdateUI();
+  }
+
   // Mascot jump animations
   for (const name in mascotJumpAnims) {
     const anim = mascotJumpAnims[name];
@@ -3242,6 +4025,19 @@ update = function() {
 const origDraw = draw;
 draw = function() {
   origDraw();
+
+  // === CIVILIZATION DRAW (before ambience, after main draw) ===
+  if (getStage() >= 3) {
+    civDrawTerritories();
+    // Draw citizens sorted by Y
+    const sortedCiv = civCitizens.filter(c => c.hp > 0).sort((a, b) => a.y - b.y);
+    for (const c of sortedCiv) civDrawCitizen(c);
+    // Draw threats
+    for (const t of civThreats) if (t.hp > 0) civDrawThreat(t);
+    civDrawBattleParticles();
+    civDrawDayNightOverlay();
+  }
+
   drawAmbienceVisuals();
 
   // Reposition popup to follow world coordinates
