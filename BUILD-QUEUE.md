@@ -42,12 +42,18 @@
 - Added to both draw paths (normal + manual camera)
 - TEST: garden loads, plants visible, citizens visible, popups work
 
-### ⏳ Step 5: Factions + threats visual
-- Faction territory: subtle colored overlay on minimap
-- Threats: red emoji sprites at their positions, subtle red glow
-- Click on threat shows popup with name, danger level, weaknesses
-- Events ticker at bottom (read events[] from world-state)
-- TEST: everything above still works
+### ✅ Step 5: Factions + threats visual
+- Faction territory: subtle colored overlay on minimap (green tint for The Founders)
+- drawFactionTerritoriesOnMinimap() renders faction-controlled regions with labels
+- Threats: red emoji sprites (🦇🪲⚠️) at their positions with pulsing red radial glow
+- drawThreats() renders on main canvas, drawThreatsOnMinimap() as pulsing red dots
+- findThreatAt() for click/touch detection
+- Click/touch on threat shows popup with name, type, danger level, behavior, weaknesses, loot
+- Danger level shown as colored dots below threat emoji
+- Events ticker at bottom bar: reads events[] + recent history[] from world-state
+- Ticker auto-scrolls with CSS animation, type-colored labels
+- Added to both draw paths (normal + manual camera)
+- TEST: JS syntax valid, garden loads, plants/citizens/threats all visible
 
 ### ⏳ Step 6: Day/night cycle + economy UI
 - Subtle overlay based on real time (warm→cool tones)
