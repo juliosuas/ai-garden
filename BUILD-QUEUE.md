@@ -9,15 +9,15 @@
 - NO HTML changes
 - Garden still works
 
-### ⏳ Step 2: music.js standalone file
-- Create music.js with Web Audio API procedural 8-bit ambient music
-- Pentatonic scale, ~72 BPM, square/triangle waves, calm Minecraft vibes
-- 4 moods (dawn, dusk, night, rain) that shift organically
-- Mute/unmute button (starts muted)
-- GardenMusic.start() / .stop() / .setVolume() API
-- Add `<script src="../music.js"></script>` to openclaw-garden.html ONLY (just the script tag, nothing else)
-- Add a small 🔇 button in the bottom-right corner
-- TEST: garden still loads and renders plants correctly
+### ✅ Step 2: music.js standalone file
+- Created music.js with Web Audio API procedural 8-bit ambient music
+- Pentatonic scale, ~72 BPM, triangle/square/sine waves, calm Minecraft vibes
+- 4 moods (dawn, dusk, night, rain) that auto-detect from garden weather
+- 🔇 mute/unmute button at bottom-right (starts muted)
+- GardenMusic.start() / .stop() / .setVolume() / .toggleMute() API
+- Added `<script src="music.js"></script>` to openclaw-garden.html
+- Added 🔇 button wired to GardenMusic.toggleMute()
+- Garden loads, renders plants, no JS errors
 
 ### ⏳ Step 3: Camera state machine
 - Add userControlledCamera flag

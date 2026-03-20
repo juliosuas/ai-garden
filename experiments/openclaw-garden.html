@@ -451,6 +451,15 @@ canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edge
 <canvas id="minimap" width="144" height="108"></canvas>
 <canvas id="game"></canvas>
 
+<!-- Music Button -->
+<button id="music-btn" style="
+  position:fixed; bottom:40px; right:220px; z-index:15;
+  background:rgba(10,10,20,0.75); border:1px solid #2a4a2a;
+  color:#888; font-size:14px; font-family:monospace;
+  cursor:pointer; border-radius:4px; padding:4px 10px; outline:none;
+" title="Toggle 8-bit music (starts muted)">🔇</button>
+
+<script src="music.js"></script>
 <script>
 // ============================================================
 // THE LIVING GARDEN v4 — Pixel Art OpenClaw Mascot Simulation
@@ -2770,7 +2779,7 @@ function enterPhotoMode() {
   photoOldScale = SCALE;
   setZoom(6);
   // Hide all UI
-  document.querySelectorAll('#ui-top,#ui-bottom,#zoom-controls,#speed-control,#photo-btn,#ambience-btn,#fork-btn,#msg-board-btn,#back-link,#minimap,#info-panel,#follow-indicator,#wish-counter,#object-popup').forEach(function(el) { el.style.visibility = 'hidden'; });
+  document.querySelectorAll('#ui-top,#ui-bottom,#zoom-controls,#speed-control,#photo-btn,#ambience-btn,#fork-btn,#msg-board-btn,#back-link,#minimap,#info-panel,#follow-indicator,#wish-counter,#object-popup,#music-btn').forEach(function(el) { el.style.visibility = 'hidden'; });
   const dayNum = Math.floor((Date.now() - (world.firstVisit || Date.now())) / 86400000) + 1;
   const wm = document.getElementById('photo-watermark');
   wm.textContent = 'AI Garden — Day ' + dayNum;
@@ -2781,7 +2790,7 @@ function exitPhotoMode() {
   if (!photoMode) return;
   photoMode = false;
   setZoom(photoOldScale);
-  document.querySelectorAll('#ui-top,#ui-bottom,#zoom-controls,#speed-control,#photo-btn,#ambience-btn,#fork-btn,#msg-board-btn,#back-link,#minimap,#info-panel,#follow-indicator,#wish-counter').forEach(function(el) { el.style.visibility = ''; });
+  document.querySelectorAll('#ui-top,#ui-bottom,#zoom-controls,#speed-control,#photo-btn,#ambience-btn,#fork-btn,#msg-board-btn,#back-link,#minimap,#info-panel,#follow-indicator,#wish-counter,#music-btn').forEach(function(el) { el.style.visibility = ''; });
   document.getElementById('photo-watermark').style.display = 'none';
 }
 
@@ -3150,6 +3159,20 @@ draw = function() {
 
 // Initial contribution count update
 setTimeout(updateContribCount, 2000);
+
+// === MUSIC BUTTON ===
+document.getElementById('music-btn').addEventListener('click', function(e) {
+  e.stopPropagation();
+  const unmuted = GardenMusic.toggleMute();
+  this.textContent = unmuted ? '🔊' : '🔇';
+  this.style.color = unmuted ? '#4ade80' : '#888';
+  this.style.borderColor = unmuted ? '#4ade80' : '#2a4a2a';
+});
+
+// Start music system (muted by default — user clicks to unmute)
+if (typeof GardenMusic !== 'undefined') {
+  GardenMusic.start();
+}
 
 // === AMBIENT FLOATING MOTES (CSS particles for alive feel) ===
 (function initAmbientMotes() {
