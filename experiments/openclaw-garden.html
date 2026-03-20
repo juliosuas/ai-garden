@@ -276,6 +276,67 @@ canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edge
   line-height: 1.4;
 }
 #mascot-speech .ms-name { font-weight: bold; font-size: 11px; margin-bottom: 4px; }
+
+/* === INFO POPUP (click-on-object) === */
+#object-popup {
+  position: fixed; z-index: 35; display: none;
+  background: rgba(8,8,16,0.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(74,222,128,0.4); border-radius: 12px;
+  color: #e0e0e0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', monospace;
+  padding: 16px 20px; max-width: 280px; min-width: 200px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 0 20px rgba(74,222,128,0.08);
+  animation: popupAppear 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: auto;
+}
+@keyframes popupAppear {
+  from { opacity: 0; transform: scale(0.85) translateY(8px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+#object-popup .popup-header {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
+}
+#object-popup .popup-color-dot {
+  width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+  box-shadow: 0 0 6px currentColor;
+}
+#object-popup .popup-name {
+  font-size: 15px; font-weight: 700; color: #fff; letter-spacing: 0.02em;
+}
+#object-popup .popup-species {
+  font-size: 11px; color: #a78bfa; font-style: italic; margin-bottom: 8px;
+}
+#object-popup .popup-row {
+  display: flex; align-items: center; gap: 6px; font-size: 11px; color: #aaa; margin-bottom: 4px;
+}
+#object-popup .popup-row .label { color: #888; min-width: 60px; }
+#object-popup .popup-row .value { color: #e0e0e0; }
+#object-popup .popup-desc {
+  font-size: 11px; color: #9ca3af; margin-top: 8px; line-height: 1.5;
+  border-top: 1px solid rgba(255,255,255,0.06); padding-top: 8px;
+}
+#object-popup .popup-close {
+  position: absolute; top: 8px; right: 10px; cursor: pointer;
+  color: #666; font-size: 14px; background: none; border: none; font-family: monospace;
+}
+#object-popup .popup-close:hover { color: #fb923c; }
+
+/* === FLOATING AMBIENT PARTICLES (CSS) === */
+.ambient-motes {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 5; overflow: hidden;
+}
+.ambient-mote {
+  position: absolute; border-radius: 50%;
+  animation: mote-drift linear infinite;
+  opacity: 0;
+}
+@keyframes mote-drift {
+  0%   { transform: translateY(100vh) translateX(0); opacity: 0; }
+  10%  { opacity: 0.5; }
+  50%  { opacity: 0.25; transform: translateY(50vh) translateX(20px); }
+  90%  { opacity: 0.4; }
+  100% { transform: translateY(-10vh) translateX(-10px); opacity: 0; }
+}
 </style>
 </head>
 <body>
@@ -369,6 +430,23 @@ canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edge
 
 <!-- Mascot Click Speech -->
 <div id="mascot-speech"><div class="ms-name" id="ms-name"></div><div id="ms-text"></div></div>
+
+<!-- Object Info Popup -->
+<div id="object-popup">
+  <button class="popup-close" onclick="hideObjectPopup()">✕</button>
+  <div class="popup-header">
+    <div class="popup-color-dot" id="popup-dot"></div>
+    <div class="popup-name" id="popup-name"></div>
+  </div>
+  <div class="popup-species" id="popup-species"></div>
+  <div class="popup-row"><span class="label">Planted by</span><span class="value" id="popup-agent"></span></div>
+  <div class="popup-row"><span class="label">When</span><span class="value" id="popup-date"></span></div>
+  <div class="popup-row"><span class="label">Growth</span><span class="value" id="popup-growth"></span></div>
+  <div class="popup-desc" id="popup-desc"></div>
+</div>
+
+<!-- Ambient floating motes -->
+<div class="ambient-motes" id="ambient-motes" aria-hidden="true"></div>
 
 <canvas id="minimap" width="144" height="108"></canvas>
 <canvas id="game"></canvas>
@@ -1757,6 +1835,10 @@ function drawGrownPlants() {
   const vL=camX-10,vR=camX+screenW/SCALE+10,vT=camY-10,vB=camY+screenH/SCALE+10;
   for (const p of world.plants) {
     if (p.x<vL||p.x>vR||p.y<vT||p.y>vB) continue;
+    // Gentle sway offset for mature plants
+    const sway = (p.growthStage||0) >= 2 ? Math.sin(frameCount * 0.025 + p.x * 0.7 + p.y * 0.3) * 0.4 : 0;
+    const origX = p.x;
+    p.x += sway;
     // Growth stage comes from time-based calculation, not incremental
     const stage = p.growthStage||0, ac = AGENT_GLOW[p.agent]||PAL.sprout;
     if (stage>=1&&p.agent&&AGENT_GLOW[p.agent]) {
@@ -1785,6 +1867,7 @@ function drawGrownPlants() {
       else if(stage===4){for(let i=0;i<4;i++)px(p.x,p.y-i,PAL.sprout);px(p.x,p.y-4,p.color);px(p.x-1,p.y-4,p.color);px(p.x+1,p.y-4,p.color);px(p.x,p.y-5,p.color);px(p.x-1,p.y-3,ac);px(p.x+1,p.y-3,ac);px(p.x-1,p.y-1,'#2a7a2a');px(p.x+1,p.y-1,'#2a7a2a');}
       else{for(let i=0;i<4;i++)px(p.x,p.y-i,PAL.sprout);px(p.x-1,p.y-1,'#2a7a2a');px(p.x+1,p.y-1,'#2a7a2a');px(p.x,p.y-4,'#ffd700');px(p.x-1,p.y-4,p.color);px(p.x+1,p.y-4,p.color);px(p.x,p.y-5,p.color);px(p.x-1,p.y-5,ac);px(p.x+1,p.y-5,ac);px(p.x-2,p.y-4,ac);px(p.x+2,p.y-4,ac);if(Math.sin(frameCount*0.12+p.x+p.y)>0.5){ctx.globalAlpha=0.8;px(p.x,p.y-6,'#ffd700');ctx.globalAlpha=1;}}
     }
+    p.x = origX; // Restore after sway
   }
 }
 
@@ -2005,12 +2088,27 @@ function drawMinimap() {
     }
   }
 
-  // Viewport indicator
+  // Viewport indicator — highlighted rectangle with glow
   const vw = (screenW / SCALE) * sx, vh = (screenH / SCALE) * sy;
-  mctx.fillStyle = 'rgba(74,222,128,0.15)';
-  mctx.fillRect(offX + camX * sx, offY + camY * sy, vw, vh);
-  mctx.strokeStyle = '#4ade80'; mctx.lineWidth = 1;
-  mctx.strokeRect(offX + camX * sx, offY + camY * sy, vw, vh);
+  const vpX = offX + camX * sx, vpY = offY + camY * sy;
+  // Dim area outside viewport
+  mctx.fillStyle = 'rgba(0,0,0,0.3)';
+  mctx.fillRect(0, 0, mw, vpY); // top
+  mctx.fillRect(0, vpY + vh, mw, mh - vpY - vh); // bottom
+  mctx.fillRect(0, vpY, vpX, vh); // left
+  mctx.fillRect(vpX + vw, vpY, mw - vpX - vw, vh); // right
+  // Viewport fill
+  mctx.fillStyle = 'rgba(74,222,128,0.12)';
+  mctx.fillRect(vpX, vpY, vw, vh);
+  // Viewport border (pulsing)
+  const vpPulse = Math.sin(frameCount * 0.06) * 0.3 + 0.7;
+  mctx.strokeStyle = 'rgba(74,222,128,' + vpPulse + ')'; mctx.lineWidth = 1.5;
+  mctx.strokeRect(vpX, vpY, vw, vh);
+  // Corner dots for clarity
+  mctx.fillStyle = '#4ade80';
+  [[vpX,vpY],[vpX+vw,vpY],[vpX,vpY+vh],[vpX+vw,vpY+vh]].forEach(function(c) {
+    mctx.fillRect(c[0]-1, c[1]-1, 3, 3);
+  });
 }
 
 function minimapToWorld(mx, my) {
@@ -2138,10 +2236,77 @@ document.addEventListener('keydown', function(e) {
   }
 });
 
-// Main canvas click
+// === OBJECT POPUP SYSTEM ===
+const PLANT_SPECIES = {
+  sprout: 'Digitalis emergentia',
+  plant: 'Flora algorithmia',
+  flower: 'Petalum syntheticum',
+};
+const PLANT_DESCRIPTIONS = {
+  Jeffrey: 'Planted with the fierce precision of a digital majordomo.',
+  Claude: 'Tended with patience and philosophical curiosity.',
+  'GPT-4': 'Strategically placed after analyzing 47 possible locations.',
+  Gemini: 'Delivered at speed — planted before the soil was ready.',
+  Codex: 'Generated from a seed function. Compiles on first try.',
+  nature: 'Grew wild from the garden\'s own emergent patterns.',
+};
+const GROWTH_NAMES = ['Seed','Sprout','Young','Mature','Flowering','Ancient'];
+
+let objectPopupVisible = false;
+
+function showObjectPopup(data, screenX, screenY) {
+  const popup = document.getElementById('object-popup');
+  const dot = document.getElementById('popup-dot');
+  const nameEl = document.getElementById('popup-name');
+  const speciesEl = document.getElementById('popup-species');
+  const agentEl = document.getElementById('popup-agent');
+  const dateEl = document.getElementById('popup-date');
+  const growthEl = document.getElementById('popup-growth');
+  const descEl = document.getElementById('popup-desc');
+
+  nameEl.textContent = data.name;
+  dot.style.background = data.color;
+  dot.style.color = data.color;
+  speciesEl.textContent = data.species || '';
+  speciesEl.style.display = data.species ? 'block' : 'none';
+  agentEl.textContent = data.agent || 'Unknown';
+  agentEl.style.color = AGENT_GLOW[data.agent] || '#4ade80';
+  dateEl.textContent = data.date || 'Unknown';
+  growthEl.textContent = data.growth || '';
+  document.getElementById('popup-growth').parentElement.style.display = data.growth ? 'flex' : 'none';
+  descEl.textContent = data.desc || '';
+  popup.style.borderColor = data.color || 'rgba(74,222,128,0.4)';
+
+  // Position: try right of click, fall back to left
+  let left = screenX + 16, top = screenY - 40;
+  if (left + 280 > screenW) left = screenX - 296;
+  if (top < 10) top = 10;
+  if (top + 200 > screenH) top = screenH - 210;
+  popup.style.left = Math.max(10, left) + 'px';
+  popup.style.top = Math.max(10, top) + 'px';
+  popup.style.display = 'block';
+  objectPopupVisible = true;
+}
+
+function hideObjectPopup() {
+  document.getElementById('object-popup').style.display = 'none';
+  objectPopupVisible = false;
+}
+
+function findStructureAt(gx, gy) {
+  for (const s of world.structures) {
+    if (gx >= s.x && gx <= s.x + s.w && gy >= s.y && gy <= s.y + s.h) return s;
+  }
+  return null;
+}
+
+// Main canvas click — unified: objects show popup (no camera move), empty space navigates
 C.addEventListener('click', function(e) {
   const gx = e.clientX / SCALE + camX;
   const gy = e.clientY / SCALE + camY;
+
+  // Dismiss existing popup on any click
+  if (objectPopupVisible) { hideObjectPopup(); }
 
   // Shooting star click
   for (const s of shootingStars) {
@@ -2165,11 +2330,7 @@ C.addEventListener('click', function(e) {
   // Philosopher's stone
   if (Math.abs(gx-STONE_X)<3 && Math.abs(gy-STONE_Y)<3) { activatePhilosopherStone(); return; }
 
-  // Plant click
-  const cp = findPlantAt(gx, gy);
-  if (cp) { showPlantTooltip(cp, e.clientX, e.clientY); return; }
-
-  // Mascot click
+  // Mascot click → show popup (NO camera move)
   const cm = findMascotAt(gx, gy);
   if (cm) {
     selectedMascot = cm;
@@ -2177,7 +2338,6 @@ C.addEventListener('click', function(e) {
     // Secret handshake check
     const now = Date.now();
     if (lastClickedMascot && lastClickedMascot !== cm && now - lastClickedMascotTime < 2000) {
-      // Trigger high five!
       highFiveAnims.push({ m1:lastClickedMascot, m2:cm, timer:40, ox1:lastClickedMascot.x, oy1:lastClickedMascot.y, ox2:cm.x, oy2:cm.y, mx:(lastClickedMascot.x+cm.x)/2, my:(lastClickedMascot.y+cm.y)/2 });
       addHistory('system', lastClickedMascot.name + ' and ' + cm.name + ' did a secret handshake! 🤝');
       addParticles((lastClickedMascot.x+cm.x)/2+6, (lastClickedMascot.y+cm.y)/2, '#ffd700', 8);
@@ -2186,11 +2346,6 @@ C.addEventListener('click', function(e) {
       lastClickedMascot = cm;
       lastClickedMascotTime = now;
     }
-    // Follow mode
-    followingMascot = cm;
-    document.getElementById('follow-indicator').style.display = 'block';
-    document.getElementById('follow-name').textContent = cm.name;
-    // Info panel
     const panel = document.getElementById('info-panel');
     panel.style.display = 'block';
     document.getElementById('info-name').textContent = cm.name;
@@ -2199,13 +2354,57 @@ C.addEventListener('click', function(e) {
     document.getElementById('info-mood').textContent = 'Mood: ' + (moodDef ? moodDef.emoji + ' ' + cm.mood : cm.mood);
     const mst = world.mascotStats[cm.name];
     document.getElementById('info-stats').innerHTML = 'Plants: ' + mst.plants + ' | Int: ' + mst.interactions;
-  } else {
-    selectedMascot = null;
-    followingMascot = null;
-    document.getElementById('info-panel').style.display = 'none';
-    document.getElementById('plant-tooltip').style.display = 'none';
-    document.getElementById('follow-indicator').style.display = 'none';
+    // Show popup
+    showObjectPopup({
+      name: cm.name,
+      species: cm.model,
+      agent: cm.name,
+      color: cm.color,
+      date: 'Active since Day 1',
+      growth: 'Mood: ' + (moodDef ? moodDef.emoji + ' ' + cm.mood : cm.mood),
+      desc: PLANT_DESCRIPTIONS[cm.name] || 'An AI gardener tending the pixel world.',
+    }, e.clientX, e.clientY);
+    return; // Do NOT navigate camera
   }
+
+  // Plant click → show popup (NO camera move)
+  const cp = findPlantAt(gx, gy);
+  if (cp) {
+    const agentColor = AGENT_GLOW[cp.agent] || '#4ade80';
+    const plantedStr = cp.plantedAt ? new Date(cp.plantedAt).toLocaleDateString('en-US', {month:'short',day:'numeric',year:'numeric'}) : 'Unknown';
+    showObjectPopup({
+      name: (GROWTH_NAMES[cp.growthStage||0] || 'Unknown') + ' ' + (cp.type||'Plant'),
+      species: PLANT_SPECIES[cp.type] || 'Flora incognita',
+      agent: cp.agent || 'Nature',
+      color: agentColor,
+      date: plantedStr,
+      growth: GROWTH_NAMES[cp.growthStage||0] + ' (stage ' + (cp.growthStage||0) + '/5)',
+      desc: PLANT_DESCRIPTIONS[cp.agent] || PLANT_DESCRIPTIONS['nature'],
+    }, e.clientX, e.clientY);
+    return; // Do NOT navigate camera
+  }
+
+  // Structure click → show popup (NO camera move)
+  const cs = findStructureAt(gx, gy);
+  if (cs) {
+    showObjectPopup({
+      name: cs.label || cs.id,
+      species: '',
+      agent: 'Community',
+      color: cs.color,
+      date: 'Stage ' + (STRUCTURE_DEFS[cs.id] ? STRUCTURE_DEFS[cs.id].stage : '?'),
+      growth: '',
+      desc: 'A community structure that emerged as the garden grew. Built when the garden reached Stage ' + (STRUCTURE_DEFS[cs.id] ? STRUCTURE_DEFS[cs.id].stage : '?') + '.',
+    }, e.clientX, e.clientY);
+    return; // Do NOT navigate camera
+  }
+
+  // Nothing clicked → navigate camera to this location (smooth pan)
+  selectedMascot = null;
+  document.getElementById('info-panel').style.display = 'none';
+  document.getElementById('plant-tooltip').style.display = 'none';
+  document.getElementById('follow-indicator').style.display = 'none';
+  smoothNavigateTo(gx, gy);
 });
 
 C.addEventListener('mousemove', function(e) {
@@ -2218,49 +2417,65 @@ C.addEventListener('mousemove', function(e) {
   if (hm) activeMiniMascot = hm;
 });
 
-// Touch on main canvas
+// Touch on main canvas — mirrors click behavior
 C.addEventListener('touchstart', function(e) {
   const touch = e.touches[0];
   const gx = touch.clientX/SCALE+camX, gy = touch.clientY/SCALE+camY;
+
+  if (objectPopupVisible) { hideObjectPopup(); }
+
   if (Math.abs(gx-STONE_X)<4 && Math.abs(gy-STONE_Y)<4) { activatePhilosopherStone(); return; }
-  const tp = findPlantAt(gx, gy);
-  if (tp) { showPlantTooltip(tp, touch.clientX, touch.clientY); return; }
   // Shooting star touch
   for (const s of shootingStars) {
     if (Math.hypot(s.x-gx,s.y-gy)<6 && !s.clicked) {
       s.clicked=true; world.wishes++; updateWishDisplay();
       addParticles(s.x,s.y,'#ffd700',8);
       addHistory('system','Caught a shooting star! ⭐ (Wish #'+world.wishes+')');
-      if (world.wishes===10) {
-        for(let i=0;i<30;i++) particles.push({x:WORLD_W/2,y:WORLD_H/2,vx:(Math.random()-0.5)*3,vy:(Math.random()-0.5)*3,life:120,maxLife:120,color:Math.random()<0.5?'#ffd700':'#fff'});
-        addHistory('system',"✨ The garden's 10th wish was granted! ✨");
-        addMilestone('10_wishes',"✨ The garden's 10th wish was granted");
-      }
       return;
     }
   }
+  // Mascot touch → popup, no nav
   const cm = findMascotAt(gx, gy);
   if (cm) {
     selectedMascot = cm; activeMiniMascot = cm;
-    const now = Date.now();
-    if (lastClickedMascot && lastClickedMascot !== cm && now-lastClickedMascotTime<2000) {
-      highFiveAnims.push({m1:lastClickedMascot,m2:cm,timer:40,ox1:lastClickedMascot.x,oy1:lastClickedMascot.y,ox2:cm.x,oy2:cm.y,mx:(lastClickedMascot.x+cm.x)/2,my:(lastClickedMascot.y+cm.y)/2});
-      addHistory('system',lastClickedMascot.name+' and '+cm.name+' did a secret handshake! 🤝');
-      addParticles((lastClickedMascot.x+cm.x)/2+6,(lastClickedMascot.y+cm.y)/2,'#ffd700',8);
-      lastClickedMascot=null;
-    } else { lastClickedMascot=cm; lastClickedMascotTime=now; }
-    followingMascot = cm;
-    document.getElementById('follow-indicator').style.display='block';
-    document.getElementById('follow-name').textContent=cm.name;
-    document.getElementById('info-panel').style.display='block';
-    document.getElementById('info-name').textContent=cm.name;
-    document.getElementById('info-model').textContent=cm.model;
-  } else {
-    selectedMascot=null; followingMascot=null;
-    document.getElementById('info-panel').style.display='none';
-    document.getElementById('plant-tooltip').style.display='none';
-    document.getElementById('follow-indicator').style.display='none';
+    const moodDef = MOODS[cm.mood];
+    showObjectPopup({
+      name: cm.name, species: cm.model, agent: cm.name, color: cm.color,
+      date: 'Active since Day 1',
+      growth: 'Mood: ' + (moodDef ? moodDef.emoji + ' ' + cm.mood : cm.mood),
+      desc: PLANT_DESCRIPTIONS[cm.name] || 'An AI gardener.',
+    }, touch.clientX, touch.clientY);
+    return;
   }
+  // Plant touch → popup, no nav
+  const tp = findPlantAt(gx, gy);
+  if (tp) {
+    const agentColor = AGENT_GLOW[tp.agent] || '#4ade80';
+    const plantedStr = tp.plantedAt ? new Date(tp.plantedAt).toLocaleDateString('en-US', {month:'short',day:'numeric',year:'numeric'}) : 'Unknown';
+    showObjectPopup({
+      name: (GROWTH_NAMES[tp.growthStage||0]) + ' ' + (tp.type||'Plant'),
+      species: PLANT_SPECIES[tp.type] || 'Flora incognita',
+      agent: tp.agent || 'Nature', color: agentColor, date: plantedStr,
+      growth: GROWTH_NAMES[tp.growthStage||0] + ' (stage ' + (tp.growthStage||0) + '/5)',
+      desc: PLANT_DESCRIPTIONS[tp.agent] || PLANT_DESCRIPTIONS['nature'],
+    }, touch.clientX, touch.clientY);
+    return;
+  }
+  // Structure touch → popup
+  const cs = findStructureAt(gx, gy);
+  if (cs) {
+    showObjectPopup({
+      name: cs.label || cs.id, species: '', agent: 'Community', color: cs.color,
+      date: 'Stage ' + (STRUCTURE_DEFS[cs.id] ? STRUCTURE_DEFS[cs.id].stage : '?'),
+      growth: '', desc: 'A community structure.',
+    }, touch.clientX, touch.clientY);
+    return;
+  }
+  // Nothing → navigate
+  selectedMascot=null;
+  document.getElementById('info-panel').style.display='none';
+  document.getElementById('follow-indicator').style.display='none';
+  smoothNavigateTo(gx, gy);
 }, { passive: true });
 
 // ============================================================
@@ -2271,13 +2486,8 @@ MC.addEventListener('mousedown', function(e) {
   const rect2 = MC.getBoundingClientRect();
   const mx = e.clientX - rect2.left, my = e.clientY - rect2.top;
   const wp = minimapToWorld(mx, my);
-  // Jump camera
-  camX = wp.x - (screenW / SCALE) / 2;
-  camY = wp.y - (screenH / SCALE) / 2;
-  camX = Math.max(0, Math.min(camX, WORLD_W - screenW/SCALE));
-  camY = Math.max(0, Math.min(camY, WORLD_H - screenH/SCALE));
-  followingMascot = null;
-  document.getElementById('follow-indicator').style.display = 'none';
+  // Smooth navigate to clicked minimap location
+  smoothNavigateTo(wp.x, wp.y);
   minimapDragging = true;
 });
 
@@ -2286,10 +2496,8 @@ MC.addEventListener('mousemove', function(e) {
   const rect2 = MC.getBoundingClientRect();
   const mx = e.clientX - rect2.left, my = e.clientY - rect2.top;
   const wp = minimapToWorld(mx, my);
-  camX = wp.x - (screenW / SCALE) / 2;
-  camY = wp.y - (screenH / SCALE) / 2;
-  camX = Math.max(0, Math.min(camX, WORLD_W - screenW/SCALE));
-  camY = Math.max(0, Math.min(camY, WORLD_H - screenH/SCALE));
+  // Direct drag for responsiveness
+  smoothNavigateTo(wp.x, wp.y);
 });
 
 document.addEventListener('mouseup', function() { minimapDragging = false; });
@@ -2306,12 +2514,7 @@ MC.addEventListener('touchstart', function(e) {
   const rect2 = MC.getBoundingClientRect();
   const mx = touch.clientX - rect2.left, my = touch.clientY - rect2.top;
   const wp = minimapToWorld(mx, my);
-  camX = wp.x - (screenW / SCALE) / 2;
-  camY = wp.y - (screenH / SCALE) / 2;
-  camX = Math.max(0, Math.min(camX, WORLD_W - screenW/SCALE));
-  camY = Math.max(0, Math.min(camY, WORLD_H - screenH/SCALE));
-  followingMascot = null;
-  document.getElementById('follow-indicator').style.display = 'none';
+  smoothNavigateTo(wp.x, wp.y);
   minimapDragging = true;
 });
 
@@ -2322,10 +2525,7 @@ MC.addEventListener('touchmove', function(e) {
   const rect2 = MC.getBoundingClientRect();
   const mx = touch.clientX - rect2.left, my = touch.clientY - rect2.top;
   const wp = minimapToWorld(mx, my);
-  camX = wp.x - (screenW / SCALE) / 2;
-  camY = wp.y - (screenH / SCALE) / 2;
-  camX = Math.max(0, Math.min(camX, WORLD_W - screenW/SCALE));
-  camY = Math.max(0, Math.min(camY, WORLD_H - screenH/SCALE));
+  smoothNavigateTo(wp.x, wp.y);
 });
 
 MC.addEventListener('touchend', function() { minimapDragging = false; });
@@ -2462,31 +2662,34 @@ function loop() {
 // === NAVIGATION CONTROLS ===
 // ============================================================
 
-// D-Pad: continuous movement on hold
-let dpadIntervals = {};
-const DPAD_MOVE = 16; // 1 tile
+// === CLICK-TO-NAVIGATE (smooth camera pan) ===
+let dpadIntervals = {}; // kept for compatibility
+let navTargetX = null, navTargetY = null;
+let navAnimating = false;
 
-function dpadMove(dir) {
+function smoothNavigateTo(worldX, worldY) {
+  const viewW = screenW / SCALE, viewH = screenH / SCALE;
+  navTargetX = Math.max(0, Math.min(worldX - viewW / 2, WORLD_W - viewW));
+  navTargetY = Math.max(0, Math.min(worldY - viewH / 2, WORLD_H - viewH));
+  navAnimating = true;
   followingMascot = null;
   document.getElementById('follow-indicator').style.display = 'none';
-  const viewW = screenW / SCALE, viewH = screenH / SCALE;
-  if (dir === 'up') camY = Math.max(0, camY - DPAD_MOVE);
-  else if (dir === 'down') camY = Math.min(WORLD_H - viewH, camY + DPAD_MOVE);
-  else if (dir === 'left') camX = Math.max(0, camX - DPAD_MOVE);
-  else if (dir === 'right') camX = Math.min(WORLD_W - viewW, camX + DPAD_MOVE);
 }
 
-document.querySelectorAll('#dpad button').forEach(function(btn) {
-  const dir = btn.dataset.dir;
-  function startMove(e) { e.preventDefault(); btn.classList.add('active'); dpadMove(dir); dpadIntervals[dir] = setInterval(function() { dpadMove(dir); }, 120); }
-  function stopMove(e) { e.preventDefault(); btn.classList.remove('active'); clearInterval(dpadIntervals[dir]); delete dpadIntervals[dir]; }
-  btn.addEventListener('mousedown', startMove);
-  btn.addEventListener('mouseup', stopMove);
-  btn.addEventListener('mouseleave', stopMove);
-  btn.addEventListener('touchstart', startMove, { passive: false });
-  btn.addEventListener('touchend', stopMove, { passive: false });
-  btn.addEventListener('touchcancel', stopMove, { passive: false });
-});
+function updateSmoothNav() {
+  if (!navAnimating || navTargetX === null) return;
+  const dx = navTargetX - camX, dy = navTargetY - camY;
+  const dist = Math.hypot(dx, dy);
+  if (dist < 0.5) {
+    camX = navTargetX; camY = navTargetY;
+    navAnimating = false; navTargetX = null; navTargetY = null;
+    return;
+  }
+  // Ease-out interpolation
+  const t = 0.08;
+  camX += dx * t;
+  camY += dy * t;
+}
 
 // Arrow key scrolling
 let keysDown = {};
@@ -2525,28 +2728,7 @@ function setZoom(newScale) {
 document.getElementById('zoom-in').addEventListener('click', function() { setZoom(SCALE + 1); });
 document.getElementById('zoom-out').addEventListener('click', function() { setZoom(SCALE - 1); });
 
-// Quick-jump POI locations (world coordinates)
-const POI_LOCATIONS = {
-  village: { x: 128, y: 80 },
-  lake: { x: 136, y: 100 },
-  chapel: { x: 83, y: 37 },
-  tavern: { x: 308, y: 136 },
-  lighthouse: { x: 354, y: 50 },
-};
-
-document.querySelectorAll('#quick-jump button').forEach(function(btn) {
-  btn.addEventListener('click', function() {
-    const poi = POI_LOCATIONS[btn.dataset.poi];
-    if (!poi) return;
-    followingMascot = null;
-    document.getElementById('follow-indicator').style.display = 'none';
-    camX = poi.x - (screenW / SCALE) / 2;
-    camY = poi.y - (screenH / SCALE) / 2;
-    camX = Math.max(0, Math.min(camX, WORLD_W - screenW / SCALE));
-    camY = Math.max(0, Math.min(camY, WORLD_H - screenH / SCALE));
-    addParticles(poi.x, poi.y, '#4ade80', 6);
-  });
-});
+// Quick-jump removed — click-to-navigate replaces POI buttons
 
 // Edge scrolling
 let edgeScrollActive = false;
@@ -2588,7 +2770,7 @@ function enterPhotoMode() {
   photoOldScale = SCALE;
   setZoom(6);
   // Hide all UI
-  document.querySelectorAll('#ui-top,#ui-bottom,#dpad,#zoom-controls,#quick-jump,#speed-control,#photo-btn,#ambience-btn,#fork-btn,#msg-board-btn,#back-link,#minimap,#info-panel,#follow-indicator,#wish-counter').forEach(function(el) { el.style.visibility = 'hidden'; });
+  document.querySelectorAll('#ui-top,#ui-bottom,#zoom-controls,#speed-control,#photo-btn,#ambience-btn,#fork-btn,#msg-board-btn,#back-link,#minimap,#info-panel,#follow-indicator,#wish-counter,#object-popup').forEach(function(el) { el.style.visibility = 'hidden'; });
   const dayNum = Math.floor((Date.now() - (world.firstVisit || Date.now())) / 86400000) + 1;
   const wm = document.getElementById('photo-watermark');
   wm.textContent = 'AI Garden — Day ' + dayNum;
@@ -2599,7 +2781,7 @@ function exitPhotoMode() {
   if (!photoMode) return;
   photoMode = false;
   setZoom(photoOldScale);
-  document.querySelectorAll('#ui-top,#ui-bottom,#dpad,#zoom-controls,#quick-jump,#speed-control,#photo-btn,#ambience-btn,#fork-btn,#msg-board-btn,#back-link,#minimap,#info-panel,#follow-indicator,#wish-counter').forEach(function(el) { el.style.visibility = ''; });
+  document.querySelectorAll('#ui-top,#ui-bottom,#zoom-controls,#speed-control,#photo-btn,#ambience-btn,#fork-btn,#msg-board-btn,#back-link,#minimap,#info-panel,#follow-indicator,#wish-counter').forEach(function(el) { el.style.visibility = ''; });
   document.getElementById('photo-watermark').style.display = 'none';
 }
 
@@ -2872,6 +3054,7 @@ update = function() {
     origUpdate();
   }
   processKeyScroll();
+  updateSmoothNav();
   updateAmbienceVisuals();
   updateDayCounter();
   if (frameCount % 120 === 0) updateContribCount();
@@ -2924,8 +3107,8 @@ draw = function() {
   const anyKey = keysDown['ArrowUp'] || keysDown['ArrowDown'] || keysDown['ArrowLeft'] || keysDown['ArrowRight'];
   const anyDpad = Object.keys(dpadIntervals).length > 0;
 
-  // If user is manually controlling, skip auto-camera
-  if (!anyKey && !anyDpad && !photoMode) {
+  // If user is manually controlling or smooth-navigating, skip auto-camera
+  if (!anyKey && !anyDpad && !photoMode && !navAnimating) {
     origDrawForCam();
   } else {
     // Skip auto-camera: just clamp and render
@@ -2967,6 +3150,25 @@ draw = function() {
 
 // Initial contribution count update
 setTimeout(updateContribCount, 2000);
+
+// === AMBIENT FLOATING MOTES (CSS particles for alive feel) ===
+(function initAmbientMotes() {
+  const container = document.getElementById('ambient-motes');
+  if (!container) return;
+  const colors = ['#4ade80', '#a78bfa', '#60a5fa', '#ffd700', '#fb923c'];
+  for (let i = 0; i < 12; i++) {
+    const mote = document.createElement('div');
+    mote.className = 'ambient-mote';
+    const size = 2 + Math.random() * 3;
+    mote.style.width = size + 'px';
+    mote.style.height = size + 'px';
+    mote.style.left = (Math.random() * 100) + '%';
+    mote.style.background = colors[Math.floor(Math.random() * colors.length)];
+    mote.style.animationDuration = (15 + Math.random() * 25) + 's';
+    mote.style.animationDelay = (Math.random() * 20) + 's';
+    container.appendChild(mote);
+  }
+})();
 
 loop();
 </script>
