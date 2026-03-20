@@ -163,24 +163,7 @@ canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edge
   display: none; transition: opacity 0.5s;
 }
 
-/* === D-PAD CONTROLS === */
-#dpad {
-  position: fixed; bottom: 80px; left: 12px; z-index: 15;
-  width: 120px; height: 120px; user-select: none; -webkit-user-select: none;
-}
-#dpad button {
-  position: absolute; width: 38px; height: 38px;
-  background: rgba(10,10,20,0.75); border: 2px solid #2a4a2a;
-  color: #4ade80; font-size: 18px; font-family: monospace;
-  cursor: pointer; display: flex; align-items: center; justify-content: center;
-  border-radius: 4px; outline: none; padding: 0;
-  image-rendering: pixelated; transition: background 0.1s;
-}
-#dpad button:active, #dpad button.active { background: rgba(74,222,128,0.3); border-color: #4ade80; }
-#dpad .dpad-up    { left: 41px; top: 0; }
-#dpad .dpad-down  { left: 41px; bottom: 0; }
-#dpad .dpad-left  { left: 0; top: 41px; }
-#dpad .dpad-right { right: 0; top: 41px; }
+/* D-PAD removed — click-to-navigate */
 
 /* === ZOOM CONTROLS === */
 #zoom-controls {
@@ -346,13 +329,7 @@ canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edge
 </div>
 <div id="offline-toast">🌐 Sin conexión — mostrando última versión guardada</div>
 
-<!-- D-Pad Navigation -->
-<div id="dpad">
-  <button class="dpad-up" data-dir="up">▲</button>
-  <button class="dpad-down" data-dir="down">▼</button>
-  <button class="dpad-left" data-dir="left">◀</button>
-  <button class="dpad-right" data-dir="right">▶</button>
-</div>
+<!-- D-Pad removed: click-to-navigate replaces arrow controls -->
 
 <!-- Zoom Controls -->
 <div id="zoom-controls">
@@ -361,14 +338,7 @@ canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edge
   <button id="zoom-in">+</button>
 </div>
 
-<!-- Quick Jump Buttons -->
-<div id="quick-jump">
-  <button data-poi="village">🏠 Village</button>
-  <button data-poi="lake">🌊 Lake</button>
-  <button data-poi="chapel">⛪ Chapel</button>
-  <button data-poi="tavern">🍺 Tavern</button>
-  <button data-poi="lighthouse">🗼 Lighthouse</button>
-</div>
+<!-- Quick jump removed: click-to-navigate replaces POI buttons -->
 
 <!-- Speed Control -->
 <div id="speed-control">
