@@ -84,6 +84,19 @@ canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edge
 }
 #back-link:hover { background: #1a2a3a; }
 
+/* === CAMERA CONTROLS === */
+#camera-controls {
+  position: fixed; bottom: 74px; left: 12px; z-index: 15;
+  display: flex; flex-direction: column; gap: 4px; user-select: none;
+}
+#camera-controls button {
+  background: rgba(8,8,16,0.8); border: 1px solid #1a2a3a;
+  color: #4ade80; font-size: 11px; font-family: 'Segoe UI', system-ui, monospace;
+  cursor: pointer; border-radius: 6px; outline: none; padding: 4px 8px;
+}
+#camera-controls button:active, #camera-controls button.active { background: rgba(74,222,128,0.2); border-color: #4ade80; }
+#camera-mode-label { color: #4a5568; font-size: 9px; text-align: center; }
+
 /* === ZOOM CONTROLS === */
 #zoom-controls {
   position: fixed; bottom: 36px; left: 12px; z-index: 15;
@@ -157,6 +170,12 @@ canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edge
 <!-- BACK LINK -->
 <a id="back-link" href="../index.html">← Back to Garden</a>
 
+<!-- CAMERA CONTROLS -->
+<div id="camera-controls">
+  <button id="follow-btn" title="Press F to toggle follow mode">👁️ Follow [F]</button>
+  <div id="camera-mode-label">FREE</div>
+</div>
+
 <!-- ZOOM -->
 <div id="zoom-controls">
   <button id="zoom-out">−</button>
@@ -223,6 +242,55 @@ let camX = 0, camY = 0;
 let frame = 0;
 let gameSpeed = 1;
 let worldReady = false;
+
+// === CAMERA STATE MACHINE ===
+const CAMERA_STATE = { FREE: 'FREE', FOLLOWING: 'FOLLOWING', PANNING: 'PANNING', SMOOTH_NAV: 'SMOOTH_NAV' };
+let cameraState = CAMERA_STATE.FREE;
+let userControlledCamera = false;
+let followingCitizen = null;
+
+// Drag-to-pan state
+let isDragging = false;
+let dragStartX = 0, dragStartY = 0;
+let dragCamStartX = 0, dragCamStartY = 0;
+let dragTotalDist = 0;
+let mouseDownTime = 0;
+
+// Touch state
+let touchDragId = null;
+let touchStartX = 0, touchStartY = 0;
+let touchCamStartX = 0, touchCamStartY = 0;
+let touchDragDist = 0;
+let touchStartTime = 0;
+let pinchStartDist = 0;
+let pinchStartScale = 4;
+let isTouchDragging = false;
+
+function setCameraState(state) {
+  cameraState = state;
+  const label = document.getElementById('camera-mode-label');
+  if (label) label.textContent = state;
+  const followBtn = document.getElementById('follow-btn');
+  if (followBtn) followBtn.classList.toggle('active', state === CAMERA_STATE.FOLLOWING);
+}
+
+function setCameraFree() {
+  userControlledCamera = true;
+  setCameraState(CAMERA_STATE.FREE);
+  followingCitizen = null;
+}
+
+function toggleFollowMode() {
+  if (cameraState === CAMERA_STATE.FOLLOWING) {
+    setCameraFree();
+  } else {
+    if (popupCitizen) {
+      followingCitizen = popupCitizen;
+      userControlledCamera = false;
+      setCameraState(CAMERA_STATE.FOLLOWING);
+    }
+  }
+}
 
 function resize() {
   screenW = window.innerWidth;
@@ -1566,48 +1634,157 @@ function hideCitizenPopup() {
 // INPUT
 // ============================================================
 let navTargetX = null, navTargetY = null, navAnimating = false;
+let popupWorldX = 0, popupWorldY = 0; // Track popup world position
 
 function smoothNavigateTo(wx, wy) {
   const viewW = screenW / SCALE, viewH = screenH / SCALE;
   navTargetX = Math.max(0, Math.min(wx - viewW / 2, WORLD_W - viewW));
   navTargetY = Math.max(0, Math.min(wy - viewH / 2, WORLD_H - viewH));
   navAnimating = true;
+  userControlledCamera = true;
+  setCameraState(CAMERA_STATE.SMOOTH_NAV);
 }
 
-C.addEventListener('click', function(e) {
-  const gx = e.clientX / SCALE + camX;
-  const gy = e.clientY / SCALE + camY;
+// Unified click handler — only fires for short clicks (not drags)
+function handleCanvasClick(screenX, screenY) {
+  const gx = screenX / SCALE + camX;
+  const gy = screenY / SCALE + camY;
 
   hideCitizenPopup();
 
-  // Check citizen click
+  // Check citizen click (larger hit area on touch)
+  const hitSize = ('ontouchstart' in window) ? 12 : 8;
   for (const c of citizens) {
     if (c.hp <= 0) continue;
-    if (Math.abs(c.x + 4 - gx) < 8 && Math.abs(c.y + 5 - gy) < 8) {
-      showCitizenPopup(c, e.clientX, e.clientY);
+    if (Math.abs(c.x + 4 - gx) < hitSize && Math.abs(c.y + 5 - gy) < hitSize) {
+      popupWorldX = c.x + 4;
+      popupWorldY = c.y + 5;
+      showCitizenPopup(c, screenX, screenY);
       return;
     }
   }
 
-  // Navigate
-  smoothNavigateTo(gx, gy);
+  // Nothing clicked — just deselect (drag-to-pan is primary nav)
+}
+
+// Mouse click — only fires if it wasn't a drag
+C.addEventListener('click', function(e) {
+  if (dragTotalDist > 5) return;
+  const elapsed = Date.now() - mouseDownTime;
+  if (elapsed > 300) return;
+  handleCanvasClick(e.clientX, e.clientY);
 });
 
-C.addEventListener('touchstart', function(e) {
-  const touch = e.touches[0];
-  const gx = touch.clientX / SCALE + camX;
-  const gy = touch.clientY / SCALE + camY;
-  hideCitizenPopup();
+// === DRAG-TO-PAN (mouse) ===
+C.addEventListener('mousedown', function(e) {
+  if (e.button !== 0) return;
+  isDragging = true;
+  dragStartX = e.clientX;
+  dragStartY = e.clientY;
+  dragCamStartX = camX;
+  dragCamStartY = camY;
+  dragTotalDist = 0;
+  mouseDownTime = Date.now();
+  C.style.cursor = 'grabbing';
+});
 
-  for (const c of citizens) {
-    if (c.hp <= 0) continue;
-    if (Math.abs(c.x + 4 - gx) < 10 && Math.abs(c.y + 5 - gy) < 10) {
-      showCitizenPopup(c, touch.clientX, touch.clientY);
-      return;
+C.addEventListener('mousemove', function(e) {
+  if (!isDragging) return;
+  const dx = e.clientX - dragStartX;
+  const dy = e.clientY - dragStartY;
+  dragTotalDist = Math.hypot(dx, dy);
+  if (dragTotalDist > 5) {
+    camX = dragCamStartX - dx / SCALE;
+    camY = dragCamStartY - dy / SCALE;
+    setCameraFree();
+    setCameraState(CAMERA_STATE.PANNING);
+    if (popupCitizen) hideCitizenPopup();
+  }
+});
+
+document.addEventListener('mouseup', function() {
+  if (isDragging) {
+    isDragging = false;
+    C.style.cursor = 'crosshair';
+    if (cameraState === CAMERA_STATE.PANNING) setCameraState(CAMERA_STATE.FREE);
+  }
+});
+
+// === TOUCH CONTROLS ===
+C.addEventListener('touchstart', function(e) {
+  e.preventDefault();
+  if (e.touches.length === 2) {
+    pinchStartDist = Math.hypot(
+      e.touches[0].clientX - e.touches[1].clientX,
+      e.touches[0].clientY - e.touches[1].clientY
+    );
+    pinchStartScale = SCALE;
+    isTouchDragging = false;
+    return;
+  }
+  if (e.touches.length === 1) {
+    const touch = e.touches[0];
+    touchDragId = touch.identifier;
+    touchStartX = touch.clientX;
+    touchStartY = touch.clientY;
+    touchCamStartX = camX;
+    touchCamStartY = camY;
+    touchDragDist = 0;
+    touchStartTime = Date.now();
+    isTouchDragging = true;
+  }
+}, { passive: false });
+
+C.addEventListener('touchmove', function(e) {
+  e.preventDefault();
+  if (e.touches.length === 2) {
+    const dist = Math.hypot(
+      e.touches[0].clientX - e.touches[1].clientX,
+      e.touches[0].clientY - e.touches[1].clientY
+    );
+    const ratio = dist / pinchStartDist;
+    const newScale = Math.round(pinchStartScale * ratio * 2) / 2;
+    const midX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+    const midY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+    setZoom(newScale, midX, midY);
+    setCameraFree();
+    isTouchDragging = false;
+    return;
+  }
+  if (e.touches.length === 1 && isTouchDragging) {
+    const touch = e.touches[0];
+    const dx = touch.clientX - touchStartX;
+    const dy = touch.clientY - touchStartY;
+    touchDragDist = Math.hypot(dx, dy);
+    if (touchDragDist > 5) {
+      camX = touchCamStartX - dx / SCALE;
+      camY = touchCamStartY - dy / SCALE;
+      setCameraFree();
+      setCameraState(CAMERA_STATE.PANNING);
+      if (popupCitizen) hideCitizenPopup();
     }
   }
-  smoothNavigateTo(gx, gy);
-}, { passive: true });
+}, { passive: false });
+
+C.addEventListener('touchend', function(e) {
+  if (e.touches.length === 0 && isTouchDragging) {
+    const elapsed = Date.now() - touchStartTime;
+    if (touchDragDist < 5 && elapsed < 300) {
+      handleCanvasClick(touchStartX, touchStartY);
+    }
+    isTouchDragging = false;
+    if (cameraState === CAMERA_STATE.PANNING) setCameraState(CAMERA_STATE.FREE);
+  }
+}, { passive: false });
+
+// === SCROLL WHEEL ZOOM ===
+C.addEventListener('wheel', function(e) {
+  e.preventDefault();
+  setCameraFree();
+  const zoomDelta = e.deltaY < 0 ? 0.5 : -0.5;
+  const newScale = Math.round((SCALE + zoomDelta) * 2) / 2;
+  setZoom(newScale, e.clientX, e.clientY);
+}, { passive: false });
 
 // Minimap click
 MC.addEventListener('click', function(e) {
@@ -1623,22 +1800,41 @@ let keysDown = {};
 document.addEventListener('keydown', function(e) {
   if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)) {
     e.preventDefault(); keysDown[e.key] = true;
+    setCameraFree();
   }
-  if (e.key === 'Escape') hideCitizenPopup();
+  if (e.key === 'Escape') {
+    setCameraFree();
+    hideCitizenPopup();
+  }
+  if ((e.key === 'f' || e.key === 'F') && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+    toggleFollowMode();
+  }
 });
 document.addEventListener('keyup', function(e) { delete keysDown[e.key]; });
 
-// Zoom
-function setZoom(s) {
-  const vcx = camX + (screenW / SCALE) / 2;
-  const vcy = camY + (screenH / SCALE) / 2;
-  SCALE = Math.max(2, Math.min(6, s));
-  document.getElementById('zoom-level').textContent = SCALE + 'x';
-  camX = vcx - (screenW / SCALE) / 2;
-  camY = vcy - (screenH / SCALE) / 2;
+// Zoom — zoom toward cursor point
+function setZoom(s, pivotScreenX, pivotScreenY) {
+  s = Math.max(1, Math.min(8, s));
+  if (s === SCALE) return;
+  if (pivotScreenX === undefined) pivotScreenX = screenW / 2;
+  if (pivotScreenY === undefined) pivotScreenY = screenH / 2;
+  const worldX = camX + pivotScreenX / SCALE;
+  const worldY = camY + pivotScreenY / SCALE;
+  SCALE = s;
+  document.getElementById('zoom-level').textContent = (SCALE % 1 === 0 ? SCALE : SCALE.toFixed(1)) + 'x';
+  camX = worldX - pivotScreenX / SCALE;
+  camY = worldY - pivotScreenY / SCALE;
+  camX = Math.max(0, Math.min(camX, WORLD_W - screenW / SCALE));
+  camY = Math.max(0, Math.min(camY, WORLD_H - screenH / SCALE));
 }
-document.getElementById('zoom-in').addEventListener('click', () => setZoom(SCALE + 1));
-document.getElementById('zoom-out').addEventListener('click', () => setZoom(SCALE - 1));
+document.getElementById('zoom-in').addEventListener('click', () => setZoom(Math.round(SCALE + 1)));
+document.getElementById('zoom-out').addEventListener('click', () => setZoom(Math.round(SCALE - 1)));
+
+// Follow button
+document.getElementById('follow-btn').addEventListener('click', function(e) {
+  e.stopPropagation();
+  toggleFollowMode();
+});
 
 // Speed
 document.querySelectorAll('#speed-control button').forEach(btn => {
@@ -1730,11 +1926,42 @@ function update() {
   if (keysDown['ArrowLeft']) camX = Math.max(0, camX - speed);
   if (keysDown['ArrowRight']) camX = Math.min(WORLD_W - viewW, camX + speed);
 
+  // Camera state machine
+  if (cameraState === CAMERA_STATE.FOLLOWING && followingCitizen && followingCitizen.hp > 0) {
+    const targetCamX = followingCitizen.x + 4 - viewW / 2;
+    const targetCamY = followingCitizen.y + 5 - viewH / 2;
+    camX += (targetCamX - camX) * 0.08;
+    camY += (targetCamY - camY) * 0.08;
+  }
+
   // Smooth nav
   if (navAnimating && navTargetX !== null) {
     const dx = navTargetX - camX, dy = navTargetY - camY;
-    if (Math.hypot(dx, dy) < 0.5) { camX = navTargetX; camY = navTargetY; navAnimating = false; }
+    if (Math.hypot(dx, dy) < 0.5) {
+      camX = navTargetX; camY = navTargetY;
+      navAnimating = false;
+      setCameraState(CAMERA_STATE.FREE);
+    }
     else { camX += dx * 0.08; camY += dy * 0.08; }
+  }
+
+  // Reposition popup to follow citizen
+  if (popupCitizen && popupCitizen.hp > 0) {
+    const popup = document.getElementById('citizen-popup');
+    if (popup.style.display === 'block') {
+      const sx = (popupCitizen.x + 4 - camX) * SCALE;
+      const sy = (popupCitizen.y - camY) * SCALE;
+      if (sx < -100 || sx > screenW + 100 || sy < -100 || sy > screenH + 100) {
+        hideCitizenPopup();
+      } else {
+        let left = sx + 16, top = sy - 60;
+        if (left + 320 > screenW) left = sx - 340;
+        if (top < 10) top = 10;
+        if (top + 280 > screenH) top = screenH - 290;
+        popup.style.left = Math.max(10, left) + 'px';
+        popup.style.top = Math.max(10, top) + 'px';
+      }
+    }
   }
 
   // Clamp camera
