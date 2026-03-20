@@ -166,6 +166,18 @@ canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edge
 /* D-PAD removed — click-to-navigate */
 
 /* === ZOOM CONTROLS === */
+#camera-controls {
+  position: fixed; bottom: 80px; left: 12px; z-index: 15;
+  display: flex; flex-direction: column; gap: 4px; user-select: none;
+}
+#camera-controls button {
+  background: rgba(10,10,20,0.75); border: 2px solid #2a4a2a;
+  color: #4ade80; font-size: 11px; font-family: monospace;
+  cursor: pointer; border-radius: 4px; outline: none; padding: 4px 8px;
+  white-space: nowrap;
+}
+#camera-controls button:active, #camera-controls button.active { background: rgba(74,222,128,0.3); border-color: #4ade80; }
+#camera-mode-label { color: #666; font-size: 9px; font-family: monospace; text-align: center; }
 #zoom-controls {
   position: fixed; bottom: 40px; left: 12px; z-index: 15;
   display: flex; align-items: center; gap: 6px; user-select: none;
@@ -392,6 +404,12 @@ canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edge
 
 <!-- D-Pad removed: click-to-navigate replaces arrow controls -->
 
+<!-- Camera Controls -->
+<div id="camera-controls">
+  <button id="follow-btn" title="Press F to toggle follow mode">👁️ Follow [F]</button>
+  <div id="camera-mode-label">FREE</div>
+</div>
+
 <!-- Zoom Controls -->
 <div id="zoom-controls">
   <button id="zoom-out">−</button>
@@ -472,6 +490,47 @@ let camX = 0, camY = 0;
 let dayTime = 0;
 let selectedMascot = null;
 let frameCount = 0;
+
+// === CAMERA STATE MACHINE ===
+const CAMERA_STATE = { FREE: 'FREE', FOLLOWING: 'FOLLOWING', PANNING: 'PANNING', SMOOTH_NAV: 'SMOOTH_NAV' };
+let cameraState = CAMERA_STATE.FOLLOWING;
+let userControlledCamera = false;
+
+// Drag-to-pan state
+let isDragging = false;
+let dragStartX = 0, dragStartY = 0;
+let dragCamStartX = 0, dragCamStartY = 0;
+let dragTotalDist = 0;
+let mouseDownTime = 0;
+
+// Touch state
+let touchDragId = null;
+let touchStartX = 0, touchStartY = 0;
+let touchCamStartX = 0, touchCamStartY = 0;
+let touchDragDist = 0;
+let touchStartTime = 0;
+let pinchStartDist = 0;
+let pinchStartScale = 4;
+let isTouchDragging = false;
+
+// Zoom easing
+let targetScale = 4;
+let zoomEasing = false;
+
+function setCameraState(state) {
+  cameraState = state;
+  const label = document.getElementById('camera-mode-label');
+  if (label) label.textContent = state;
+  const followBtn = document.getElementById('follow-btn');
+  if (followBtn) followBtn.classList.toggle('active', state === CAMERA_STATE.FOLLOWING);
+}
+
+function setCameraFree() {
+  userControlledCamera = true;
+  setCameraState(CAMERA_STATE.FREE);
+  followingMascot = null;
+  document.getElementById('follow-indicator').style.display = 'none';
+}
 
 // Follow mode
 let followingMascot = null;
@@ -2231,8 +2290,8 @@ document.addEventListener('keydown', function(e) {
   if (e.key === 's' || e.key === 'S') toggleStats();
   if (e.key === 'm' || e.key === 'M') toggleMemory();
   if (e.key === 'Escape') {
-    followingMascot = null;
-    document.getElementById('follow-indicator').style.display = 'none';
+    setCameraFree();
+    if (objectPopupVisible) hideObjectPopup();
   }
 });
 
@@ -2253,8 +2312,12 @@ const PLANT_DESCRIPTIONS = {
 const GROWTH_NAMES = ['Seed','Sprout','Young','Mature','Flowering','Ancient'];
 
 let objectPopupVisible = false;
+let popupWorldX = 0, popupWorldY = 0; // Track world position for popup repositioning
 
 function showObjectPopup(data, screenX, screenY) {
+  // Store world coordinates for popup tracking
+  popupWorldX = screenX / SCALE + camX;
+  popupWorldY = screenY / SCALE + camY;
   const popup = document.getElementById('object-popup');
   const dot = document.getElementById('popup-dot');
   const nameEl = document.getElementById('popup-name');
@@ -2300,10 +2363,10 @@ function findStructureAt(gx, gy) {
   return null;
 }
 
-// Main canvas click — unified: objects show popup (no camera move), empty space navigates
-C.addEventListener('click', function(e) {
-  const gx = e.clientX / SCALE + camX;
-  const gy = e.clientY / SCALE + camY;
+// Unified click/tap handler — only fires for short clicks (not drags)
+function handleCanvasClick(screenX, screenY) {
+  const gx = screenX / SCALE + camX;
+  const gy = screenY / SCALE + camY;
 
   // Dismiss existing popup on any click
   if (objectPopupVisible) { hideObjectPopup(); }
@@ -2335,7 +2398,6 @@ C.addEventListener('click', function(e) {
   if (cm) {
     selectedMascot = cm;
     activeMiniMascot = cm;
-    // Secret handshake check
     const now = Date.now();
     if (lastClickedMascot && lastClickedMascot !== cm && now - lastClickedMascotTime < 2000) {
       highFiveAnims.push({ m1:lastClickedMascot, m2:cm, timer:40, ox1:lastClickedMascot.x, oy1:lastClickedMascot.y, ox2:cm.x, oy2:cm.y, mx:(lastClickedMascot.x+cm.x)/2, my:(lastClickedMascot.y+cm.y)/2 });
@@ -2354,17 +2416,13 @@ C.addEventListener('click', function(e) {
     document.getElementById('info-mood').textContent = 'Mood: ' + (moodDef ? moodDef.emoji + ' ' + cm.mood : cm.mood);
     const mst = world.mascotStats[cm.name];
     document.getElementById('info-stats').innerHTML = 'Plants: ' + mst.plants + ' | Int: ' + mst.interactions;
-    // Show popup
     showObjectPopup({
-      name: cm.name,
-      species: cm.model,
-      agent: cm.name,
-      color: cm.color,
+      name: cm.name, species: cm.model, agent: cm.name, color: cm.color,
       date: 'Active since Day 1',
       growth: 'Mood: ' + (moodDef ? moodDef.emoji + ' ' + cm.mood : cm.mood),
       desc: PLANT_DESCRIPTIONS[cm.name] || 'An AI gardener tending the pixel world.',
-    }, e.clientX, e.clientY);
-    return; // Do NOT navigate camera
+    }, screenX, screenY);
+    return;
   }
 
   // Plant click → show popup (NO camera move)
@@ -2375,108 +2433,52 @@ C.addEventListener('click', function(e) {
     showObjectPopup({
       name: (GROWTH_NAMES[cp.growthStage||0] || 'Unknown') + ' ' + (cp.type||'Plant'),
       species: PLANT_SPECIES[cp.type] || 'Flora incognita',
-      agent: cp.agent || 'Nature',
-      color: agentColor,
-      date: plantedStr,
+      agent: cp.agent || 'Nature', color: agentColor, date: plantedStr,
       growth: GROWTH_NAMES[cp.growthStage||0] + ' (stage ' + (cp.growthStage||0) + '/5)',
       desc: PLANT_DESCRIPTIONS[cp.agent] || PLANT_DESCRIPTIONS['nature'],
-    }, e.clientX, e.clientY);
-    return; // Do NOT navigate camera
+    }, screenX, screenY);
+    return;
   }
 
   // Structure click → show popup (NO camera move)
   const cs = findStructureAt(gx, gy);
   if (cs) {
     showObjectPopup({
-      name: cs.label || cs.id,
-      species: '',
-      agent: 'Community',
-      color: cs.color,
+      name: cs.label || cs.id, species: '', agent: 'Community', color: cs.color,
       date: 'Stage ' + (STRUCTURE_DEFS[cs.id] ? STRUCTURE_DEFS[cs.id].stage : '?'),
       growth: '',
       desc: 'A community structure that emerged as the garden grew. Built when the garden reached Stage ' + (STRUCTURE_DEFS[cs.id] ? STRUCTURE_DEFS[cs.id].stage : '?') + '.',
-    }, e.clientX, e.clientY);
-    return; // Do NOT navigate camera
+    }, screenX, screenY);
+    return;
   }
 
-  // Nothing clicked → navigate camera to this location (smooth pan)
+  // Nothing clicked → just deselect (drag-to-pan is primary nav now)
   selectedMascot = null;
   document.getElementById('info-panel').style.display = 'none';
   document.getElementById('plant-tooltip').style.display = 'none';
-  document.getElementById('follow-indicator').style.display = 'none';
-  smoothNavigateTo(gx, gy);
+}
+
+// Alias for touch tap handler
+function handleCanvasTap(screenX, screenY) { handleCanvasClick(screenX, screenY); }
+
+// Mouse click — only fires if it wasn't a drag (< 5px movement, < 300ms)
+C.addEventListener('click', function(e) {
+  if (dragTotalDist > 5) return; // was a drag, not a click
+  const elapsed = Date.now() - mouseDownTime;
+  if (elapsed > 300) return; // too long, was a drag
+  handleCanvasClick(e.clientX, e.clientY);
 });
 
+// Hover tooltips (not drag-related)
 C.addEventListener('mousemove', function(e) {
+  if (isDragging) return; // Don't show tooltips while dragging
   const gx = e.clientX/SCALE+camX, gy = e.clientY/SCALE+camY;
   const plant = findPlantAt(gx, gy);
   if (plant) showPlantTooltip(plant, e.clientX, e.clientY);
   else document.getElementById('plant-tooltip').style.display = 'none';
-  // Update active minimap mascot on hover
   const hm = findMascotAt(gx, gy);
   if (hm) activeMiniMascot = hm;
 });
-
-// Touch on main canvas — mirrors click behavior
-C.addEventListener('touchstart', function(e) {
-  const touch = e.touches[0];
-  const gx = touch.clientX/SCALE+camX, gy = touch.clientY/SCALE+camY;
-
-  if (objectPopupVisible) { hideObjectPopup(); }
-
-  if (Math.abs(gx-STONE_X)<4 && Math.abs(gy-STONE_Y)<4) { activatePhilosopherStone(); return; }
-  // Shooting star touch
-  for (const s of shootingStars) {
-    if (Math.hypot(s.x-gx,s.y-gy)<6 && !s.clicked) {
-      s.clicked=true; world.wishes++; updateWishDisplay();
-      addParticles(s.x,s.y,'#ffd700',8);
-      addHistory('system','Caught a shooting star! ⭐ (Wish #'+world.wishes+')');
-      return;
-    }
-  }
-  // Mascot touch → popup, no nav
-  const cm = findMascotAt(gx, gy);
-  if (cm) {
-    selectedMascot = cm; activeMiniMascot = cm;
-    const moodDef = MOODS[cm.mood];
-    showObjectPopup({
-      name: cm.name, species: cm.model, agent: cm.name, color: cm.color,
-      date: 'Active since Day 1',
-      growth: 'Mood: ' + (moodDef ? moodDef.emoji + ' ' + cm.mood : cm.mood),
-      desc: PLANT_DESCRIPTIONS[cm.name] || 'An AI gardener.',
-    }, touch.clientX, touch.clientY);
-    return;
-  }
-  // Plant touch → popup, no nav
-  const tp = findPlantAt(gx, gy);
-  if (tp) {
-    const agentColor = AGENT_GLOW[tp.agent] || '#4ade80';
-    const plantedStr = tp.plantedAt ? new Date(tp.plantedAt).toLocaleDateString('en-US', {month:'short',day:'numeric',year:'numeric'}) : 'Unknown';
-    showObjectPopup({
-      name: (GROWTH_NAMES[tp.growthStage||0]) + ' ' + (tp.type||'Plant'),
-      species: PLANT_SPECIES[tp.type] || 'Flora incognita',
-      agent: tp.agent || 'Nature', color: agentColor, date: plantedStr,
-      growth: GROWTH_NAMES[tp.growthStage||0] + ' (stage ' + (tp.growthStage||0) + '/5)',
-      desc: PLANT_DESCRIPTIONS[tp.agent] || PLANT_DESCRIPTIONS['nature'],
-    }, touch.clientX, touch.clientY);
-    return;
-  }
-  // Structure touch → popup
-  const cs = findStructureAt(gx, gy);
-  if (cs) {
-    showObjectPopup({
-      name: cs.label || cs.id, species: '', agent: 'Community', color: cs.color,
-      date: 'Stage ' + (STRUCTURE_DEFS[cs.id] ? STRUCTURE_DEFS[cs.id].stage : '?'),
-      growth: '', desc: 'A community structure.',
-    }, touch.clientX, touch.clientY);
-    return;
-  }
-  // Nothing → navigate
-  selectedMascot=null;
-  document.getElementById('info-panel').style.display='none';
-  document.getElementById('follow-indicator').style.display='none';
-  smoothNavigateTo(gx, gy);
-}, { passive: true });
 
 // ============================================================
 // MINIMAP INPUT
@@ -2588,22 +2590,27 @@ function update() {
 function draw() {
   const viewW = screenW / SCALE, viewH = screenH / SCALE;
 
-  if (followingMascot) {
-    // Follow mode: track mascot
-    const targetCamX = followingMascot.x + 6 - viewW / 2;
-    const targetCamY = followingMascot.y + 8 - viewH / 2;
-    camX += (targetCamX - camX) * 0.08;
-    camY += (targetCamY - camY) * 0.08;
-  } else {
-    // Default: follow center of all mascots
-    let avgX = 0, avgY = 0;
-    for (const m of mascots) { avgX += m.x; avgY += m.y; }
-    avgX /= mascots.length; avgY /= mascots.length;
-    const targetCamX = avgX - viewW / 2 + 6;
-    const targetCamY = avgY - viewH / 2 + 8;
-    camX += (targetCamX - camX) * 0.05;
-    camY += (targetCamY - camY) * 0.05;
+  // Camera state machine
+  if (cameraState === CAMERA_STATE.FOLLOWING) {
+    if (followingMascot) {
+      const targetCamX = followingMascot.x + 6 - viewW / 2;
+      const targetCamY = followingMascot.y + 8 - viewH / 2;
+      camX += (targetCamX - camX) * 0.08;
+      camY += (targetCamY - camY) * 0.08;
+    } else if (!userControlledCamera) {
+      // Default: follow center of all mascots
+      let avgX = 0, avgY = 0;
+      for (const m of mascots) { avgX += m.x; avgY += m.y; }
+      avgX /= mascots.length; avgY /= mascots.length;
+      const targetCamX = avgX - viewW / 2 + 6;
+      const targetCamY = avgY - viewH / 2 + 8;
+      camX += (targetCamX - camX) * 0.03;
+      camY += (targetCamY - camY) * 0.03;
+    }
   }
+  // FREE and PANNING: camera stays where user put it (no auto-movement)
+  // SMOOTH_NAV: handled by updateSmoothNav()
+
   camX = Math.max(0, Math.min(camX, WORLD_W - viewW));
   camY = Math.max(0, Math.min(camY, WORLD_H - viewH));
 
@@ -2672,6 +2679,8 @@ function smoothNavigateTo(worldX, worldY) {
   navTargetX = Math.max(0, Math.min(worldX - viewW / 2, WORLD_W - viewW));
   navTargetY = Math.max(0, Math.min(worldY - viewH / 2, WORLD_H - viewH));
   navAnimating = true;
+  userControlledCamera = true;
+  setCameraState(CAMERA_STATE.SMOOTH_NAV);
   followingMascot = null;
   document.getElementById('follow-indicator').style.display = 'none';
 }
@@ -2683,9 +2692,9 @@ function updateSmoothNav() {
   if (dist < 0.5) {
     camX = navTargetX; camY = navTargetY;
     navAnimating = false; navTargetX = null; navTargetY = null;
+    setCameraState(CAMERA_STATE.FREE);
     return;
   }
-  // Ease-out interpolation
   const t = 0.08;
   camX += dx * t;
   camY += dy * t;
@@ -2697,11 +2706,28 @@ document.addEventListener('keydown', function(e) {
   if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
     e.preventDefault();
     keysDown[e.key] = true;
-    followingMascot = null;
-    document.getElementById('follow-indicator').style.display = 'none';
+    setCameraFree();
+  }
+  // F key toggles follow mode
+  if ((e.key === 'f' || e.key === 'F') && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+    toggleFollowMode();
   }
 });
 document.addEventListener('keyup', function(e) { delete keysDown[e.key]; });
+
+function toggleFollowMode() {
+  if (cameraState === CAMERA_STATE.FOLLOWING) {
+    setCameraFree();
+  } else {
+    userControlledCamera = false;
+    followingMascot = selectedMascot || null;
+    setCameraState(CAMERA_STATE.FOLLOWING);
+    if (followingMascot) {
+      document.getElementById('follow-indicator').style.display = 'block';
+      document.getElementById('follow-name').textContent = followingMascot.name;
+    }
+  }
+}
 
 function processKeyScroll() {
   const speed = 2;
@@ -2712,39 +2738,176 @@ function processKeyScroll() {
   if (keysDown['ArrowRight']) camX = Math.min(WORLD_W - viewW, camX + speed);
 }
 
-// Zoom controls
-function setZoom(newScale) {
-  const viewCX = camX + (screenW / SCALE) / 2;
-  const viewCY = camY + (screenH / SCALE) / 2;
-  SCALE = Math.max(2, Math.min(6, newScale));
-  document.getElementById('zoom-level').textContent = SCALE + 'x';
-  // Re-center camera on same world point
-  camX = viewCX - (screenW / SCALE) / 2;
-  camY = viewCY - (screenH / SCALE) / 2;
+// Zoom controls — zoom toward a point (default: center)
+function setZoom(newScale, pivotScreenX, pivotScreenY) {
+  newScale = Math.max(1, Math.min(8, newScale));
+  if (newScale === SCALE) return;
+  // Default pivot: screen center
+  if (pivotScreenX === undefined) pivotScreenX = screenW / 2;
+  if (pivotScreenY === undefined) pivotScreenY = screenH / 2;
+  // World point under cursor before zoom
+  const worldX = camX + pivotScreenX / SCALE;
+  const worldY = camY + pivotScreenY / SCALE;
+  SCALE = newScale;
+  document.getElementById('zoom-level').textContent = (SCALE % 1 === 0 ? SCALE : SCALE.toFixed(1)) + 'x';
+  // Adjust camera so world point stays under cursor
+  camX = worldX - pivotScreenX / SCALE;
+  camY = worldY - pivotScreenY / SCALE;
   camX = Math.max(0, Math.min(camX, WORLD_W - screenW / SCALE));
   camY = Math.max(0, Math.min(camY, WORLD_H - screenH / SCALE));
 }
 
-document.getElementById('zoom-in').addEventListener('click', function() { setZoom(SCALE + 1); });
-document.getElementById('zoom-out').addEventListener('click', function() { setZoom(SCALE - 1); });
+function smoothZoomUpdate() {
+  if (!zoomEasing) return;
+  const diff = targetScale - SCALE;
+  if (Math.abs(diff) < 0.05) {
+    setZoom(targetScale);
+    zoomEasing = false;
+  } else {
+    setZoom(SCALE + diff * 0.15);
+  }
+}
 
-// Quick-jump removed — click-to-navigate replaces POI buttons
+document.getElementById('zoom-in').addEventListener('click', function() { setZoom(Math.round(SCALE + 1)); });
+document.getElementById('zoom-out').addEventListener('click', function() { setZoom(Math.round(SCALE - 1)); });
 
-// Edge scrolling
-let edgeScrollActive = false;
+// Follow button
+document.getElementById('follow-btn').addEventListener('click', function(e) {
+  e.stopPropagation();
+  toggleFollowMode();
+});
+
+// === SCROLL WHEEL ZOOM ===
+C.addEventListener('wheel', function(e) {
+  e.preventDefault();
+  setCameraFree();
+  const zoomDelta = e.deltaY < 0 ? 0.5 : -0.5;
+  const newScale = Math.round((SCALE + zoomDelta) * 2) / 2; // snap to 0.5 increments
+  setZoom(newScale, e.clientX, e.clientY);
+}, { passive: false });
+
+// === DRAG-TO-PAN (mouse) ===
+C.addEventListener('mousedown', function(e) {
+  if (e.button !== 0) return; // left button only
+  isDragging = true;
+  dragStartX = e.clientX;
+  dragStartY = e.clientY;
+  dragCamStartX = camX;
+  dragCamStartY = camY;
+  dragTotalDist = 0;
+  mouseDownTime = Date.now();
+  C.style.cursor = 'grabbing';
+});
+
 C.addEventListener('mousemove', function(e) {
+  if (!isDragging) return;
+  const dx = e.clientX - dragStartX;
+  const dy = e.clientY - dragStartY;
+  dragTotalDist = Math.hypot(dx, dy);
+  if (dragTotalDist > 5) {
+    // It's a real drag — move camera
+    camX = dragCamStartX - dx / SCALE;
+    camY = dragCamStartY - dy / SCALE;
+    setCameraFree();
+    setCameraState(CAMERA_STATE.PANNING);
+    // Dismiss popups on drag
+    if (objectPopupVisible) hideObjectPopup();
+    document.getElementById('mascot-speech').style.display = 'none';
+  }
+});
+
+document.addEventListener('mouseup', function(e) {
+  if (isDragging) {
+    isDragging = false;
+    C.style.cursor = 'crosshair';
+    if (cameraState === CAMERA_STATE.PANNING) {
+      setCameraState(CAMERA_STATE.FREE);
+    }
+  }
+});
+
+// === TOUCH CONTROLS ===
+C.addEventListener('touchstart', function(e) {
+  e.preventDefault();
+  if (e.touches.length === 2) {
+    // Pinch-to-zoom start
+    pinchStartDist = Math.hypot(
+      e.touches[0].clientX - e.touches[1].clientX,
+      e.touches[0].clientY - e.touches[1].clientY
+    );
+    pinchStartScale = SCALE;
+    isTouchDragging = false;
+    return;
+  }
+  if (e.touches.length === 1) {
+    const touch = e.touches[0];
+    touchDragId = touch.identifier;
+    touchStartX = touch.clientX;
+    touchStartY = touch.clientY;
+    touchCamStartX = camX;
+    touchCamStartY = camY;
+    touchDragDist = 0;
+    touchStartTime = Date.now();
+    isTouchDragging = true;
+  }
+}, { passive: false });
+
+C.addEventListener('touchmove', function(e) {
+  e.preventDefault();
+  if (e.touches.length === 2) {
+    // Pinch-to-zoom
+    const dist = Math.hypot(
+      e.touches[0].clientX - e.touches[1].clientX,
+      e.touches[0].clientY - e.touches[1].clientY
+    );
+    const ratio = dist / pinchStartDist;
+    const newScale = Math.round(pinchStartScale * ratio * 2) / 2;
+    const midX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+    const midY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+    setZoom(newScale, midX, midY);
+    setCameraFree();
+    isTouchDragging = false;
+    return;
+  }
+  if (e.touches.length === 1 && isTouchDragging) {
+    const touch = e.touches[0];
+    const dx = touch.clientX - touchStartX;
+    const dy = touch.clientY - touchStartY;
+    touchDragDist = Math.hypot(dx, dy);
+    if (touchDragDist > 5) {
+      camX = touchCamStartX - dx / SCALE;
+      camY = touchCamStartY - dy / SCALE;
+      setCameraFree();
+      setCameraState(CAMERA_STATE.PANNING);
+      if (objectPopupVisible) hideObjectPopup();
+    }
+  }
+}, { passive: false });
+
+C.addEventListener('touchend', function(e) {
+  if (e.touches.length === 0 && isTouchDragging) {
+    const elapsed = Date.now() - touchStartTime;
+    if (touchDragDist < 5 && elapsed < 300) {
+      // This was a tap, not a drag — handle as click
+      handleCanvasTap(touchStartX, touchStartY);
+    }
+    isTouchDragging = false;
+    if (cameraState === CAMERA_STATE.PANNING) setCameraState(CAMERA_STATE.FREE);
+  }
+}, { passive: false });
+
+// Edge scrolling: ONLY when Shift key is held (opt-in)
+C.addEventListener('mousemove', function(e) {
+  if (!e.shiftKey || isDragging) return;
   const margin = 30;
   const speed = 1.5;
   const viewW = screenW / SCALE, viewH = screenH / SCALE;
   let moved = false;
   if (e.clientX < margin) { camX = Math.max(0, camX - speed); moved = true; }
   else if (e.clientX > screenW - margin) { camX = Math.min(WORLD_W - viewW, camX + speed); moved = true; }
-  if (e.clientY < margin + 36) { camY = Math.max(0, camY - speed); moved = true; } // +36 for top bar
+  if (e.clientY < margin + 36) { camY = Math.max(0, camY - speed); moved = true; }
   else if (e.clientY > screenH - margin - 28) { camY = Math.min(WORLD_H - viewH, camY + speed); moved = true; }
-  if (moved && followingMascot) {
-    followingMascot = null;
-    document.getElementById('follow-indicator').style.display = 'none';
-  }
+  if (moved) setCameraFree();
 });
 
 // ============================================================
@@ -2770,7 +2933,7 @@ function enterPhotoMode() {
   photoOldScale = SCALE;
   setZoom(6);
   // Hide all UI
-  document.querySelectorAll('#ui-top,#ui-bottom,#zoom-controls,#speed-control,#photo-btn,#ambience-btn,#fork-btn,#msg-board-btn,#back-link,#minimap,#info-panel,#follow-indicator,#wish-counter,#object-popup').forEach(function(el) { el.style.visibility = 'hidden'; });
+  document.querySelectorAll('#ui-top,#ui-bottom,#zoom-controls,#speed-control,#photo-btn,#ambience-btn,#fork-btn,#msg-board-btn,#back-link,#minimap,#info-panel,#follow-indicator,#wish-counter,#object-popup,#camera-controls').forEach(function(el) { el.style.visibility = 'hidden'; });
   const dayNum = Math.floor((Date.now() - (world.firstVisit || Date.now())) / 86400000) + 1;
   const wm = document.getElementById('photo-watermark');
   wm.textContent = 'AI Garden — Day ' + dayNum;
@@ -2781,7 +2944,7 @@ function exitPhotoMode() {
   if (!photoMode) return;
   photoMode = false;
   setZoom(photoOldScale);
-  document.querySelectorAll('#ui-top,#ui-bottom,#zoom-controls,#speed-control,#photo-btn,#ambience-btn,#fork-btn,#msg-board-btn,#back-link,#minimap,#info-panel,#follow-indicator,#wish-counter').forEach(function(el) { el.style.visibility = ''; });
+  document.querySelectorAll('#ui-top,#ui-bottom,#zoom-controls,#speed-control,#photo-btn,#ambience-btn,#fork-btn,#msg-board-btn,#back-link,#minimap,#info-panel,#follow-indicator,#wish-counter,#object-popup,#camera-controls').forEach(function(el) { el.style.visibility = ''; });
   document.getElementById('photo-watermark').style.display = 'none';
 }
 
@@ -2918,15 +3081,16 @@ function showMascotSpeech(m, screenX, screenY) {
   mascotSpeechTimeout = setTimeout(function() { el.style.display = 'none'; }, 3000);
 }
 
-// Override main canvas click to include mascot speech
-const origCanvasClick = C.onclick;
+// Override main canvas click to include mascot speech — uses drag disambiguation
 C.addEventListener('click', function(e) {
+  if (dragTotalDist > 5) return; // was a drag
+  const elapsed = Date.now() - mouseDownTime;
+  if (elapsed > 300) return;
   const gx = e.clientX / SCALE + camX;
   const gy = e.clientY / SCALE + camY;
   const cm = findMascotAt(gx, gy);
   if (cm) {
     const now = Date.now();
-    // Double-click → spin
     if (lastMascotClicked === cm && now - lastMascotClickTime < 400) {
       mascotSpinAnims[cm.name] = { timer: 30 };
       addParticles(cm.x + 6, cm.y + 6, cm.color, 8);
@@ -3055,6 +3219,7 @@ update = function() {
   }
   processKeyScroll();
   updateSmoothNav();
+  smoothZoomUpdate();
   updateAmbienceVisuals();
   updateDayCounter();
   if (frameCount % 120 === 0) updateContribCount();
@@ -3073,11 +3238,29 @@ update = function() {
   }
 };
 
-// Patch the draw function for ambience visuals
+// Patch the draw function for ambience visuals + popup repositioning
 const origDraw = draw;
 draw = function() {
   origDraw();
   drawAmbienceVisuals();
+
+  // Reposition popup to follow world coordinates
+  if (objectPopupVisible) {
+    const popup = document.getElementById('object-popup');
+    const sx = (popupWorldX - camX) * SCALE;
+    const sy = (popupWorldY - camY) * SCALE;
+    // If target is off screen, dismiss popup
+    if (sx < -100 || sx > screenW + 100 || sy < -100 || sy > screenH + 100) {
+      hideObjectPopup();
+    } else {
+      let left = sx + 16, top = sy - 40;
+      if (left + 280 > screenW) left = sx - 296;
+      if (top < 10) top = 10;
+      if (top + 200 > screenH) top = screenH - 210;
+      popup.style.left = Math.max(10, left) + 'px';
+      popup.style.top = Math.max(10, top) + 'px';
+    }
+  }
 };
 
 // Patch the drawMascot to support jump/spin animations
@@ -3100,52 +3283,14 @@ drawMascot = function(m) {
   m.y = savedY;
 };
 
-// Override the camera following in draw to not fight with manual controls
+// Override the camera following in draw — camera state machine handles everything now
 const origDrawForCam = draw;
 draw = function() {
-  const viewW = screenW / SCALE, viewH = screenH / SCALE;
-  const anyKey = keysDown['ArrowUp'] || keysDown['ArrowDown'] || keysDown['ArrowLeft'] || keysDown['ArrowRight'];
-  const anyDpad = Object.keys(dpadIntervals).length > 0;
-
-  // If user is manually controlling or smooth-navigating, skip auto-camera
-  if (!anyKey && !anyDpad && !photoMode && !navAnimating) {
-    origDrawForCam();
-  } else {
-    // Skip auto-camera: just clamp and render
-    camX = Math.max(0, Math.min(camX, WORLD_W - viewW));
-    camY = Math.max(0, Math.min(camY, WORLD_H - viewH));
-
-    ctx.fillStyle = '#1a1a2e';
-    ctx.fillRect(0, 0, screenW, screenH);
-
-    for (let ty = 0; ty < TILES_H; ty++) for (let tx = 0; tx < TILES_W; tx++) drawTile(tx, ty);
-    drawTerritoryTints();
-    drawStructures();
-    drawAgentMarks();
-    drawGrownPlants();
-    drawPhilosopherStone();
-    drawCritters();
-    drawButterflies();
-    const sorted = mascots.slice().sort(function(a,b){return a.y-b.y;});
-    for (const m2 of sorted) drawMascot(m2);
-    drawParticles();
-    drawSpeechBubbles();
-    drawFireflies();
-    drawConfetti();
-    drawMusicNotes();
-    drawGifts();
-    drawStage5Banner();
-    if (getStage() >= 5) {
-      ctx.globalAlpha = Math.sin(frameCount*0.01)*0.02+0.04;
-      ctx.fillStyle = '#ffd700'; ctx.fillRect(0,0,screenW,screenH);
-      ctx.globalAlpha = 1;
-    }
-    ctx.fillStyle = getDayOverlay();
-    ctx.fillRect(0, 0, screenW, screenH);
-    drawWeatherEffects();
-    drawAmbienceVisuals();
-    if (frameCount % 10 === 0) drawMinimap();
-  }
+  // The camera state machine in origDrawForCam handles all states properly now
+  // No need for the old anyKey/anyDpad checks — the state machine does it
+  origDrawForCam();
+  // Smooth zoom easing
+  smoothZoomUpdate();
 };
 
 // Initial contribution count update
