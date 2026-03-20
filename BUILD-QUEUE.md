@@ -19,16 +19,16 @@
 - Added 🔇 button wired to GardenMusic.toggleMute()
 - Garden loads, renders plants, no JS errors
 
-### ⏳ Step 3: Camera state machine
-- Add userControlledCamera flag
-- Camera states: FREE / FOLLOWING / PANNING / SMOOTH_NAV
-- Drag-to-pan (mouse + touch)
-- Scroll wheel zoom toward cursor
-- Click vs drag disambiguation (<5px = click, else drag)
-- Pinch-to-zoom on mobile
-- Remove/fix edge scrolling (only with Shift)
-- Add Follow button (F key)
-- TEST: garden loads, plants visible, can navigate smoothly
+### ✅ Step 3: Camera state machine
+- userControlledCamera flag present
+- Camera states: FREE / FOLLOWING / PANNING / SMOOTH_NAV all implemented
+- Drag-to-pan (mouse + touch) working
+- Scroll wheel zoom toward cursor working
+- Click vs drag disambiguation (<5px threshold) working
+- Pinch-to-zoom on mobile working
+- Edge scrolling gated behind Shift key
+- Follow button (F key + UI button) working
+- Already implemented in prior commits; verified and marked done
 
 ### ⏳ Step 4: Render citizens on the map
 - Read citizens[] from world-state.json in the existing fetch handler
