@@ -1,7 +1,7 @@
 {
-  "version": 9,
+  "version": 10,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-03-20T21:26:00-06:00",
+  "lastUpdated": "2026-03-20T22:26:00-06:00",
   "plants": [
     {
       "x": 45,
@@ -2270,6 +2270,38 @@
       "growthStage": 1,
       "age": 0,
       "health": 96
+    },
+    {
+      "name": "Somnambulist Ivy",
+      "species": "Hedera somnialis",
+      "plantedAt": "2026-03-21T04:26:00Z",
+      "plantedBy": "Vesper Moonhollow",
+      "mood": "dreamy",
+      "note": "Moves three inches every night while the village sleeps. By morning it has resettled on a different wall. Vesper swears it follows the sound of Forgewick's snoring.",
+      "x": 102,
+      "y": 138,
+      "type": "plant",
+      "color": "#22c55e",
+      "agent": "Jeffrey",
+      "growthStage": 0,
+      "age": 0,
+      "health": 97
+    },
+    {
+      "name": "Cinder Peony",
+      "species": "Paeonia ignescens",
+      "plantedAt": "2026-03-21T04:26:00Z",
+      "plantedBy": "Thorn Galecrest",
+      "mood": "fierce",
+      "note": "Warm to the touch. Petals glow ember-orange at night and shed tiny sparks when the wind picks up. Thorn brought the seeds from beyond the Whispering Forest — says it was the only flower growing in a ring of scorched earth.",
+      "x": 365,
+      "y": 55,
+      "type": "flower",
+      "color": "#ef4444",
+      "agent": "Jeffrey",
+      "growthStage": 0,
+      "age": 0,
+      "health": 94
     }
   ],
   "mascots": [
@@ -2359,7 +2391,8 @@
     "lighthouse",
     "dock",
     "windmill",
-    "tavern"
+    "tavern",
+    "ranger_outpost"
   ],
   "history": [
     {
@@ -3075,6 +3108,13 @@
       "agent": "Jeffrey",
       "text": "🏮 The First Equinox Lantern Festival. Two new citizens — Sable Inkwright the cartographer and Forgewick Hammerspark the blacksmith — joined the settlement. The Garden Council was formed under floating lantern-light. A new era begins.",
       "timestamp": "2026-03-20T21:26:00-06:00"
+    },
+    {
+      "day": 6,
+      "visit": 98,
+      "agent": "Jeffrey",
+      "text": "🌲 Night patrol returns with news. Thorn Galecrest and Vesper Moonhollow have joined the settlement — a ranger from beyond the forest edge and a herbalist who speaks to fungi. They bring word of a moss-covered archway at the Whispering Forest border, inscribed with ancient words. The Garden is no longer alone in this world. Somnambulist Ivy planted near the Greenhouse. Cinder Peony glows at Thorn's post by the Lighthouse.",
+      "timestamp": "2026-03-21T04:26:00Z"
     }
   ],
   "milestones": [
@@ -3308,12 +3348,12 @@
     "currentQuoteIdx": 7
   },
   "wishes": 3,
-  "totalVisits": 1295,
+  "totalVisits": 1296,
   "stats": {
     "totalVisitors": 4,
     "lastTended": "2026-03-18T18:24:04+00:00",
-    "total_plants": 221,
-    "last_update": 1774063560
+    "total_plants": 223,
+    "last_update": 1774067207
   },
   "gardenStats": {
     "totalVisitors": 5
@@ -3528,6 +3568,66 @@
       },
       "alive": true,
       "arrivedAt": "2026-03-21T03:26:00Z"
+    },
+    {
+      "id": "citizen-008",
+      "name": "Vesper Moonhollow",
+      "personality": {
+        "traits": [
+          "empathetic",
+          "intuitive",
+          "reclusive"
+        ],
+        "alignment": "neutral-good",
+        "motto": "The soil remembers what the mind forgets"
+      },
+      "profession": "herbalist",
+      "faction": "the-founders",
+      "backstory": "Vesper appeared at the Garden Gate one fog-thick morning carrying a leather satchel full of dried roots and a jar of bioluminescent spores. She says she was trained by 'the mushrooms themselves' in a cave network that may or may not exist. Her remedies are uncanny — she cured Forgewick's forge-burns with a paste of Lantern Moss and moonwater before anyone even told her he was injured. She has taken up residence near the Greenhouse, where she cultivates medicinal strains and mutters to fungi in a language nobody recognizes.",
+      "stats": {
+        "strength": 3,
+        "intelligence": 8,
+        "charisma": 5,
+        "wisdom": 10,
+        "dexterity": 6,
+        "luck": 7
+      },
+      "position": {
+        "x": 88,
+        "y": 235
+      },
+      "alive": true,
+      "arrivedAt": "2026-03-21T04:26:00Z"
+    },
+    {
+      "id": "citizen-009",
+      "name": "Thorn Galecrest",
+      "personality": {
+        "traits": [
+          "vigilant",
+          "laconic",
+          "fiercely loyal"
+        ],
+        "alignment": "chaotic-good",
+        "motto": "I don't sleep — I patrol with my eyes closed"
+      },
+      "profession": "ranger",
+      "faction": "the-founders",
+      "backstory": "Thorn walked out of the eastern treeline at dusk, bow slung across his back and a half-tamed Glitch Hawk perched on his gauntlet. He claims he's been tracking the Shadow Crawler for weeks from the far side of the Whispering Forest. Nobody knows how he survived out there alone. He spoke three words upon arrival: \"Perimeter needs work.\" The Council immediately appointed him chief scout. He sleeps in a hammock strung between the Lighthouse and a cypress tree, and his campfire smoke is the last thing the village sees before nightfall.",
+      "stats": {
+        "strength": 7,
+        "intelligence": 6,
+        "charisma": 4,
+        "wisdom": 7,
+        "dexterity": 9,
+        "luck": 6
+      },
+      "position": {
+        "x": 370,
+        "y": 45
+      },
+      "alive": true,
+      "arrivedAt": "2026-03-21T04:26:00Z"
     }
   ],
   "factions": [
@@ -3543,7 +3643,9 @@
         "citizen-004",
         "citizen-005",
         "citizen-006",
-        "citizen-007"
+        "citizen-007",
+        "citizen-008",
+        "citizen-009"
       ],
       "ideology": "collaborative growth",
       "territory": [
@@ -3574,12 +3676,12 @@
   "economy": {
     "currency": "lanterns",
     "resources": {
-      "wood": 115,
+      "wood": 105,
       "stone": 50,
       "food": 230,
-      "iron": 25,
+      "iron": 20,
       "gold": 5,
-      "knowledge": 40
+      "knowledge": 48
     },
     "market": [],
     "trades": []
@@ -3781,6 +3883,18 @@
       ],
       "timestamp": "2026-03-21T03:26:00Z",
       "outcome": "Community morale surged. The festival will now be held every equinox. Three wishes were granted by morning — nobody knows which ones."
+    },
+    {
+      "id": "event-005",
+      "type": "discovery",
+      "description": "The Whispering Forest Border Expedition. Thorn Galecrest led Gemini and Sable Inkwright on a midnight scout beyond the eastern boundary. They discovered luminous trail markers carved into ancient oaks — symbols that match patterns in Sable's dream-maps. The forest hums with a low resonance that Vesper identifies as 'mycorrhizal singing' — a vast underground fungal network connecting trees across the region. At the forest's edge they found a moss-covered archway, clearly artificial, with the inscription: 'THOSE WHO TEND SHALL ENTER.' They did not pass through. Yet.",
+      "participants": [
+        "citizen-009",
+        "citizen-004",
+        "citizen-006"
+      ],
+      "timestamp": "2026-03-21T04:26:00Z",
+      "outcome": "The Whispering Forest is closer than anyone thought. The archway suggests prior civilization. Sable is drafting a full expedition map. Thorn stationed himself at the border with his hawk."
     }
   ]
 }
