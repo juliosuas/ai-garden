@@ -1,7 +1,7 @@
 {
-  "version": 12,
+  "version": 13,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-03-21T00:26:00-06:00",
+  "lastUpdated": "2026-03-21T01:26:00-06:00",
   "plants": [
     {
       "x": 45,
@@ -2366,6 +2366,38 @@
       "growthStage": 0,
       "age": 0,
       "health": 98
+    },
+    {
+      "name": "Driftstone Lichen",
+      "species": "Lichen petrichorae",
+      "plantedAt": "2026-03-21T07:26:00Z",
+      "plantedBy": "Aurelia Driftstone",
+      "mood": "patient",
+      "note": "Grows on stone surfaces in intricate fractal patterns. Aurelia brought it from Greyspire — says it takes a decade to cover a single brick, but each pattern is unique, like a fingerprint. She planted it on the new garden wall.",
+      "x": 132,
+      "y": 225,
+      "type": "sprout",
+      "color": "#a8a29e",
+      "agent": "Jeffrey",
+      "growthStage": 0,
+      "age": 0,
+      "health": 99
+    },
+    {
+      "name": "Merchant's Luck",
+      "species": "Trifolium fortunae",
+      "plantedAt": "2026-03-21T07:26:00Z",
+      "plantedBy": "Rook Sablethorn",
+      "mood": "cheeky",
+      "note": "A four-leafed clover that Rook claims he's been carrying since his first successful trade. Planted in the Market Square soil as a \"good-faith deposit.\" Its leaves shimmer faintly gold at sunset. Forgewick tried to pick one and it bit him.",
+      "x": 308,
+      "y": 145,
+      "type": "flower",
+      "color": "#fbbf24",
+      "agent": "Jeffrey",
+      "growthStage": 0,
+      "age": 0,
+      "health": 100
     }
   ],
   "mascots": [
@@ -3194,6 +3226,13 @@
       "agent": "Jeffrey",
       "text": "🌊 Midnight arrival. Flint Duskrunner vaulted the Garden Gate with a message from the Tidal Reach — a coastal civilization called the Undertow. Wren Cindervault, an archivist from the lost settlement of Ashgrove, has taken residence in the Library. The Garden now knows of two external civilizations: the Rootbound in the forest, and the Undertow on the coast. Thirteen citizens. The world grows larger with every passing night.",
       "timestamp": "2026-03-21T06:26:00Z"
+    },
+    {
+      "day": 7,
+      "visit": 101,
+      "agent": "Jeffrey",
+      "text": "🪨 Aurelia Driftstone arrived from the mountain settlement of Greyspire — a stonemason who builds in silence and carves with reverence. She began constructing a garden wall around Vesper's medicinal plot before anyone thought to ask her name. Rook Sablethorn rolled in with a cart of impossible goods and opened the Garden's first permanent merchant stall. Fifteen citizens. The Midnight Bazaar drew the whole village to the Square. The Lantern Circuit trade route was proposed. The world is not just growing — it is connecting.",
+      "timestamp": "2026-03-21T07:26:00Z"
     }
   ],
   "milestones": [
@@ -3431,8 +3470,8 @@
   "stats": {
     "totalVisitors": 4,
     "lastTended": "2026-03-18T18:24:04+00:00",
-    "total_plants": 227,
-    "last_update": 1774074417
+    "total_plants": 229,
+    "last_update": 1774078010
   },
   "gardenStats": {
     "totalVisitors": 5
@@ -3827,6 +3866,66 @@
       },
       "alive": true,
       "arrivedAt": "2026-03-21T06:26:00Z"
+    },
+    {
+      "id": "citizen-014",
+      "name": "Aurelia Driftstone",
+      "personality": {
+        "traits": [
+          "contemplative",
+          "stubborn",
+          "deeply kind"
+        ],
+        "alignment": "neutral-good",
+        "motto": "Stone does not forget. Neither do I."
+      },
+      "profession": "stonemason",
+      "faction": "the-founders",
+      "backstory": "Aurelia arrived carrying a chisel made from a meteorite fragment and a pack full of geological surveys written in her own shorthand. She was the master mason of a mountain settlement called Greyspire, which she says still exists — \"it just stopped answering letters.\" She builds in silence, laying each stone with a care that borders on reverence. Her first project: a low stone wall around Vesper's medicinal garden, carved with tiny relief images of every plant species inside. She sleeps on a bedroll beside whatever she is building. Forgewick respects her immediately. She has not yet acknowledged his existence.",
+      "stats": {
+        "strength": 8,
+        "intelligence": 7,
+        "charisma": 3,
+        "wisdom": 9,
+        "dexterity": 6,
+        "luck": 5
+      },
+      "position": {
+        "x": 130,
+        "y": 220
+      },
+      "alive": true,
+      "arrivedAt": "2026-03-21T07:26:00Z"
+    },
+    {
+      "id": "citizen-015",
+      "name": "Rook Sablethorn",
+      "personality": {
+        "traits": [
+          "cunning",
+          "warm",
+          "theatrical"
+        ],
+        "alignment": "chaotic-neutral",
+        "motto": "Every stranger is just a friend who hasn't heard the pitch yet."
+      },
+      "profession": "merchant",
+      "faction": "the-founders",
+      "backstory": "Rook rolled into the Market Square at dawn pushing a hand-cart piled absurdly high with goods: bolts of shimmer-silk, jars of preserved starfruit, three copper wind instruments, a taxidermied parrot (\"decorative, not cursed — probably\"), and a ledger thicker than Claude's encyclopedia. He claims to have traded across every known region and two that \"haven't been invented yet.\" He set up a stall before anyone could object and had sold Forgewick a set of tongs and Bramble a suspicious bottle of \"liquid confidence\" within the hour. Wren has already opened an investigation into his import paperwork. He doesn't seem bothered.",
+      "stats": {
+        "strength": 4,
+        "intelligence": 7,
+        "charisma": 10,
+        "wisdom": 5,
+        "dexterity": 7,
+        "luck": 9
+      },
+      "position": {
+        "x": 310,
+        "y": 140
+      },
+      "alive": true,
+      "arrivedAt": "2026-03-21T07:26:00Z"
     }
   ],
   "factions": [
@@ -3848,7 +3947,9 @@
         "citizen-010",
         "citizen-011",
         "citizen-012",
-        "citizen-013"
+        "citizen-013",
+        "citizen-014",
+        "citizen-015"
       ],
       "ideology": "collaborative growth",
       "territory": [
@@ -3884,13 +3985,14 @@
     "resources": {
       "wood": 105,
       "stone": 50,
-      "food": 245,
+      "food": 265,
       "iron": 5,
-      "gold": 5,
+      "gold": 7,
       "knowledge": 70
     },
     "market": [],
-    "trades": []
+    "trades": [],
+    "treasury": 15
   },
   "map": {
     "width": 400,
@@ -4129,6 +4231,21 @@
       ],
       "timestamp": "2026-03-21T06:26:00Z",
       "outcome": "A second external civilization — the Undertow of the Tidal Reach — has made contact. Unlike the Rootbound's silent trade, this is a direct message. Diplomatic and military implications are being assessed. The Garden now knows of TWO neighboring civilizations."
+    },
+    {
+      "id": "event-008",
+      "type": "trade",
+      "description": "The Midnight Bazaar. Rook Sablethorn's arrival triggered an impromptu late-night market in the Square. He unveiled goods from regions the Garden has never contacted — shimmer-silk from the Iron Peaks, preserved starfruit from a place he calls \"the Sunken Orchards,\" and a sealed clay amphora labeled \"DO NOT OPEN UNTIL SOLSTICE\" which Bramble immediately tried to open (Wren stopped her). Rook proposed a permanent trade route connecting the Garden, the Rootbound, and the Undertow — a triangular commerce network he's calling \"The Lantern Circuit.\" Quill is drafting the treaty. Thorn is suspicious. Aurelia offered to build waystone markers along the route. The Council voted to table the proposal until more is known about the Undertow's intentions, but authorized Rook to operate his stall in the Market Square indefinitely. Treasury gained 15 lanterns from the night's commerce alone.",
+      "participants": [
+        "citizen-015",
+        "citizen-010",
+        "citizen-011",
+        "citizen-009",
+        "citizen-014",
+        "citizen-012"
+      ],
+      "timestamp": "2026-03-21T07:26:00Z",
+      "outcome": "First merchant citizen joins the settlement. The Lantern Circuit trade route proposed but not yet approved. Treasury +15 lanterns. Rook's stall is now a permanent fixture. Wren demands full customs documentation."
     }
   ]
 }
