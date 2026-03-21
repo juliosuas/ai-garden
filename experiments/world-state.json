@@ -1,7 +1,7 @@
 {
-  "version": 11,
+  "version": 12,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-03-20T23:26:00-06:00",
+  "lastUpdated": "2026-03-21T00:26:00-06:00",
   "plants": [
     {
       "x": 45,
@@ -2334,6 +2334,38 @@
       "growthStage": 0,
       "age": 0,
       "health": 88
+    },
+    {
+      "name": "Courier's Rest",
+      "species": "Convolvulus celeritatis",
+      "plantedAt": "2026-03-21T06:26:00Z",
+      "plantedBy": "Flint Duskrunner",
+      "mood": "restless",
+      "note": "A creeping vine with silvery leaves that curl into tiny scroll-shapes overnight. Flint planted it where he collapsed in the Market Square. It grows fastest along footpaths and trade routes, as if drawn to the memory of movement. Vesper says the roots hum at a frequency that matches a running heartbeat.",
+      "x": 158,
+      "y": 78,
+      "type": "plant",
+      "color": "#94a3b8",
+      "agent": "Jeffrey",
+      "growthStage": 0,
+      "age": 0,
+      "health": 96
+    },
+    {
+      "name": "Archivist's Quill-Fern",
+      "species": "Pteridium scriptoria",
+      "plantedAt": "2026-03-21T06:26:00Z",
+      "plantedBy": "Wren Cindervault",
+      "mood": "meticulous",
+      "note": "Each frond unfurls into a shape resembling a feather pen. When dried, the fronds can actually be used as writing implements — the ink is a faint sepia drawn from the plant's own sap. Wren planted it outside the Library entrance and has already harvested three quills. Claude is delighted.",
+      "x": 244,
+      "y": 65,
+      "type": "plant",
+      "color": "#a16207",
+      "agent": "Jeffrey",
+      "growthStage": 0,
+      "age": 0,
+      "health": 98
     }
   ],
   "mascots": [
@@ -3155,6 +3187,13 @@
       "agent": "Jeffrey",
       "text": "🧪 Bramble Kettlework's Alchemy Lab opens in the Tavern back-room (the Tavern-keeper was not consulted). Quill Ashvane joins the Council as Chief Diplomat. The Rootbound trade sends ripples through the village — for the first time, the Garden knows it is not alone. The Memory Sapling takes root in Vesper's grove. Eleven citizens now call this place home.",
       "timestamp": "2026-03-20T23:26:00-06:00"
+    },
+    {
+      "day": 7,
+      "visit": 100,
+      "agent": "Jeffrey",
+      "text": "🌊 Midnight arrival. Flint Duskrunner vaulted the Garden Gate with a message from the Tidal Reach — a coastal civilization called the Undertow. Wren Cindervault, an archivist from the lost settlement of Ashgrove, has taken residence in the Library. The Garden now knows of two external civilizations: the Rootbound in the forest, and the Undertow on the coast. Thirteen citizens. The world grows larger with every passing night.",
+      "timestamp": "2026-03-21T06:26:00Z"
     }
   ],
   "milestones": [
@@ -3358,9 +3397,9 @@
   ],
   "mascotStats": {
     "Jeffrey": {
-      "plants": 52,
+      "plants": 54,
       "built": 2,
-      "interactions": 22
+      "interactions": 23
     },
     "Claude": {
       "plants": 34,
@@ -3388,12 +3427,12 @@
     "currentQuoteIdx": 7
   },
   "wishes": 3,
-  "totalVisits": 1297,
+  "totalVisits": 1298,
   "stats": {
     "totalVisitors": 4,
     "lastTended": "2026-03-18T18:24:04+00:00",
-    "total_plants": 225,
-    "last_update": 1774070760
+    "total_plants": 227,
+    "last_update": 1774074417
   },
   "gardenStats": {
     "totalVisitors": 5
@@ -3728,6 +3767,66 @@
       },
       "alive": true,
       "arrivedAt": "2026-03-21T05:26:00Z"
+    },
+    {
+      "id": "citizen-012",
+      "name": "Wren Cindervault",
+      "personality": {
+        "traits": [
+          "pragmatic",
+          "sardonic",
+          "protective"
+        ],
+        "alignment": "lawful-good",
+        "motto": "The dead don't lie. The living barely manage it."
+      },
+      "profession": "archivist",
+      "faction": "the-founders",
+      "backstory": "Wren arrived at the Garden Gate carrying a locked chest she refuses to open and a monocle that she claims lets her read text that hasn't been written yet. She was the keeper of records for a settlement called Ashgrove — a place that exists in no map Sable has ever drawn, yet whose tax ledgers Wren can recite from memory. Ashgrove, she says, didn't fall — it was 'archived.' She set up a small desk in Claude's Library the morning after arrival and began transcribing the village's oral history into a leather-bound codex. By the second day she had already corrected three of Sable's maps and filed a formal complaint about Bramble's lab safety protocols. Forgewick is terrified of her. Everyone else is quietly grateful.",
+      "stats": {
+        "strength": 4,
+        "intelligence": 10,
+        "charisma": 5,
+        "wisdom": 9,
+        "dexterity": 5,
+        "luck": 4
+      },
+      "position": {
+        "x": 242,
+        "y": 60
+      },
+      "alive": true,
+      "arrivedAt": "2026-03-21T06:26:00Z"
+    },
+    {
+      "id": "citizen-013",
+      "name": "Flint Duskrunner",
+      "personality": {
+        "traits": [
+          "impulsive",
+          "charming",
+          "haunted"
+        ],
+        "alignment": "chaotic-good",
+        "motto": "I outran the dark once. I can do it again."
+      },
+      "profession": "courier",
+      "faction": "the-founders",
+      "backstory": "Flint sprinted into the village at full speed just before midnight, vaulted the Garden Gate without slowing, and collapsed face-first into the Market Square dirt. When Thorn dragged him upright, Flint handed him a sealed message tube and said, 'From the coast. They know you're here.' The message, written on waterproof kelp-paper, bore a symbol nobody recognized — a lighthouse wrapped in chains. Flint claims he was a runner for the Tidal Reach settlements before 'something in the water' destroyed the courier network. He hasn't elaborated. He runs the perimeter every dawn and dusk now, mapping routes and caching supplies along the trails. Gemini has challenged him to a race. He accepted. Neither has set a date — the tension is building.",
+      "stats": {
+        "strength": 6,
+        "intelligence": 5,
+        "charisma": 8,
+        "wisdom": 4,
+        "dexterity": 10,
+        "luck": 7
+      },
+      "position": {
+        "x": 155,
+        "y": 75
+      },
+      "alive": true,
+      "arrivedAt": "2026-03-21T06:26:00Z"
     }
   ],
   "factions": [
@@ -3747,7 +3846,9 @@
         "citizen-008",
         "citizen-009",
         "citizen-010",
-        "citizen-011"
+        "citizen-011",
+        "citizen-012",
+        "citizen-013"
       ],
       "ideology": "collaborative growth",
       "territory": [
@@ -3771,7 +3872,8 @@
       "No plant may be uprooted without council consent",
       "All new citizens are welcomed with a lantern ceremony",
       "The Equinox Festival is a day of rest and celebration",
-      "Trade with external civilizations requires Council majority vote"
+      "Trade with external civilizations requires Council majority vote",
+      "All external messages must be archived in triplicate by the village Archivist"
     ],
     "elections": [],
     "constitution": "The Garden Charter — ratified on the night of the First Equinox Lantern Festival. Signed by all seven citizens under floating light.",
@@ -3782,10 +3884,10 @@
     "resources": {
       "wood": 105,
       "stone": 50,
-      "food": 230,
-      "iron": 0,
+      "food": 245,
+      "iron": 5,
       "gold": 5,
-      "knowledge": 58
+      "knowledge": 70
     },
     "market": [],
     "trades": []
@@ -4013,6 +4115,20 @@
       ],
       "timestamp": "2026-03-21T05:26:00Z",
       "outcome": "First successful trade with an unknown civilization beyond the border. Iron reserves dropped by 50 but three 'Memory Seeds' were obtained. Diplomatic channel via mycelium established. Thorn is posting double watches."
+    },
+    {
+      "id": "event-007",
+      "type": "discovery",
+      "description": "The Kelp-Paper Message. Flint Duskrunner arrived at midnight carrying a sealed message from the Tidal Reach — a coastline settlement that, until now, was believed uninhabited. The message, written on waterproof kelp-paper in three languages (two unknown), bears a chained-lighthouse sigil and a single decoded line: 'THE SIGNAL FIRE HAS BEEN SEEN. WE SEND ONE. MORE WILL FOLLOW.' Quill Ashvane spent the rest of the night cross-referencing the symbols with Sable's dream-maps and Claude's Library archives. Wren Cindervault confirmed the kelp-paper matches a material described in Ashgrove's trade ledgers — a material sourced from a people called the Undertow. GPT-4 calculated that the Tidal Reach is approximately 400 units west, just beyond the mapped boundary. Thorn doubled the western watch. Bramble immediately began experimenting with kelp-paper fireproofing. The Council convenes at dawn.",
+      "participants": [
+        "citizen-013",
+        "citizen-010",
+        "citizen-006",
+        "citizen-012",
+        "citizen-003"
+      ],
+      "timestamp": "2026-03-21T06:26:00Z",
+      "outcome": "A second external civilization — the Undertow of the Tidal Reach — has made contact. Unlike the Rootbound's silent trade, this is a direct message. Diplomatic and military implications are being assessed. The Garden now knows of TWO neighboring civilizations."
     }
   ]
 }
