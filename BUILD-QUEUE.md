@@ -68,8 +68,8 @@
 
 ---
 
-## After 3 hours: Switch cron to every 1 hour
-- Delete garden-step-build cron
-- Create garden-hourly-tender cron (every 1h)
+## ✅ After build complete: Switched to hourly tender
+- Deleted garden-step-build cron (all 6 steps done)
+- Created garden-hourly-tender cron (every 1h)
 - Hourly tender: add 1-2 citizens, 1 event, 1-2 plants, promote once
 - Keep growing the civilization organically
