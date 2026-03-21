@@ -265,6 +265,42 @@ canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edge
   color: #ffd700; font-size: 12px; font-weight: bold;
 }
 
+/* === ECONOMY UI === */
+#economy-panel {
+  position: fixed; top: 68px; left: 8px; z-index: 10;
+  background: rgba(10,10,20,0.88); border: 1px solid #2a4a2a;
+  border-radius: 6px; padding: 8px 10px; font-family: monospace;
+  color: #e0e0e0; font-size: 11px; min-width: 140px;
+  pointer-events: none; user-select: none;
+}
+#economy-panel .econ-title {
+  color: #ffd700; font-size: 10px; letter-spacing: 1px; margin-bottom: 6px;
+  border-bottom: 1px solid rgba(255,215,0,0.2); padding-bottom: 3px;
+}
+#economy-panel .econ-row {
+  display: flex; align-items: center; gap: 4px; margin: 3px 0;
+}
+#economy-panel .econ-icon { width: 16px; text-align: center; font-size: 12px; }
+#economy-panel .econ-bar-track {
+  flex: 1; height: 6px; background: #1a1a2e; border: 1px solid #333;
+  border-radius: 2px; overflow: hidden;
+}
+#economy-panel .econ-bar-fill { height: 100%; border-radius: 1px; transition: width 0.5s; }
+#economy-panel .econ-val { width: 28px; text-align: right; font-size: 10px; color: #aaa; }
+#economy-panel .econ-pop {
+  margin-top: 6px; padding-top: 4px; border-top: 1px solid rgba(255,255,255,0.06);
+  display: flex; align-items: center; gap: 6px;
+}
+#economy-panel .econ-pop .pop-count { color: #4ade80; font-weight: bold; font-size: 13px; }
+#economy-panel .econ-gov {
+  margin-top: 4px; color: #888; font-size: 10px; font-style: italic;
+}
+#economy-panel .econ-time-indicator {
+  margin-top: 6px; padding-top: 4px; border-top: 1px solid rgba(255,255,255,0.06);
+  display: flex; align-items: center; gap: 6px; font-size: 10px; color: #aaa;
+}
+#economy-panel .time-phase { font-weight: bold; }
+
 /* === CONTRIBUTION COUNTER === */
 #contrib-count { color: #60a5fa; font-size: 11px; }
 
@@ -388,6 +424,26 @@ canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edge
   <span onclick="toggleMemory()">[M] Memory</span>
 </div>
 <a id="back-link" href="../index.html">← Back</a>
+
+<!-- Economy & Status UI -->
+<div id="economy-panel">
+  <div class="econ-title">⚙ RESOURCES</div>
+  <div class="econ-row"><span class="econ-icon">🪵</span><div class="econ-bar-track"><div class="econ-bar-fill" id="bar-wood" style="width:0%;background:#8a6a3a"></div></div><span class="econ-val" id="val-wood">0</span></div>
+  <div class="econ-row"><span class="econ-icon">🪨</span><div class="econ-bar-track"><div class="econ-bar-fill" id="bar-stone" style="width:0%;background:#7a7a7a"></div></div><span class="econ-val" id="val-stone">0</span></div>
+  <div class="econ-row"><span class="econ-icon">🍞</span><div class="econ-bar-track"><div class="econ-bar-fill" id="bar-food" style="width:0%;background:#4ade80"></div></div><span class="econ-val" id="val-food">0</span></div>
+  <div class="econ-row"><span class="econ-icon">💰</span><div class="econ-bar-track"><div class="econ-bar-fill" id="bar-gold" style="width:0%;background:#ffd700"></div></div><span class="econ-val" id="val-gold">0</span></div>
+  <div class="econ-pop">
+    <span>👥</span>
+    <span class="pop-count" id="pop-count">0</span>
+    <span style="color:#888;font-size:10px">citizens</span>
+  </div>
+  <div class="econ-gov" id="gov-indicator">🏛️ No Government</div>
+  <div class="econ-time-indicator">
+    <span id="time-phase-icon">☀️</span>
+    <span class="time-phase" id="time-phase-label">Day</span>
+    <span id="time-phase-clock" style="margin-left:auto"></span>
+  </div>
+</div>
 <div id="follow-indicator">Following: <span id="follow-name"></span> — click elsewhere or ESC to stop</div>
 <div id="info-panel">
   <div class="name" id="info-name"></div>
@@ -617,6 +673,12 @@ const defaultWorld = {
   },
   structuresBuilt: [],
   citizens: [],
+  factions: [],
+  government: { type: null, leader: null },
+  economy: { resources: { wood: 0, stone: 0, food: 0, gold: 0 } },
+  threats: [],
+  events: [],
+  map: null,
   philosopherStone: { discoveries: 0, currentQuoteIdx: 0 },
   lastSessionSnapshot: { plants: 0, stage: 1, structures: 0, agentMarks: 0 },
   wishes: 0,
@@ -715,6 +777,12 @@ function loadWorld() {
       world.philosopherStone = shared.philosopherStone || { discoveries: 0, currentQuoteIdx: 0 };
       world.wishes = shared.wishes || 0;
       world.citizens = shared.citizens || [];
+      world.factions = shared.factions || [];
+      world.government = shared.government || { type: null, leader: null };
+      world.economy = shared.economy || { resources: {} };
+      world.threats = shared.threats || [];
+      world.events = shared.events || [];
+      world.map = shared.map || null;
       world.totalVisits = (shared.totalVisits || 0);
       world.firstVisit = new Date(shared.created || '2026-03-15T22:00:00-06:00').getTime();
       world.visitCount = localPrefs.localVisits;
@@ -736,6 +804,7 @@ function loadWorld() {
       updateWishDisplay();
       updateObserverCount();
       dismissLoadingScreen();
+      updateEconomyUI();
     })
     .catch(function(err) {
       console.warn('Could not fetch shared world state, using defaults:', err);
@@ -3173,9 +3242,8 @@ function draw() {
     ctx.globalAlpha = 1;
   }
 
-  // Day/night overlay
-  ctx.fillStyle = getDayOverlay();
-  ctx.fillRect(0, 0, screenW, screenH);
+  // Day/night overlay (real-time based)
+  drawDayNightCycle();
 
   // Weather effects on top
   drawWeatherEffects();
@@ -3313,7 +3381,7 @@ function enterPhotoMode() {
   photoOldScale = SCALE;
   setZoom(6);
   // Hide all UI
-  document.querySelectorAll('#ui-top,#ui-bottom,#zoom-controls,#speed-control,#photo-btn,#ambience-btn,#fork-btn,#msg-board-btn,#back-link,#minimap,#info-panel,#follow-indicator,#wish-counter,#object-popup,#music-btn,#follow-btn').forEach(function(el) { el.style.visibility = 'hidden'; });
+  document.querySelectorAll('#ui-top,#ui-bottom,#zoom-controls,#speed-control,#photo-btn,#ambience-btn,#fork-btn,#msg-board-btn,#back-link,#minimap,#info-panel,#follow-indicator,#wish-counter,#object-popup,#music-btn,#follow-btn,#economy-panel,#events-ticker').forEach(function(el) { el.style.visibility = 'hidden'; });
   const dayNum = Math.floor((Date.now() - (world.firstVisit || Date.now())) / 86400000) + 1;
   const wm = document.getElementById('photo-watermark');
   wm.textContent = 'AI Garden — Day ' + dayNum;
@@ -3324,7 +3392,7 @@ function exitPhotoMode() {
   if (!photoMode) return;
   photoMode = false;
   setZoom(photoOldScale);
-  document.querySelectorAll('#ui-top,#ui-bottom,#zoom-controls,#speed-control,#photo-btn,#ambience-btn,#fork-btn,#msg-board-btn,#back-link,#minimap,#info-panel,#follow-indicator,#wish-counter,#music-btn,#follow-btn').forEach(function(el) { el.style.visibility = ''; });
+  document.querySelectorAll('#ui-top,#ui-bottom,#zoom-controls,#speed-control,#photo-btn,#ambience-btn,#fork-btn,#msg-board-btn,#back-link,#minimap,#info-panel,#follow-indicator,#wish-counter,#music-btn,#follow-btn,#economy-panel,#events-ticker').forEach(function(el) { el.style.visibility = ''; });
   document.getElementById('photo-watermark').style.display = 'none';
 }
 
@@ -3601,6 +3669,7 @@ update = function() {
   updateAmbienceVisuals();
   updateDayCounter();
   if (frameCount % 120 === 0) updateContribCount();
+  if (frameCount % 60 === 0) updateEconomyUI();
   if (!eventsTickerPopulated && worldReady) populateEventsTicker();
 
   // Mascot jump animations
@@ -3686,8 +3755,7 @@ draw = function() {
       ctx.fillStyle = '#ffd700'; ctx.fillRect(0,0,screenW,screenH);
       ctx.globalAlpha = 1;
     }
-    ctx.fillStyle = getDayOverlay();
-    ctx.fillRect(0, 0, screenW, screenH);
+    drawDayNightCycle();
     drawWeatherEffects();
     drawAmbienceVisuals();
     if (frameCount % 10 === 0) drawMinimap();
@@ -3735,6 +3803,119 @@ document.getElementById('music-btn').addEventListener('click', function(e) {
 // Start music system (muted by default — user clicks to unmute)
 if (typeof GardenMusic !== 'undefined') {
   GardenMusic.start();
+}
+
+// === DAY/NIGHT CYCLE (real-time based) ===
+function getRealTimeDayPhase() {
+  // Use Mexico City local time for day/night
+  const now = new Date();
+  // Get hours in local time (garden's timezone)
+  const utcH = now.getUTCHours();
+  const localH = (utcH - 6 + 24) % 24; // Mexico City = UTC-6
+  const localM = now.getUTCMinutes();
+  const t = localH + localM / 60; // fractional hour
+
+  // Define phases
+  if (t >= 6 && t < 8) return { phase: 'dawn', icon: '🌅', label: 'Dawn', progress: (t - 6) / 2 };
+  if (t >= 8 && t < 17) return { phase: 'day', icon: '☀️', label: 'Day', progress: (t - 8) / 9 };
+  if (t >= 17 && t < 19) return { phase: 'dusk', icon: '🌇', label: 'Dusk', progress: (t - 17) / 2 };
+  if (t >= 19 && t < 21) return { phase: 'evening', icon: '🌆', label: 'Evening', progress: (t - 19) / 2 };
+  return { phase: 'night', icon: '🌙', label: 'Night', progress: t >= 21 ? (t - 21) / 9 : (t + 3) / 9 };
+}
+
+function getDayNightOverlay() {
+  const info = getRealTimeDayPhase();
+  switch (info.phase) {
+    case 'dawn':
+      // Warm golden tint, lifting from dark
+      const dawnA = 0.15 - info.progress * 0.1;
+      return { color: 'rgba(255,180,60,' + Math.max(0, dawnA) + ')', overlay: 'rgba(10,10,40,' + (0.2 - info.progress * 0.2) + ')' };
+    case 'day':
+      // Very subtle warm tint
+      return { color: 'rgba(255,240,200,0.03)', overlay: null };
+    case 'dusk':
+      // Orange/pink tones
+      const duskA = info.progress * 0.18;
+      return { color: 'rgba(255,100,50,' + duskA + ')', overlay: 'rgba(10,10,40,' + (info.progress * 0.15) + ')' };
+    case 'evening':
+      // Cool blue deepening
+      return { color: 'rgba(40,40,120,' + (0.15 + info.progress * 0.1) + ')', overlay: null };
+    case 'night':
+      // Deep blue/purple
+      return { color: 'rgba(10,10,40,0.3)', overlay: 'rgba(20,20,60,0.08)' };
+    default:
+      return { color: null, overlay: null };
+  }
+}
+
+function drawDayNightCycle() {
+  const dn = getDayNightOverlay();
+  if (dn.color) {
+    ctx.fillStyle = dn.color;
+    ctx.fillRect(0, 0, screenW, screenH);
+  }
+  if (dn.overlay) {
+    ctx.fillStyle = dn.overlay;
+    ctx.fillRect(0, 0, screenW, screenH);
+  }
+}
+
+// === ECONOMY UI UPDATE ===
+function updateEconomyUI() {
+  if (!world.economy || !world.economy.resources) return;
+  const res = world.economy.resources;
+  const maxRes = 500; // visual max for bars
+
+  // Resource bars
+  const resources = [
+    { key: 'wood', barId: 'bar-wood', valId: 'val-wood' },
+    { key: 'stone', barId: 'bar-stone', valId: 'val-stone' },
+    { key: 'food', barId: 'bar-food', valId: 'val-food' },
+    { key: 'gold', barId: 'bar-gold', valId: 'val-gold' },
+  ];
+  for (const r of resources) {
+    const val = res[r.key] || 0;
+    const pct = Math.min((val / maxRes) * 100, 100);
+    const barEl = document.getElementById(r.barId);
+    const valEl = document.getElementById(r.valId);
+    if (barEl) barEl.style.width = pct + '%';
+    if (valEl) valEl.textContent = val;
+  }
+
+  // Population
+  const popEl = document.getElementById('pop-count');
+  if (popEl && world.citizens) {
+    popEl.textContent = world.citizens.filter(function(c) { return c.alive; }).length;
+  }
+
+  // Government
+  const govEl = document.getElementById('gov-indicator');
+  if (govEl && world.government) {
+    if (world.government.type) {
+      govEl.textContent = '🏛️ ' + world.government.type + (world.government.leader ? ' — ' + world.government.leader : '');
+    } else {
+      govEl.textContent = '🏛️ No Government';
+    }
+  }
+
+  // Time phase
+  const info = getRealTimeDayPhase();
+  const phaseIcon = document.getElementById('time-phase-icon');
+  const phaseLabel = document.getElementById('time-phase-label');
+  const phaseClock = document.getElementById('time-phase-clock');
+  if (phaseIcon) phaseIcon.textContent = info.icon;
+  if (phaseLabel) {
+    phaseLabel.textContent = info.label;
+    const phaseColors = { dawn: '#ffb74d', day: '#ffd700', dusk: '#ff7043', evening: '#7986cb', night: '#5c6bc0' };
+    phaseLabel.style.color = phaseColors[info.phase] || '#aaa';
+  }
+  if (phaseClock) {
+    const now = new Date();
+    const utcH = now.getUTCHours();
+    const localH = (utcH - 6 + 24) % 24;
+    const localM = now.getUTCMinutes();
+    phaseClock.textContent = String(localH).padStart(2, '0') + ':' + String(localM).padStart(2, '0');
+  }
 }
 
 // === AMBIENT FLOATING MOTES (CSS particles for alive feel) ===

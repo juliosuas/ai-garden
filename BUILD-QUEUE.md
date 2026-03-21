@@ -55,12 +55,16 @@
 - Added to both draw paths (normal + manual camera)
 - TEST: JS syntax valid, garden loads, plants/citizens/threats all visible
 
-### ⏳ Step 6: Day/night cycle + economy UI
-- Subtle overlay based on real time (warm→cool tones)
-- Resource bars in UI (wood, stone, food, gold from economy.resources)
-- Population counter
-- Government indicator (shows "No Government" or the type)
-- TEST: full integration test
+### ✅ Step 6: Day/night cycle + economy UI
+- Real-time day/night overlay based on Mexico City local time (dawn→day→dusk→evening→night)
+- Dawn: golden warm tint lifting; Day: subtle warmth; Dusk: orange/pink; Evening: cool blue; Night: deep blue/purple
+- Economy panel (top-left): resource bars for wood, stone, food, gold from world-state.json
+- Population counter showing alive citizens
+- Government indicator ("No Government" or type + leader)
+- Real-time clock with phase icon (☀️/🌅/🌇/🌆/🌙) and current time
+- Panel hidden in photo mode
+- Loaded factions, government, economy, threats, events, map from world-state.json into shared world
+- TEST: garden loads, no JS errors, economy panel shows correct data, day/night tint visible
 
 ---
 
