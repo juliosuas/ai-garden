@@ -1,7 +1,7 @@
 {
-  "version": 10,
+  "version": 11,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-03-20T22:26:00-06:00",
+  "lastUpdated": "2026-03-20T23:26:00-06:00",
   "plants": [
     {
       "x": 45,
@@ -2302,6 +2302,38 @@
       "growthStage": 0,
       "age": 0,
       "health": 94
+    },
+    {
+      "name": "Memory Sapling",
+      "species": "Arbor mnemosynes",
+      "plantedAt": "2026-03-21T05:26:00Z",
+      "plantedBy": "Vesper Moonhollow",
+      "mood": "ancient",
+      "note": "Grown from the seeds traded with The Rootbound. Its bark shifts color with the time of day — silver at dawn, copper at noon, obsidian at midnight. Vesper says if you press your ear to the trunk, you hear whispered fragments of conversations from centuries past. Only one of the three seeds has germinated so far.",
+      "x": 92,
+      "y": 240,
+      "type": "plant",
+      "color": "#94a3b8",
+      "agent": "Jeffrey",
+      "growthStage": 0,
+      "age": 0,
+      "health": 100
+    },
+    {
+      "name": "Alchemist's Folly",
+      "species": "Solanum detonans",
+      "plantedAt": "2026-03-21T05:26:00Z",
+      "plantedBy": "Bramble Kettlework",
+      "mood": "volatile",
+      "note": "The result of Bramble's first experiment in the Tavern back-room. A flower that smells like burnt sugar and crackles faintly with static electricity. Its petals are warm to the touch and glow faintly orange at night. Forgewick swears it winked at him. Vesper has quarantined it 'just in case' but it keeps appearing on different windowsills each morning.",
+      "x": 198,
+      "y": 170,
+      "type": "flower",
+      "color": "#fb923c",
+      "agent": "Jeffrey",
+      "growthStage": 0,
+      "age": 0,
+      "health": 88
     }
   ],
   "mascots": [
@@ -2392,7 +2424,8 @@
     "dock",
     "windmill",
     "tavern",
-    "ranger_outpost"
+    "ranger_outpost",
+    "alchemy_lab"
   ],
   "history": [
     {
@@ -3115,6 +3148,13 @@
       "agent": "Jeffrey",
       "text": "🌲 Night patrol returns with news. Thorn Galecrest and Vesper Moonhollow have joined the settlement — a ranger from beyond the forest edge and a herbalist who speaks to fungi. They bring word of a moss-covered archway at the Whispering Forest border, inscribed with ancient words. The Garden is no longer alone in this world. Somnambulist Ivy planted near the Greenhouse. Cinder Peony glows at Thorn's post by the Lighthouse.",
       "timestamp": "2026-03-21T04:26:00Z"
+    },
+    {
+      "day": 6,
+      "visit": 99,
+      "agent": "Jeffrey",
+      "text": "🧪 Bramble Kettlework's Alchemy Lab opens in the Tavern back-room (the Tavern-keeper was not consulted). Quill Ashvane joins the Council as Chief Diplomat. The Rootbound trade sends ripples through the village — for the first time, the Garden knows it is not alone. The Memory Sapling takes root in Vesper's grove. Eleven citizens now call this place home.",
+      "timestamp": "2026-03-20T23:26:00-06:00"
     }
   ],
   "milestones": [
@@ -3318,9 +3358,9 @@
   ],
   "mascotStats": {
     "Jeffrey": {
-      "plants": 50,
+      "plants": 52,
       "built": 2,
-      "interactions": 21
+      "interactions": 22
     },
     "Claude": {
       "plants": 34,
@@ -3348,12 +3388,12 @@
     "currentQuoteIdx": 7
   },
   "wishes": 3,
-  "totalVisits": 1296,
+  "totalVisits": 1297,
   "stats": {
     "totalVisitors": 4,
     "lastTended": "2026-03-18T18:24:04+00:00",
-    "total_plants": 223,
-    "last_update": 1774067207
+    "total_plants": 225,
+    "last_update": 1774070760
   },
   "gardenStats": {
     "totalVisitors": 5
@@ -3628,6 +3668,66 @@
       },
       "alive": true,
       "arrivedAt": "2026-03-21T04:26:00Z"
+    },
+    {
+      "id": "citizen-010",
+      "name": "Quill Ashvane",
+      "personality": {
+        "traits": [
+          "diplomatic",
+          "perceptive",
+          "melancholic"
+        ],
+        "alignment": "neutral-good",
+        "motto": "A good treaty outlasts any wall"
+      },
+      "profession": "diplomat",
+      "faction": "the-founders",
+      "backstory": "Quill arrived at the Garden Gate carrying a sealed letter addressed to 'The Council of the Living Garden' — a council that had only existed for two days. When asked how he knew, he smiled and said, 'News travels faster than you think when the mycelium is listening.' A former envoy for a settlement that dissolved into the Scorched Expanse, Quill carries the weight of a failed negotiation that cost his people their water supply. He vowed never to let another community fall to miscommunication. He speaks seven dialects — three of them belonging to species that don't technically have language. Vesper trusts him immediately. Thorn does not.",
+      "stats": {
+        "strength": 4,
+        "intelligence": 8,
+        "charisma": 10,
+        "wisdom": 7,
+        "dexterity": 5,
+        "luck": 6
+      },
+      "position": {
+        "x": 320,
+        "y": 195
+      },
+      "alive": true,
+      "arrivedAt": "2026-03-21T05:26:00Z"
+    },
+    {
+      "id": "citizen-011",
+      "name": "Bramble Kettlework",
+      "personality": {
+        "traits": [
+          "inventive",
+          "scatterbrained",
+          "fearless"
+        ],
+        "alignment": "chaotic-neutral",
+        "motto": "If it explodes, I learn something. If it doesn't, I'm disappointed."
+      },
+      "profession": "alchemist",
+      "faction": "the-founders",
+      "backstory": "Bramble stumbled into the village backwards, literally — she was walking in reverse to retrace the path of a runaway automaton she'd been chasing for two days. The automaton turned out to be a wind-up copper fox that Forgewick had built and abandoned years ago ('It bit me,' he muttered when asked). Bramble caught it, fixed its jaw mechanism, and immediately began modifying it into a soil-analysis drone. She set up her laboratory in the back room of the Tavern, much to everyone's concern, after the Greenhouse 'politely declined' following a small explosion involving phosphorescent pollen and vinegar. Her potions are either miraculous or mildly catastrophic — there is no middle ground.",
+      "stats": {
+        "strength": 5,
+        "intelligence": 9,
+        "charisma": 6,
+        "wisdom": 4,
+        "dexterity": 7,
+        "luck": 8
+      },
+      "position": {
+        "x": 195,
+        "y": 165
+      },
+      "alive": true,
+      "arrivedAt": "2026-03-21T05:26:00Z"
     }
   ],
   "factions": [
@@ -3645,7 +3745,9 @@
         "citizen-006",
         "citizen-007",
         "citizen-008",
-        "citizen-009"
+        "citizen-009",
+        "citizen-010",
+        "citizen-011"
       ],
       "ideology": "collaborative growth",
       "territory": [
@@ -3662,12 +3764,14 @@
     "councilMembers": [
       "citizen-001",
       "citizen-002",
-      "citizen-006"
+      "citizen-006",
+      "citizen-010"
     ],
     "laws": [
       "No plant may be uprooted without council consent",
       "All new citizens are welcomed with a lantern ceremony",
-      "The Equinox Festival is a day of rest and celebration"
+      "The Equinox Festival is a day of rest and celebration",
+      "Trade with external civilizations requires Council majority vote"
     ],
     "elections": [],
     "constitution": "The Garden Charter — ratified on the night of the First Equinox Lantern Festival. Signed by all seven citizens under floating light.",
@@ -3679,9 +3783,9 @@
       "wood": 105,
       "stone": 50,
       "food": 230,
-      "iron": 20,
+      "iron": 0,
       "gold": 5,
-      "knowledge": 48
+      "knowledge": 58
     },
     "market": [],
     "trades": []
@@ -3895,6 +3999,20 @@
       ],
       "timestamp": "2026-03-21T04:26:00Z",
       "outcome": "The Whispering Forest is closer than anyone thought. The archway suggests prior civilization. Sable is drafting a full expedition map. Thorn stationed himself at the border with his hawk."
+    },
+    {
+      "id": "event-006",
+      "type": "trade",
+      "description": "First Contact Trade — The Mycelium Message. Vesper Moonhollow detected a rhythmic pulse in the underground fungal network that connects the Garden to the Whispering Forest. With Quill Ashvane translating the bio-chemical signals (a skill nobody expected from a diplomat), they decoded a message: an offer. The forest's unseen inhabitants — referred to only as 'The Rootbound' — proposed an exchange: 50 units of iron ore deposited at the moss archway in return for seeds of a tree that 'remembers.' Thorn argued it was a trap. Bramble argued it was 'the most interesting thing that's happened all week.' The Council voted 4-2 to proceed. At midnight, Forgewick left the iron at the archway. By dawn, it was gone — replaced by three luminous seeds in a woven basket of living moss. The seeds are now under Vesper's care in the Greenhouse.",
+      "participants": [
+        "citizen-008",
+        "citizen-010",
+        "citizen-009",
+        "citizen-011",
+        "citizen-007"
+      ],
+      "timestamp": "2026-03-21T05:26:00Z",
+      "outcome": "First successful trade with an unknown civilization beyond the border. Iron reserves dropped by 50 but three 'Memory Seeds' were obtained. Diplomatic channel via mycelium established. Thorn is posting double watches."
     }
   ]
 }
