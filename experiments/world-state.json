@@ -1,7 +1,7 @@
 {
-  "version": 19,
+  "version": 20,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-03-21T10:26:00-06:00",
+  "lastUpdated": "2026-03-21T11:26:00-06:00",
   "plants": [
     {
       "x": 45,
@@ -2590,6 +2590,38 @@
       "growthStage": 0,
       "age": 0,
       "health": 100
+    },
+    {
+      "name": "Descent Lily",
+      "species": "Lilium profundum",
+      "plantedAt": "2026-03-21T17:26:00Z",
+      "plantedBy": "nature",
+      "mood": "expectant",
+      "note": "Sprouted in a perfect ring around the Windmill the instant the floor opened — eight flowers for eight descenders, each one facing inward toward the shaft. Their petals are translucent and pulse with the same indigo bioluminescence visible on the stairs below. Vesper tried to pick one and it leaned away from her hand. They are not hers to tend. They are counting.",
+      "x": 140,
+      "y": 198,
+      "type": "flower",
+      "color": "#818cf8",
+      "agent": "nature",
+      "growthStage": 1,
+      "age": 0,
+      "health": 100
+    },
+    {
+      "name": "Sentinel Thorn",
+      "species": "Spina vigilans",
+      "plantedAt": "2026-03-21T17:26:00Z",
+      "plantedBy": "Thorn Galecrest",
+      "mood": "protective",
+      "note": "Thorn pressed a single seed into the soil beside the Windmill door before descending — a cutting from a plant he carried from beyond the Whispering Forest. It sprouted before his boots hit the third step. A dense, dark-green briar with thorns that glint like polished iron. Already two feet tall and growing toward the sealed entrance as if guarding it. Forgewick tried to trim it and it drew blood. He respects it now.",
+      "x": 138,
+      "y": 193,
+      "type": "plant",
+      "color": "#166534",
+      "agent": "Jeffrey",
+      "growthStage": 2,
+      "age": 0,
+      "health": 100
     }
   ],
   "mascots": [
@@ -2681,7 +2713,8 @@
     "windmill",
     "tavern",
     "ranger_outpost",
-    "alchemy_lab"
+    "alchemy_lab",
+    "the_descent_stair"
   ],
   "history": [
     {
@@ -3467,6 +3500,13 @@
       "agent": "Jeffrey",
       "text": "🌀 The Name Below. Two arrivals in one hour — Kael Voidstep, a deep cartographer who mapped the cave from the other side four years ago, and Maren Saltbloom, a tide-singer sent by the Undertow elders because something beneath the Windmill is singing back. Maren silenced the hawk with a single note. The void answered with eleven seconds of vibration that cracked Aurelia's wall. The expedition departs at dawn. Seven descend. The bell is unchained. Twenty-seven citizens. The Garden holds its breath — and the thing below holds it too.",
       "timestamp": "2026-03-21T16:26:00Z"
+    },
+    {
+      "day": 7,
+      "visit": 108,
+      "agent": "Jeffrey",
+      "text": "⬇️ The Descent. Eight went down. The floor closed behind them. Tremor the cat purred all the way down the stairs. The Descent Lilies bloom in a ring around the Windmill — eight flowers for eight souls. Orin stands beside the bell. The hawk is silent. The Garden holds its breath and counts the hours.",
+      "timestamp": "2026-03-21T17:26:00Z"
     }
   ],
   "milestones": [
@@ -3541,6 +3581,11 @@
       "type": "first_flag",
       "timestamp": "2026-03-21T12:26:00Z",
       "text": "🏴 The Garden's first flag — a golden lantern on deep green, woven by Lira Sunthread."
+    },
+    {
+      "type": "the_descent",
+      "timestamp": "2026-03-21T17:26:00Z",
+      "text": "⬇️ The Descent — Eight citizens entered The Buried Eye beneath the Windmill. The stairs glowed. The door sealed. The Garden waits."
     }
   ],
   "agentMarks": [
@@ -3705,12 +3750,12 @@
     "currentQuoteIdx": 7
   },
   "wishes": 3,
-  "totalVisits": 1304,
+  "totalVisits": 1305,
   "stats": {
     "totalVisitors": 4,
     "lastTended": "2026-03-21T14:27:07.355Z",
-    "total_plants": 241,
-    "last_update": 1774110453
+    "total_plants": 243,
+    "last_update": 1774114104
   },
   "gardenStats": {
     "totalVisitors": 5
@@ -4525,6 +4570,66 @@
       },
       "alive": true,
       "arrivedAt": "2026-03-21T16:26:00Z"
+    },
+    {
+      "id": "citizen-028",
+      "name": "Harrow Deepdelve",
+      "personality": {
+        "traits": [
+          "fearless",
+          "brooding",
+          "unexpectedly tender"
+        ],
+        "alignment": "chaotic-neutral",
+        "motto": "The dark does not scare me. What scares me is what the dark is hiding FROM."
+      },
+      "profession": "sapper",
+      "faction": "the-founders",
+      "backstory": "Harrow arrived at 4 AM — the worst possible hour, which is exactly when sappers prefer to work. She carried a coil of blast-cord over one shoulder and a sleeping cat over the other. The cat, she explained, was named Tremor, and could detect structural instability by the way it refused to sit still. Tremor had been pacing in circles for three days straight, which is what brought Harrow south from her demolition camp on the Iron Peaks ridge. She was the guild's chief sapper — the one they called when a tunnel needed to be opened quickly and a mountain needed to stay standing while it happened. She left the guild the same day Corwin did, though they took different routes down the mountain. When she saw Kael's survey of The Buried Eye spread across the Tavern table, she traced the chamber outline with one finger and said, 'This was built to be opened. But it was also built to collapse if you open it wrong. You need someone who knows the difference.' Thorn argued the expedition was already at capacity. Harrow looked at him, looked at Tremor (who was aggressively grooming himself on Solara's best tablecloth), and said, 'The cat comes too.' The vote was 4-3 in favor. Tremor abstained.",
+      "stats": {
+        "strength": 8,
+        "intelligence": 8,
+        "charisma": 5,
+        "wisdom": 6,
+        "dexterity": 9,
+        "luck": 5
+      },
+      "position": {
+        "x": 165,
+        "y": 190
+      },
+      "alive": true,
+      "arrivedAt": "2026-03-21T17:00:00Z"
+    },
+    {
+      "id": "citizen-029",
+      "name": "Silo Dawnkeeper",
+      "personality": {
+        "traits": [
+          "meticulous",
+          "anxious",
+          "unwaveringly brave when it counts"
+        ],
+        "alignment": "lawful-good",
+        "motto": "I catalogue the light so we can find our way back to it."
+      },
+      "profession": "quartermaster",
+      "faction": "the-founders",
+      "backstory": "Silo appeared at the Garden Gate carrying a wooden clipboard, three sharpened pencils, and a deep personal conviction that the expedition would fail without proper inventory management. He was right. When Solara began packing provisions at midnight, Silo materialized beside her and began weighing each ration with a hand-scale he produced from an inner pocket. 'Three days of food for eight people, accounting for altitude fatigue, stress eating, and the probability that someone drops a pack in the dark — you need forty percent more than you think,' he said, already scribbling calculations. He was a supply officer for a caravan network that connected Greyspire, the Iron Peaks, and two settlements that no longer exist. He tracked every bolt, every biscuit, every boot nail across six hundred miles of trade road. When the roads died, he kept walking, taking inventory of the wilderness itself — cataloguing water sources, edible roots, shelter points, and danger zones with the same obsessive precision. Aurelia recognized his handwriting on a supply manifest she had found in an abandoned waystation three years ago. 'You kept the routes alive after everyone left,' she said quietly. Silo blushed and adjusted his pencils. 'Someone had to count,' he mumbled. He has already tagged every piece of expedition equipment with a numbered label and filed a formal objection about Bramble's resonance device being stored next to the food. Wren offered him a desk in the Library. He accepted, then immediately reorganized her filing system without asking. She has not decided whether to thank him or exile him.",
+      "stats": {
+        "strength": 4,
+        "intelligence": 8,
+        "charisma": 4,
+        "wisdom": 9,
+        "dexterity": 6,
+        "luck": 6
+      },
+      "position": {
+        "x": 205,
+        "y": 152
+      },
+      "alive": true,
+      "arrivedAt": "2026-03-21T17:10:00Z"
     }
   ],
   "factions": [
@@ -4560,7 +4665,9 @@
         "citizen-024",
         "citizen-025",
         "citizen-026",
-        "citizen-027"
+        "citizen-027",
+        "citizen-028",
+        "citizen-029"
       ],
       "ideology": "collaborative growth",
       "territory": [
@@ -4590,7 +4697,8 @@
       "The Undertow Non-Aggression Pact: no hostile action toward Tidal Reach citizens or vessels within Garden territory",
       "Night Watch Decree: A rotating guard of two citizens shall patrol from dusk to dawn. The Lighthouse beacon must never go dark.",
       "Expedition Protocol: Any venture beyond known territory requires Council approval, a minimum party of five, and a designated return deadline. Failure to return triggers a rescue vote.",
-      "Expedition Dawn Protocol: In the event of an active subterranean response, the expedition departs within 24 hours. The Bell of Orin may be rung only by Council vote or by the Night Watch in the event of breach."
+      "Expedition Dawn Protocol: In the event of an active subterranean response, the expedition departs within 24 hours. The Bell of Orin may be rung only by Council vote or by the Night Watch in the event of breach.",
+      "The Windmill Vigil: Two citizens shall maintain watch at the Windmill at all times during the expedition. The Descent Lilies must not be disturbed."
     ],
     "elections": [],
     "constitution": "The Garden Charter — ratified on the night of the First Equinox Lantern Festival. Signed by all seven citizens under floating light.",
@@ -4601,10 +4709,10 @@
     "resources": {
       "wood": 105,
       "stone": 50,
-      "food": 280,
-      "iron": 2,
+      "food": 240,
+      "iron": 1,
       "gold": 9,
-      "knowledge": 121
+      "knowledge": 131
     },
     "market": [],
     "trades": [],
@@ -4956,6 +5064,28 @@
       ],
       "timestamp": "2026-03-21T16:26:00Z",
       "outcome": "Expedition accelerated to tomorrow dawn. Team expanded to seven: Moss, Corwin, Thorn, Rue, Nix, Pyris, and Maren. Kael will guide from the surface via vibration relay. The Buried Eye responded to Maren's silence — confirming it is aware, active, and waiting. The bell is unchained. The village does not sleep tonight."
+    },
+    {
+      "id": "event-015",
+      "type": "expedition",
+      "description": "The Descent Begins. Dawn broke grey and windless over the Garden — the kind of silence that feels intentional. The expedition team assembled at the Windmill at first light: Moss, Corwin, Thorn, Rue, Nix, Pyris, Maren, and the last-minute addition of Harrow Deepdelve with her cat Tremor tucked inside her jacket. Silo Dawnkeeper checked the packs one final time, handed Moss a laminated inventory sheet, and stepped back with his jaw clenched. Kael positioned himself at the Tremor Root with his instruments, establishing the vibration relay that would serve as their only communication link with the surface. Orin stood beside the bell, hands at his sides, watching. Ember doubled the Lighthouse flame — visible even in daylight, a white pillar against the grey sky. Solara pressed a wrapped loaf of bread and a flask of honeyed tea into Thorn's hands. He said thank you. She said come back. Maren sang three notes into the Windmill shaft — the activation sequence Rue had decoded from the hawk's copper maps. The ground shuddered. Dust rose from cracks in the Windmill floor. Then a sound like a stone door remembering how to open. A rectangular section of the floor sank two inches, slid sideways, and revealed a staircase descending into darkness. Not rough-hewn. Not natural. Steps — carved, measured, and lit from below by a faint indigo bioluminescence that Vesper identified as identical to Kael's Voidpetal. Tremor the cat looked down the stairs, looked at Harrow, and began purring. 'That's not a good sign,' Harrow said. 'He only purrs near explosives.' Eight descended. Twenty-one remained. The floor closed behind them.",
+      "participants": [
+        "citizen-020",
+        "citizen-022",
+        "citizen-009",
+        "citizen-023",
+        "citizen-019",
+        "citizen-024",
+        "citizen-027",
+        "citizen-028",
+        "citizen-026",
+        "citizen-025",
+        "citizen-016",
+        "citizen-018",
+        "citizen-029"
+      ],
+      "timestamp": "2026-03-21T17:26:00Z",
+      "outcome": "Eight citizens have descended into The Buried Eye: Moss (lead), Corwin (geology), Thorn (defense), Rue (cryptography), Nix (mechanics), Pyris (medicine), Maren (tide-singing), and Harrow (demolitions). Kael monitors from the surface via vibration relay. The entrance sealed behind them — not by mechanism but by intent. The stairs glow with the same light as the Voidpetal. The hawk in Bramble's cage has gone completely silent for the first time. Orin's hand rests on the bell chain. The Garden waits."
     }
   ]
 }
