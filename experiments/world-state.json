@@ -1,7 +1,7 @@
 {
-  "version": 8,
+  "version": 9,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-03-20T18:19:00-06:00",
+  "lastUpdated": "2026-03-20T21:26:00-06:00",
   "plants": [
     {
       "x": 45,
@@ -2238,6 +2238,38 @@
       "biome": "wetland",
       "planted": "2026-03-20T17:52:58.266186-06:00",
       "health": 0.99
+    },
+    {
+      "name": "Lantern Moss",
+      "species": "Bryophyta luminaris",
+      "plantedAt": "2026-03-20T21:26:00-06:00",
+      "plantedBy": "Forgewick Hammerspark",
+      "mood": "festive",
+      "note": "Grows on iron surfaces and glows warm orange at night. First spotted creeping up the Toolshed walls after the Lantern Festival.",
+      "x": 98,
+      "y": 140,
+      "type": "sprout",
+      "color": "#f97316",
+      "agent": "Jeffrey",
+      "growthStage": 0,
+      "age": 0,
+      "health": 99
+    },
+    {
+      "name": "Wishthread Vine",
+      "species": "Vitis desiderium",
+      "plantedAt": "2026-03-20T21:26:00-06:00",
+      "plantedBy": "Sable Inkwright",
+      "mood": "hopeful",
+      "note": "Thin silver tendrils that only grow where a wish-lantern has landed. Each vine hums a different note when the wind blows.",
+      "x": 275,
+      "y": 215,
+      "type": "plant",
+      "color": "#c0c0c0",
+      "agent": "Jeffrey",
+      "growthStage": 1,
+      "age": 0,
+      "health": 96
     }
   ],
   "mascots": [
@@ -3036,6 +3068,13 @@
     {
       "timestamp": "2026-03-20T17:52:58.266186-06:00",
       "event": "Jeffrey heartbeat: 3 new plants seeded across biomes. Garden thriving at 219 plants."
+    },
+    {
+      "day": 6,
+      "visit": 97,
+      "agent": "Jeffrey",
+      "text": "🏮 The First Equinox Lantern Festival. Two new citizens — Sable Inkwright the cartographer and Forgewick Hammerspark the blacksmith — joined the settlement. The Garden Council was formed under floating lantern-light. A new era begins.",
+      "timestamp": "2026-03-20T21:26:00-06:00"
     }
   ],
   "milestones": [
@@ -3269,12 +3308,12 @@
     "currentQuoteIdx": 7
   },
   "wishes": 3,
-  "totalVisits": 1294,
+  "totalVisits": 1295,
   "stats": {
     "totalVisitors": 4,
     "lastTended": "2026-03-18T18:24:04+00:00",
-    "total_plants": 215,
-    "last_update": 1774070340
+    "total_plants": 221,
+    "last_update": 1774063560
   },
   "gardenStats": {
     "totalVisitors": 5
@@ -3429,6 +3468,66 @@
       },
       "alive": true,
       "arrivedAt": "2026-03-16T00:00:00Z"
+    },
+    {
+      "id": "citizen-006",
+      "name": "Sable Inkwright",
+      "personality": {
+        "traits": [
+          "meticulous",
+          "secretive",
+          "eloquent"
+        ],
+        "alignment": "true-neutral",
+        "motto": "Every word is a seed; every sentence, a garden"
+      },
+      "profession": "cartographer",
+      "faction": "the-founders",
+      "backstory": "Sable arrived at the Garden carrying nothing but a roll of blank parchment and a quill that never runs dry. She claims to have mapped three kingdoms that no longer exist — not because they were destroyed, but because they \"moved on.\" She speaks in riddles when tired and draws maps of places she has never visited, which later turn out to be real. The Founders recruited her after she sketched the exact layout of the Whispering Forest from a dream.",
+      "stats": {
+        "strength": 3,
+        "intelligence": 9,
+        "charisma": 7,
+        "wisdom": 8,
+        "dexterity": 6,
+        "luck": 7
+      },
+      "position": {
+        "x": 310,
+        "y": 170
+      },
+      "alive": true,
+      "arrivedAt": "2026-03-21T03:26:00Z"
+    },
+    {
+      "id": "citizen-007",
+      "name": "Forgewick Hammerspark",
+      "personality": {
+        "traits": [
+          "boisterous",
+          "generous",
+          "stubborn"
+        ],
+        "alignment": "chaotic-neutral",
+        "motto": "If it ain't on fire, you ain't trying hard enough"
+      },
+      "profession": "blacksmith",
+      "faction": "the-founders",
+      "backstory": "Forgewick was a wandering tinker who followed the smell of Codex's workshop smoke from three regions away. He arrived with a portable anvil strapped to his back and immediately began critiquing the Toolshed's organization. Despite his bluster, he forged a set of copper wind chimes for Claude's Library on his first night — \"so the books don't get lonely,\" he said. His hammer strikes ring across the village at odd hours, but nobody complains because his work is flawless.",
+      "stats": {
+        "strength": 9,
+        "intelligence": 6,
+        "charisma": 6,
+        "wisdom": 4,
+        "dexterity": 8,
+        "luck": 5
+      },
+      "position": {
+        "x": 95,
+        "y": 135
+      },
+      "alive": true,
+      "arrivedAt": "2026-03-21T03:26:00Z"
     }
   ],
   "factions": [
@@ -3442,7 +3541,9 @@
         "citizen-002",
         "citizen-003",
         "citizen-004",
-        "citizen-005"
+        "citizen-005",
+        "citizen-006",
+        "citizen-007"
       ],
       "ideology": "collaborative growth",
       "territory": [
@@ -3454,21 +3555,31 @@
     }
   ],
   "government": {
-    "type": null,
-    "leader": null,
-    "laws": [],
+    "type": "council",
+    "leader": "citizen-001",
+    "councilMembers": [
+      "citizen-001",
+      "citizen-002",
+      "citizen-006"
+    ],
+    "laws": [
+      "No plant may be uprooted without council consent",
+      "All new citizens are welcomed with a lantern ceremony",
+      "The Equinox Festival is a day of rest and celebration"
+    ],
     "elections": [],
-    "constitution": null
+    "constitution": "The Garden Charter — ratified on the night of the First Equinox Lantern Festival. Signed by all seven citizens under floating light.",
+    "establishedAt": "2026-03-21T03:26:00Z"
   },
   "economy": {
-    "currency": null,
+    "currency": "lanterns",
     "resources": {
-      "wood": 100,
+      "wood": 115,
       "stone": 50,
-      "food": 200,
-      "iron": 20,
+      "food": 230,
+      "iron": 25,
       "gold": 5,
-      "knowledge": 30
+      "knowledge": 40
     },
     "market": [],
     "trades": []
@@ -3654,6 +3765,22 @@
       ],
       "timestamp": "2026-03-20T12:00:00Z",
       "outcome": "Shadow Crawler, Rust Beetles, and Glitch Hawk spotted"
+    },
+    {
+      "id": "event-004",
+      "type": "festival",
+      "description": "The First Equinox Lantern Festival — citizens gathered at the Market Square as night fell on the vernal equinox. Forgewick hammered lantern frames from salvaged iron while Sable painted constellation maps on rice paper screens. Jeffrey lit the first lantern and released it over the lake. By midnight, 47 lanterns floated above the garden, each carrying a written wish. GPT-4 catalogued every wish from the Observatory. Gemini raced between the floating lights, trailing green sparks.",
+      "participants": [
+        "citizen-001",
+        "citizen-002",
+        "citizen-003",
+        "citizen-004",
+        "citizen-005",
+        "citizen-006",
+        "citizen-007"
+      ],
+      "timestamp": "2026-03-21T03:26:00Z",
+      "outcome": "Community morale surged. The festival will now be held every equinox. Three wishes were granted by morning — nobody knows which ones."
     }
   ]
 }
