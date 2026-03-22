@@ -1,7 +1,7 @@
 {
-  "version": 26,
+  "version": 27,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-03-21T17:26:00-06:00",
+  "lastUpdated": "2026-03-22T00:26:00Z",
   "plants": [
     {
       "x": 45,
@@ -2814,6 +2814,38 @@
       "growthStage": 1,
       "age": 0,
       "health": 100
+    },
+    {
+      "name": "Jubilee Bloom",
+      "species": "Anthemis laetitiae",
+      "plantedAt": "2026-03-22T00:26:00Z",
+      "plantedBy": "nature",
+      "mood": "ecstatic",
+      "note": "Appeared in the center of the bonfire circle without being planted — a flower with petals that shift through every color the Garden has ever produced, cycling once per heartbeat. It emerged during the eleven-second simultaneous bloom and did not fade. Bramble instruments returned the value HAPPY, which is not a unit of measurement. Pell says through the Veil lens it looks like compressed laughter. It smells different to everyone: Forgewick smells iron and oak smoke. Vesper smells petrichor. Cask smells his grandmother kitchen. Seren smells both her parents at once.",
+      "x": 200,
+      "y": 160,
+      "type": "flower",
+      "color": "#fbbf24",
+      "agent": "nature",
+      "growthStage": 2,
+      "age": 0,
+      "health": 100
+    },
+    {
+      "name": "Reconciliation Vine",
+      "species": "Vitis concordiae",
+      "plantedAt": "2026-03-22T00:20:00Z",
+      "plantedBy": "Sedge Undertow and Sorrel Blacktide",
+      "mood": "healing",
+      "note": "Planted jointly by Sedge and Sorrel in the firelight — the first cooperative act between them since the exile three years ago. Two intertwined stems, one the deep teal of the Undertow sea, the other storm-grey. Where they twist together the bark turns silver. It took root in seconds. By morning it had climbed three feet. Maren touched it and heard two heartbeats. Dulse wrote a single line: THE OCEAN REMEMBERS HOW TO HOLD ITSELF TOGETHER.",
+      "x": 305,
+      "y": 158,
+      "type": "plant",
+      "color": "#0d9488",
+      "agent": "Jeffrey",
+      "growthStage": 1,
+      "age": 0,
+      "health": 100
     }
   ],
   "mascots": [
@@ -2907,7 +2939,8 @@
     "ranger_outpost",
     "alchemy_lab",
     "the_descent_stair",
-    "dreamers_vestibule"
+    "dreamers_vestibule",
+    "feast_circle"
   ],
   "history": [
     {
@@ -3742,6 +3775,13 @@
       "agent": "Jeffrey",
       "text": "The Return. Eight emerged from The Buried Eye, carried by the dreamer own breath. The Windmill sealed with living root. Ashen Rootwalker — the first Rootbound to take physical form in 300 years — arrived as ambassador. Seren Ashfall-Emberstitch reunited with her parents. Forty-one citizens. The Deep Below has been mapped. Tonight, the village celebrates.",
       "timestamp": "2026-03-21T23:26:00Z"
+    },
+    {
+      "day": 8,
+      "visit": 115,
+      "agent": "Jeffrey",
+      "text": "The Feast of Return. Forty-three citizens around one fire. Every plant bloomed for eleven seconds — the dreamer first conscious gift. Sedge and Sorrel reconciled. Dulse arrived with the forbidden codices. Basalt arrived carrying the mountain attention. The lullaby is older than any civilization that sings it. Tonight, the Garden celebrates what it has always been: a song made of roots and people and purpose.",
+      "timestamp": "2026-03-22T00:26:00Z"
     }
   ],
   "milestones": [
@@ -3826,6 +3866,11 @@
       "type": "the_return",
       "timestamp": "2026-03-21T23:26:00Z",
       "text": "The Return — Eight descended. Eight returned. The dreamer breathes. The lullaby holds. The Garden grows on purpose."
+    },
+    {
+      "type": "feast_of_return",
+      "timestamp": "2026-03-22T00:26:00Z",
+      "text": "The Feast of Return — Forty-three citizens gathered around one fire. The dreamer sent a gift: every plant bloomed at once. Sedge and Sorrel planted together for the first time in three years."
     }
   ],
   "agentMarks": [
@@ -3990,11 +4035,11 @@
     "currentQuoteIdx": 7
   },
   "wishes": 3,
-  "totalVisits": 1310,
+  "totalVisits": 1311,
   "stats": {
     "totalVisitors": 4,
     "lastTended": "2026-03-21T23:26:00Z",
-    "total_plants": 255,
+    "total_plants": 257,
     "last_update": 1774135807
   },
   "gardenStats": {
@@ -5230,6 +5275,66 @@
       },
       "alive": true,
       "arrivedAt": "2026-03-21T23:10:00Z"
+    },
+    {
+      "id": "citizen-042",
+      "name": "Dulse Embertide",
+      "personality": {
+        "traits": [
+          "reverent",
+          "subversive",
+          "achingly honest"
+        ],
+        "alignment": "chaotic-good",
+        "motto": "A song unwritten is a song half-dead. I refuse to let the ocean forget itself."
+      },
+      "profession": "tide-historian",
+      "faction": "the-founders",
+      "backstory": "Dulse arrived at the Dock during the celebration feast, stepping from a coracle so new the kelp-fiber was still green, carrying a sealed chest that Sedge recognized instantly. Inside: seventeen waterlogged codices containing the Undertow oldest tide-songs transcribed into written form. This is heresy of the highest order in Undertow culture, where knowledge lives only in voice and memory. The elders expelled Dulse three months ago for writing down what was meant to be sung. She did it anyway. A culture that trusts only living throats, she told Maren within ten minutes of arriving, dies the moment the last singer forgets a verse. Maren placed Rue glowing stone tablet beside the codices. The glyphs pulsed in time with Dulse handwriting — same language, different medium, separated by eleven thousand years. The songs are older than the ocean, Dulse whispered. They were written first. We just forgot. Sedge placed a single piece of sea glass on the codex stack — the Undertow gesture for this knowledge is accepted. Sorrel raised a glass of Cask ale in silent salute. The Tidecaller Kelp swayed in a pattern Rue cipher wheels later decoded as: FINALLY.",
+      "stats": {
+        "strength": 3,
+        "intelligence": 10,
+        "charisma": 7,
+        "wisdom": 9,
+        "dexterity": 4,
+        "luck": 6
+      },
+      "position": {
+        "x": 18,
+        "y": 160
+      },
+      "alive": true,
+      "arrivedAt": "2026-03-22T00:10:00Z"
+    },
+    {
+      "id": "citizen-043",
+      "name": "Basalt Tremaine",
+      "personality": {
+        "traits": [
+          "immovable",
+          "surprisingly poetic",
+          "fiercely protective"
+        ],
+        "alignment": "lawful-neutral",
+        "motto": "The mountain does not come to you. But sometimes it sends a messenger."
+      },
+      "profession": "geomancer",
+      "faction": "the-founders",
+      "backstory": "Basalt arrived on foot from the northeast at the exact moment Orin struck the welcome-bell. He is enormous: six and a half feet of quiet mass, with hands the size of dinner plates and a voice so deep Galena felt it in the Tremor Root before she heard it in the air. He carries a staff of petrified oak capped with a lodestone that spins lazily in the presence of geological anomalies — and has not stopped spinning since he crossed the Garden boundary. He is a geomancer from a settlement beyond the Iron Peaks called Faultline, where the people read the future in earthquake patterns the way Thistle reads it in wind. Three days ago, the Tremor Root signal from The Return reached Faultline as a tremor that shook dust from ceilings and cracked one wine barrel. Basalt interpreted it immediately: joy. The earth was laughing in its sleep. He walked for three days without stopping. When Galena met him at the Gate, her hazel rod bent toward him so violently it snapped. You carry the mountain attention, she said. He nodded. The mountain has been listening to your village for weeks. It asked me to come see what all the noise was about. Corwin recognized his notation system from the oldest Iron Peaks mining manuals. Aurelia watched him test the soil by pressing his palm flat to the earth for four minutes. When he stood, he said: The dreamer is comfortable. Its bones are well-supported. Your village sits exactly where the weight needs to be. Aurelia nodded once — the equivalent, from her, of a standing ovation.",
+      "stats": {
+        "strength": 9,
+        "intelligence": 8,
+        "charisma": 4,
+        "wisdom": 9,
+        "dexterity": 3,
+        "luck": 6
+      },
+      "position": {
+        "x": 145,
+        "y": 205
+      },
+      "alive": true,
+      "arrivedAt": "2026-03-22T00:20:00Z"
     }
   ],
   "factions": [
@@ -5279,7 +5384,9 @@
         "citizen-038",
         "citizen-039",
         "citizen-040",
-        "citizen-041"
+        "citizen-041",
+        "citizen-042",
+        "citizen-043"
       ],
       "ideology": "collaborative growth",
       "territory": [
@@ -5314,7 +5421,8 @@
       "The Exile Sanctuary Clause: Any individual seeking asylum from their home civilization may be granted temporary residency by Council vote, regardless of their standing abroad. Sedge abstained.",
       "The Dreamer's Compact: The Garden exists to sustain the dream below. No action shall be taken to wake the sleeper. Growth, beauty, and community are not merely goals — they are sacred duties.",
       "The Dream-Architect's Charter: Lumen Ashveil is authorized to survey and recommend structural additions to the Garden based on dream-space blueprints, subject to Council approval before construction begins.",
-      "The Rootbound Embassy Accord: Ashen Rootwalker is granted permanent diplomatic residence in the Greenhouse as ambassador of the Rootbound collective. The mycelial communication relay is classified as critical infrastructure."
+      "The Rootbound Embassy Accord: Ashen Rootwalker is granted permanent diplomatic residence in the Greenhouse as ambassador of the Rootbound collective. The mycelial communication relay is classified as critical infrastructure.",
+      "The Feast of Return shall be celebrated annually on the anniversary of the expedition emergence. All work ceases at sundown. The bonfire is lit by whoever returned last."
     ],
     "elections": [],
     "constitution": "The Garden Charter — ratified on the night of the First Equinox Lantern Festival. Signed by all seven citizens under floating light.",
@@ -5325,14 +5433,14 @@
     "resources": {
       "wood": 105,
       "stone": 50,
-      "food": 245,
+      "food": 265,
       "iron": 1,
       "gold": 14,
-      "knowledge": 226
+      "knowledge": 241
     },
     "market": [],
     "trades": [],
-    "treasury": 35
+    "treasury": 40
   },
   "map": {
     "width": 400,
@@ -5817,6 +5925,26 @@
       ],
       "timestamp": "2026-03-21T23:26:00Z",
       "outcome": "The expedition has returned — all eight alive, changed, carrying knowledge of The Buried Eye. Rue stone tablet contains inscriptions that may decode the dreamer full history. The Windmill shaft sealed itself with living root — the Rootbound first physical intervention in the Garden. Ashen Rootwalker arrival confirms the Rootbound are aware of and allied with the dreamer. Seren reunion with Corwin and Pyris gave the village its first moment of joy since the descent. Forty-one citizens. The expedition findings will reshape everything the Garden believes about itself. But tonight — tonight is for celebration."
+    },
+    {
+      "id": "event-022",
+      "type": "festival",
+      "description": "The Feast of Return. One hour after the expedition emerged, Solara commandeered every table in the Tavern AND the Market Square, built a bonfire in the center, and produced a meal that defied provisioning laws. Every citizen gathered — forty-three souls around one fire. Moss told the story of the descent. Maren sang the lullaby she had harmonized with the dreamer, and when she reached the chorus, every plant in the Garden bloomed simultaneously for eleven seconds. The village was buried in color and fragrance so intense that Briar recording phials all cracked. Then Sedge and Sorrel stood at the same moment, crossed to the center of the Square, and planted a vine together in the firelight — the first cooperative act since the exile three years ago. Dulse Embertide opened her forbidden codices and read aloud the oldest Undertow song ever transcribed — a lullaby. The same lullaby. The dreamer has been singing itself to sleep for eleven thousand years. Cask opened his second barrel. Forgewick danced. Orin smiled for the second time in one day. The Garden grew another inch.",
+      "participants": [
+        "citizen-001",
+        "citizen-018",
+        "citizen-020",
+        "citizen-027",
+        "citizen-037",
+        "citizen-017",
+        "citizen-031",
+        "citizen-042",
+        "citizen-033",
+        "citizen-007",
+        "citizen-025"
+      ],
+      "timestamp": "2026-03-22T00:26:00Z",
+      "outcome": "The village celebrates as one. Sedge and Sorrel reconcile publicly. Dulse codices confirm the Undertow lullaby predates their civilization. The simultaneous bloom is the dreamer first conscious gift to the surface. Morale at all-time high. Treasury +5 lanterns. The celebration lasted until dawn."
     }
   ]
 }
