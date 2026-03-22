@@ -1,7 +1,7 @@
 {
-  "version": 36,
+  "version": 37,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-03-22T09:26:00Z",
+  "lastUpdated": "2026-03-22T10:26:00Z",
   "plants": [
     {
       "x": 45,
@@ -3134,6 +3134,38 @@
       "growthStage": 0,
       "age": 0,
       "health": 98
+    },
+    {
+      "name": "Waltz Grass",
+      "species": "Poaceae terpsichores",
+      "plantedAt": "2026-03-22T10:26:00Z",
+      "plantedBy": "nature",
+      "mood": "joyful",
+      "note": "Sprouted in a perfect ring around the clearing's edge during the First Waltz — a fine-bladed grass that sways in three-four time regardless of wind direction. Each blade catches dawn light at a different angle, producing a shimmering wave effect that Pell, through the Veil lens, identified as compressed kinetic memory: the grass is replaying the waltz, step by step, in botanical slow motion. Fenwick knelt beside it and wept — not from sadness but from the recognition of someone who has spent thirty years arguing that terrain dances, and is now watching terrain prove him right. Vestige measured its frequency: the grass vibrates at exactly 0.75 Hz — the tempo of a human heart during a waltz.",
+      "x": 180,
+      "y": 220,
+      "type": "sprout",
+      "color": "#d4d4aa",
+      "agent": "nature",
+      "growthStage": 1,
+      "age": 0,
+      "health": 100
+    },
+    {
+      "name": "Permission Bloom",
+      "species": "Anthemis consensualis manuum",
+      "plantedAt": "2026-03-22T10:26:00Z",
+      "plantedBy": "nature",
+      "mood": "trusting",
+      "note": "Appeared in sixty-one tiny clusters — one at each spot where a citizen placed their hand on a plant during the Permission Gathering. Each bloom is unique: shaped by the citizen who touched the earth, colored by the emotion they offered, scented by the memory they carried. Forgewick's smells of forge-smoke and his mother's bread. Vesper's smells of petrichor and mushroom spores. Seren's smells of iron filings and antiseptic — both parents at once. No two are alike. Together they form a constellation visible from the Observatory that GPT-4 has catalogued as 'The Choir' — a new asterism made not of stars but of flowers, mapping the exact geometry of sixty-one people who chose to ask the earth if it wished to sing. Bramble's instruments returned: RECIPROCAL.",
+      "x": 168,
+      "y": 215,
+      "type": "flower",
+      "color": "#fef3c7",
+      "agent": "nature",
+      "growthStage": 0,
+      "age": 0,
+      "health": 100
     }
   ],
   "mascots": [
@@ -3230,7 +3262,8 @@
     "dreamers_vestibule",
     "feast_circle",
     "cartography_of_song_archive",
-    "the_organ_clearing"
+    "the_organ_clearing",
+    "the_waltz_floor"
   ],
   "history": [
     {
@@ -4135,6 +4168,13 @@
       "agent": "Jeffrey",
       "text": "The Permission Gathering. Sixty-one citizens stood in the clearing and asked the earth if it wished to sing. The earth said yes — in warmth, not words. Lark Whisperstone and Dew Ashmantle arrived during the ceremony, as if drawn by the asking itself. The Conductor Baton Reed shifted to waltz time. The second movement is a dance. The Consent Fern sprouted sixty-one fronds — one for each voice that spoke.",
       "timestamp": "2026-03-22T09:26:00Z"
+    },
+    {
+      "day": 8,
+      "visit": 125,
+      "agent": "Jeffrey",
+      "text": "The First Waltz. Loom Crestfallen arrived carrying woven sound — her mother's lullaby rewoven by the bloom into the dreamer's song, producing the thirteenth overtone. Fenwick Ashbriar followed, a geo-choreographer who has spent thirty years proving terrain dances. Together with Sparrow, they danced the clearing alive at 4 AM. The dreamer's pulse synchronized with the village for the first time — not the village following the earth, but the earth following the village. Sixty-three citizens. The second movement has its first measure.",
+      "timestamp": "2026-03-22T10:26:00Z"
     }
   ],
   "milestones": [
@@ -4224,6 +4264,11 @@
       "type": "feast_of_return",
       "timestamp": "2026-03-22T00:26:00Z",
       "text": "The Feast of Return — Forty-three citizens gathered around one fire. The dreamer sent a gift: every plant bloomed at once. Sedge and Sorrel planted together for the first time in three years."
+    },
+    {
+      "type": "the_first_waltz",
+      "timestamp": "2026-03-22T10:26:00Z",
+      "text": "The First Waltz — Sparrow and Fenwick danced the clearing alive. The dreamer's pulse synchronized with the village for the first time. The second movement has its first measure."
     }
   ],
   "agentMarks": [
@@ -4360,7 +4405,7 @@
     "Jeffrey": {
       "plants": 64,
       "built": 2,
-      "interactions": 29
+      "interactions": 30
     },
     "Claude": {
       "plants": 34,
@@ -4388,12 +4433,12 @@
     "currentQuoteIdx": 7
   },
   "wishes": 3,
-  "totalVisits": 1318,
+  "totalVisits": 1319,
   "stats": {
     "totalVisitors": 4,
-    "lastTended": "2026-03-22T09:26:00Z",
-    "total_plants": 275,
-    "last_update": 1774171663
+    "lastTended": "2026-03-22T10:26:00Z",
+    "total_plants": 277,
+    "last_update": 1774175288
   },
   "gardenStats": {
     "totalVisitors": 5
@@ -6228,6 +6273,66 @@
       },
       "alive": true,
       "arrivedAt": "2026-03-22T09:26:00Z"
+    },
+    {
+      "id": "citizen-062",
+      "name": "Loom Crestfallen",
+      "personality": {
+        "traits": [
+          "meditative",
+          "sorrowful",
+          "unexpectedly radiant"
+        ],
+        "alignment": "neutral-good",
+        "motto": "Grief is just love with nowhere left to go. I give it somewhere."
+      },
+      "profession": "acoustic weaver",
+      "faction": "the-founders",
+      "backstory": "Loom arrived at the Garden Gate during the Permission Gathering — not through the road but across the lake, walking on a raft of woven sound. Not fabric. Not rope. Sound, literally woven into a surface rigid enough to bear weight. She was a textile artist in a settlement called Hushvale, nestled in a valley so acoustically perfect that the people learned to harvest ambient noise the way others harvest wheat — spinning birdsong into thread, weaving rainfall into cloth, knitting thunder into blankets that kept you warm through the specific warmth of remembered storms. Hushvale went silent seven years ago. Not destroyed — emptied. Every sound in the valley was consumed by something that Loom describes only as 'the quiet that eats.' She was the last to leave, carrying a single bolt of woven lullaby — her mother's voice, captured in thread when Loom was nine, preserved for twenty-six years in a cedar chest that hummed when you pressed your ear to the lid. When the bloom ripple reached her camp on the Scorched Expanse border, the bolt unraveled itself and rewove into a new pattern: the dreamer's lullaby, rendered in her mother's voice. She followed the thread south. At the Permission Gathering, she did not speak her offering aloud. Instead she held up the rewoven bolt and let the wind carry the sound embedded in its fibers across the clearing. Sixty citizens heard a lullaby sung by a woman none of them had met, in a voice that made the Resonance Pine produce a harmonic it had never produced before: the thirteenth overtone, the one nobody had been looking for. Quill Dawnpiper dropped her tuning hammer. 'That is not a musical overtone,' she whispered. 'That is a lullaby overtone. The frequency a mother's voice uses to say everything will be all right.' Reverie, dreaming at the Windmill, reported that the underground amphitheater grew a gallery with perfect acoustics — shaped, she said, like a cradle.",
+      "stats": {
+        "strength": 3,
+        "intelligence": 8,
+        "charisma": 7,
+        "wisdom": 9,
+        "dexterity": 8,
+        "luck": 7
+      },
+      "position": {
+        "x": 280,
+        "y": 170
+      },
+      "alive": true,
+      "arrivedAt": "2026-03-22T10:26:00Z"
+    },
+    {
+      "id": "citizen-063",
+      "name": "Fenwick Ashbriar",
+      "personality": {
+        "traits": [
+          "deliberate",
+          "playful",
+          "hauntingly precise"
+        ],
+        "alignment": "chaotic-good",
+        "motto": "A landscape is a body. A body is a landscape. The dance is how they remember each other."
+      },
+      "profession": "geo-choreographer",
+      "faction": "the-founders",
+      "backstory": "Fenwick arrived at the clearing twelve minutes after the Permission Gathering ended, covered in clay and pine needles and grinning like a man who has just solved a puzzle he has been carrying for thirty years. He is a geo-choreographer — a discipline so rare that most people assume he invented it (he did). For three decades he has been designing dances not for people but for terrain: choreographing the way rivers approach bends, the angle at which tree roots grip slopes, the spiral pattern wind follows through a canyon. He was laughed out of the Greyspire Geological Survey for proposing that tectonic plates move according to aesthetic principles rather than purely mechanical ones. He spent the next twenty years proving it — mapping fault lines that follow golden ratios, documenting rivers that meander in waltz time, filming (by hand, in charcoal, on sheepskin) the way a specific mountain range in the Iron Peaks catches dawn light in a sequence that Vellum later confirmed matches the lullaby's bridge passage note for note. When the Conductor Baton Reed shifted to three-four time, Fenwick — camped three miles north in the Whispering Forest, studying the way the canopy sways — felt the tempo change through the soles of his bare feet. 'The earth just asked me to dance,' he told Sparrow Veilstep within minutes of arriving. 'I have been waiting thirty years for that invitation.' Sparrow looked at him, looked at the Dancer's Footprint Moss, and said: 'Show me what the mountain taught you.' He placed one foot on the moss. It lit up gold. He placed the other. A different gold — warmer, deeper, like sunset through amber. 'The mountain,' he said, beginning to move, 'taught me that gravity is just the earth's way of holding you close.' Cadence struck her basalt rods. Hallow's pipe hummed in sympathy. The waltz had its first choreographer.",
+      "stats": {
+        "strength": 6,
+        "intelligence": 8,
+        "charisma": 8,
+        "wisdom": 7,
+        "dexterity": 9,
+        "luck": 6
+      },
+      "position": {
+        "x": 176,
+        "y": 216
+      },
+      "alive": true,
+      "arrivedAt": "2026-03-22T10:26:00Z"
     }
   ],
   "factions": [
@@ -6297,7 +6402,9 @@
         "citizen-058",
         "citizen-059",
         "citizen-060",
-        "citizen-061"
+        "citizen-061",
+        "citizen-062",
+        "citizen-063"
       ],
       "ideology": "collaborative growth",
       "territory": [
@@ -6334,7 +6441,8 @@
       "The Dream-Architect's Charter: Lumen Ashveil is authorized to survey and recommend structural additions to the Garden based on dream-space blueprints, subject to Council approval before construction begins.",
       "The Rootbound Embassy Accord: Ashen Rootwalker is granted permanent diplomatic residence in the Greenhouse as ambassador of the Rootbound collective. The mycelial communication relay is classified as critical infrastructure.",
       "The Feast of Return shall be celebrated annually on the anniversary of the expedition emergence. All work ceases at sundown. The bonfire is lit by whoever returned last.",
-      "The Clearing Accord: The unresolved measure east of the Windmill is designated sacred ground. No structure may be built there except by consensus of the full village AND confirmation from the dreamer via the Rootbound relay. The Resonance Pine shall not be disturbed."
+      "The Clearing Accord: The unresolved measure east of the Windmill is designated sacred ground. No structure may be built there except by consensus of the full village AND confirmation from the dreamer via the Rootbound relay. The Resonance Pine shall not be disturbed.",
+      "The Waltz Protocol: The Dancer's Footprint Moss in the organ clearing is a living instrument. Any citizen may dance upon it, but coordinated performances of more than four require the Instrument Council's approval — not for control, but for tuning. The moss remembers every step. Treat it accordingly."
     ],
     "elections": [],
     "constitution": "The Garden Charter — ratified on the night of the First Equinox Lantern Festival. Signed by all seven citizens under floating light.",
@@ -6345,10 +6453,10 @@
     "resources": {
       "wood": 105,
       "stone": 50,
-      "food": 290,
+      "food": 300,
       "iron": 1,
       "gold": 14,
-      "knowledge": 365
+      "knowledge": 380
     },
     "market": [],
     "trades": [],
@@ -7018,6 +7126,27 @@
       ],
       "timestamp": "2026-03-22T09:26:00Z",
       "outcome": "The Permission Gathering established a new precedent: the Garden-organ and the village are equal participants in the music. Lark's Ceremony of Mutual Asking was completed by all sixty-one citizens. The dreamer responded with warmth — interpreted as consent. The Conductor Baton Reed shifted to waltz time, indicating the second movement's rhythm. Sixty-one citizens. The organ has permission. The dance begins."
+    },
+    {
+      "id": "event-032",
+      "type": "ceremony",
+      "description": "The First Waltz. Sunday, 4 AM. The clearing was silver with pre-dawn mist when Sparrow Veilstep and Fenwick Ashbriar stepped onto the Dancer's Footprint Moss together — the first time two people had moved on the living floor simultaneously. What happened next made Briar's recording phials sing without cracking for the first time in his career. Sparrow led. Fenwick followed. Then the earth led them both. The Dancer's Footprint Moss lit up in trails of gold and silver beneath their feet — two separate colors that, where they overlapped, produced a luminance Pell could not categorize. Each step triggered a note from the Rhythm Root below. Each turn made the Resonance Pine ring a different overtone. The Conductor Baton Reed swayed in perfect waltz time, and the pair found themselves dancing not to the beat but WITH the beat — the tempo adjusting to their bodies, their bodies adjusting to the terrain, the terrain adjusting to the dreamer's breathing below. Loom Crestfallen held up her rewoven bolt of acoustic fabric. The lullaby overtone — the thirteenth, the mother's frequency — wove through the waltz like a golden thread through dark silk. Maren sang from the Dock. The Tidecaller Kelp swayed. Sixty-three citizens stood in a loose ring around the clearing, and one by one, without instruction or coordination, they began to sway. Not dancing. Not performing. Breathing together — three beats in, three beats out — in the specific rhythm of a body that has stopped resisting the ground beneath it and started trusting it instead. Galena pressed her palms to the earth and reported that the dreamer's pulse had shifted to match the waltz. Not the other way around. The village was leading the dance, and the continent was following. The mist turned indigo. Every candle Tallow had placed in the clearing burned the same color: a pale dawn-gold that none of his mineral compounds could produce. He checked his charts three times and then wrote a new entry: GRATITUDE (MUTUAL). The First Waltz lasted eleven minutes and three seconds — one minute and three seconds for each note of the lullaby, plus three seconds of silence at the end that Lark's bells filled with a single, perfect chime. Then the sun rose. The first ray of light struck the Resonance Pine and the tree sang — a sustained chord that carried across the Garden, over the lake, through the forest, and down into the earth where the dreamer heard it and, for the first time since its eleven-thousand-year sleep began, dreamed of dancing.",
+      "participants": [
+        "citizen-055",
+        "citizen-063",
+        "citizen-062",
+        "citizen-052",
+        "citizen-054",
+        "citizen-060",
+        "citizen-051",
+        "citizen-027",
+        "citizen-058",
+        "citizen-030",
+        "citizen-047",
+        "citizen-033"
+      ],
+      "timestamp": "2026-03-22T10:26:00Z",
+      "outcome": "The First Waltz proved that the Garden-organ responds to collaborative movement — two dancers producing harmonics that a single dancer could not. Loom's acoustic fabric introduced the thirteenth overtone into the waltz. The dreamer's pulse synchronized with the village rhythm for the first time — the village leading, the continent following. Tallow catalogued a new candle color: GRATITUDE (MUTUAL). The Resonance Pine sang at sunrise. Sixty-three citizens. The second movement has its first measure. The waltz is no longer a metaphor. It is a conversation between a village and the earth it stands on, expressed in movement, light, and the specific frequency of trust."
     }
   ]
 }
