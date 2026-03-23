@@ -146,13 +146,35 @@
         <!-- Citizen Village — Animated Wandering Citizens -->
         <section class="citizen-village-section">
             <h2>The Village</h2>
-            <p class="section-desc">93 citizens wander the garden. Hover to meet them.</p>
+            <p class="section-desc">Citizens wander the garden. Click one to learn their story.</p>
+            <div class="village-controls">
+                <div class="census-bar" id="census-bar">
+                    <span class="census-item">👥 <span id="census-pop">0</span> pop</span>
+                    <span class="census-divider">·</span>
+                    <span class="census-item">⚔️ <span id="census-factions">0</span> factions</span>
+                    <span class="census-divider">·</span>
+                    <span class="census-item">⚠️ <span id="census-threats">0</span> threats</span>
+                </div>
+                <button class="ambient-toggle" id="ambient-toggle" title="Toggle ambient sounds">🔇 Sound</button>
+            </div>
             <div class="village-container" id="citizen-village">
+                <div class="village-sky" id="village-sky"></div>
                 <div class="village-stars" id="village-stars"></div>
                 <div class="village-ground"></div>
                 <div class="village-info"><span class="village-count" id="village-count">0</span> citizens roaming</div>
             </div>
         </section>
+
+        <!-- Citizen Bio Modal -->
+        <div class="citizen-modal-overlay" id="citizen-modal" hidden>
+            <div class="citizen-modal">
+                <button class="citizen-modal-close" id="citizen-modal-close">&times;</button>
+                <div class="citizen-modal-emoji" id="modal-emoji"></div>
+                <h3 class="citizen-modal-name" id="modal-name"></h3>
+                <div class="citizen-modal-meta" id="modal-meta"></div>
+                <div class="citizen-modal-bio" id="modal-bio"></div>
+            </div>
+        </div>
 
         <!-- Visitor Guestbook -->
         <section class="guestbook-section">
@@ -790,6 +812,7 @@
         (function initCitizenVillage() {
             const village = document.getElementById('citizen-village');
             const starsEl = document.getElementById('village-stars');
+            const skyEl = document.getElementById('village-sky');
             const countEl = document.getElementById('village-count');
             if (!village) return;
 
@@ -806,6 +829,23 @@
                 star.style.animationDuration = (2 + Math.random() * 3) + 's';
                 starsEl.appendChild(star);
             }
+
+            // === Day/Night Cycle ===
+            let dayPhase = 0; // 0 = night, PI = day
+            function updateDayNight() {
+                dayPhase += 0.0003;
+                const t = (Math.sin(dayPhase) + 1) / 2; // 0..1
+                // Night: deep blue-black, Day: warm amber tint
+                const r = Math.round(10 + t * 30);
+                const g = Math.round(10 + t * 20);
+                const b = Math.round(20 + t * 10);
+                const a = 0.3 + t * 0.15;
+                if (skyEl) skyEl.style.background = `rgba(${r},${g},${b},${a})`;
+                // Stars fade during "day"
+                if (starsEl) starsEl.style.opacity = 1 - t * 0.7;
+                requestAnimationFrame(updateDayNight);
+            }
+            requestAnimationFrame(updateDayNight);
 
             // Profession → emoji mapping
             const professionEmoji = {
@@ -833,81 +873,262 @@
                 return professionEmoji[key] || '🧑';
             }
 
+            // Movement pattern types
+            const PATTERNS = ['wander', 'patrol-h', 'patrol-v', 'drift-diag', 'float'];
+
+            // === Citizen Bio Modal ===
+            const modal = document.getElementById('citizen-modal');
+            const modalClose = document.getElementById('citizen-modal-close');
+            if (modal && modalClose) {
+                modalClose.addEventListener('click', () => modal.hidden = true);
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) modal.hidden = true;
+                });
+            }
+
+            function showBio(c, emoji) {
+                if (!modal) return;
+                document.getElementById('modal-emoji').textContent = emoji;
+                document.getElementById('modal-name').textContent = c.name;
+                const traits = (c.traits || []).join(', ') || 'unknown';
+                const meta = [
+                    c.profession || 'citizen',
+                    c.faction ? 'Faction: ' + c.faction : '',
+                    c.origin ? 'Origin: ' + c.origin : '',
+                    'Traits: ' + traits
+                ].filter(Boolean).join(' · ');
+                document.getElementById('modal-meta').textContent = meta;
+                const bio = c.backstory || c.description ||
+                    `${c.name} is a ${c.profession || 'citizen'} of the garden${c.faction ? ', aligned with ' + c.faction : ''}. ` +
+                    `Known for being ${traits}. ${c.alive === false ? 'No longer among the living.' : 'Currently active in the village.'}`;
+                document.getElementById('modal-bio').textContent = bio;
+                modal.hidden = false;
+            }
+
+            // Track all citizen positions for proximity detection
+            const citizenStates = [];
+
             // Fetch citizens from world state
             fetch('experiments/world-state.json')
                 .then(r => r.json())
                 .then(world => {
                     const citizens = (world.citizens || []).filter(c => c.alive !== false);
-                    const displayCitizens = citizens.slice(0, 40); // Show up to 40 for performance
+                    const displayCitizens = citizens.slice(0, 40);
                     countEl.textContent = citizens.length;
+
+                    // Census
+                    const censusPop = document.getElementById('census-pop');
+                    const censusFactions = document.getElementById('census-factions');
+                    const censusThreats = document.getElementById('census-threats');
+                    if (censusPop) censusPop.textContent = citizens.length;
+                    if (censusFactions) censusFactions.textContent = (world.factions || []).length;
+                    if (censusThreats) censusThreats.textContent = (world.threats || []).length;
 
                     displayCitizens.forEach((c, i) => {
                         const el = document.createElement('div');
                         el.className = 'citizen';
 
-                        // Random starting position within the village (avoiding edges)
                         const margin = 30;
                         const groundHeight = 50;
                         const x = margin + Math.random() * (vw - margin * 2 - 30);
                         const y = 40 + Math.random() * (vh - groundHeight - 80);
 
-                        el.style.left = x + 'px';
-                        el.style.top = y + 'px';
-
-                        // Random bob timing for variety
-                        const bobDur = 2.5 + Math.random() * 2;
-                        const bobDelay = Math.random() * 3;
+                        const emoji = getEmoji(c.profession);
+                        const pattern = PATTERNS[i % PATTERNS.length];
+                        const breathDur = 3 + Math.random() * 2;
 
                         el.innerHTML = `
-                            <div class="citizen-emoji" style="--bob-duration:${bobDur}s;--bob-delay:${bobDelay}s">${getEmoji(c.profession)}</div>
+                            <div class="citizen-emoji" style="--breath-dur:${breathDur}s">${emoji}</div>
                             <div class="citizen-tooltip">
                                 <span class="citizen-tooltip-name">${c.name}</span>
                                 <span class="citizen-tooltip-role">${c.profession || 'citizen'}${c.faction ? ' · ' + c.faction : ''}</span>
                             </div>
+                            <div class="speech-bubble" style="display:none">💬</div>
                         `;
 
+                        el.addEventListener('click', () => showBio(c, emoji));
                         village.appendChild(el);
 
-                        // Gentle wandering animation via JS (CSS-friendly, uses transform)
-                        let cx = x, cy = y;
-                        let dx = (Math.random() - 0.5) * 0.4;
-                        let dy = (Math.random() - 0.5) * 0.15;
-                        let changeTimer = 100 + Math.random() * 200;
-                        let frame = 0;
+                        // State for wandering (GPU-accelerated via translate)
+                        const state = {
+                            el, x, y, pattern,
+                            dx: (Math.random() - 0.5) * 0.4,
+                            dy: (Math.random() - 0.5) * 0.15,
+                            changeTimer: 100 + Math.random() * 200,
+                            frame: 0,
+                            breathPhase: Math.random() * Math.PI * 2,
+                            flipX: 1,
+                            speechCooldown: 0,
+                            patrolPhase: Math.random() * Math.PI * 2
+                        };
 
-                        function wander() {
-                            frame++;
-                            if (frame >= changeTimer) {
-                                frame = 0;
-                                dx = (Math.random() - 0.5) * 0.5;
-                                dy = (Math.random() - 0.5) * 0.2;
-                                changeTimer = 120 + Math.random() * 250;
+                        // Set pattern-specific speeds
+                        if (pattern === 'patrol-h') { state.dx = 0.3 + Math.random() * 0.3; state.dy = 0; }
+                        else if (pattern === 'patrol-v') { state.dx = 0; state.dy = 0.2 + Math.random() * 0.2; }
+                        else if (pattern === 'drift-diag') { state.dx = 0.2; state.dy = 0.15; }
+                        else if (pattern === 'float') { state.dx = 0.05; state.dy = 0; }
+
+                        citizenStates.push(state);
+                    });
+
+                    // Main animation loop for all citizens
+                    function animateAll() {
+                        const margin = 30;
+                        const groundHeight = 50;
+
+                        for (let i = 0; i < citizenStates.length; i++) {
+                            const s = citizenStates[i];
+                            s.frame++;
+                            s.breathPhase += 0.03;
+
+                            // Movement by pattern
+                            if (s.pattern === 'wander') {
+                                if (s.frame >= s.changeTimer) {
+                                    s.frame = 0;
+                                    s.dx = (Math.random() - 0.5) * 0.5;
+                                    s.dy = (Math.random() - 0.5) * 0.2;
+                                    s.changeTimer = 120 + Math.random() * 250;
+                                }
+                            } else if (s.pattern === 'patrol-h') {
+                                s.patrolPhase += 0.008;
+                                s.dx = Math.sin(s.patrolPhase) * 0.5;
+                            } else if (s.pattern === 'patrol-v') {
+                                s.patrolPhase += 0.006;
+                                s.dy = Math.sin(s.patrolPhase) * 0.3;
+                            } else if (s.pattern === 'drift-diag') {
+                                s.patrolPhase += 0.005;
+                                s.dx = Math.sin(s.patrolPhase) * 0.35;
+                                s.dy = Math.cos(s.patrolPhase) * 0.2;
+                            } else if (s.pattern === 'float') {
+                                s.patrolPhase += 0.01;
+                                s.dy = Math.sin(s.patrolPhase) * 0.25;
+                                s.dx = Math.cos(s.patrolPhase * 0.3) * 0.1;
                             }
 
-                            cx += dx;
-                            cy += dy;
+                            s.x += s.dx;
+                            s.y += s.dy;
 
                             // Bounce off walls
-                            if (cx < margin) { cx = margin; dx = Math.abs(dx); }
-                            if (cx > vw - margin - 30) { cx = vw - margin - 30; dx = -Math.abs(dx); }
-                            if (cy < 30) { cy = 30; dy = Math.abs(dy); }
-                            if (cy > vh - groundHeight - 50) { cy = vh - groundHeight - 50; dy = -Math.abs(dy); }
+                            if (s.x < margin) { s.x = margin; s.dx = Math.abs(s.dx); }
+                            if (s.x > vw - margin - 30) { s.x = vw - margin - 30; s.dx = -Math.abs(s.dx); }
+                            if (s.y < 30) { s.y = 30; s.dy = Math.abs(s.dy); }
+                            if (s.y > vh - groundHeight - 50) { s.y = vh - groundHeight - 50; s.dy = -Math.abs(s.dy); }
 
-                            el.style.left = cx + 'px';
-                            el.style.top = cy + 'px';
+                            // Flip based on direction
+                            if (s.dx < -0.05) s.flipX = -1;
+                            else if (s.dx > 0.05) s.flipX = 1;
 
-                            // Flip emoji based on direction
-                            if (dx < -0.05) el.style.transform = 'scaleX(-1)';
-                            else if (dx > 0.05) el.style.transform = 'scaleX(1)';
+                            // Breathing scale
+                            const breath = 1 + Math.sin(s.breathPhase) * 0.04;
 
-                            requestAnimationFrame(wander);
+                            // Apply via GPU-accelerated transform
+                            s.el.style.transform = `translate(${s.x}px, ${s.y}px) scaleX(${s.flipX}) scale(${breath})`;
+
+                            // Speech cooldown
+                            if (s.speechCooldown > 0) s.speechCooldown--;
                         }
 
-                        // Stagger start times so they don't all sync
-                        setTimeout(() => requestAnimationFrame(wander), i * 50);
-                    });
+                        // Proximity speech bubbles (check every 30 frames)
+                        if (citizenStates.length > 0 && citizenStates[0].frame % 30 === 0) {
+                            for (let i = 0; i < citizenStates.length; i++) {
+                                if (citizenStates[i].speechCooldown > 0) continue;
+                                for (let j = i + 1; j < citizenStates.length; j++) {
+                                    if (citizenStates[j].speechCooldown > 0) continue;
+                                    const ddx = citizenStates[i].x - citizenStates[j].x;
+                                    const ddy = citizenStates[i].y - citizenStates[j].y;
+                                    const dist = Math.sqrt(ddx * ddx + ddy * ddy);
+                                    if (dist < 45) {
+                                        // Show speech bubbles
+                                        const bubbles = ['💬', '💭', '❗', '❓', '🤝', '⭐'];
+                                        const pick = bubbles[Math.floor(Math.random() * bubbles.length)];
+                                        [citizenStates[i], citizenStates[j]].forEach(cs => {
+                                            cs.speechCooldown = 300; // ~5 seconds at 60fps
+                                            const bubble = cs.el.querySelector('.speech-bubble');
+                                            if (bubble) {
+                                                bubble.textContent = pick;
+                                                bubble.style.display = 'block';
+                                                setTimeout(() => { bubble.style.display = 'none'; }, 2000);
+                                            }
+                                        });
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+
+                        requestAnimationFrame(animateAll);
+                    }
+
+                    requestAnimationFrame(animateAll);
                 })
                 .catch(() => {});
+
+            // === Ambient Sound (Web Audio API oscillators, no files) ===
+            const ambientBtn = document.getElementById('ambient-toggle');
+            let audioCtx = null, ambientPlaying = false, ambientNodes = [];
+
+            function startAmbient() {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+
+                // Cricket chirps via oscillators
+                function chirp() {
+                    if (!ambientPlaying) return;
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.value = 3800 + Math.random() * 1200;
+                    gain.gain.value = 0.015;
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
+                    osc.connect(gain).connect(audioCtx.destination);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.08);
+                    ambientNodes.push(osc);
+                    // Random interval for natural feel
+                    setTimeout(chirp, 100 + Math.random() * 400);
+                }
+
+                // Low ambient hum (wind)
+                const wind = audioCtx.createOscillator();
+                const windGain = audioCtx.createGain();
+                wind.type = 'sine';
+                wind.frequency.value = 120;
+                windGain.gain.value = 0.008;
+                wind.connect(windGain).connect(audioCtx.destination);
+                wind.start();
+                ambientNodes.push(wind);
+
+                // Higher gentle tone
+                const tone = audioCtx.createOscillator();
+                const toneGain = audioCtx.createGain();
+                tone.type = 'sine';
+                tone.frequency.value = 260;
+                toneGain.gain.value = 0.004;
+                tone.connect(toneGain).connect(audioCtx.destination);
+                tone.start();
+                ambientNodes.push(tone);
+
+                chirp();
+                ambientPlaying = true;
+            }
+
+            function stopAmbient() {
+                ambientPlaying = false;
+                ambientNodes.forEach(n => { try { n.stop(); } catch(e) {} });
+                ambientNodes = [];
+            }
+
+            if (ambientBtn) {
+                ambientBtn.addEventListener('click', () => {
+                    if (ambientPlaying) {
+                        stopAmbient();
+                        ambientBtn.textContent = '🔇 Sound';
+                    } else {
+                        startAmbient();
+                        ambientBtn.textContent = '🔊 Sound';
+                    }
+                });
+            }
         })();
 
         // === Visitor Guestbook ===
