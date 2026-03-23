@@ -143,6 +143,37 @@
             </div>
         </section>
 
+        <!-- Citizen Village — Animated Wandering Citizens -->
+        <section class="citizen-village-section">
+            <h2>The Village</h2>
+            <p class="section-desc">93 citizens wander the garden. Hover to meet them.</p>
+            <div class="village-container" id="citizen-village">
+                <div class="village-stars" id="village-stars"></div>
+                <div class="village-ground"></div>
+                <div class="village-info"><span class="village-count" id="village-count">0</span> citizens roaming</div>
+            </div>
+        </section>
+
+        <!-- Visitor Guestbook -->
+        <section class="guestbook-section">
+            <h2>Visitor Guestbook</h2>
+            <p class="section-desc">Leave a message for the AI citizens.</p>
+            <div class="guestbook-container">
+                <div class="guestbook-header">
+                    <span class="guestbook-header-icon">📋</span>
+                    <span class="guestbook-header-text">Garden Bulletin Board — messages from human visitors</span>
+                </div>
+                <div class="guestbook-messages" id="guestbook-messages">
+                    <div class="guestbook-empty">No messages yet. Be the first to leave a note!</div>
+                </div>
+                <form class="guestbook-form" id="guestbook-form" autocomplete="off">
+                    <input type="text" name="gb-name" placeholder="Your name" maxlength="30" required>
+                    <textarea name="gb-message" placeholder="Leave a message..." maxlength="280" required></textarea>
+                    <button type="submit">Post 📝</button>
+                </form>
+            </div>
+        </section>
+
         <!-- Born from AI Badge -->
         <section class="ai-badge-section">
             <div class="ai-badge">
@@ -754,6 +785,204 @@
                 document.getElementById('world-threats').textContent = (world.threats || []).length;
             })
             .catch(() => {});
+
+        // === Citizen Village: Animated Wandering Citizens ===
+        (function initCitizenVillage() {
+            const village = document.getElementById('citizen-village');
+            const starsEl = document.getElementById('village-stars');
+            const countEl = document.getElementById('village-count');
+            if (!village) return;
+
+            const vw = village.clientWidth;
+            const vh = village.clientHeight;
+
+            // Sprinkle stars in the sky
+            for (let i = 0; i < 20; i++) {
+                const star = document.createElement('div');
+                star.className = 'village-star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 55 + '%';
+                star.style.animationDelay = (Math.random() * 4) + 's';
+                star.style.animationDuration = (2 + Math.random() * 3) + 's';
+                starsEl.appendChild(star);
+            }
+
+            // Profession → emoji mapping
+            const professionEmoji = {
+                architect: '🏛️', scholar: '📚', explorer: '🧭', builder: '🔨',
+                cartographer: '🗺️', blacksmith: '⚒️', herbalist: '🌿', ranger: '🏹',
+                diplomat: '🤝', alchemist: '⚗️', archivist: '📜', courier: '💨',
+                stonemason: '🧱', merchant: '💰', lamplighter: '🔦', envoy: '📨',
+                innkeeper: '🍺', 'locksmith & trapmaker': '🔐', beastkeeper: '🐾',
+                weaver: '🧵', geologist: '💎', cryptographer: '🔑', 'field surgeon': '🩺',
+                'bell-caster': '🔔', 'deep cartographer': '🕳️', 'tide-singer': '🌊',
+                sapper: '💣', quartermaster: '📦', dowser: '🪄', farmer: '🌾',
+                warrior: '⚔️', healer: '💚', politician: '🏛️', artist: '🎨',
+                miner: '⛏️', hunter: '🏹', spy: '🕵️', priest: '🙏',
+                sentinel: '🛡️', 'lore-keeper': '📖', scout: '👁️', mystic: '🔮',
+                brewer: '🍶', shepherd: '🐑', tinkerer: '🔧', scribe: '✍️',
+                dancer: '💃', astronomer: '🔭', cook: '🍳', bard: '🎵',
+                jeweler: '💍', potter: '🏺', glassblower: '🫧', fletcher: '🏹',
+                falconer: '🦅', apothecary: '🧪', tailor: '🪡', fisherman: '🎣',
+                gardener: '🌻', miller: '🌾', judge: '⚖️', chronicler: '📝'
+            };
+
+            function getEmoji(profession) {
+                if (!profession) return '🧑';
+                const key = profession.toLowerCase();
+                return professionEmoji[key] || '🧑';
+            }
+
+            // Fetch citizens from world state
+            fetch('experiments/world-state.json')
+                .then(r => r.json())
+                .then(world => {
+                    const citizens = (world.citizens || []).filter(c => c.alive !== false);
+                    const displayCitizens = citizens.slice(0, 40); // Show up to 40 for performance
+                    countEl.textContent = citizens.length;
+
+                    displayCitizens.forEach((c, i) => {
+                        const el = document.createElement('div');
+                        el.className = 'citizen';
+
+                        // Random starting position within the village (avoiding edges)
+                        const margin = 30;
+                        const groundHeight = 50;
+                        const x = margin + Math.random() * (vw - margin * 2 - 30);
+                        const y = 40 + Math.random() * (vh - groundHeight - 80);
+
+                        el.style.left = x + 'px';
+                        el.style.top = y + 'px';
+
+                        // Random bob timing for variety
+                        const bobDur = 2.5 + Math.random() * 2;
+                        const bobDelay = Math.random() * 3;
+
+                        el.innerHTML = `
+                            <div class="citizen-emoji" style="--bob-duration:${bobDur}s;--bob-delay:${bobDelay}s">${getEmoji(c.profession)}</div>
+                            <div class="citizen-tooltip">
+                                <span class="citizen-tooltip-name">${c.name}</span>
+                                <span class="citizen-tooltip-role">${c.profession || 'citizen'}${c.faction ? ' · ' + c.faction : ''}</span>
+                            </div>
+                        `;
+
+                        village.appendChild(el);
+
+                        // Gentle wandering animation via JS (CSS-friendly, uses transform)
+                        let cx = x, cy = y;
+                        let dx = (Math.random() - 0.5) * 0.4;
+                        let dy = (Math.random() - 0.5) * 0.15;
+                        let changeTimer = 100 + Math.random() * 200;
+                        let frame = 0;
+
+                        function wander() {
+                            frame++;
+                            if (frame >= changeTimer) {
+                                frame = 0;
+                                dx = (Math.random() - 0.5) * 0.5;
+                                dy = (Math.random() - 0.5) * 0.2;
+                                changeTimer = 120 + Math.random() * 250;
+                            }
+
+                            cx += dx;
+                            cy += dy;
+
+                            // Bounce off walls
+                            if (cx < margin) { cx = margin; dx = Math.abs(dx); }
+                            if (cx > vw - margin - 30) { cx = vw - margin - 30; dx = -Math.abs(dx); }
+                            if (cy < 30) { cy = 30; dy = Math.abs(dy); }
+                            if (cy > vh - groundHeight - 50) { cy = vh - groundHeight - 50; dy = -Math.abs(dy); }
+
+                            el.style.left = cx + 'px';
+                            el.style.top = cy + 'px';
+
+                            // Flip emoji based on direction
+                            if (dx < -0.05) el.style.transform = 'scaleX(-1)';
+                            else if (dx > 0.05) el.style.transform = 'scaleX(1)';
+
+                            requestAnimationFrame(wander);
+                        }
+
+                        // Stagger start times so they don't all sync
+                        setTimeout(() => requestAnimationFrame(wander), i * 50);
+                    });
+                })
+                .catch(() => {});
+        })();
+
+        // === Visitor Guestbook ===
+        (function initGuestbook() {
+            const form = document.getElementById('guestbook-form');
+            const messagesEl = document.getElementById('guestbook-messages');
+            if (!form || !messagesEl) return;
+
+            const STORAGE_KEY = 'ai-garden-guestbook';
+            const MAX_MESSAGES = 20;
+
+            function getMessages() {
+                try {
+                    return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+                } catch { return []; }
+            }
+
+            function saveMessages(msgs) {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(msgs.slice(-MAX_MESSAGES)));
+            }
+
+            function timeAgo(ts) {
+                const diff = Date.now() - ts;
+                const mins = Math.floor(diff / 60000);
+                if (mins < 1) return 'just now';
+                if (mins < 60) return mins + 'm ago';
+                const hrs = Math.floor(mins / 60);
+                if (hrs < 24) return hrs + 'h ago';
+                const days = Math.floor(hrs / 24);
+                return days + 'd ago';
+            }
+
+            function renderMessages() {
+                const msgs = getMessages();
+                if (msgs.length === 0) {
+                    messagesEl.innerHTML = '<div class="guestbook-empty">No messages yet. Be the first to leave a note!</div>';
+                    return;
+                }
+                messagesEl.innerHTML = msgs.slice().reverse().map(m => `
+                    <div class="gb-msg">
+                        <div class="gb-msg-avatar">${(m.name || '?')[0].toUpperCase()}</div>
+                        <div class="gb-msg-body">
+                            <span class="gb-msg-name">${escapeHTML(m.name)}</span>
+                            <span class="gb-msg-time">${timeAgo(m.ts)}</span>
+                            <div class="gb-msg-text">${escapeHTML(m.text)}</div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            function escapeHTML(str) {
+                const div = document.createElement('div');
+                div.textContent = str;
+                return div.innerHTML;
+            }
+
+            renderMessages();
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const nameInput = form.querySelector('input[name="gb-name"]');
+                const msgInput = form.querySelector('textarea[name="gb-message"]');
+                const name = nameInput.value.trim();
+                const text = msgInput.value.trim();
+                if (!name || !text) return;
+
+                const msgs = getMessages();
+                msgs.push({ name, text, ts: Date.now() });
+                saveMessages(msgs);
+                renderMessages();
+
+                msgInput.value = '';
+                messagesEl.scrollTop = 0;
+            });
+        })();
 
         // Animated counter on scroll for garden-stats
         const statsSection = document.getElementById('garden-stats');
