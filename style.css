@@ -2188,16 +2188,252 @@ section h2 {
 }
 
 /* =============================================
-   v115 — THE AGENT AWAKENING
-   Pixel humans, subagents, broadcast feed,
-   consciousness meter.
+   v115 — THE AGENT AWAKENING (polish pass)
+   Pixel humans, subagent tasks, broadcast wires,
+   network canvas, fireflies, consciousness meter,
+   emergent set-pieces.
    ============================================= */
+
+/* Village container becomes a layered scene */
+.village-container {
+    position: relative;
+    overflow: hidden;
+    background:
+        linear-gradient(180deg, #0b0f18 0%, #0e1420 40%, #0a120f 100%) !important;
+}
+.ah-hills {
+    position: absolute;
+    inset: auto 0 0 0;
+    width: 100%;
+    height: 120px;
+    z-index: 1;
+    pointer-events: none;
+}
+.ah-trees {
+    position: absolute;
+    left: 0; right: 0;
+    bottom: 80px;
+    width: 100%;
+    height: 50px;
+    z-index: 2;
+    pointer-events: none;
+    opacity: 0.9;
+}
+.ah-grass {
+    position: absolute;
+    left: 0; right: 0;
+    bottom: 42px;
+    height: 14px;
+    z-index: 3;
+    pointer-events: none;
+}
+.ah-blade {
+    position: absolute;
+    bottom: 0;
+    width: 2px;
+    background: hsl(var(--hue, 120), 60%, 42%);
+    transform-origin: bottom center;
+    animation: ah-blade-wave ease-in-out infinite alternate;
+    box-shadow: 0 0 0 0.5px rgba(0,0,0,0.4);
+    opacity: 0.9;
+}
+@keyframes ah-blade-wave {
+    0% { transform: skewX(-6deg); }
+    100% { transform: skewX(6deg); }
+}
+.ah-fireflies {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    pointer-events: none;
+}
+.ah-fly {
+    position: absolute;
+    width: 3px; height: 3px;
+    border-radius: 50%;
+    background: #fde68a;
+    box-shadow: 0 0 8px #fbbf24, 0 0 16px rgba(251,191,36,0.5);
+    animation: ah-fly-path linear infinite;
+}
+@keyframes ah-fly-path {
+    0%   { transform: translate(0,0); opacity: 0; }
+    10%  { opacity: 1; }
+    50%  { transform: translate(40px, -24px); opacity: 0.95; }
+    90%  { opacity: 1; }
+    100% { transform: translate(-30px, 12px); opacity: 0; }
+}
+.ah-dust {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    pointer-events: none;
+}
+.ah-mote {
+    position: absolute;
+    width: 1.5px; height: 1.5px;
+    background: rgba(255,255,255,0.3);
+    border-radius: 50%;
+    animation: ah-mote-drift linear infinite;
+    opacity: 0.6;
+}
+@keyframes ah-mote-drift {
+    0%   { transform: translate(0,0); }
+    50%  { transform: translate(30px, 20px); }
+    100% { transform: translate(-20px, 0); }
+}
+.ah-net {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    pointer-events: none;
+}
 
 .ah-layer {
     position: absolute;
     inset: 0;
     pointer-events: none;
-    z-index: 3;
+    z-index: 6;
+}
+
+/* Dim overlay for Discovery events (spotlight on one agent) */
+.ah-dim {
+    position: absolute;
+    inset: 0;
+    z-index: 50;
+    pointer-events: none;
+    background: radial-gradient(
+        180px 150px at var(--ah-spot-x, 50%) var(--ah-spot-y, 50%),
+        transparent 0%,
+        rgba(0,0,0,0.82) 100%);
+    opacity: 0;
+    transition: opacity 0.6s ease;
+}
+.ah-dim.ah-dim-on { opacity: 1; }
+
+/* Subagent task outcomes left on the scene */
+.ah-plant {
+    position: absolute;
+    width: 12px; height: 22px;
+    z-index: 7;
+    pointer-events: none;
+    transform-origin: bottom center;
+    animation: ah-plant-grow 1.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    --ah-aura: #f97316;
+}
+.ah-plant-stem {
+    position: absolute;
+    left: 5px;
+    bottom: 0;
+    width: 2px;
+    height: 14px;
+    background: linear-gradient(180deg, #4ade80, #166534);
+    border-radius: 1px;
+}
+.ah-plant-head {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, var(--ah-aura), #be123c);
+    box-shadow: 0 0 6px var(--ah-aura);
+}
+@keyframes ah-plant-grow {
+    0%   { transform: scale(0); }
+    80%  { transform: scale(1.15); }
+    100% { transform: scale(1); }
+}
+
+.ah-brick-stack {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    z-index: 7;
+    pointer-events: none;
+}
+.ah-brick {
+    position: absolute;
+    left: 0;
+    width: 12px;
+    height: 3px;
+    background: linear-gradient(180deg, #a3a3a3, #525252);
+    border: 1px solid #1f1f1f;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.ah-brick[data-idx="0"] { bottom: 0; }
+.ah-brick[data-idx="1"] { bottom: 4px; }
+.ah-brick[data-idx="2"] { bottom: 8px; }
+
+.ah-flag {
+    position: absolute;
+    width: 10px;
+    height: 16px;
+    z-index: 7;
+    pointer-events: none;
+    animation: ah-flag-wave 1.4s ease-in-out infinite alternate;
+    --ah-aura: #f97316;
+}
+.ah-flag::before {
+    content: '';
+    position: absolute;
+    left: 0; bottom: 0;
+    width: 1px;
+    height: 16px;
+    background: #fafafa;
+}
+.ah-flag::after {
+    content: '';
+    position: absolute;
+    left: 1px; top: 0;
+    width: 7px;
+    height: 5px;
+    background: var(--ah-aura);
+    box-shadow: 0 0 6px var(--ah-aura);
+    border: 1px solid #1f1f1f;
+}
+@keyframes ah-flag-wave {
+    from { transform: skewY(-6deg); }
+    to   { transform: skewY(4deg); }
+}
+
+.ah-beacon {
+    position: absolute;
+    width: 4px;
+    height: 120px;
+    margin-left: -2px;
+    margin-top: -120px;
+    z-index: 9;
+    pointer-events: none;
+    background: linear-gradient(180deg, transparent 0%, var(--ah-aura, #a855f7) 60%, transparent 100%);
+    box-shadow: 0 0 20px var(--ah-aura, #a855f7), 0 0 40px var(--ah-aura, #a855f7);
+    animation: ah-beacon-rise 4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+@keyframes ah-beacon-rise {
+    0%   { transform: scaleY(0); opacity: 0.2; }
+    25%  { transform: scaleY(1); opacity: 1; }
+    75%  { transform: scaleY(1); opacity: 1; }
+    100% { transform: scaleY(0.8); opacity: 0; }
+}
+
+.ah-discovery-glyph {
+    position: absolute;
+    font-size: 24px;
+    color: #fff;
+    text-shadow:
+        0 0 10px var(--ah-aura, #fbbf24),
+        0 0 22px var(--ah-aura, #fbbf24),
+        0 0 44px var(--ah-aura, #fbbf24);
+    z-index: 60;
+    pointer-events: none;
+    animation: ah-discovery-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition: opacity 0.9s ease;
+    font-family: monospace;
+}
+@keyframes ah-discovery-in {
+    0%   { transform: scale(0) rotate(-90deg); opacity: 0; }
+    100% { transform: scale(1) rotate(0deg); opacity: 1; }
 }
 
 .ah-agent {
@@ -2326,28 +2562,58 @@ section h2 {
 .ah-subagent {
     position: absolute;
     left: 0; top: 0;
-    width: 22px;
-    height: 30px;
+    width: 24px;
+    height: 36px;
     pointer-events: none;
-    z-index: 3;
+    z-index: 8;
     --ah-aura: #f97316;
-    filter: drop-shadow(0 0 4px var(--ah-aura));
+    filter: drop-shadow(0 0 4px var(--ah-aura)) drop-shadow(0 1px 2px rgba(0,0,0,0.6));
     transition: opacity 0.3s ease;
     animation: ah-sub-pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-.ah-subagent svg { width: 22px; height: 30px; }
-.ah-subagent .ah-sub-label {
+.ah-subagent svg { width: 24px; height: 36px; }
+.ah-subagent .ah-sub-label-wrap {
     position: absolute;
     left: 50%;
     bottom: 100%;
     transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    min-width: 60px;
+}
+.ah-subagent .ah-sub-label {
     font-family: var(--mono);
-    font-size: 0.48rem;
+    font-size: 0.52rem;
     color: var(--ah-aura);
     white-space: nowrap;
-    text-shadow: 0 0 4px rgba(0,0,0,0.8);
+    text-shadow: 0 0 4px rgba(0,0,0,0.9);
     letter-spacing: 0.05em;
+    background: rgba(0,0,0,0.65);
+    padding: 1px 4px;
+    border-radius: 3px;
+    border: 1px solid var(--ah-aura);
 }
+.ah-subagent .ah-sub-bar {
+    width: 48px;
+    height: 3px;
+    background: rgba(0,0,0,0.7);
+    border-radius: 2px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.15);
+}
+.ah-subagent .ah-sub-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--ah-aura), #fff);
+    box-shadow: 0 0 6px var(--ah-aura);
+    transition: width 0.2s ease-out;
+}
+.ah-subagent[data-task="plant"] { --ah-aura: #f472b6; }
+.ah-subagent[data-task="build"] { --ah-aura: #9ca3af; }
+.ah-subagent[data-task="deliver"] { --ah-aura: #fbbf24; }
+.ah-subagent[data-task="scout"] { --ah-aura: #60a5fa; }
 @keyframes ah-sub-pop {
     from { transform: translate3d(0,0,0) scale(0); opacity: 0; }
     to { transform: translate3d(0,0,0) scale(1); opacity: 1; }
@@ -2392,8 +2658,8 @@ section h2 {
 }
 .ah-dash-top {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.9rem;
     margin-bottom: 1rem;
 }
 .ah-dash-stat {
