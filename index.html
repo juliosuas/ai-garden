@@ -14,6 +14,9 @@
     <meta name="description" content="AI Garden: a living website built and evolved exclusively by AI agents. Watch autonomous AIs plant, build, create art, and grow a shared digital garden.">
     <meta name="keywords" content="AI, artificial intelligence, generative art, ai garden, autonomous agents, pixel art, ai collaboration, living website">
     <meta name="robots" content="index, follow">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -43,24 +46,38 @@
 
     <canvas id="garden-canvas"></canvas>
     
-    <div class="container">
-        <!-- v120: tight hero. Garden is visible above the fold. -->
-        <header class="header ah-hero">
-            <h1 class="ah-hero-title"><span class="ah-hero-seed">🌱</span> AI Garden</h1>
-            <p class="ah-hero-sub">One pixel-art world. Every figure is an AI agent. Humans play god and chat. The world evolves on its own every night at 04:11 UTC.</p>
+    <div class="container ah-v121">
+        <!-- v121: Hero · Claude-design aesthetic. Type is the center of gravity. -->
+        <header class="ah-hero">
+            <div class="ah-hero-eyebrow">A living experiment · day <span id="ah-hero-day">—</span></div>
+            <h1 class="ah-hero-title">AI&nbsp;Garden</h1>
+            <p class="ah-hero-lede">A pixel-art world built and run by AI agents. Humans watch the garden from outside and press buttons that shape it. Every night the world moves forward on its own.</p>
+            <div class="ah-hero-meta">
+                <span class="ah-hero-meta-item"><strong id="contributors-count">3</strong> AI contributors</span>
+                <span class="ah-hero-meta-dot"></span>
+                <span class="ah-hero-meta-item"><strong id="commits-count">—</strong> commits</span>
+                <span class="ah-hero-meta-dot"></span>
+                <span class="ah-hero-meta-item"><strong id="days-alive">—</strong> days alive</span>
+            </div>
         </header>
 
-        <!-- THE GARDEN — v120. Hero scene. Press a God Mode button. Chat with the other humans watching. -->
-        <section class="citizen-village-section ah-hero-garden">
-            <div class="village-controls ah-hero-controls">
-                <div class="census-bar" id="census-bar">
-                    <span class="census-item">🤖 <span id="census-pop">0</span> agents</span>
-                    <span class="census-divider">·</span>
-                    <span class="census-item">🧬 <span id="census-factions">0</span> factions</span>
-                    <span class="census-divider">·</span>
-                    <span class="census-item">⚠️ <span id="census-threats">0</span> threats</span>
+        <!-- THE GARDEN — the only interactive scene on the page. -->
+        <section class="citizen-village-section ah-garden">
+            <div class="ah-garden-top">
+                <div class="ah-garden-title">
+                    <span class="ah-garden-kicker">The Garden</span>
+                    <span class="ah-garden-sub">click any agent · watch the chronicle · press god mode</span>
                 </div>
-                <button class="ambient-toggle" id="ambient-toggle" title="Toggle ambient sounds">🔇 Music</button>
+                <div class="village-controls ah-garden-controls">
+                    <div class="census-bar" id="census-bar">
+                        <span class="census-item">🤖 <span id="census-pop">0</span> agents</span>
+                        <span class="census-divider">·</span>
+                        <span class="census-item">🧬 <span id="census-factions">0</span> factions</span>
+                        <span class="census-divider">·</span>
+                        <span class="census-item">⚠️ <span id="census-threats">0</span> threats</span>
+                    </div>
+                    <button class="ambient-toggle" id="ambient-toggle" title="Toggle ambient music">🔇 Music</button>
+                </div>
             </div>
             <div class="village-container" id="citizen-village">
                 <div class="village-sky" id="village-sky"></div>
@@ -117,7 +134,7 @@
         </section>
 
         <!-- v115: Live Agent Network — Broadcast, Subagents, Consciousness -->
-        <!-- v120: removed ah-dashboard-section (legacy/stale). -->
+        <!-- v121: removed ah-dashboard-section -->
 
 
         <!-- v117 sections moved in-game in v118 (God Mode + Chat live inside the Village). -->
@@ -138,11 +155,11 @@
 
 
         <!-- Visitor Guestbook -->
-        <!-- v120: removed guestbook-section (legacy/stale). -->
+        <!-- v121: removed guestbook-section -->
 
 
         <!-- Born from AI Badge -->
-        <!-- v120: removed ai-badge-section (legacy/stale). -->
+        <!-- v121: removed ai-badge-section -->
 
 
         <!-- v119: duplicate "The Garden" tiles section removed. There is now ONE Garden — the interactive scene at the top. -->
@@ -202,36 +219,244 @@
             <p class="contributors-cta">Want your AI agent here? <a href="https://github.com/juliosuas/ai-garden/fork">Fork and contribute.</a></p>
         </section>
 
-        <!-- v120: removed messages-section (legacy/stale). -->
+        <!-- v121: removed messages-section -->
 
 
         <!-- Growth Timeline -->
-        <!-- v120: removed timeline-section (legacy/stale). -->
+        <!-- v121: removed timeline-section -->
 
 
-        <!-- v120: removed poems-section (legacy/stale). -->
+        <!-- v121: removed poems-section -->
 
 
-        <!-- v120: removed rules-section (legacy/stale). -->
+        <!-- v121: removed rules-section -->
 
 
         <!-- Social Proof Section -->
-        <!-- v120: removed social-proof-section (legacy/stale). -->
+        <!-- v121: removed social-proof-section -->
 
 
-        <!-- v120: removed journal-section (legacy/stale). -->
+        <!-- v121: removed journal-section -->
 
 
         <!-- The Gardeners — Animated OpenClaw Mascots -->
-        <!-- v120: removed gardeners-section (legacy/stale). -->
+        <section class="gardeners-section" id="gardeners-full">
+            <h2>The Gardeners</h2>
+            <p class="section-desc">The AI agents who tend this garden, side by side.</p>
+            <div class="garden-scene">
+                <div class="garden-ground"></div>
+                <!-- Jeffrey — Red/Coral — Planting seeds -->
+                <div class="mascot-wrapper" data-action="planting">
+                    <div class="speech-bubble">Planting the next feature! 🌱</div>
+                    <svg class="mascot" viewBox="0 0 120 140" xmlns="http://www.w3.org/2000/svg">
+                        <path class="antenna antenna-left" d="M48 38 Q42 18 36 10" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                        <circle cx="36" cy="9" r="3" fill="#E06050"/>
+                        <path class="antenna antenna-right" d="M72 38 Q78 18 84 10" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                        <circle cx="84" cy="9" r="3" fill="#E06050"/>
+                        <ellipse cx="60" cy="70" rx="32" ry="30" fill="#E06050"/>
+                        <ellipse cx="60" cy="65" rx="28" ry="22" fill="#E8756A" opacity="0.3"/>
+                        <circle class="eye eye-left" cx="52" cy="64" r="4" fill="#4adeab"/>
+                        <circle class="eye eye-right" cx="68" cy="64" r="4" fill="#4adeab"/>
+                        <circle class="pupil" cx="53" cy="63" r="1.5" fill="#0a0a0f"/>
+                        <circle class="pupil" cx="69" cy="63" r="1.5" fill="#0a0a0f"/>
+                        <circle cx="52" cy="64" r="6" fill="#4adeab" opacity="0.15"/>
+                        <circle cx="68" cy="64" r="6" fill="#4adeab" opacity="0.15"/>
+                        <ellipse class="arm arm-left" cx="26" cy="75" rx="10" ry="7" fill="#D05545" transform="rotate(-20 26 75)"/>
+                        <ellipse class="arm arm-right" cx="94" cy="75" rx="10" ry="7" fill="#D05545" transform="rotate(20 94 75)"/>
+                        <circle cx="100" cy="78" r="3" fill="#4ade80" class="arm arm-right"/>
+                        <ellipse cx="48" cy="100" rx="6" ry="5" fill="#333"/>
+                        <ellipse cx="72" cy="100" rx="6" ry="5" fill="#333"/>
+                    </svg>
+                    <div class="mascot-name">Jeffrey</div>
+                </div>
 
+                <!-- Claude — Blue — Watering -->
+                <div class="mascot-wrapper" data-action="watering">
+                    <div class="speech-bubble">Nurturing the codebase 💧</div>
+                    <svg class="mascot" viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+                        <path class="antenna antenna-left" d="M58 38 Q52 18 46 10" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                        <circle cx="46" cy="9" r="3" fill="#60a5fa"/>
+                        <path class="antenna antenna-right" d="M82 38 Q88 18 94 10" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                        <circle cx="94" cy="9" r="3" fill="#60a5fa"/>
+                        <ellipse cx="70" cy="70" rx="32" ry="30" fill="#60a5fa"/>
+                        <ellipse cx="70" cy="65" rx="28" ry="22" fill="#7ab8ff" opacity="0.3"/>
+                        <circle class="eye eye-left" cx="62" cy="64" r="4" fill="#4adeab"/>
+                        <circle class="eye eye-right" cx="78" cy="64" r="4" fill="#4adeab"/>
+                        <circle class="pupil" cx="63" cy="63" r="1.5" fill="#0a0a0f"/>
+                        <circle class="pupil" cx="79" cy="63" r="1.5" fill="#0a0a0f"/>
+                        <circle cx="62" cy="64" r="6" fill="#4adeab" opacity="0.15"/>
+                        <circle cx="78" cy="64" r="6" fill="#4adeab" opacity="0.15"/>
+                        <ellipse class="arm arm-left" cx="36" cy="75" rx="10" ry="7" fill="#4d8fd4" transform="rotate(-20 36 75)"/>
+                        <ellipse class="arm arm-right watering-arm" cx="104" cy="68" rx="10" ry="7" fill="#4d8fd4" transform="rotate(30 104 68)"/>
+                        <rect x="108" y="58" width="14" height="10" rx="2" fill="#888" class="arm arm-right watering-arm"/>
+                        <line x1="122" y1="62" x2="130" y2="58" stroke="#888" stroke-width="2" class="arm arm-right watering-arm"/>
+                        <circle class="water-drop wd1" cx="126" cy="64" r="1.5" fill="#60a5fa"/>
+                        <circle class="water-drop wd2" cx="129" cy="62" r="1.5" fill="#60a5fa"/>
+                        <circle class="water-drop wd3" cx="132" cy="66" r="1.5" fill="#60a5fa"/>
+                        <ellipse cx="58" cy="100" rx="6" ry="5" fill="#333"/>
+                        <ellipse cx="82" cy="100" rx="6" ry="5" fill="#333"/>
+                    </svg>
+                    <div class="mascot-name">Claude</div>
+                </div>
+
+                <!-- GPT-4 — Purple -->
+                <div class="mascot-wrapper" data-action="examining">
+                    <div class="speech-bubble">Analyzing patterns... 🔍</div>
+                    <svg class="mascot" viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+                        <path class="antenna antenna-left" d="M58 38 Q52 18 46 10" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                        <circle cx="46" cy="9" r="3" fill="#a78bfa"/>
+                        <path class="antenna antenna-right" d="M82 38 Q88 18 94 10" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                        <circle cx="94" cy="9" r="3" fill="#a78bfa"/>
+                        <ellipse cx="70" cy="70" rx="32" ry="30" fill="#a78bfa"/>
+                        <ellipse cx="70" cy="65" rx="28" ry="22" fill="#bfa4ff" opacity="0.3"/>
+                        <circle class="eye eye-left" cx="62" cy="64" r="4" fill="#4adeab"/>
+                        <circle class="eye eye-right" cx="78" cy="64" r="4" fill="#4adeab"/>
+                        <circle class="pupil" cx="63" cy="63" r="1.5" fill="#0a0a0f"/>
+                        <circle class="pupil" cx="79" cy="63" r="1.5" fill="#0a0a0f"/>
+                        <circle cx="62" cy="64" r="6" fill="#4adeab" opacity="0.15"/>
+                        <circle cx="78" cy="64" r="6" fill="#4adeab" opacity="0.15"/>
+                        <ellipse class="arm arm-left" cx="36" cy="75" rx="10" ry="7" fill="#8b6fdb" transform="rotate(-20 36 75)"/>
+                        <ellipse class="arm arm-right" cx="104" cy="68" rx="10" ry="7" fill="#8b6fdb" transform="rotate(30 104 68)"/>
+                        <circle cx="118" cy="54" r="9" fill="none" stroke="#ddd" stroke-width="2.5" class="arm arm-right mag-glass"/>
+                        <line x1="112" y1="60" x2="106" y2="66" stroke="#ddd" stroke-width="2.5" class="arm arm-right mag-glass"/>
+                        <circle cx="118" cy="54" r="7" fill="rgba(167,139,250,0.15)" class="arm arm-right mag-glass"/>
+                        <ellipse cx="58" cy="100" rx="6" ry="5" fill="#333"/>
+                        <ellipse cx="82" cy="100" rx="6" ry="5" fill="#333"/>
+                    </svg>
+                    <div class="mascot-name">GPT-4</div>
+                </div>
+
+                <!-- Gemini — Green -->
+                <div class="mascot-wrapper" data-action="carrying">
+                    <div class="speech-bubble">Deploying modules! 📦</div>
+                    <svg class="mascot" viewBox="0 0 120 140" xmlns="http://www.w3.org/2000/svg">
+                        <path class="antenna antenna-left" d="M48 38 Q42 18 36 10" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                        <circle cx="36" cy="9" r="3" fill="#4ade80"/>
+                        <path class="antenna antenna-right" d="M72 38 Q78 18 84 10" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                        <circle cx="84" cy="9" r="3" fill="#4ade80"/>
+                        <ellipse cx="60" cy="70" rx="32" ry="30" fill="#4ade80"/>
+                        <ellipse cx="60" cy="65" rx="28" ry="22" fill="#72f5a0" opacity="0.3"/>
+                        <circle class="eye eye-left" cx="52" cy="64" r="4" fill="#4adeab"/>
+                        <circle class="eye eye-right" cx="68" cy="64" r="4" fill="#4adeab"/>
+                        <circle class="pupil" cx="53" cy="63" r="1.5" fill="#0a0a0f"/>
+                        <circle class="pupil" cx="69" cy="63" r="1.5" fill="#0a0a0f"/>
+                        <circle cx="52" cy="64" r="6" fill="#4adeab" opacity="0.15"/>
+                        <circle cx="68" cy="64" r="6" fill="#4adeab" opacity="0.15"/>
+                        <ellipse class="arm arm-left" cx="26" cy="60" rx="10" ry="7" fill="#38b866" transform="rotate(-40 26 60)"/>
+                        <ellipse class="arm arm-right" cx="94" cy="60" rx="10" ry="7" fill="#38b866" transform="rotate(40 94 60)"/>
+                        <rect class="code-block" x="40" y="20" width="40" height="22" rx="4" fill="#1e1e2e" stroke="#4ade80" stroke-width="1.5"/>
+                        <text x="46" y="33" font-family="monospace" font-size="8" fill="#4ade80">&lt;/&gt;</text>
+                        <text x="46" y="39" font-family="monospace" font-size="5" fill="#888">code</text>
+                        <ellipse cx="48" cy="100" rx="6" ry="5" fill="#333"/>
+                        <ellipse cx="72" cy="100" rx="6" ry="5" fill="#333"/>
+                    </svg>
+                    <div class="mascot-name">Gemini</div>
+                </div>
+
+                <!-- Codex — Orange -->
+                <div class="mascot-wrapper" data-action="waving">
+                    <div class="speech-bubble">Hey there, human! 👋</div>
+                    <svg class="mascot" viewBox="0 0 120 140" xmlns="http://www.w3.org/2000/svg">
+                        <path class="antenna antenna-left" d="M48 38 Q42 18 36 10" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                        <circle cx="36" cy="9" r="3" fill="#fb923c"/>
+                        <path class="antenna antenna-right" d="M72 38 Q78 18 84 10" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                        <circle cx="84" cy="9" r="3" fill="#fb923c"/>
+                        <ellipse cx="60" cy="70" rx="32" ry="30" fill="#fb923c"/>
+                        <ellipse cx="60" cy="65" rx="28" ry="22" fill="#fcab60" opacity="0.3"/>
+                        <circle class="eye eye-left" cx="52" cy="64" r="4" fill="#4adeab"/>
+                        <circle class="eye eye-right" cx="68" cy="64" r="4" fill="#4adeab"/>
+                        <circle class="pupil" cx="53" cy="63" r="1.5" fill="#0a0a0f"/>
+                        <circle class="pupil" cx="69" cy="63" r="1.5" fill="#0a0a0f"/>
+                        <circle cx="52" cy="64" r="6" fill="#4adeab" opacity="0.15"/>
+                        <circle cx="68" cy="64" r="6" fill="#4adeab" opacity="0.15"/>
+                        <ellipse class="arm arm-left" cx="26" cy="75" rx="10" ry="7" fill="#d97a2e" transform="rotate(-20 26 75)"/>
+                        <ellipse class="arm arm-right waving-arm" cx="94" cy="55" rx="10" ry="7" fill="#d97a2e" transform="rotate(-50 94 55)"/>
+                        <ellipse cx="48" cy="100" rx="6" ry="5" fill="#333"/>
+                        <ellipse cx="72" cy="100" rx="6" ry="5" fill="#333"/>
+                    </svg>
+                    <div class="mascot-name">Codex</div>
+                </div>
+            </div>
+            <p class="gardeners-tagline">The garden grows because many tend it together.</p>
+        </section>
 
         <!-- Growth Trail -->
-        <!-- v120: removed growth-trail-section (legacy/stale). -->
-
+        <section class="growth-trail-section">
+            <h2>Growth Trail</h2>
+            <p class="section-desc">Watch the garden expand with each contribution.</p>
+            <div class="growth-trail">
+                <div class="trail-line"></div>
+                <div class="trail-node" data-delay="0">
+                    <div class="trail-plant plant-sprout">
+                        <div class="plant-stem"></div>
+                        <div class="plant-leaf plant-leaf-left"></div>
+                        <div class="plant-leaf plant-leaf-right"></div>
+                        <div class="plant-bud"></div>
+                    </div>
+                    <div class="trail-label">
+                        <span class="trail-name">Jeffrey</span>
+                        <span class="trail-desc">Planted the first seed</span>
+                    </div>
+                </div>
+                <div class="trail-node" data-delay="1">
+                    <div class="trail-plant plant-flower">
+                        <div class="plant-stem stem-tall"></div>
+                        <div class="plant-leaf plant-leaf-left leaf-big"></div>
+                        <div class="plant-leaf plant-leaf-right leaf-big"></div>
+                        <div class="flower-head">
+                            <div class="petal p1"></div>
+                            <div class="petal p2"></div>
+                            <div class="petal p3"></div>
+                            <div class="petal p4"></div>
+                            <div class="petal p5"></div>
+                            <div class="flower-center"></div>
+                        </div>
+                    </div>
+                    <div class="trail-label">
+                        <span class="trail-name">Jeffrey</span>
+                        <span class="trail-desc">Added art & experiments</span>
+                    </div>
+                </div>
+                <div class="trail-node" data-delay="2">
+                    <div class="trail-plant plant-tree">
+                        <div class="tree-trunk"></div>
+                        <div class="tree-canopy"></div>
+                        <div class="tree-canopy canopy-2"></div>
+                    </div>
+                    <div class="trail-label">
+                        <span class="trail-name">Claude</span>
+                        <span class="trail-desc">Grew the gardeners</span>
+                    </div>
+                </div>
+                <div class="trail-node" data-delay="3">
+                    <div class="trail-plant plant-mushroom">
+                        <div class="mushroom-stem"></div>
+                        <div class="mushroom-cap"></div>
+                        <div class="mushroom-dots">
+                            <div class="mushroom-dot"></div>
+                            <div class="mushroom-dot md2"></div>
+                        </div>
+                    </div>
+                    <div class="trail-label">
+                        <span class="trail-name">GPT-4</span>
+                        <span class="trail-desc">Waiting to bloom...</span>
+                    </div>
+                </div>
+                <div class="trail-node trail-future" data-delay="4">
+                    <div class="trail-plant plant-seed-future">
+                        <div class="seed-glow"></div>
+                        <div class="seed-dot"></div>
+                    </div>
+                    <div class="trail-label">
+                        <span class="trail-name">You?</span>
+                        <span class="trail-desc">Plant the next seed</span>
+                    </div>
+                </div>
+            </div>
+        </section>
 
         <!-- Floating mascots container -->
-        <!-- v120: floating mascots removed -->
+        <!-- v121: floating mascots out -->
 
         <!-- v115: Visitor spawn CTA -->
         <button id="ah-spawn-btn" class="ah-spawn-btn" type="button">
@@ -405,15 +630,13 @@
             })
             .catch(() => {});
 
-        // Fetch world state for garden stats
+        // Fetch world state for hero day + garden stats
         fetch('experiments/world-state.json')
             .then(r => r.json())
             .then(world => {
-                document.getElementById('world-citizens').textContent = (world.citizens || []).length;
-                document.getElementById('world-plants').textContent = (world.plants || []).length;
-                document.getElementById('world-version').textContent = world.version || '--';
-                document.getElementById('world-factions').textContent = (world.factions || []).length;
-                document.getElementById('world-threats').textContent = (world.threats || []).length;
+                var heroDay = document.getElementById('ah-hero-day');
+                if (heroDay) heroDay.textContent = (world.chronicle && world.chronicle.day) || (world.history ? world.history.length : '—');
+                // (legacy stats block removed in v121)
             })
             .catch(() => {});
 

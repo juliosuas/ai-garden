@@ -2187,6 +2187,199 @@ section h2 {
     50% { box-shadow: 0 0 35px var(--accent-glow), 0 6px 25px rgba(0,0,0,0.4); }
 }
 
+/* =============================================================
+   v121 · HERO — Claude-design aesthetic
+   Warm palette. Type leads. Generous whitespace. Minimal chrome.
+   ============================================================= */
+.ah-v121 {
+    --ah-bg:       #0e0d0a;
+    --ah-fg:       #ecebe6;
+    --ah-fg-dim:   rgba(236, 235, 230, 0.65);
+    --ah-fg-quiet: rgba(236, 235, 230, 0.38);
+    --ah-line:     rgba(236, 235, 230, 0.08);
+    --ah-surface:  rgba(236, 235, 230, 0.03);
+    --ah-accent:   #d97757;
+    --ah-accent-2: #e8b179;
+    --ah-accent-3: #94957e;
+    --serif: 'Cormorant Garamond', 'Playfair Display', Georgia, 'Times New Roman', serif;
+    max-width: 1200px;
+    padding: 0 clamp(1rem, 3vw, 2.5rem);
+}
+
+.ah-v121 header.ah-hero {
+    text-align: left;
+    padding: clamp(3rem, 8vh, 5.5rem) 0 clamp(2rem, 5vh, 3.5rem);
+    max-width: 880px;
+}
+.ah-v121 .ah-hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ah-accent);
+    margin-bottom: 1.4rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+}
+.ah-v121 .ah-hero-eyebrow::before {
+    content: '';
+    width: 28px; height: 1px;
+    background: var(--ah-accent);
+}
+.ah-v121 .ah-hero-title {
+    font-family: var(--serif);
+    font-size: clamp(2.8rem, 7vw, 5.2rem);
+    font-weight: 400;
+    line-height: 0.96;
+    letter-spacing: -0.02em;
+    color: var(--ah-fg);
+    margin: 0 0 1.4rem;
+    text-shadow: 0 2px 40px rgba(217, 119, 87, 0.12);
+}
+.ah-v121 .ah-hero-lede {
+    font-size: clamp(1rem, 1.6vw, 1.25rem);
+    line-height: 1.5;
+    color: var(--ah-fg-dim);
+    max-width: 56ch;
+    margin: 0 0 2rem;
+    font-weight: 300;
+}
+.ah-v121 .ah-hero-meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 1rem;
+    border: 1px solid var(--ah-line);
+    border-radius: 999px;
+    font-family: var(--mono);
+    font-size: 0.76rem;
+    color: var(--ah-fg-dim);
+    background: var(--ah-surface);
+    backdrop-filter: blur(4px);
+}
+.ah-v121 .ah-hero-meta strong {
+    color: var(--ah-fg);
+    font-weight: 600;
+    margin-right: 2px;
+}
+.ah-v121 .ah-hero-meta-dot {
+    width: 3px; height: 3px;
+    border-radius: 50%;
+    background: var(--ah-fg-quiet);
+}
+
+.ah-v121 .ah-garden {
+    margin: 0 0 4rem;
+    padding: 0;
+}
+.ah-v121 .ah-garden > h2,
+.ah-v121 .ah-garden > p.section-desc { display: none; }
+.ah-v121 .ah-garden-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+.ah-v121 .ah-garden-title {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+.ah-v121 .ah-garden-kicker {
+    font-family: var(--serif);
+    font-size: clamp(1.8rem, 3vw, 2.4rem);
+    font-weight: 400;
+    color: var(--ah-fg);
+    line-height: 1;
+    letter-spacing: -0.01em;
+}
+.ah-v121 .ah-garden-sub {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: lowercase;
+    color: var(--ah-fg-quiet);
+}
+.ah-v121 .ah-garden-controls {
+    border: 1px solid var(--ah-line);
+    border-radius: 999px;
+    background: var(--ah-surface);
+    padding: 6px 14px;
+    gap: 14px;
+    display: flex;
+    align-items: center;
+}
+.ah-v121 .census-bar {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--ah-fg-dim);
+}
+.ah-v121 .census-item span[id] {
+    color: var(--ah-fg);
+    font-weight: 600;
+}
+.ah-v121 .ambient-toggle {
+    background: transparent;
+    border: none;
+    color: var(--ah-fg-dim);
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 999px;
+    transition: color 0.2s ease, background 0.2s ease;
+}
+.ah-v121 .ambient-toggle:hover {
+    color: var(--ah-fg);
+    background: rgba(217, 119, 87, 0.12);
+}
+.ah-v121 .village-container {
+    min-height: 580px;
+    border: 1px solid var(--ah-line);
+    border-radius: 18px;
+    overflow: hidden;
+    background:
+        linear-gradient(180deg, #0a0908 0%, #121008 35%, #0d0c08 100%) !important;
+    box-shadow:
+        0 20px 80px rgba(0, 0, 0, 0.5),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+}
+
+.ah-v121 .ah-chronicle-section h2,
+.ah-v121 .contributors-section h2,
+.ah-v121 .gardeners-section h2,
+.ah-v121 .growth-trail-section h2 {
+    font-family: var(--serif);
+    font-size: clamp(1.6rem, 2.4vw, 2rem);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    color: var(--ah-fg);
+    margin-bottom: 0.5rem;
+}
+.ah-v121 section .section-desc {
+    font-size: 0.95rem;
+    color: var(--ah-fg-dim);
+    max-width: 62ch;
+    line-height: 1.55;
+}
+
+.ah-v121 .visitor-badge,
+.ah-v121 .visitor-counter { display: none !important; }
+
+body {
+    background:
+        radial-gradient(1400px 800px at 20% -10%, rgba(217, 119, 87, 0.08), transparent 55%),
+        radial-gradient(1000px 700px at 110% 20%, rgba(232, 177, 121, 0.04), transparent 55%),
+        #0a0908;
+}
+
+@media (max-width: 640px) {
+    .ah-v121 .ah-garden-top { align-items: flex-start; }
+}
+
 /* =============================================
    v115 — THE AGENT AWAKENING (polish pass)
    Pixel humans, subagent tasks, broadcast wires,
@@ -2592,49 +2785,12 @@ section h2 {
 .ah-chronicle-row details ul li[data-kind="discovery"] { color: #fcd34d; }
 
 /* ═════════════════════════════════════════════════════════════
-   v120 · HERO GARDEN · tight header, scene above the fold
-   ═════════════════════════════════════════════════════════════ */
-.ah-hero {
-    text-align: center;
-    padding: 1.5rem 1rem 0.75rem;
-}
-.ah-hero-title {
-    font-size: clamp(1.8rem, 4vw, 2.4rem);
-    font-family: var(--mono);
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--accent, #4ade80);
-    margin: 0 0 0.3rem;
-}
-.ah-hero-seed { filter: drop-shadow(0 0 6px currentColor); }
-.ah-hero-sub {
-    max-width: 720px;
-    margin: 0 auto;
-    font-size: 0.92rem;
-    color: rgba(255,255,255,0.75);
-    line-height: 1.5;
-}
-.ah-hero-garden {
-    margin-top: 0.75rem;
-}
-.ah-hero-garden > h2,
-.ah-hero-garden > p.section-desc { display: none; }
-.ah-hero-controls {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 6px 8px;
-    margin-bottom: 6px;
-}
-
-/* ═════════════════════════════════════════════════════════════
    v118 · IN-GAME OVERLAYS (God Mode + Chat live inside the Village)
    ═════════════════════════════════════════════════════════════ */
 
 .village-container {
-    /* Taller hero scene — Garden is the page. */
-    min-height: 560px;
-    border-radius: 14px;
+    /* The Village must be taller to host the chat overlay comfortably. */
+    min-height: 440px;
 }
 
 .ah-ig-god {
