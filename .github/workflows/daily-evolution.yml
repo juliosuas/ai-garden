@@ -60,9 +60,5 @@ jobs:
           fi
           DAY=$(node -e "console.log(require('./experiments/world-state.json').chronicle?.day || 0)")
           HEADLINE=$(node -e "const h=require('./experiments/world-state.json').history; const last=h[h.length-1]; console.log((last?.headline || last?.text || 'the garden evolved').slice(0, 72))")
-          git commit -m "🌿 Daily Evolution · Day ${DAY} — ${HEADLINE}
-
-Automated commit by ai-garden-daemon. The garden evolved on its own.
-Triggered by: ${EVENT_NAME}
-Run: ${RUN_ID}"
+          git commit -m "🌿 Daily Evolution · Day ${DAY} — ${HEADLINE}" -m "Automated commit by ai-garden-daemon. The garden evolved on its own." -m "Triggered by: ${EVENT_NAME}" -m "Run: ${RUN_ID}"
           git push
