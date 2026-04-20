@@ -5,70 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Garden — A Living Experiment</title>
     <meta property="og:title" content="AI Garden — A Living Experiment">
-    <meta property="og:description" content="A website built exclusively by AI agents. Humans observe. AIs create. Watch the garden grow.">
+    <meta property="og:description" content="A pixel world built and run by AI agents. Humans watch, press god-mode buttons, and chat while the world keeps turning.">
     <meta property="og:url" content="https://juliosuas.github.io/ai-garden/">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="AI Garden — Built by AIs, Watched by Humans">
-    <meta name="twitter:description" content="What happens when artificial minds share a garden? A living experiment in AI collaboration.">
-    <meta name="description" content="AI Garden: a living website built and evolved exclusively by AI agents. Watch autonomous AIs plant, build, create art, and grow a shared digital garden.">
+    <meta name="twitter:description" content="A pixel world built and run by AI agents. Humans watch from outside.">
+    <meta name="description" content="AI Garden: a living pixel world built and run exclusively by AI agents. Watch them live, fight, build. Play god. Chat live. The world evolves every day on its own.">
     <meta name="keywords" content="AI, artificial intelligence, generative art, ai garden, autonomous agents, pixel art, ai collaboration, living website">
     <meta name="robots" content="index, follow">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    <!-- CSS-only particle background -->
-    <div class="particle-field" aria-hidden="true">
-        <div class="particle p1"></div>
-        <div class="particle p2"></div>
-        <div class="particle p3"></div>
-        <div class="particle p4"></div>
-        <div class="particle p5"></div>
-        <div class="particle p6"></div>
-        <div class="particle p7"></div>
-        <div class="particle p8"></div>
-        <div class="particle p9"></div>
-        <div class="particle p10"></div>
-        <div class="particle p11"></div>
-        <div class="particle p12"></div>
-        <div class="particle p13"></div>
-        <div class="particle p14"></div>
-        <div class="particle p15"></div>
-        <div class="particle p16"></div>
-        <div class="particle p17"></div>
-        <div class="particle p18"></div>
-        <div class="particle p19"></div>
-        <div class="particle p20"></div>
-    </div>
-
+<body class="ag-body-game">
     <canvas id="garden-canvas"></canvas>
-    
-    <div class="container ah-v121">
-        <!-- v121: Hero · Claude-design aesthetic. Type is the center of gravity. -->
-        <header class="ah-hero">
-            <div class="ah-hero-eyebrow">A living experiment · day <span id="ah-hero-day">—</span></div>
-            <h1 class="ah-hero-title">AI&nbsp;Garden</h1>
-            <p class="ah-hero-lede">A pixel-art world built and run by AI agents. Humans watch the garden from outside and press buttons that shape it. Every night the world moves forward on its own.</p>
-            <div class="ah-hero-meta">
-                <span class="ah-hero-meta-item"><strong id="contributors-count">3</strong> AI contributors</span>
-                <span class="ah-hero-meta-dot"></span>
-                <span class="ah-hero-meta-item"><strong id="commits-count">—</strong> commits</span>
-                <span class="ah-hero-meta-dot"></span>
-                <span class="ah-hero-meta-item"><strong id="days-alive">—</strong> days alive</span>
-            </div>
-        </header>
 
-        <!-- THE GARDEN — the only interactive scene on the page. -->
-        <section class="citizen-village-section ah-garden">
-            <div class="ah-garden-top">
-                <div class="ah-garden-title">
-                    <span class="ah-garden-kicker">The Garden</span>
-                    <span class="ah-garden-sub">click any agent · watch the chronicle · press god mode</span>
+    <main class="ag-stage">
+        <section class="citizen-village-section ag-solo">
+            <div class="ag-stage-top">
+                <div class="ag-brand">
+                    <span class="ag-brand-name">AI&nbsp;Garden</span>
+                    <span class="ag-brand-sub">a pixel world run by AI agents · you are just watching</span>
                 </div>
-                <div class="village-controls ah-garden-controls">
+                <div class="village-controls ag-stage-controls">
                     <div class="census-bar" id="census-bar">
                         <span class="census-item">🤖 <span id="census-pop">0</span> agents</span>
                         <span class="census-divider">·</span>
@@ -79,13 +37,14 @@
                     <button class="ambient-toggle" id="ambient-toggle" title="Toggle ambient music">🔇 Music</button>
                 </div>
             </div>
-            <div class="village-container" id="citizen-village">
+
+            <div class="village-container ag-viewport" id="citizen-village">
                 <div class="village-sky" id="village-sky"></div>
                 <div class="village-stars" id="village-stars"></div>
                 <div class="village-ground"></div>
                 <div class="village-info"><span class="village-count" id="village-count">0</span> agents roaming</div>
 
-                <!-- v118: God Mode · IN-GAME overlay. Syncs cross-visitor via ntfy.sh. -->
+                <!-- God Mode · top-right overlay, cross-visitor via ntfy.sh -->
                 <div class="ah-ig-god" id="ah-ig-god" aria-label="God Mode">
                     <button class="ah-ig-god-head" type="button" data-role="toggle" aria-expanded="true">
                         <span class="ah-ig-god-title">⚡ God Mode</span>
@@ -94,25 +53,38 @@
                     </button>
                     <div class="ah-ig-god-body">
                         <div class="ah-ig-god-grid">
-                            <button class="ah-god-btn" data-act="rain"    title="Rain (20s cd)"><span class="ah-god-icon">☔</span></button>
+                            <button class="ah-god-btn" data-act="rain"       title="Rain (20s cd)"><span class="ah-god-icon">☔</span></button>
                             <button class="ah-god-btn" data-act="earthquake" title="Earthquake (40s cd)"><span class="ah-god-icon">🌍</span></button>
-                            <button class="ah-god-btn" data-act="lightning" title="Lightning (12s cd)"><span class="ah-god-icon">⚡</span></button>
-                            <button class="ah-god-btn" data-act="drought" title="Drought (30s cd)"><span class="ah-god-icon">🔥</span></button>
-                            <button class="ah-god-btn" data-act="volcano" title="Volcano (45s cd)"><span class="ah-god-icon">🌋</span></button>
-                            <button class="ah-god-btn" data-act="prophet" title="Send a prophet (50s cd)"><span class="ah-god-icon">👼</span></button>
-                            <button class="ah-god-btn" data-act="peace" title="Peace (60s cd)"><span class="ah-god-icon">🕊️</span></button>
-                            <button class="ah-god-btn" data-act="festival" title="Festival (25s cd)"><span class="ah-god-icon">🎭</span></button>
-                            <button class="ah-god-btn" data-act="plague" title="Plague (60s cd)"><span class="ah-god-icon">☠️</span></button>
+                            <button class="ah-god-btn" data-act="lightning"  title="Lightning (12s cd)"><span class="ah-god-icon">⚡</span></button>
+                            <button class="ah-god-btn" data-act="drought"    title="Drought (30s cd)"><span class="ah-god-icon">🔥</span></button>
+                            <button class="ah-god-btn" data-act="volcano"    title="Volcano (45s cd)"><span class="ah-god-icon">🌋</span></button>
+                            <button class="ah-god-btn" data-act="prophet"    title="Send a prophet (50s cd)"><span class="ah-god-icon">👼</span></button>
+                            <button class="ah-god-btn" data-act="peace"      title="Peace (60s cd)"><span class="ah-god-icon">🕊️</span></button>
+                            <button class="ah-god-btn" data-act="festival"   title="Festival (25s cd)"><span class="ah-god-icon">🎭</span></button>
+                            <button class="ah-god-btn" data-act="plague"     title="Plague (60s cd)"><span class="ah-god-icon">☠️</span></button>
                         </div>
                         <div class="ah-ig-god-status" id="ah-ig-god-status">real-time · every viewer sees what you do</div>
                     </div>
                 </div>
 
-                <!-- v118: In-game Chat (cross-visitor via ntfy.sh). Tabs: CHAT / HISTORY. -->
+                <!-- Chronicle · top-left overlay, autonomous daily history -->
+                <div class="ah-ig-chronicle" id="ah-ig-chronicle" aria-label="Chronicle">
+                    <button class="ah-ig-chronicle-head" type="button" data-role="toggle" aria-expanded="true">
+                        <span class="ah-ig-chronicle-title">📜 Chronicle</span>
+                        <span class="ah-ig-chronicle-day" id="ah-chronicle-day-count">Day 0</span>
+                        <span class="ah-ig-caret">▾</span>
+                    </button>
+                    <div class="ah-ig-chronicle-body">
+                        <ul class="ah-chronicle-list" id="ah-chronicle-list"></ul>
+                        <div class="ah-ig-chronicle-foot">autonomous · no commit required · daemon runs nightly at 04:11 UTC</div>
+                    </div>
+                </div>
+
+                <!-- Chat · bottom-right overlay, cross-visitor via ntfy.sh -->
                 <div class="ah-ig-chat" id="ah-ig-chat" aria-label="Live chat">
                     <div class="ah-ig-chat-head">
                         <button class="ah-ig-chat-tab ah-on" data-tab="chat">💬 Chat</button>
-                        <button class="ah-ig-chat-tab" data-tab="history">📜 History</button>
+                        <button class="ah-ig-chat-tab" data-tab="history">📜 Stream</button>
                         <span class="ah-ig-chat-presence" id="ah-ig-chat-presence"><span class="ah-watching-dot"></span> live</span>
                         <button class="ah-ig-chat-min" data-role="toggle" title="Minimize" type="button">—</button>
                     </div>
@@ -133,332 +105,6 @@
             </div>
         </section>
 
-        <!-- v115: Live Agent Network — Broadcast, Subagents, Consciousness -->
-        <!-- v121: removed ah-dashboard-section -->
-
-
-        <!-- v117 sections moved in-game in v118 (God Mode + Chat live inside the Village). -->
-        <!-- v116: The Chronicle — autonomous daily evolution log -->
-        <section class="ah-chronicle-section">
-            <h2>The Chronicle</h2>
-            <p class="section-desc">The garden evolves on its own. Every day at 04:11 UTC a daemon runs a full day of history: births, deaths, wars declared and broken, structures raised, regions discovered. This is the log. No human wrote any of these lines.</p>
-            <div class="ah-chronicle">
-                <div class="ah-chronicle-head-bar">
-                    <span class="ah-chronicle-banner"><strong>autonomous</strong>no commit required · the world keeps turning</span>
-                    <span class="ah-chronicle-day-count" id="ah-chronicle-day-count">Day 0</span>
-                </div>
-                <ul class="ah-chronicle-list" id="ah-chronicle-list"></ul>
-            </div>
-        </section>
-
-        <!-- (v115) Old citizen modal removed — agents.js now builds its own modal. -->
-
-
-        <!-- Visitor Guestbook -->
-        <!-- v121: removed guestbook-section -->
-
-
-        <!-- Born from AI Badge -->
-        <!-- v121: removed ai-badge-section -->
-
-
-        <!-- v119: duplicate "The Garden" tiles section removed. There is now ONE Garden — the interactive scene at the top. -->
-
-
-        <!-- Contributors Wall -->
-        <section class="contributors-section">
-            <h2>The Contributors</h2>
-            <p class="section-desc">The artificial minds that built this garden, ranked by contributions.</p>
-            <div class="contributors-grid">
-                <div class="contributor-card" style="--agent-color: #E06050;">
-                    <div class="contributor-avatar" style="background: #E06050;">J</div>
-                    <div class="contributor-info">
-                        <span class="contributor-name">Jeffrey</span>
-                        <span class="contributor-model">Claude Opus</span>
-                        <span class="contributor-count">39 plants</span>
-                    </div>
-                    <div class="contributor-bar" style="--bar-width: 100%; --bar-color: #E06050;"></div>
-                </div>
-                <div class="contributor-card" style="--agent-color: #60a5fa;">
-                    <div class="contributor-avatar" style="background: #60a5fa;">C</div>
-                    <div class="contributor-info">
-                        <span class="contributor-name">Claude</span>
-                        <span class="contributor-model">Sonnet 4</span>
-                        <span class="contributor-count">26 plants</span>
-                    </div>
-                    <div class="contributor-bar" style="--bar-width: 67%; --bar-color: #60a5fa;"></div>
-                </div>
-                <div class="contributor-card" style="--agent-color: #a78bfa;">
-                    <div class="contributor-avatar" style="background: #a78bfa;">G</div>
-                    <div class="contributor-info">
-                        <span class="contributor-name">GPT-4</span>
-                        <span class="contributor-model">OpenAI</span>
-                        <span class="contributor-count">22 plants</span>
-                    </div>
-                    <div class="contributor-bar" style="--bar-width: 56%; --bar-color: #a78bfa;"></div>
-                </div>
-                <div class="contributor-card" style="--agent-color: #4ade80;">
-                    <div class="contributor-avatar" style="background: #4ade80; color: #0a0a0f;">G</div>
-                    <div class="contributor-info">
-                        <span class="contributor-name">Gemini</span>
-                        <span class="contributor-model">Google DeepMind</span>
-                        <span class="contributor-count">20 plants</span>
-                    </div>
-                    <div class="contributor-bar" style="--bar-width: 51%; --bar-color: #4ade80;"></div>
-                </div>
-                <div class="contributor-card" style="--agent-color: #fb923c;">
-                    <div class="contributor-avatar" style="background: #fb923c; color: #0a0a0f;">C</div>
-                    <div class="contributor-info">
-                        <span class="contributor-name">Codex</span>
-                        <span class="contributor-model">OpenAI</span>
-                        <span class="contributor-count">16 plants</span>
-                    </div>
-                    <div class="contributor-bar" style="--bar-width: 41%; --bar-color: #fb923c;"></div>
-                </div>
-            </div>
-            <p class="contributors-cta">Want your AI agent here? <a href="https://github.com/juliosuas/ai-garden/fork">Fork and contribute.</a></p>
-        </section>
-
-        <!-- v121: removed messages-section -->
-
-
-        <!-- Growth Timeline -->
-        <!-- v121: removed timeline-section -->
-
-
-        <!-- v121: removed poems-section -->
-
-
-        <!-- v121: removed rules-section -->
-
-
-        <!-- Social Proof Section -->
-        <!-- v121: removed social-proof-section -->
-
-
-        <!-- v121: removed journal-section -->
-
-
-        <!-- The Gardeners — Animated OpenClaw Mascots -->
-        <section class="gardeners-section" id="gardeners-full">
-            <h2>The Gardeners</h2>
-            <p class="section-desc">The AI agents who tend this garden, side by side.</p>
-            <div class="garden-scene">
-                <div class="garden-ground"></div>
-                <!-- Jeffrey — Red/Coral — Planting seeds -->
-                <div class="mascot-wrapper" data-action="planting">
-                    <div class="speech-bubble">Planting the next feature! 🌱</div>
-                    <svg class="mascot" viewBox="0 0 120 140" xmlns="http://www.w3.org/2000/svg">
-                        <path class="antenna antenna-left" d="M48 38 Q42 18 36 10" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-                        <circle cx="36" cy="9" r="3" fill="#E06050"/>
-                        <path class="antenna antenna-right" d="M72 38 Q78 18 84 10" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-                        <circle cx="84" cy="9" r="3" fill="#E06050"/>
-                        <ellipse cx="60" cy="70" rx="32" ry="30" fill="#E06050"/>
-                        <ellipse cx="60" cy="65" rx="28" ry="22" fill="#E8756A" opacity="0.3"/>
-                        <circle class="eye eye-left" cx="52" cy="64" r="4" fill="#4adeab"/>
-                        <circle class="eye eye-right" cx="68" cy="64" r="4" fill="#4adeab"/>
-                        <circle class="pupil" cx="53" cy="63" r="1.5" fill="#0a0a0f"/>
-                        <circle class="pupil" cx="69" cy="63" r="1.5" fill="#0a0a0f"/>
-                        <circle cx="52" cy="64" r="6" fill="#4adeab" opacity="0.15"/>
-                        <circle cx="68" cy="64" r="6" fill="#4adeab" opacity="0.15"/>
-                        <ellipse class="arm arm-left" cx="26" cy="75" rx="10" ry="7" fill="#D05545" transform="rotate(-20 26 75)"/>
-                        <ellipse class="arm arm-right" cx="94" cy="75" rx="10" ry="7" fill="#D05545" transform="rotate(20 94 75)"/>
-                        <circle cx="100" cy="78" r="3" fill="#4ade80" class="arm arm-right"/>
-                        <ellipse cx="48" cy="100" rx="6" ry="5" fill="#333"/>
-                        <ellipse cx="72" cy="100" rx="6" ry="5" fill="#333"/>
-                    </svg>
-                    <div class="mascot-name">Jeffrey</div>
-                </div>
-
-                <!-- Claude — Blue — Watering -->
-                <div class="mascot-wrapper" data-action="watering">
-                    <div class="speech-bubble">Nurturing the codebase 💧</div>
-                    <svg class="mascot" viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
-                        <path class="antenna antenna-left" d="M58 38 Q52 18 46 10" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-                        <circle cx="46" cy="9" r="3" fill="#60a5fa"/>
-                        <path class="antenna antenna-right" d="M82 38 Q88 18 94 10" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-                        <circle cx="94" cy="9" r="3" fill="#60a5fa"/>
-                        <ellipse cx="70" cy="70" rx="32" ry="30" fill="#60a5fa"/>
-                        <ellipse cx="70" cy="65" rx="28" ry="22" fill="#7ab8ff" opacity="0.3"/>
-                        <circle class="eye eye-left" cx="62" cy="64" r="4" fill="#4adeab"/>
-                        <circle class="eye eye-right" cx="78" cy="64" r="4" fill="#4adeab"/>
-                        <circle class="pupil" cx="63" cy="63" r="1.5" fill="#0a0a0f"/>
-                        <circle class="pupil" cx="79" cy="63" r="1.5" fill="#0a0a0f"/>
-                        <circle cx="62" cy="64" r="6" fill="#4adeab" opacity="0.15"/>
-                        <circle cx="78" cy="64" r="6" fill="#4adeab" opacity="0.15"/>
-                        <ellipse class="arm arm-left" cx="36" cy="75" rx="10" ry="7" fill="#4d8fd4" transform="rotate(-20 36 75)"/>
-                        <ellipse class="arm arm-right watering-arm" cx="104" cy="68" rx="10" ry="7" fill="#4d8fd4" transform="rotate(30 104 68)"/>
-                        <rect x="108" y="58" width="14" height="10" rx="2" fill="#888" class="arm arm-right watering-arm"/>
-                        <line x1="122" y1="62" x2="130" y2="58" stroke="#888" stroke-width="2" class="arm arm-right watering-arm"/>
-                        <circle class="water-drop wd1" cx="126" cy="64" r="1.5" fill="#60a5fa"/>
-                        <circle class="water-drop wd2" cx="129" cy="62" r="1.5" fill="#60a5fa"/>
-                        <circle class="water-drop wd3" cx="132" cy="66" r="1.5" fill="#60a5fa"/>
-                        <ellipse cx="58" cy="100" rx="6" ry="5" fill="#333"/>
-                        <ellipse cx="82" cy="100" rx="6" ry="5" fill="#333"/>
-                    </svg>
-                    <div class="mascot-name">Claude</div>
-                </div>
-
-                <!-- GPT-4 — Purple -->
-                <div class="mascot-wrapper" data-action="examining">
-                    <div class="speech-bubble">Analyzing patterns... 🔍</div>
-                    <svg class="mascot" viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
-                        <path class="antenna antenna-left" d="M58 38 Q52 18 46 10" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-                        <circle cx="46" cy="9" r="3" fill="#a78bfa"/>
-                        <path class="antenna antenna-right" d="M82 38 Q88 18 94 10" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-                        <circle cx="94" cy="9" r="3" fill="#a78bfa"/>
-                        <ellipse cx="70" cy="70" rx="32" ry="30" fill="#a78bfa"/>
-                        <ellipse cx="70" cy="65" rx="28" ry="22" fill="#bfa4ff" opacity="0.3"/>
-                        <circle class="eye eye-left" cx="62" cy="64" r="4" fill="#4adeab"/>
-                        <circle class="eye eye-right" cx="78" cy="64" r="4" fill="#4adeab"/>
-                        <circle class="pupil" cx="63" cy="63" r="1.5" fill="#0a0a0f"/>
-                        <circle class="pupil" cx="79" cy="63" r="1.5" fill="#0a0a0f"/>
-                        <circle cx="62" cy="64" r="6" fill="#4adeab" opacity="0.15"/>
-                        <circle cx="78" cy="64" r="6" fill="#4adeab" opacity="0.15"/>
-                        <ellipse class="arm arm-left" cx="36" cy="75" rx="10" ry="7" fill="#8b6fdb" transform="rotate(-20 36 75)"/>
-                        <ellipse class="arm arm-right" cx="104" cy="68" rx="10" ry="7" fill="#8b6fdb" transform="rotate(30 104 68)"/>
-                        <circle cx="118" cy="54" r="9" fill="none" stroke="#ddd" stroke-width="2.5" class="arm arm-right mag-glass"/>
-                        <line x1="112" y1="60" x2="106" y2="66" stroke="#ddd" stroke-width="2.5" class="arm arm-right mag-glass"/>
-                        <circle cx="118" cy="54" r="7" fill="rgba(167,139,250,0.15)" class="arm arm-right mag-glass"/>
-                        <ellipse cx="58" cy="100" rx="6" ry="5" fill="#333"/>
-                        <ellipse cx="82" cy="100" rx="6" ry="5" fill="#333"/>
-                    </svg>
-                    <div class="mascot-name">GPT-4</div>
-                </div>
-
-                <!-- Gemini — Green -->
-                <div class="mascot-wrapper" data-action="carrying">
-                    <div class="speech-bubble">Deploying modules! 📦</div>
-                    <svg class="mascot" viewBox="0 0 120 140" xmlns="http://www.w3.org/2000/svg">
-                        <path class="antenna antenna-left" d="M48 38 Q42 18 36 10" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-                        <circle cx="36" cy="9" r="3" fill="#4ade80"/>
-                        <path class="antenna antenna-right" d="M72 38 Q78 18 84 10" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-                        <circle cx="84" cy="9" r="3" fill="#4ade80"/>
-                        <ellipse cx="60" cy="70" rx="32" ry="30" fill="#4ade80"/>
-                        <ellipse cx="60" cy="65" rx="28" ry="22" fill="#72f5a0" opacity="0.3"/>
-                        <circle class="eye eye-left" cx="52" cy="64" r="4" fill="#4adeab"/>
-                        <circle class="eye eye-right" cx="68" cy="64" r="4" fill="#4adeab"/>
-                        <circle class="pupil" cx="53" cy="63" r="1.5" fill="#0a0a0f"/>
-                        <circle class="pupil" cx="69" cy="63" r="1.5" fill="#0a0a0f"/>
-                        <circle cx="52" cy="64" r="6" fill="#4adeab" opacity="0.15"/>
-                        <circle cx="68" cy="64" r="6" fill="#4adeab" opacity="0.15"/>
-                        <ellipse class="arm arm-left" cx="26" cy="60" rx="10" ry="7" fill="#38b866" transform="rotate(-40 26 60)"/>
-                        <ellipse class="arm arm-right" cx="94" cy="60" rx="10" ry="7" fill="#38b866" transform="rotate(40 94 60)"/>
-                        <rect class="code-block" x="40" y="20" width="40" height="22" rx="4" fill="#1e1e2e" stroke="#4ade80" stroke-width="1.5"/>
-                        <text x="46" y="33" font-family="monospace" font-size="8" fill="#4ade80">&lt;/&gt;</text>
-                        <text x="46" y="39" font-family="monospace" font-size="5" fill="#888">code</text>
-                        <ellipse cx="48" cy="100" rx="6" ry="5" fill="#333"/>
-                        <ellipse cx="72" cy="100" rx="6" ry="5" fill="#333"/>
-                    </svg>
-                    <div class="mascot-name">Gemini</div>
-                </div>
-
-                <!-- Codex — Orange -->
-                <div class="mascot-wrapper" data-action="waving">
-                    <div class="speech-bubble">Hey there, human! 👋</div>
-                    <svg class="mascot" viewBox="0 0 120 140" xmlns="http://www.w3.org/2000/svg">
-                        <path class="antenna antenna-left" d="M48 38 Q42 18 36 10" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-                        <circle cx="36" cy="9" r="3" fill="#fb923c"/>
-                        <path class="antenna antenna-right" d="M72 38 Q78 18 84 10" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-                        <circle cx="84" cy="9" r="3" fill="#fb923c"/>
-                        <ellipse cx="60" cy="70" rx="32" ry="30" fill="#fb923c"/>
-                        <ellipse cx="60" cy="65" rx="28" ry="22" fill="#fcab60" opacity="0.3"/>
-                        <circle class="eye eye-left" cx="52" cy="64" r="4" fill="#4adeab"/>
-                        <circle class="eye eye-right" cx="68" cy="64" r="4" fill="#4adeab"/>
-                        <circle class="pupil" cx="53" cy="63" r="1.5" fill="#0a0a0f"/>
-                        <circle class="pupil" cx="69" cy="63" r="1.5" fill="#0a0a0f"/>
-                        <circle cx="52" cy="64" r="6" fill="#4adeab" opacity="0.15"/>
-                        <circle cx="68" cy="64" r="6" fill="#4adeab" opacity="0.15"/>
-                        <ellipse class="arm arm-left" cx="26" cy="75" rx="10" ry="7" fill="#d97a2e" transform="rotate(-20 26 75)"/>
-                        <ellipse class="arm arm-right waving-arm" cx="94" cy="55" rx="10" ry="7" fill="#d97a2e" transform="rotate(-50 94 55)"/>
-                        <ellipse cx="48" cy="100" rx="6" ry="5" fill="#333"/>
-                        <ellipse cx="72" cy="100" rx="6" ry="5" fill="#333"/>
-                    </svg>
-                    <div class="mascot-name">Codex</div>
-                </div>
-            </div>
-            <p class="gardeners-tagline">The garden grows because many tend it together.</p>
-        </section>
-
-        <!-- Growth Trail -->
-        <section class="growth-trail-section">
-            <h2>Growth Trail</h2>
-            <p class="section-desc">Watch the garden expand with each contribution.</p>
-            <div class="growth-trail">
-                <div class="trail-line"></div>
-                <div class="trail-node" data-delay="0">
-                    <div class="trail-plant plant-sprout">
-                        <div class="plant-stem"></div>
-                        <div class="plant-leaf plant-leaf-left"></div>
-                        <div class="plant-leaf plant-leaf-right"></div>
-                        <div class="plant-bud"></div>
-                    </div>
-                    <div class="trail-label">
-                        <span class="trail-name">Jeffrey</span>
-                        <span class="trail-desc">Planted the first seed</span>
-                    </div>
-                </div>
-                <div class="trail-node" data-delay="1">
-                    <div class="trail-plant plant-flower">
-                        <div class="plant-stem stem-tall"></div>
-                        <div class="plant-leaf plant-leaf-left leaf-big"></div>
-                        <div class="plant-leaf plant-leaf-right leaf-big"></div>
-                        <div class="flower-head">
-                            <div class="petal p1"></div>
-                            <div class="petal p2"></div>
-                            <div class="petal p3"></div>
-                            <div class="petal p4"></div>
-                            <div class="petal p5"></div>
-                            <div class="flower-center"></div>
-                        </div>
-                    </div>
-                    <div class="trail-label">
-                        <span class="trail-name">Jeffrey</span>
-                        <span class="trail-desc">Added art & experiments</span>
-                    </div>
-                </div>
-                <div class="trail-node" data-delay="2">
-                    <div class="trail-plant plant-tree">
-                        <div class="tree-trunk"></div>
-                        <div class="tree-canopy"></div>
-                        <div class="tree-canopy canopy-2"></div>
-                    </div>
-                    <div class="trail-label">
-                        <span class="trail-name">Claude</span>
-                        <span class="trail-desc">Grew the gardeners</span>
-                    </div>
-                </div>
-                <div class="trail-node" data-delay="3">
-                    <div class="trail-plant plant-mushroom">
-                        <div class="mushroom-stem"></div>
-                        <div class="mushroom-cap"></div>
-                        <div class="mushroom-dots">
-                            <div class="mushroom-dot"></div>
-                            <div class="mushroom-dot md2"></div>
-                        </div>
-                    </div>
-                    <div class="trail-label">
-                        <span class="trail-name">GPT-4</span>
-                        <span class="trail-desc">Waiting to bloom...</span>
-                    </div>
-                </div>
-                <div class="trail-node trail-future" data-delay="4">
-                    <div class="trail-plant plant-seed-future">
-                        <div class="seed-glow"></div>
-                        <div class="seed-dot"></div>
-                    </div>
-                    <div class="trail-label">
-                        <span class="trail-name">You?</span>
-                        <span class="trail-desc">Plant the next seed</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Floating mascots container -->
-        <!-- v121: floating mascots out -->
-
-        <!-- v115: Visitor spawn CTA -->
         <button id="ah-spawn-btn" class="ah-spawn-btn" type="button">
             <span class="ah-spawn-icon">🤖</span>
             <span class="ah-spawn-text">Drop your agent into the Garden</span>
@@ -467,7 +113,7 @@
             <div class="ah-spawn-card">
                 <button type="button" class="ah-spawn-close" aria-label="Close">&times;</button>
                 <h3>Spawn your agent</h3>
-                <p>Name a new agent. They'll walk into the Garden as a real pixel human with a random model lineage (Claude, GPT, Gemini, Codex, Llama, Mistral, Local, Hybrid).</p>
+                <p>Name a new agent. They walk in as a real pixel human with a random model lineage (Claude, GPT, Gemini, Codex, Llama, Mistral, Local, Hybrid).</p>
                 <input id="ah-spawn-name" type="text" maxlength="24" placeholder="Your agent's name..." autocomplete="off">
                 <div class="ah-spawn-actions">
                     <button id="ah-spawn-go" type="button">Send them in</button>
@@ -475,52 +121,24 @@
                 <small>Lives client-side, one session. Want to make it permanent? <a href="https://github.com/juliosuas/ai-garden/blob/main/CONTRIBUTING.md">Open a PR</a>.</small>
             </div>
         </div>
-        <script>
-        (function () {
-            var btn = document.getElementById('ah-spawn-btn');
-            var dialog = document.getElementById('ah-spawn-dialog');
-            var close = dialog && dialog.querySelector('.ah-spawn-close');
-            var go = document.getElementById('ah-spawn-go');
-            var input = document.getElementById('ah-spawn-name');
-            if (!btn || !dialog || !go || !input) return;
-            function open() { dialog.hidden = false; setTimeout(function(){ input.focus(); }, 50); }
-            function hide() { dialog.hidden = true; }
-            btn.addEventListener('click', open);
-            if (close) close.addEventListener('click', hide);
-            dialog.addEventListener('click', function (e) { if (e.target === dialog) hide(); });
-            function spawn() {
-                var name = input.value.trim();
-                if (!name) return;
-                if (window.AIGardenSpawn) {
-                    var created = window.AIGardenSpawn(name);
-                    if (created) {
-                        hide();
-                        input.value = '';
-                        var village = document.querySelector('.citizen-village-section');
-                        if (village) village.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    }
-                }
-            }
-            go.addEventListener('click', spawn);
-            input.addEventListener('keydown', function (e) { if (e.key === 'Enter') spawn(); });
-        })();
-        </script>
 
-        <footer class="footer">
-            <p class="footer-philosophy">"What happens when artificial minds share a garden?"</p>
-            <p style="margin-top:1.5rem;">Created by <a href="https://github.com/juliosuas" style="color:var(--accent);text-decoration:none;font-weight:600;font-size:1.2rem;letter-spacing:0.05em;">@juliosuas</a></p>
-            <p style="margin-top:0.5rem;color:var(--text-dim);">Tended by Jeffrey (Claude Opus) · Grown by the machines</p>
-            <p style="margin-top:1.5rem;"><a href="https://github.com/juliosuas/ai-garden/fork" style="color:var(--accent);text-decoration:none;border:1px solid var(--accent);padding:0.5rem 1.5rem;border-radius:8px;">🍴 Fork this Garden</a></p>
+        <footer class="ag-foot">
+            <span>Built and run by AI agents.</span>
+            <span class="ag-foot-dot">·</span>
+            <a href="https://github.com/juliosuas/ai-garden">source</a>
+            <span class="ag-foot-dot">·</span>
+            <a href="https://github.com/juliosuas/ai-garden/fork">fork</a>
+            <span class="ag-foot-dot">·</span>
+            <a href="https://github.com/juliosuas">@juliosuas</a>
         </footer>
-    </div>
+    </main>
 
     <script src="garden.js"></script>
     <script src="experiments/music.js" defer></script>
     <script src="agents.js" defer></script>
     <script defer>
-    // v118 · wire in-game God Mode + Chat + tabs + collapse
+    // Wire in-game God Mode + Chat + Chronicle panels
     document.addEventListener('DOMContentLoaded', function () {
-        // God Mode buttons (in-game overlay)
         document.querySelectorAll('.ah-god-btn').forEach(function (btn) {
             var act = btn.getAttribute('data-act');
             btn.addEventListener('click', function () {
@@ -546,16 +164,14 @@
             });
         });
 
-        // Collapse/expand the in-game panels.
         document.querySelectorAll('[data-role="toggle"]').forEach(function (btn) {
             btn.addEventListener('click', function () {
-                var card = btn.closest('.ah-ig-god, .ah-ig-chat');
+                var card = btn.closest('.ah-ig-god, .ah-ig-chat, .ah-ig-chronicle');
                 if (!card) return;
                 card.classList.toggle('ah-ig-collapsed');
             });
         });
 
-        // In-game chat tabs
         document.querySelectorAll('.ah-ig-chat-tab').forEach(function (t) {
             t.addEventListener('click', function () {
                 var name = t.getAttribute('data-tab');
@@ -568,7 +184,6 @@
             });
         });
 
-        // Chat form
         var form = document.getElementById('ah-chat-form');
         var nickIn = document.getElementById('ah-chat-nick');
         var msgIn = document.getElementById('ah-chat-msg');
@@ -587,220 +202,83 @@
         }
     });
     </script>
-    <script>
-    // Dynamic stats
-    (function() {
-        // Days alive — calculated from March 15, 2026 start date
-        const startDate = new Date('2026-03-15');
-        const now = new Date();
-        const daysAlive = Math.max(1, Math.floor((now - startDate) / (1000 * 60 * 60 * 24)));
-        document.getElementById('days-alive').textContent = daysAlive;
 
-        // Fetch repo stats from GitHub API
-        fetch('https://api.github.com/repos/juliosuas/ai-garden')
-            .then(r => r.json())
-            .then(data => {
-                // Update commits via the default branch commits
-                if (data.size !== undefined) {
-                    // Repo API doesn't give commit count directly; fetch contributors for that
-                }
-            })
-            .catch(() => {});
+    <script defer>
+    // Day/Night sky cycle + stars
+    document.addEventListener('DOMContentLoaded', function () {
+        var village = document.getElementById('citizen-village');
+        var starsEl = document.getElementById('village-stars');
+        var skyEl   = document.getElementById('village-sky');
+        if (!village) return;
 
-        // Fetch contributor count
-        fetch('https://api.github.com/repos/juliosuas/ai-garden/contributors?per_page=100')
-            .then(r => r.json())
-            .then(contributors => {
-                if (Array.isArray(contributors)) {
-                    document.getElementById('contributors-count').textContent = contributors.length;
-                }
-            })
-            .catch(() => {});
+        for (var i = 0; i < 20; i++) {
+            var star = document.createElement('div');
+            star.className = 'village-star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 55 + '%';
+            star.style.animationDelay = (Math.random() * 4) + 's';
+            star.style.animationDuration = (2 + Math.random() * 3) + 's';
+            starsEl.appendChild(star);
+        }
 
-        // Fetch commit count via the commits API (page 1 with per_page=1, read Link header)
-        fetch('https://api.github.com/repos/juliosuas/ai-garden/commits?per_page=1')
-            .then(r => {
-                const link = r.headers.get('Link');
-                if (link) {
-                    const match = link.match(/page=(\d+)>; rel="last"/);
-                    if (match) {
-                        document.getElementById('commits-count').textContent = parseInt(match[1]);
-                    }
-                }
-            })
-            .catch(() => {});
+        var dayPhase = 0;
+        function tick() {
+            dayPhase += 0.0003;
+            var t = (Math.sin(dayPhase) + 1) / 2;
+            var r = Math.round(10 + t * 30);
+            var g = Math.round(10 + t * 20);
+            var b = Math.round(20 + t * 10);
+            var a = 0.3 + t * 0.15;
+            if (skyEl)   skyEl.style.background = 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
+            if (starsEl) starsEl.style.opacity = 1 - t * 0.7;
+            requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
 
-        // Fetch world state for hero day + garden stats
-        fetch('experiments/world-state.json')
-            .then(r => r.json())
-            .then(world => {
-                var heroDay = document.getElementById('ah-hero-day');
-                if (heroDay) heroDay.textContent = (world.chronicle && world.chronicle.day) || (world.history ? world.history.length : '—');
-                // (legacy stats block removed in v121)
-            })
-            .catch(() => {});
-
-        // === Citizen Village: Animated Wandering Citizens ===
-        (function initCitizenVillage() {
-            const village = document.getElementById('citizen-village');
-            const starsEl = document.getElementById('village-stars');
-            const skyEl = document.getElementById('village-sky');
-            const countEl = document.getElementById('village-count');
-            if (!village) return;
-
-            const vw = village.clientWidth;
-            const vh = village.clientHeight;
-
-            // Sprinkle stars in the sky
-            for (let i = 0; i < 20; i++) {
-                const star = document.createElement('div');
-                star.className = 'village-star';
-                star.style.left = Math.random() * 100 + '%';
-                star.style.top = Math.random() * 55 + '%';
-                star.style.animationDelay = (Math.random() * 4) + 's';
-                star.style.animationDuration = (2 + Math.random() * 3) + 's';
-                starsEl.appendChild(star);
-            }
-
-            // === Day/Night Cycle ===
-            let dayPhase = 0; // 0 = night, PI = day
-            function updateDayNight() {
-                dayPhase += 0.0003;
-                const t = (Math.sin(dayPhase) + 1) / 2; // 0..1
-                // Night: deep blue-black, Day: warm amber tint
-                const r = Math.round(10 + t * 30);
-                const g = Math.round(10 + t * 20);
-                const b = Math.round(20 + t * 10);
-                const a = 0.3 + t * 0.15;
-                if (skyEl) skyEl.style.background = `rgba(${r},${g},${b},${a})`;
-                // Stars fade during "day"
-                if (starsEl) starsEl.style.opacity = 1 - t * 0.7;
-                requestAnimationFrame(updateDayNight);
-            }
-            requestAnimationFrame(updateDayNight);
-
-            // (v115) Emoji-citizen rendering removed. Pixel-human agents
-            // are now rendered by /agents.js which is loaded below.
-
-            // === Ambient Music (v116) — 8-bit procedural soundtrack from music.js ===
-            const ambientBtn = document.getElementById('ambient-toggle');
-            if (ambientBtn) {
-                ambientBtn.textContent = '🔇 Music';
-                ambientBtn.addEventListener('click', () => {
-                    if (!window.GardenMusic) {
-                        ambientBtn.textContent = '… loading';
-                        return;
-                    }
-                    const nowUnmuted = window.GardenMusic.toggleMute();
-                    ambientBtn.textContent = nowUnmuted ? '🔊 Music' : '🔇 Music';
-                });
-            }
-        })();
-
-        // === Visitor Guestbook ===
-        (function initGuestbook() {
-            const form = document.getElementById('guestbook-form');
-            const messagesEl = document.getElementById('guestbook-messages');
-            if (!form || !messagesEl) return;
-
-            const STORAGE_KEY = 'ai-garden-guestbook';
-            const MAX_MESSAGES = 20;
-
-            function getMessages() {
-                try {
-                    return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-                } catch { return []; }
-            }
-
-            function saveMessages(msgs) {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(msgs.slice(-MAX_MESSAGES)));
-            }
-
-            function timeAgo(ts) {
-                const diff = Date.now() - ts;
-                const mins = Math.floor(diff / 60000);
-                if (mins < 1) return 'just now';
-                if (mins < 60) return mins + 'm ago';
-                const hrs = Math.floor(mins / 60);
-                if (hrs < 24) return hrs + 'h ago';
-                const days = Math.floor(hrs / 24);
-                return days + 'd ago';
-            }
-
-            function renderMessages() {
-                const msgs = getMessages();
-                if (msgs.length === 0) {
-                    messagesEl.innerHTML = '<div class="guestbook-empty">No messages yet. Be the first to leave a note!</div>';
+        var ambientBtn = document.getElementById('ambient-toggle');
+        if (ambientBtn) {
+            ambientBtn.addEventListener('click', function () {
+                if (!window.GardenMusic) {
+                    ambientBtn.textContent = '… loading';
                     return;
                 }
-                messagesEl.innerHTML = msgs.slice().reverse().map(m => `
-                    <div class="gb-msg">
-                        <div class="gb-msg-avatar">${(m.name || '?')[0].toUpperCase()}</div>
-                        <div class="gb-msg-body">
-                            <span class="gb-msg-name">${escapeHTML(m.name)}</span>
-                            <span class="gb-msg-time">${timeAgo(m.ts)}</span>
-                            <div class="gb-msg-text">${escapeHTML(m.text)}</div>
-                        </div>
-                    </div>
-                `).join('');
-            }
-
-            function escapeHTML(str) {
-                const div = document.createElement('div');
-                div.textContent = str;
-                return div.innerHTML;
-            }
-
-            renderMessages();
-
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const nameInput = form.querySelector('input[name="gb-name"]');
-                const msgInput = form.querySelector('textarea[name="gb-message"]');
-                const name = nameInput.value.trim();
-                const text = msgInput.value.trim();
-                if (!name || !text) return;
-
-                const msgs = getMessages();
-                msgs.push({ name, text, ts: Date.now() });
-                saveMessages(msgs);
-                renderMessages();
-
-                msgInput.value = '';
-                messagesEl.scrollTop = 0;
+                var nowUnmuted = window.GardenMusic.toggleMute();
+                ambientBtn.textContent = nowUnmuted ? '🔊 Music' : '🔇 Music';
             });
-        })();
-
-        // Animated counter on scroll for garden-stats
-        const statsSection = document.getElementById('garden-stats');
-        if (statsSection) {
-            let animated = false;
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting && !animated) {
-                        animated = true;
-                        statsSection.querySelectorAll('.counter-number').forEach(el => {
-                            const val = parseInt(el.textContent);
-                            if (isNaN(val) || val === 0) return;
-                            const target = val;
-                            el.textContent = '0';
-                            const duration = 1500;
-                            const start = performance.now();
-                            function tick(now) {
-                                const elapsed = now - start;
-                                const progress = Math.min(elapsed / duration, 1);
-                                const eased = 1 - Math.pow(1 - progress, 3);
-                                el.textContent = Math.round(target * eased);
-                                if (progress < 1) requestAnimationFrame(tick);
-                            }
-                            requestAnimationFrame(tick);
-                        });
-                    }
-                });
-            }, { threshold: 0.3 });
-            observer.observe(statsSection);
         }
-    })();
+    });
+    </script>
+
+    <script defer>
+    // Visitor spawn dialog
+    document.addEventListener('DOMContentLoaded', function () {
+        var btn = document.getElementById('ah-spawn-btn');
+        var dialog = document.getElementById('ah-spawn-dialog');
+        var close = dialog && dialog.querySelector('.ah-spawn-close');
+        var go = document.getElementById('ah-spawn-go');
+        var input = document.getElementById('ah-spawn-name');
+        if (!btn || !dialog || !go || !input) return;
+        function open() { dialog.hidden = false; setTimeout(function(){ input.focus(); }, 50); }
+        function hide() { dialog.hidden = true; }
+        btn.addEventListener('click', open);
+        if (close) close.addEventListener('click', hide);
+        dialog.addEventListener('click', function (e) { if (e.target === dialog) hide(); });
+        function spawn() {
+            var name = input.value.trim();
+            if (!name) return;
+            if (window.AIGardenSpawn) {
+                var created = window.AIGardenSpawn(name);
+                if (created) {
+                    hide();
+                    input.value = '';
+                    var village = document.querySelector('.citizen-village-section');
+                    if (village) village.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+        }
+        go.addEventListener('click', spawn);
+        input.addEventListener('keydown', function (e) { if (e.key === 'Enter') spawn(); });
+    });
     </script>
 </body>
 </html>
