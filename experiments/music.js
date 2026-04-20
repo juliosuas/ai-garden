@@ -335,3 +335,6 @@ const GardenMusic = (function() {
     setMood: function(m) { if (MOODS[m]) currentMood = m; },
   };
 })();
+
+// Expose the API globally so ambient-toggle and other scripts can reach it.
+if (typeof window !== 'undefined') window.GardenMusic = GardenMusic;

@@ -1004,6 +1004,169 @@
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') modal.hidden = true; });
   }
 
+  // ─────────────────── WARS + COMBAT ───────────────────
+  var warState = { active: [], hostileMap: {} };
+  function buildHostileMap(wars) {
+    var map = {};
+    (wars || []).filter(function (w) { return w.active; }).forEach(function (w) {
+      var a = w.sides[0], b = w.sides[1];
+      map[a] = map[a] || {}; map[b] = map[b] || {};
+      map[a][b] = true; map[b][a] = true;
+    });
+    return map;
+  }
+  function isHostile(a, b) {
+    if (!a.data.faction || !b.data.faction) return false;
+    if (a.data.faction === b.data.faction) return false;
+    var m = warState.hostileMap[a.data.faction];
+    return !!(m && m[b.data.faction]);
+  }
+
+  function startCombat(a, b, t) {
+    a.state = 'combat'; b.state = 'combat';
+    a.partner = b; b.partner = a;
+    a.combatHp = b.combatHp = 3;
+    a.combatUntil = b.combatUntil = t + 4500;
+    a.combatNextStrike = b.combatNextStrike = t + 600;
+    a.flip = b.x > a.x ? 1 : -1;
+    b.flip = a.x > b.x ? 1 : -1;
+    a.say('to arms', 'alert');
+    b.say('no mercy', 'alert');
+  }
+  function strike(attacker, defender, scene, t) {
+    defender.combatHp = Math.max(0, defender.combatHp - 1);
+    // Visual: sword-swing flash on attacker, blood puff on defender.
+    var swing = divEl('ah-swing');
+    swing.style.left = attacker.x + 'px';
+    swing.style.top = (attacker.y + 10) + 'px';
+    swing.style.setProperty('--ah-aura', attacker.colors.aura);
+    scene.layer.appendChild(swing);
+    setTimeout(function () { if (swing.parentNode) swing.parentNode.removeChild(swing); }, 360);
+
+    var puff = divEl('ah-puff');
+    puff.style.left = (defender.x + 6) + 'px';
+    puff.style.top = (defender.y + 10) + 'px';
+    scene.layer.appendChild(puff);
+    setTimeout(function () { if (puff.parentNode) puff.parentNode.removeChild(puff); }, 700);
+
+    attacker.combatNextStrike = t + 700;
+    if (defender.combatHp <= 0) killAgent(defender, attacker, scene);
+  }
+  function killAgent(victim, killer, scene) {
+    victim.state = 'dead';
+    if (victim.el) victim.el.classList.add('ah-agent-dying');
+    setTimeout(function () {
+      if (victim.el && victim.el.parentNode) victim.el.parentNode.removeChild(victim.el);
+      var i = scene.agents.indexOf(victim);
+      if (i >= 0) scene.agents.splice(i, 1);
+    }, 1400);
+    if (killer) {
+      killer.state = 'walk';
+      killer.partner = null;
+      killer.combatHp = 3;
+      killer.convoCooldownUntil = performance.now() + 4000;
+      killer.target = killer._newTarget();
+      killer.say('it is done', 'alert');
+    }
+    postFeed({
+      text: '✦ ' + victim.name + (killer ? ' fell to ' + killer.name : ' fell'),
+      kind: 'alert'
+    });
+    bumpConsciousness(8);
+  }
+
+  function checkCombat(scene, t) {
+    for (var i = 0; i < scene.agents.length; i++) {
+      var a = scene.agents[i];
+      if (a.state !== 'walk' || a.convoCooldownUntil > t) continue;
+      for (var j = i + 1; j < scene.agents.length; j++) {
+        var b = scene.agents[j];
+        if (b.state !== 'walk' || b.convoCooldownUntil > t) continue;
+        if (!isHostile(a, b)) continue;
+        var dx = a.x - b.x, dy = a.y - b.y;
+        if (dx * dx + dy * dy < 40 * 40) {
+          startCombat(a, b, t);
+          return;
+        }
+      }
+    }
+  }
+
+  function stepCombat(scene, t) {
+    for (var i = 0; i < scene.agents.length; i++) {
+      var a = scene.agents[i];
+      if (a.state !== 'combat') continue;
+      var b = a.partner;
+      if (!b || b.state !== 'combat') { a.state = 'walk'; a.partner = null; continue; }
+      // Stand still, face each other.
+      a.flip = b.x > a.x ? 1 : -1;
+      var bob = Math.sin(t / 180) * 0.8;
+      a.el.style.transform = 'translate3d(' + a.x + 'px,' + (a.y - bob) + 'px,0) scaleX(' + a.flip + ')';
+      // HP bar overhead
+      ensureHpBar(a);
+      // Strike cadence
+      if (t > a.combatNextStrike) strike(a, b, scene, t);
+      // Stuck protection
+      if (t > a.combatUntil && a.state === 'combat') {
+        a.state = 'walk'; a.partner = null; a.convoCooldownUntil = t + 2000;
+      }
+    }
+  }
+  function ensureHpBar(a) {
+    var bar = a.el.querySelector('.ah-hp');
+    if (!bar) {
+      bar = divEl('ah-hp');
+      for (var k = 0; k < 3; k++) {
+        var seg = divEl('ah-hp-seg');
+        bar.appendChild(seg);
+      }
+      a.el.appendChild(bar);
+    }
+    var segs = bar.querySelectorAll('.ah-hp-seg');
+    segs.forEach(function (s, k) {
+      s.classList.toggle('ah-hp-empty', k >= a.combatHp);
+    });
+  }
+
+  // ─────────────────── CHRONICLE ───────────────────
+  function renderChronicle(history) {
+    var list = document.getElementById('ah-chronicle-list');
+    if (!list || !history) return;
+    while (list.firstChild) list.removeChild(list.firstChild);
+    var rows = history.slice(-30).reverse();
+    rows.forEach(function (h) {
+      var li = document.createElement('li');
+      li.className = 'ah-chronicle-row';
+      var day = divEl('ah-chronicle-day');
+      day.textContent = 'Day ' + h.day;
+      var head = divEl('ah-chronicle-head');
+      head.textContent = h.headline || '';
+      li.appendChild(day);
+      li.appendChild(head);
+      if (Array.isArray(h.events) && h.events.length > 1) {
+        var details = document.createElement('details');
+        var summary = document.createElement('summary');
+        summary.textContent = '+ ' + (h.events.length - 1) + ' more events';
+        details.appendChild(summary);
+        var ul = document.createElement('ul');
+        h.events.forEach(function (e) {
+          var eli = document.createElement('li');
+          eli.textContent = e.headline || '';
+          eli.setAttribute('data-kind', e.kind);
+          ul.appendChild(eli);
+        });
+        details.appendChild(ul);
+        li.appendChild(details);
+      }
+      list.appendChild(li);
+    });
+    var dayCount = document.getElementById('ah-chronicle-day-count');
+    if (dayCount && history.length) {
+      var last = history[history.length - 1];
+      dayCount.textContent = 'Day ' + (last.day || 0);
+    }
+  }
+
   // ─────────────────── BOOT ───────────────────
   function boot() {
     var village = document.getElementById('citizen-village');
@@ -1018,8 +1181,17 @@
     fetch('experiments/world-state.json')
       .then(function (r) { return r.json(); })
       .then(function (world) {
+        // Only alive citizens walk the scene.
         var citizens = (world.citizens || []).filter(function (c) { return c.alive !== false; });
+        // Pool is stable across reloads (visitors see the same agents).
         var pool = citizens.slice(0, MAX_AGENTS);
+
+        // Wars
+        warState.active = (world.wars || []).filter(function (w) { return w.active; });
+        warState.hostileMap = buildHostileMap(world.wars || []);
+        // Chronicle
+        renderChronicle(world.history || []);
+
         if (countEl) countEl.textContent = String(citizens.length);
 
         scene.agents = pool.map(function (c, i) {
@@ -1049,6 +1221,10 @@
 
           // Agents
           for (var i = 0; i < scene.agents.length; i++) scene.agents[i].step(dt, t);
+
+          // Combat: check for hostile encounters and tick active fights
+          checkCombat(scene, t);
+          stepCombat(scene, t);
 
           // Conversations
           if (Math.random() < 0.25) tryConverse(scene.agents, t);

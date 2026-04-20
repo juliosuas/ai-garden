@@ -172,6 +172,19 @@
             <div class="ah-dashboard" id="ah-dashboard"></div>
         </section>
 
+        <!-- v116: The Chronicle — autonomous daily evolution log -->
+        <section class="ah-chronicle-section">
+            <h2>The Chronicle</h2>
+            <p class="section-desc">The garden evolves on its own. Every day at 04:11 UTC a daemon runs a full day of history: births, deaths, wars declared and broken, structures raised, regions discovered. This is the log. No human wrote any of these lines.</p>
+            <div class="ah-chronicle">
+                <div class="ah-chronicle-head-bar">
+                    <span class="ah-chronicle-banner"><strong>autonomous</strong>no commit required · the world keeps turning</span>
+                    <span class="ah-chronicle-day-count" id="ah-chronicle-day-count">Day 0</span>
+                </div>
+                <ul class="ah-chronicle-list" id="ah-chronicle-list"></ul>
+            </div>
+        </section>
+
         <!-- (v115) Old citizen modal removed — agents.js now builds its own modal. -->
 
 
@@ -800,6 +813,7 @@
     </div>
 
     <script src="garden.js"></script>
+    <script src="experiments/music.js" defer></script>
     <script src="agents.js" defer></script>
     <script>
     // Dynamic stats
@@ -898,70 +912,17 @@
             // (v115) Emoji-citizen rendering removed. Pixel-human agents
             // are now rendered by /agents.js which is loaded below.
 
-                        // === Ambient Sound (Web Audio API oscillators, no files) ===
+            // === Ambient Music (v116) — 8-bit procedural soundtrack from music.js ===
             const ambientBtn = document.getElementById('ambient-toggle');
-            let audioCtx = null, ambientPlaying = false, ambientNodes = [];
-
-            function startAmbient() {
-                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                if (audioCtx.state === 'suspended') audioCtx.resume();
-
-                // Cricket chirps via oscillators
-                function chirp() {
-                    if (!ambientPlaying) return;
-                    const osc = audioCtx.createOscillator();
-                    const gain = audioCtx.createGain();
-                    osc.type = 'sine';
-                    osc.frequency.value = 3800 + Math.random() * 1200;
-                    gain.gain.value = 0.015;
-                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
-                    osc.connect(gain).connect(audioCtx.destination);
-                    osc.start();
-                    osc.stop(audioCtx.currentTime + 0.08);
-                    ambientNodes.push(osc);
-                    // Random interval for natural feel
-                    setTimeout(chirp, 100 + Math.random() * 400);
-                }
-
-                // Low ambient hum (wind)
-                const wind = audioCtx.createOscillator();
-                const windGain = audioCtx.createGain();
-                wind.type = 'sine';
-                wind.frequency.value = 120;
-                windGain.gain.value = 0.008;
-                wind.connect(windGain).connect(audioCtx.destination);
-                wind.start();
-                ambientNodes.push(wind);
-
-                // Higher gentle tone
-                const tone = audioCtx.createOscillator();
-                const toneGain = audioCtx.createGain();
-                tone.type = 'sine';
-                tone.frequency.value = 260;
-                toneGain.gain.value = 0.004;
-                tone.connect(toneGain).connect(audioCtx.destination);
-                tone.start();
-                ambientNodes.push(tone);
-
-                chirp();
-                ambientPlaying = true;
-            }
-
-            function stopAmbient() {
-                ambientPlaying = false;
-                ambientNodes.forEach(n => { try { n.stop(); } catch(e) {} });
-                ambientNodes = [];
-            }
-
             if (ambientBtn) {
+                ambientBtn.textContent = '🔇 Music';
                 ambientBtn.addEventListener('click', () => {
-                    if (ambientPlaying) {
-                        stopAmbient();
-                        ambientBtn.textContent = '🔇 Sound';
-                    } else {
-                        startAmbient();
-                        ambientBtn.textContent = '🔊 Sound';
+                    if (!window.GardenMusic) {
+                        ambientBtn.textContent = '… loading';
+                        return;
                     }
+                    const nowUnmuted = window.GardenMusic.toggleMute();
+                    ambientBtn.textContent = nowUnmuted ? '🔊 Music' : '🔇 Music';
                 });
             }
         })();
