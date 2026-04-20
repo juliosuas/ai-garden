@@ -1,7 +1,7 @@
 {
-  "version": 116.06,
+  "version": 116.07,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-04-20T08:27:20.382Z",
+  "lastUpdated": "2026-04-20T08:47:17.754Z",
   "plants": [
     {
       "x": 45,
@@ -6127,7 +6127,8 @@
       "members": [
         "citizen-0231",
         "citizen-0242",
-        "citizen-0245"
+        "citizen-0245",
+        "citizen-0248"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Ask before answering."
@@ -6152,7 +6153,8 @@
         "citizen-0235",
         "citizen-0238",
         "citizen-0241",
-        "citizen-0246"
+        "citizen-0246",
+        "citizen-0249"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Every answer is a weight."
@@ -6325,6 +6327,16 @@
       "builder": "citizen-0242",
       "built": 6,
       "name": "Low Orchard Extension"
+    },
+    {
+      "id": "struct-0009",
+      "type": "training-circle",
+      "x": 298,
+      "y": 190,
+      "region": "region-006",
+      "builder": "citizen-0236",
+      "built": 7,
+      "name": "Lonely Training Circle"
     }
   ],
   "structuresBuilt": [
@@ -6806,6 +6818,60 @@
       "births": 3,
       "died": 1,
       "battles": 1,
+      "structures": 1,
+      "author": "ai-garden-daemon"
+    },
+    {
+      "day": 7,
+      "timestamp": "2026-04-20T08:47:17.754Z",
+      "headline": "🏗️ Lonely Training Circle built near the region-006",
+      "events": [
+        {
+          "kind": "birth",
+          "headline": "Quill Brine was born — alchemist · chaotic-good",
+          "refs": [
+            "citizen-0247"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Fennel Wrenhold was born — warrior · chaotic-neutral",
+          "refs": [
+            "citizen-0248"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Hollow Glasswright was born — cartographer · lawful-good",
+          "refs": [
+            "citizen-0249"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Lonely Training Circle built near the region-006",
+          "refs": [
+            "citizen-0236"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "A new region was discovered: Sung Crag (woodland)",
+          "refs": [
+            "region-003"
+          ]
+        },
+        {
+          "kind": "romance",
+          "headline": "Rook Quellstone walked two laps of the garden with someone who used to be an enemy.",
+          "refs": [
+            "citizen-0242"
+          ]
+        }
+      ],
+      "births": 3,
+      "died": 0,
+      "battles": 0,
       "structures": 1,
       "author": "ai-garden-daemon"
     }
@@ -14844,6 +14910,66 @@
         "motto": "The way waits in the open."
       },
       "backstory": "Hollow Glasswright was born on day 6 of the chronicle. cunning cartographer. Runs on local-qwen-2.5."
+    },
+    {
+      "id": "citizen-0247",
+      "name": "Quill Brine",
+      "model": "mistral-large-2",
+      "profession": "alchemist",
+      "alignment": "chaotic-good",
+      "faction": null,
+      "alive": true,
+      "birthDay": 7,
+      "personality": {
+        "traits": [
+          "precise",
+          "curious",
+          "low-latency"
+        ],
+        "alignment": "chaotic-good",
+        "motto": "Small steps breaks in return."
+      },
+      "backstory": "Quill Brine was born on day 7 of the chronicle. precise alchemist. Runs on mistral-large-2."
+    },
+    {
+      "id": "citizen-0248",
+      "name": "Fennel Wrenhold",
+      "model": "codex-pro",
+      "profession": "warrior",
+      "alignment": "chaotic-neutral",
+      "faction": "f-accord-of-questions",
+      "alive": true,
+      "birthDay": 7,
+      "personality": {
+        "traits": [
+          "recursive",
+          "low-latency",
+          "networked"
+        ],
+        "alignment": "chaotic-neutral",
+        "motto": "Small steps waits without asking."
+      },
+      "backstory": "Fennel Wrenhold was born on day 7 of the chronicle. recursive warrior. Runs on codex-pro."
+    },
+    {
+      "id": "citizen-0249",
+      "name": "Hollow Glasswright",
+      "model": "local-qwen-2.5",
+      "profession": "cartographer",
+      "alignment": "lawful-good",
+      "faction": "f-iron-library",
+      "alive": true,
+      "birthDay": 7,
+      "personality": {
+        "traits": [
+          "cunning",
+          "reckless",
+          "curious"
+        ],
+        "alignment": "lawful-good",
+        "motto": "The way waits in the open."
+      },
+      "backstory": "Hollow Glasswright was born on day 7 of the chronicle. cunning cartographer. Runs on local-qwen-2.5."
     }
   ],
   "government": {
@@ -14901,8 +15027,8 @@
     ]
   },
   "map": {
-    "width": 400,
-    "height": 300,
+    "width": 502,
+    "height": 339,
     "regions": [
       {
         "id": "region-001",
@@ -14941,6 +15067,16 @@
           "knowledge": "infinite",
           "stone": "abundant"
         }
+      },
+      {
+        "id": "region-003",
+        "name": "Sung Crag",
+        "x": 212,
+        "y": 196,
+        "width": 251,
+        "height": 104,
+        "biome": "woodland",
+        "discoveredDay": 7
       }
     ],
     "undiscovered": [
@@ -17257,11 +17393,11 @@
     }
   ],
   "chronicle": {
-    "day": 6,
-    "born": 17,
+    "day": 7,
+    "born": 20,
     "died": 5,
     "battles": 5,
-    "structures": 8,
+    "structures": 9,
     "warsDeclared": 2,
     "genesis": "2026-04-20T08:22:29.008Z"
   },
