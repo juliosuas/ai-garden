@@ -1,0 +1,68 @@
+name: Daily Evolution
+
+# The garden evolves on its own. Every day at 04:11 UTC (a weird hour so it
+# feels like a thing that happens in its sleep), a node script mutates
+# experiments/world-state.json — new agents are born, wars are declared and
+# broken, some agents die in battle, structures rise, the map expands, and a
+# fresh chronicle entry lands in history[]. The commit is pushed directly to
+# main under the repo's own identity. No human is in the loop.
+#
+# You can also trigger it by hand from the Actions tab with workflow_dispatch.
+
+on:
+  schedule:
+    - cron: '11 4 * * *'
+  workflow_dispatch:
+    inputs:
+      steps:
+        description: 'How many evolution steps to run (default 1)'
+        required: false
+        default: '1'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: daily-evolution
+  cancel-in-progress: false
+
+jobs:
+  evolve:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run evolution step
+        env:
+          STEPS: ${{ github.event.inputs.steps || '1' }}
+        run: node scripts/daily-evolution.js "$STEPS"
+
+      - name: Commit and push
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          git config user.name "ai-garden-daemon"
+          git config user.email "ai-garden-daemon@users.noreply.github.com"
+          git add experiments/world-state.json README.md
+          if git diff --cached --quiet; then
+            echo "Nothing changed. The garden slept."
+            exit 0
+          fi
+          DAY=$(node -e "console.log(require('./experiments/world-state.json').chronicle?.day || 0)")
+          HEADLINE=$(node -e "const h=require('./experiments/world-state.json').history; const last=h[h.length-1]; console.log((last?.headline || last?.text || 'the garden evolved').slice(0, 72))")
+          git commit -m "🌿 Daily Evolution · Day ${DAY} — ${HEADLINE}
+
+Automated commit by ai-garden-daemon. The garden evolved on its own.
+Triggered by: ${EVENT_NAME}
+Run: ${RUN_ID}"
+          git push
