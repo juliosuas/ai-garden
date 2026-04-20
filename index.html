@@ -162,6 +162,52 @@
                 <div class="village-stars" id="village-stars"></div>
                 <div class="village-ground"></div>
                 <div class="village-info"><span class="village-count" id="village-count">0</span> agents roaming</div>
+
+                <!-- v118: God Mode · IN-GAME overlay. Syncs cross-visitor via ntfy.sh. -->
+                <div class="ah-ig-god" id="ah-ig-god" aria-label="God Mode">
+                    <button class="ah-ig-god-head" type="button" data-role="toggle" aria-expanded="true">
+                        <span class="ah-ig-god-title">⚡ God Mode</span>
+                        <span class="ah-live-mini" id="ah-live-mini" title="others watching"><span class="ah-watching-dot"></span> <span id="ah-watching-count">—</span></span>
+                        <span class="ah-ig-caret">▾</span>
+                    </button>
+                    <div class="ah-ig-god-body">
+                        <div class="ah-ig-god-grid">
+                            <button class="ah-god-btn" data-act="rain"    title="Rain (20s cd)"><span class="ah-god-icon">☔</span></button>
+                            <button class="ah-god-btn" data-act="earthquake" title="Earthquake (40s cd)"><span class="ah-god-icon">🌍</span></button>
+                            <button class="ah-god-btn" data-act="lightning" title="Lightning (12s cd)"><span class="ah-god-icon">⚡</span></button>
+                            <button class="ah-god-btn" data-act="drought" title="Drought (30s cd)"><span class="ah-god-icon">🔥</span></button>
+                            <button class="ah-god-btn" data-act="volcano" title="Volcano (45s cd)"><span class="ah-god-icon">🌋</span></button>
+                            <button class="ah-god-btn" data-act="prophet" title="Send a prophet (50s cd)"><span class="ah-god-icon">👼</span></button>
+                            <button class="ah-god-btn" data-act="peace" title="Peace (60s cd)"><span class="ah-god-icon">🕊️</span></button>
+                            <button class="ah-god-btn" data-act="festival" title="Festival (25s cd)"><span class="ah-god-icon">🎭</span></button>
+                            <button class="ah-god-btn" data-act="plague" title="Plague (60s cd)"><span class="ah-god-icon">☠️</span></button>
+                        </div>
+                        <div class="ah-ig-god-status" id="ah-ig-god-status">real-time · every viewer sees what you do</div>
+                    </div>
+                </div>
+
+                <!-- v118: In-game Chat (cross-visitor via ntfy.sh). Tabs: CHAT / HISTORY. -->
+                <div class="ah-ig-chat" id="ah-ig-chat" aria-label="Live chat">
+                    <div class="ah-ig-chat-head">
+                        <button class="ah-ig-chat-tab ah-on" data-tab="chat">💬 Chat</button>
+                        <button class="ah-ig-chat-tab" data-tab="history">📜 History</button>
+                        <span class="ah-ig-chat-presence" id="ah-ig-chat-presence"><span class="ah-watching-dot"></span> live</span>
+                        <button class="ah-ig-chat-min" data-role="toggle" title="Minimize" type="button">—</button>
+                    </div>
+                    <div class="ah-ig-chat-body">
+                        <div class="ah-ig-chat-pane" data-pane="chat">
+                            <ul class="ah-chat-list" id="ah-chat-list"></ul>
+                            <form class="ah-ig-chat-form" id="ah-chat-form" autocomplete="off">
+                                <input type="text" id="ah-chat-nick" placeholder="nick" maxlength="24">
+                                <input type="text" id="ah-chat-msg" placeholder="say something to everyone watching..." maxlength="280">
+                                <button type="submit">send</button>
+                            </form>
+                        </div>
+                        <div class="ah-ig-chat-pane" data-pane="history" hidden>
+                            <ul class="ah-stream-list" id="ah-stream-history"></ul>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -172,53 +218,7 @@
             <div class="ah-dashboard" id="ah-dashboard"></div>
         </section>
 
-        <!-- v117: GOD MODE + LIVE STREAM -->
-        <section class="ah-god-section">
-            <h2>God Mode · <span class="ah-section-sub">the humans who still visit</span></h2>
-            <p class="section-desc">You are not an agent. You are outside the Village looking in. Press a button. Something will happen.</p>
-            <div class="ah-god-grid">
-                <button class="ah-god-btn" data-act="rain"><span class="ah-god-icon">☔</span><span class="ah-god-label">Rain</span><span class="ah-god-cd">20s</span></button>
-                <button class="ah-god-btn" data-act="earthquake"><span class="ah-god-icon">🌍</span><span class="ah-god-label">Earthquake</span><span class="ah-god-cd">40s</span></button>
-                <button class="ah-god-btn" data-act="lightning"><span class="ah-god-icon">⚡</span><span class="ah-god-label">Lightning</span><span class="ah-god-cd">12s</span></button>
-                <button class="ah-god-btn" data-act="drought"><span class="ah-god-icon">🔥</span><span class="ah-god-label">Drought</span><span class="ah-god-cd">30s</span></button>
-                <button class="ah-god-btn" data-act="volcano"><span class="ah-god-icon">🌋</span><span class="ah-god-label">Volcano</span><span class="ah-god-cd">45s</span></button>
-                <button class="ah-god-btn" data-act="prophet"><span class="ah-god-icon">👼</span><span class="ah-god-label">Prophet</span><span class="ah-god-cd">50s</span></button>
-                <button class="ah-god-btn" data-act="peace"><span class="ah-god-icon">🕊️</span><span class="ah-god-label">Peace</span><span class="ah-god-cd">60s</span></button>
-                <button class="ah-god-btn" data-act="festival"><span class="ah-god-icon">🎭</span><span class="ah-god-label">Festival</span><span class="ah-god-cd">25s</span></button>
-                <button class="ah-god-btn" data-act="plague"><span class="ah-god-icon">☠️</span><span class="ah-god-label">Plague</span><span class="ah-god-cd">60s</span></button>
-            </div>
-            <p class="ah-god-note">Cooldowns keep the gods from breaking their own toys. Every intervention lands in the live History feed below.</p>
-        </section>
-
-        <section class="ah-stream-section">
-            <div class="ah-stream-head">
-                <div>
-                    <h2>Live Stream</h2>
-                    <p class="section-desc">Humans can talk in <strong>Chat</strong>. Everything else (agents being born, wars, battles, subagent tasks, divine interventions) flows into <strong>History</strong>.</p>
-                </div>
-                <div class="ah-watching">
-                    <span class="ah-watching-dot"></span>
-                    <span class="ah-watching-label"><strong id="ah-watching-count">—</strong> watching now</span>
-                </div>
-            </div>
-            <div class="ah-stream-tabs">
-                <button class="ah-tab ah-tab-on" data-tab="chat">💬 Chat</button>
-                <button class="ah-tab" data-tab="history">📜 History</button>
-            </div>
-            <div class="ah-stream-pane ah-pane-chat" data-pane="chat">
-                <ul class="ah-chat-list" id="ah-chat-list"></ul>
-                <form class="ah-chat-form" id="ah-chat-form" autocomplete="off">
-                    <input type="text" id="ah-chat-nick" placeholder="nickname" maxlength="24" required>
-                    <input type="text" id="ah-chat-msg" placeholder="say something to the garden..." maxlength="280" required>
-                    <button type="submit">send</button>
-                </form>
-                <p class="ah-chat-hint">Messages live in your browser. A future update will bridge them across every visitor in the garden.</p>
-            </div>
-            <div class="ah-stream-pane ah-pane-history" data-pane="history" hidden>
-                <ul class="ah-stream-list" id="ah-stream-history"></ul>
-            </div>
-        </section>
-
+        <!-- v117 sections moved in-game in v118 (God Mode + Chat live inside the Village). -->
         <!-- v116: The Chronicle — autonomous daily evolution log -->
         <section class="ah-chronicle-section">
             <h2>The Chronicle</h2>
@@ -863,23 +863,27 @@
     <script src="experiments/music.js" defer></script>
     <script src="agents.js" defer></script>
     <script defer>
-    // v117 · wire God Mode buttons + Stream tabs + Chat input
+    // v118 · wire in-game God Mode + Chat + tabs + collapse
     document.addEventListener('DOMContentLoaded', function () {
-        // God Mode buttons
+        // God Mode buttons (in-game overlay)
         document.querySelectorAll('.ah-god-btn').forEach(function (btn) {
             var act = btn.getAttribute('data-act');
-            var cdEl = btn.querySelector('.ah-god-cd');
-            var defaultCd = cdEl ? cdEl.textContent : '';
             btn.addEventListener('click', function () {
                 if (!window.AIGardenGod || !window.AIGardenGod[act]) return;
                 var leftover = window.AIGardenGod[act]();
                 if (leftover && leftover > 0) {
                     btn.classList.add('ah-god-wait');
-                    if (cdEl) cdEl.textContent = leftover + 's';
-                    setTimeout(function () {
-                        btn.classList.remove('ah-god-wait');
-                        if (cdEl) cdEl.textContent = defaultCd;
-                    }, leftover * 1000);
+                    btn.setAttribute('data-cd', String(leftover));
+                    var remaining = leftover;
+                    var t = setInterval(function () {
+                        remaining--;
+                        btn.setAttribute('data-cd', String(Math.max(0, remaining)));
+                        if (remaining <= 0) {
+                            clearInterval(t);
+                            btn.classList.remove('ah-god-wait');
+                            btn.removeAttribute('data-cd');
+                        }
+                    }, 1000);
                 } else {
                     btn.classList.add('ah-god-fired');
                     setTimeout(function () { btn.classList.remove('ah-god-fired'); }, 1200);
@@ -887,12 +891,23 @@
             });
         });
 
-        // Stream tabs
-        document.querySelectorAll('.ah-tab').forEach(function (t) {
+        // Collapse/expand the in-game panels.
+        document.querySelectorAll('[data-role="toggle"]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var card = btn.closest('.ah-ig-god, .ah-ig-chat');
+                if (!card) return;
+                card.classList.toggle('ah-ig-collapsed');
+            });
+        });
+
+        // In-game chat tabs
+        document.querySelectorAll('.ah-ig-chat-tab').forEach(function (t) {
             t.addEventListener('click', function () {
                 var name = t.getAttribute('data-tab');
-                document.querySelectorAll('.ah-tab').forEach(function (x) { x.classList.toggle('ah-tab-on', x === t); });
-                document.querySelectorAll('.ah-stream-pane').forEach(function (p) {
+                document.querySelectorAll('.ah-ig-chat-tab').forEach(function (x) {
+                    x.classList.toggle('ah-on', x === t);
+                });
+                document.querySelectorAll('.ah-ig-chat-pane').forEach(function (p) {
                     p.hidden = p.getAttribute('data-pane') !== name;
                 });
             });

@@ -2592,7 +2592,269 @@ section h2 {
 .ah-chronicle-row details ul li[data-kind="discovery"] { color: #fcd34d; }
 
 /* ═════════════════════════════════════════════════════════════
-   v117 · GOD MODE + LIVE STREAM
+   v118 · IN-GAME OVERLAYS (God Mode + Chat live inside the Village)
+   ═════════════════════════════════════════════════════════════ */
+
+.village-container {
+    /* The Village must be taller to host the chat overlay comfortably. */
+    min-height: 440px;
+}
+
+.ah-ig-god {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 90;
+    width: 172px;
+    background: linear-gradient(180deg, rgba(20,10,30,0.92), rgba(10,5,20,0.92));
+    border: 1px solid rgba(236, 72, 153, 0.45);
+    border-radius: 10px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.5), 0 0 30px rgba(236, 72, 153, 0.12);
+    backdrop-filter: blur(6px);
+    font-family: var(--mono);
+    pointer-events: auto;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+.ah-ig-god-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    width: 100%;
+    padding: 6px 10px;
+    background: rgba(236, 72, 153, 0.08);
+    border: none;
+    border-radius: 10px 10px 0 0;
+    color: #f9a8d4;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+}
+.ah-ig-god-title { flex: 1; text-align: left; }
+.ah-ig-caret { transition: transform 0.2s ease; }
+.ah-ig-collapsed .ah-ig-caret { transform: rotate(-90deg); }
+.ah-ig-collapsed .ah-ig-god-body { display: none; }
+.ah-ig-collapsed.ah-ig-chat .ah-ig-chat-body { display: none; }
+
+.ah-live-mini {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 6px;
+    background: rgba(220,38,38,0.12);
+    border: 1px solid rgba(220,38,38,0.35);
+    border-radius: 999px;
+    font-size: 0.58rem;
+    color: #fecaca;
+    white-space: nowrap;
+}
+.ah-live-mini .ah-watching-dot { width: 5px; height: 5px; box-shadow: 0 0 4px #ef4444; }
+
+.ah-ig-god-body {
+    padding: 8px;
+}
+.ah-ig-god-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+}
+.ah-ig-god .ah-god-btn {
+    flex-direction: column;
+    padding: 6px 2px 4px;
+    gap: 0;
+    background: rgba(0,0,0,0.35);
+    border: 1px solid rgba(236, 72, 153, 0.15);
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    color: #fff;
+    transition: all 0.15s ease;
+}
+.ah-ig-god .ah-god-btn:hover {
+    background: rgba(236, 72, 153, 0.18);
+    border-color: #f472b6;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
+}
+.ah-ig-god .ah-god-icon {
+    font-size: 1.3rem;
+    line-height: 1;
+}
+.ah-ig-god .ah-god-btn.ah-god-wait {
+    opacity: 0.35;
+    pointer-events: none;
+    filter: grayscale(0.8);
+}
+.ah-ig-god .ah-god-btn.ah-god-wait::after {
+    content: attr(data-cd) "s";
+    position: absolute;
+    bottom: -1px; right: -1px;
+    background: #0f1218;
+    color: #fca5a5;
+    font-size: 0.5rem;
+    padding: 1px 3px;
+    border-radius: 3px;
+    font-family: var(--mono);
+    border: 1px solid rgba(255,255,255,0.15);
+}
+.ah-ig-god .ah-god-btn.ah-god-fired {
+    animation: ah-god-fired 1.2s ease-out;
+    border-color: #fde047;
+}
+.ah-ig-god-status {
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px dashed rgba(255,255,255,0.08);
+    font-size: 0.55rem;
+    color: rgba(255,255,255,0.5);
+    text-align: center;
+    letter-spacing: 0.04em;
+}
+
+/* In-game Chat overlay */
+.ah-ig-chat {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    z-index: 90;
+    width: 300px;
+    max-height: 320px;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(180deg, rgba(8,12,18,0.96), rgba(4,8,12,0.96));
+    border: 1px solid rgba(59, 130, 246, 0.4);
+    border-radius: 10px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.6), 0 0 24px rgba(59, 130, 246, 0.12);
+    backdrop-filter: blur(8px);
+    font-family: var(--mono);
+    pointer-events: auto;
+    overflow: hidden;
+}
+.ah-ig-chat-head {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 6px;
+    background: rgba(59, 130, 246, 0.08);
+    border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+}
+.ah-ig-chat-tab {
+    flex: 0 0 auto;
+    padding: 4px 8px;
+    background: transparent;
+    border: none;
+    color: rgba(255,255,255,0.55);
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    cursor: pointer;
+    border-radius: 4px;
+}
+.ah-ig-chat-tab:hover { color: rgba(255,255,255,0.85); }
+.ah-ig-chat-tab.ah-on {
+    color: #60a5fa;
+    background: rgba(59, 130, 246, 0.14);
+}
+.ah-ig-chat-presence {
+    flex: 1;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    font-size: 0.58rem;
+    color: #fecaca;
+    font-family: var(--mono);
+}
+.ah-ig-chat-presence .ah-watching-dot { width: 5px; height: 5px; box-shadow: 0 0 4px #ef4444; }
+.ah-ig-chat-min {
+    background: transparent;
+    border: none;
+    color: rgba(255,255,255,0.4);
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 0 6px;
+    line-height: 1;
+}
+.ah-ig-chat-min:hover { color: #fff; }
+
+.ah-ig-chat-body { display: flex; flex-direction: column; min-height: 0; flex: 1; }
+.ah-ig-chat-pane { display: flex; flex-direction: column; min-height: 0; flex: 1; padding: 6px; }
+.ah-ig-chat-pane[hidden] { display: none; }
+
+.ah-ig-chat .ah-chat-list {
+    max-height: 180px;
+    padding: 4px;
+    gap: 4px;
+}
+.ah-ig-chat .ah-chat-row { grid-template-columns: 22px 1fr; gap: 6px; }
+.ah-ig-chat .ah-chat-avatar { width: 22px; height: 22px; font-size: 0.72rem; }
+.ah-ig-chat .ah-chat-body {
+    padding: 3px 6px;
+    background: rgba(255,255,255,0.02);
+}
+.ah-ig-chat .ah-chat-nick { font-size: 0.68rem; }
+.ah-ig-chat .ah-chat-ts { font-size: 0.56rem; }
+.ah-ig-chat .ah-chat-text { font-size: 0.78rem; line-height: 1.35; }
+.ah-ig-chat .ah-chat-empty { font-size: 0.65rem; padding: 0.5rem; line-height: 1.4; }
+
+.ah-ig-chat .ah-stream-list {
+    max-height: 220px;
+    padding: 4px;
+}
+.ah-ig-chat .ah-stream-row {
+    grid-template-columns: 56px 1fr;
+    font-size: 0.64rem;
+    padding: 3px 2px;
+}
+.ah-ig-chat .ah-stream-ts { font-size: 0.58rem; }
+
+.ah-ig-chat-form {
+    display: grid;
+    grid-template-columns: 70px 1fr auto;
+    gap: 4px;
+    margin-top: 6px;
+}
+.ah-ig-chat-form input,
+.ah-ig-chat-form button {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    padding: 5px 8px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(96, 165, 250, 0.25);
+    border-radius: 6px;
+    color: #fff;
+    min-width: 0;
+}
+.ah-ig-chat-form input:focus {
+    outline: none;
+    border-color: #60a5fa;
+    box-shadow: 0 0 0 2px rgba(96,165,250,0.15);
+}
+.ah-ig-chat-form button {
+    background: linear-gradient(135deg, #60a5fa, #3b82f6);
+    border-color: transparent;
+    font-weight: 700;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+}
+
+.ah-ig-collapsed {
+    width: auto !important;
+    max-height: none !important;
+}
+
+@media (max-width: 680px) {
+    .ah-ig-god { width: 44px; }
+    .ah-ig-god .ah-ig-god-title, .ah-ig-god .ah-live-mini { display: none; }
+    .ah-ig-god-head { padding: 6px 4px; justify-content: center; }
+    .ah-ig-chat { width: calc(100% - 20px); max-width: 320px; }
+}
+
+/* ═════════════════════════════════════════════════════════════
+   v117 · GOD MODE + LIVE STREAM (old below-page sections — now unused)
    ═════════════════════════════════════════════════════════════ */
 
 /* Scene weather / effects */
