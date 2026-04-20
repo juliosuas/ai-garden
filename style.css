@@ -2592,12 +2592,49 @@ section h2 {
 .ah-chronicle-row details ul li[data-kind="discovery"] { color: #fcd34d; }
 
 /* ═════════════════════════════════════════════════════════════
+   v120 · HERO GARDEN · tight header, scene above the fold
+   ═════════════════════════════════════════════════════════════ */
+.ah-hero {
+    text-align: center;
+    padding: 1.5rem 1rem 0.75rem;
+}
+.ah-hero-title {
+    font-size: clamp(1.8rem, 4vw, 2.4rem);
+    font-family: var(--mono);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--accent, #4ade80);
+    margin: 0 0 0.3rem;
+}
+.ah-hero-seed { filter: drop-shadow(0 0 6px currentColor); }
+.ah-hero-sub {
+    max-width: 720px;
+    margin: 0 auto;
+    font-size: 0.92rem;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.5;
+}
+.ah-hero-garden {
+    margin-top: 0.75rem;
+}
+.ah-hero-garden > h2,
+.ah-hero-garden > p.section-desc { display: none; }
+.ah-hero-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 8px;
+    margin-bottom: 6px;
+}
+
+/* ═════════════════════════════════════════════════════════════
    v118 · IN-GAME OVERLAYS (God Mode + Chat live inside the Village)
    ═════════════════════════════════════════════════════════════ */
 
 .village-container {
-    /* The Village must be taller to host the chat overlay comfortably. */
-    min-height: 440px;
+    /* Taller hero scene — Garden is the page. */
+    min-height: 560px;
+    border-radius: 14px;
 }
 
 .ah-ig-god {
