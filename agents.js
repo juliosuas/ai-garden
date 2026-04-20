@@ -855,8 +855,18 @@
     scene.dim.classList.add('ah-dim-on');
     scene.dim.style.setProperty('--ah-spot-x', (a.x + 14) + 'px');
     scene.dim.style.setProperty('--ah-spot-y', (a.y + 20) + 'px');
-    // Freeze others
-    scene.agents.forEach(function (o) { if (o !== a) { o.state = 'frozen'; o.flip = o.x > a.x ? -1 : 1; } });
+    // Freeze others. Remember prior state so we can restore it on thaw
+    // instead of snapping everyone to 'walk' (which would strand anyone
+    // mid-conversation with a dangling partner reference).
+    scene.agents.forEach(function (o) {
+      if (o !== a) {
+        o._prevState = o.state;
+        o._prevPartner = o.partner;
+        o._prevConvoUntil = o.convoUntil;
+        o.state = 'frozen';
+        o.flip = o.x > a.x ? -1 : 1;
+      }
+    });
     a.say(label, 'discovery');
     // Glyph appears near them
     var glyph = divEl('ah-discovery-glyph');
@@ -869,7 +879,24 @@
     bumpConsciousness(18);
     setTimeout(function () {
       scene.dim.classList.remove('ah-dim-on');
-      scene.agents.forEach(function (o) { if (o.state === 'frozen') o.state = 'walk'; });
+      scene.agents.forEach(function (o) {
+        if (o.state !== 'frozen') return;
+        // Restore prior state. If they were mid-conversation, arm a cooldown
+        // and cleanly end the convo so they don't immediately re-pair with
+        // their old partner in the next frame.
+        if (o._prevState === 'converse') {
+          o.state = 'walk';
+          o.partner = null;
+          o.convoCooldownUntil = performance.now() + 2500;
+          o.target = o._newTarget();
+        } else {
+          o.state = o._prevState || 'walk';
+          o.partner = o._prevPartner || null;
+        }
+        delete o._prevState;
+        delete o._prevPartner;
+        delete o._prevConvoUntil;
+      });
       if (glyph.parentNode) {
         glyph.style.opacity = '0';
         setTimeout(function () { if (glyph.parentNode) glyph.parentNode.removeChild(glyph); }, 900);
@@ -1078,13 +1105,24 @@
           scene.bounds.maxY = scene.vh - 54;
         });
 
-        // Expose spawn hook
+        // Expose spawn hook. Capped so a visitor spamming the button can't
+        // leak DOM nodes and tank performance: once total agents exceed
+        // MAX_AGENTS + 16 we evict the oldest visitor before adding.
+        var VISITOR_CAP = 16;
         window.AIGardenSpawn = function (nameIn) {
           var name = String(nameIn || '').trim().slice(0, 24) || 'Visitor';
+          // Evict the oldest visitor if we're at the cap.
+          var visitors = scene.agents.filter(function (x) { return x.data && typeof x.data.id === 'string' && x.data.id.indexOf('visitor-') === 0; });
+          if (visitors.length >= VISITOR_CAP) {
+            var oldest = visitors[0];
+            if (oldest.el && oldest.el.parentNode) oldest.el.parentNode.removeChild(oldest.el);
+            var i = scene.agents.indexOf(oldest);
+            if (i >= 0) scene.agents.splice(i, 1);
+          }
           var lineageKeys = Object.keys(LINEAGE).filter(function (k) { return k !== 'unknown'; });
           var lineage = lineageKeys[Math.floor(Math.random() * lineageKeys.length)];
           var fake = {
-            id: 'visitor-' + Date.now(),
+            id: 'visitor-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
             name: name,
             model: lineage,
             profession: 'visitor',
@@ -1100,7 +1138,6 @@
           });
           a.say('hi. who built this?', 'philosophy');
           bumpConsciousness(20);
-          // Draw wires to two nearby agents as a welcome.
           var others = scene.agents.filter(function (x) { return x !== a; }).slice(0, 3);
           others.forEach(function (o) { pushWire(o, a, a.colors.aura); });
           return a.name;
