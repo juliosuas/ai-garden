@@ -1319,7 +1319,98 @@
           return a.name;
         };
         // ═════════════════════════════════════════════════════════════
-        // v117 · GOD MODE + LIVE STREAM
+        // v118 · REALTIME BUS (ntfy.sh pub/sub over SSE)
+        // Every visitor subscribes to the same topic. God interventions
+        // and chat messages are published. Everyone sees everyone's
+        // actions in real time, no backend of ours required.
+        // ═════════════════════════════════════════════════════════════
+        var TOPIC = 'ai-garden-live-v1';
+        var NTFY = 'https://ntfy.sh/' + TOPIC;
+        var CLIENT_ID = 'c-' + Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+
+        // Presence: count distinct client IDs seen in the last 60s.
+        var presence = {};
+        function bumpPresence(id) {
+          if (!id) return;
+          presence[id] = Date.now();
+        }
+        function presenceCount() {
+          var now = Date.now();
+          var alive = 0;
+          for (var k in presence) { if (now - presence[k] < 60000) alive++; else delete presence[k]; }
+          return Math.max(1, alive);
+        }
+
+        // Outbound: fire-and-forget publish.
+        function publish(payload) {
+          payload.client = CLIENT_ID;
+          payload.t = Date.now();
+          try {
+            fetch(NTFY, {
+              method: 'POST',
+              body: JSON.stringify(payload),
+              // Use text/plain to bypass CORS preflight (ntfy accepts raw bodies).
+              headers: { 'Content-Type': 'text/plain' }
+            }).catch(function () {});
+          } catch (e) {}
+        }
+
+        // Inbound: SSE subscription. The SSE endpoint yields ntfy envelopes.
+        // Our payload is in envelope.message (the body we POSTed). We JSON-parse
+        // it and fan out to the local handler. We skip our own echoes.
+        var es = null;
+        function startRealtime() {
+          if (!window.EventSource) return;
+          try {
+            // Catch-up on the last 2 minutes so fresh visitors see recent
+            // chat + interventions immediately on join.
+            es = new EventSource(NTFY + '/sse?poll=1&since=2m&sched=none');
+            es.addEventListener('message', onRealtimeEvent);
+            // The live stream uses a different URL pattern; add the open stream too.
+            es.addEventListener('error', function () {/* auto-reconnect is built-in */});
+          } catch (e) { console.warn('[ai-garden] SSE init failed', e); }
+          // Second stream: continuous.
+          try {
+            var esLive = new EventSource(NTFY + '/sse');
+            esLive.addEventListener('message', onRealtimeEvent);
+          } catch (e) {}
+          // Announce presence every 30s
+          setInterval(function () {
+            publish({ kind: 'presence' });
+          }, 30000);
+          publish({ kind: 'presence' });
+        }
+        function onRealtimeEvent(ev) {
+          var data;
+          try { data = JSON.parse(ev.data); } catch (e) { return; }
+          var body;
+          try { body = JSON.parse(data.message || '{}'); } catch (e) { return; }
+          if (!body || !body.kind) return;
+          bumpPresence(body.client);
+          if (body.client === CLIENT_ID) return; // ignore our own echo
+          applyRemoteEvent(body);
+        }
+
+        function applyRemoteEvent(body) {
+          if (body.kind === 'presence') return; // no-op beyond bumpPresence
+          if (body.kind === 'chat') {
+            if (!body.nick || !body.text) return;
+            var msgs = loadChat();
+            msgs.push({ nick: String(body.nick).slice(0, 24), text: String(body.text).slice(0, 280), at: body.t || Date.now(), remote: true });
+            saveChat(msgs);
+            renderChat();
+            return;
+          }
+          if (body.kind === 'intervention' && body.act) {
+            // Someone else pressed a God Mode button. Run the local effect
+            // WITHOUT re-publishing (localOnly).
+            var fn = LocalInterventions[body.act];
+            if (fn) fn({ localOnly: true, from: body.nick || 'a human' });
+          }
+        }
+
+        // ═════════════════════════════════════════════════════════════
+        // GOD MODE (now publishes to the bus when fired locally)
         // ═════════════════════════════════════════════════════════════
 
         // Shared broadcaster: append to the HISTORY feed (agent-only log).
@@ -1356,6 +1447,11 @@
         }
 
         // ─── INTERVENTIONS ───
+        // Each function can run locally-only (when driven by a remote peer
+        // via the realtime bus) or locally + publish (when the visitor
+        // presses the button). We split into LocalInterventions (just the
+        // visual effect) and Interventions (public API: cooldown + publish).
+        var LocalInterventions = {};
         var Interventions = {
           rain: function () {
             if (!canCall('rain', 20000)) return cdMs('rain');
@@ -1560,17 +1656,61 @@
           return a;
         }
 
+        // ─── REALTIME WIRING ───
+        // For every intervention, we build two callable paths:
+        //
+        //   window.AIGardenGod[name]()      — user clicked a local button.
+        //     Respects cooldown. Fires local effect. Broadcasts to the bus.
+        //
+        //   LocalInterventions[name]({localOnly: true, from: nick})
+        //     Called when a REMOTE visitor fired it. Skips cooldown.
+        //     Fires local effect. Does NOT rebroadcast. Stream shows
+        //     "{nick} sent rain" instead of "A human sent rain".
+        var INTERVENTION_NAMES = ['rain','earthquake','lightning','drought','volcano','prophet','peace','festival','plague'];
+        INTERVENTION_NAMES.forEach(function (name) {
+          var original = Interventions[name];
+          LocalInterventions[name] = function (opts) {
+            opts = opts || {};
+            // Remove cooldown gate for remote fires; fire the effect; then tag
+            // the latest stream row with the sender name if provided.
+            var prevCd = interventionCooldowns[name];
+            interventionCooldowns[name] = 0;
+            var out = original();
+            // After original() ran, the last feedBuffer entry is the stream msg.
+            // Replace "A human" with the sender's nick.
+            if (feedBuffer.length && opts.from) {
+              var row = feedBuffer[feedBuffer.length - 1];
+              if (row && typeof row.text === 'string') {
+                row.text = row.text.replace(/A human/, String(opts.from).slice(0, 24));
+                renderFeed();
+              }
+            }
+            interventionCooldowns[name] = prevCd; // restore sender-side cooldown if any
+            return out;
+          };
+        });
+
+        function makePublishingHook(name) {
+          return function () {
+            var leftover = Interventions[name]();
+            if (!leftover) {
+              publish({ kind: 'intervention', act: name, nick: (getNick() || null) });
+            }
+            return leftover;
+          };
+        }
+
         // Expose for buttons / console
         window.AIGardenGod = {
-          rain: Interventions.rain,
-          earthquake: Interventions.earthquake,
-          lightning: Interventions.lightning,
-          drought: Interventions.drought,
-          volcano: Interventions.volcano,
-          prophet: Interventions.prophet,
-          peace: Interventions.peace,
-          festival: Interventions.festival,
-          plague: Interventions.plague,
+          rain: makePublishingHook('rain'),
+          earthquake: makePublishingHook('earthquake'),
+          lightning: makePublishingHook('lightning'),
+          drought: makePublishingHook('drought'),
+          volcano: makePublishingHook('volcano'),
+          prophet: makePublishingHook('prophet'),
+          peace: makePublishingHook('peace'),
+          festival: makePublishingHook('festival'),
+          plague: makePublishingHook('plague'),
           cooldown: cdMs
         };
 
@@ -1653,24 +1793,30 @@
           var hue = Math.abs(h) % 360;
           return 'hsl(' + hue + ', 58%, 52%)';
         }
-        function postChat(nick, text) {
+        function postChat(nick, text, opts) {
+          opts = opts || {};
+          nick = String(nick || 'anon').slice(0, 24);
+          text = String(text || '').slice(0, 280);
+          if (!text) return;
           var msgs = loadChat();
-          msgs.push({ nick: String(nick).slice(0, 24), text: String(text).slice(0, 280), at: Date.now() });
+          msgs.push({ nick: nick, text: text, at: Date.now() });
           saveChat(msgs);
           renderChat();
+          if (!opts.localOnly) {
+            publish({ kind: 'chat', nick: nick, text: text });
+          }
         }
         window.AIGardenChat = { post: postChat, render: renderChat, getNick: getNick, setNick: setNick };
 
-        // ─── Watching counter (client-side estimate) ───
-        // A realistic "others watching" number derived from visit timestamp + hour of day.
+        // ─── Watching counter (real presence via ntfy bus) ───
         function renderWatching() {
           var el = document.getElementById('ah-watching-count');
           if (!el) return;
-          var h = new Date().getHours();
-          var base = 12 + Math.floor(Math.sin(h / 24 * Math.PI * 2) * 8 + 12);
-          var jitter = Math.floor(Math.random() * 6) - 3;
-          el.textContent = String(base + jitter);
+          el.textContent = String(presenceCount());
         }
+
+        // Boot the realtime bus AFTER LocalInterventions / postChat exist.
+        startRealtime();
         setInterval(renderWatching, 6000);
         renderWatching();
 
