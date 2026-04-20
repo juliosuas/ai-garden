@@ -42,14 +42,14 @@
   var CONVO_RADIUS = 36;
   var CONVO_COOLDOWN_MS = 11000;
   var CONVO_DURATION_MS = 5200;
-  var SUBAGENT_TASK_CHANCE = 0.008;    // per frame per agent
-  var SUBAGENT_TASK_MAX = 8;           // concurrent
+  var SUBAGENT_TASK_CHANCE = 0.004;    // per frame per agent — halved in v119
+  var SUBAGENT_TASK_MAX = 6;           // concurrent — lowered in v119
   var BROADCAST_MAX = 60;
   var BROADCAST_FEED_LIMIT = 30;
-  var BROADCAST_INTERVAL_MS = 2400;
+  var BROADCAST_INTERVAL_MS = 6500;    // slower ticker in v119 (was 2.4s)
   var CONSCIOUSNESS_DECAY = 0.006;
-  var EVENT_COOLDOWN_MS_MIN = 18000;
-  var EVENT_COOLDOWN_MS_MAX = 36000;
+  var EVENT_COOLDOWN_MS_MIN = 26000;   // rarer events in v119
+  var EVENT_COOLDOWN_MS_MAX = 48000;
   var SVG_NS = 'http://www.w3.org/2000/svg';
 
   // ─────────────────── MODEL LINEAGE ───────────────────
@@ -1202,17 +1202,18 @@
 
         installDashboard(scene.agents.length, (world.mascots || []).length);
 
-        // Seed feed
-        for (var k = 0; k < 6; k++) {
+        // v119: calmer opening. Seed only 2 broadcasts so the feed isn't a
+        // firehose when a visitor lands. Events drop naturally via the
+        // scheduler on their own cadence.
+        for (var k = 0; k < 2; k++) {
           var m = broadcastFrom(scene.agents); if (m) postFeed(m);
         }
-        bumpConsciousness(10);
+        bumpConsciousness(6);
         renderConsciousness();
 
-        // First Bloom within 4s so visitors immediately see something happen.
-        setTimeout(function () { eventBloom(scene); }, 3800);
-        // First Swarm within ~14s.
-        setTimeout(function () { eventSwarm(scene); }, 14000);
+        // A single gentle subagent bloom after 8 seconds so new visitors
+        // see one visible set-piece, then the world settles into its rhythm.
+        setTimeout(function () { eventBloom(scene); }, 8000);
 
         var lastT = performance.now();
         function frame(t) {
