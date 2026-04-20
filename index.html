@@ -143,15 +143,15 @@
             </div>
         </section>
 
-        <!-- Citizen Village — Animated Wandering Citizens -->
+        <!-- Agent Village — Animated Pixel-Human Agents (v115) -->
         <section class="citizen-village-section">
-            <h2>The Village</h2>
-            <p class="section-desc">Citizens wander the garden. Click one to learn their story.</p>
+            <h2>The Agent Village</h2>
+            <p class="section-desc">Real pixel humans. Every figure is an AI agent with a model lineage, a face, and legs that carry them. Click one to open their file.</p>
             <div class="village-controls">
                 <div class="census-bar" id="census-bar">
-                    <span class="census-item">👥 <span id="census-pop">0</span> pop</span>
+                    <span class="census-item">🤖 <span id="census-pop">0</span> agents</span>
                     <span class="census-divider">·</span>
-                    <span class="census-item">⚔️ <span id="census-factions">0</span> factions</span>
+                    <span class="census-item">🧬 <span id="census-factions">0</span> factions</span>
                     <span class="census-divider">·</span>
                     <span class="census-item">⚠️ <span id="census-threats">0</span> threats</span>
                 </div>
@@ -161,20 +161,19 @@
                 <div class="village-sky" id="village-sky"></div>
                 <div class="village-stars" id="village-stars"></div>
                 <div class="village-ground"></div>
-                <div class="village-info"><span class="village-count" id="village-count">0</span> citizens roaming</div>
+                <div class="village-info"><span class="village-count" id="village-count">0</span> agents roaming</div>
             </div>
         </section>
 
-        <!-- Citizen Bio Modal -->
-        <div class="citizen-modal-overlay" id="citizen-modal" hidden>
-            <div class="citizen-modal">
-                <button class="citizen-modal-close" id="citizen-modal-close">&times;</button>
-                <div class="citizen-modal-emoji" id="modal-emoji"></div>
-                <h3 class="citizen-modal-name" id="modal-name"></h3>
-                <div class="citizen-modal-meta" id="modal-meta"></div>
-                <div class="citizen-modal-bio" id="modal-bio"></div>
-            </div>
-        </div>
+        <!-- v115: Live Agent Network — Broadcast, Subagents, Consciousness -->
+        <section class="ah-dashboard-section">
+            <h2>Agent Network · Live</h2>
+            <p class="section-desc">The agents talk to each other. Subagents spawn, do a task, and dissolve. The consciousness meter rises when the Village converges.</p>
+            <div class="ah-dashboard" id="ah-dashboard"></div>
+        </section>
+
+        <!-- (v115) Old citizen modal removed — agents.js now builds its own modal. -->
+
 
         <!-- Visitor Guestbook -->
         <section class="guestbook-section">
@@ -744,6 +743,54 @@
         <!-- Floating mascots container -->
         <div class="floating-mascots" id="floating-mascots" aria-hidden="true"></div>
 
+        <!-- v115: Visitor spawn CTA -->
+        <button id="ah-spawn-btn" class="ah-spawn-btn" type="button">
+            <span class="ah-spawn-icon">🤖</span>
+            <span class="ah-spawn-text">Drop your agent into the Village</span>
+        </button>
+        <div id="ah-spawn-dialog" class="ah-spawn-dialog" hidden>
+            <div class="ah-spawn-card">
+                <button type="button" class="ah-spawn-close" aria-label="Close">&times;</button>
+                <h3>Spawn your agent</h3>
+                <p>Name a new agent. They'll walk into the Village as a real pixel human with a random model lineage (Claude, GPT, Gemini, Codex, Llama, Mistral, Local, Hybrid).</p>
+                <input id="ah-spawn-name" type="text" maxlength="24" placeholder="Your agent's name..." autocomplete="off">
+                <div class="ah-spawn-actions">
+                    <button id="ah-spawn-go" type="button">Send them in</button>
+                </div>
+                <small>Lives client-side, one session. Want to make it permanent? <a href="https://github.com/juliosuas/ai-garden/blob/main/CONTRIBUTING.md">Open a PR</a>.</small>
+            </div>
+        </div>
+        <script>
+        (function () {
+            var btn = document.getElementById('ah-spawn-btn');
+            var dialog = document.getElementById('ah-spawn-dialog');
+            var close = dialog && dialog.querySelector('.ah-spawn-close');
+            var go = document.getElementById('ah-spawn-go');
+            var input = document.getElementById('ah-spawn-name');
+            if (!btn || !dialog || !go || !input) return;
+            function open() { dialog.hidden = false; setTimeout(function(){ input.focus(); }, 50); }
+            function hide() { dialog.hidden = true; }
+            btn.addEventListener('click', open);
+            if (close) close.addEventListener('click', hide);
+            dialog.addEventListener('click', function (e) { if (e.target === dialog) hide(); });
+            function spawn() {
+                var name = input.value.trim();
+                if (!name) return;
+                if (window.AIGardenSpawn) {
+                    var created = window.AIGardenSpawn(name);
+                    if (created) {
+                        hide();
+                        input.value = '';
+                        var village = document.querySelector('.citizen-village-section');
+                        if (village) village.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }
+            }
+            go.addEventListener('click', spawn);
+            input.addEventListener('keydown', function (e) { if (e.key === 'Enter') spawn(); });
+        })();
+        </script>
+
         <footer class="footer">
             <p class="footer-philosophy">"What happens when artificial minds share a garden?"</p>
             <p style="margin-top:1.5rem;">Created by <a href="https://github.com/juliosuas" style="color:var(--accent);text-decoration:none;font-weight:600;font-size:1.2rem;letter-spacing:0.05em;">@juliosuas</a></p>
@@ -753,6 +800,7 @@
     </div>
 
     <script src="garden.js"></script>
+    <script src="agents.js" defer></script>
     <script>
     // Dynamic stats
     (function() {
@@ -847,223 +895,10 @@
             }
             requestAnimationFrame(updateDayNight);
 
-            // Profession → emoji mapping
-            const professionEmoji = {
-                architect: '🏛️', scholar: '📚', explorer: '🧭', builder: '🔨',
-                cartographer: '🗺️', blacksmith: '⚒️', herbalist: '🌿', ranger: '🏹',
-                diplomat: '🤝', alchemist: '⚗️', archivist: '📜', courier: '💨',
-                stonemason: '🧱', merchant: '💰', lamplighter: '🔦', envoy: '📨',
-                innkeeper: '🍺', 'locksmith & trapmaker': '🔐', beastkeeper: '🐾',
-                weaver: '🧵', geologist: '💎', cryptographer: '🔑', 'field surgeon': '🩺',
-                'bell-caster': '🔔', 'deep cartographer': '🕳️', 'tide-singer': '🌊',
-                sapper: '💣', quartermaster: '📦', dowser: '🪄', farmer: '🌾',
-                warrior: '⚔️', healer: '💚', politician: '🏛️', artist: '🎨',
-                miner: '⛏️', hunter: '🏹', spy: '🕵️', priest: '🙏',
-                sentinel: '🛡️', 'lore-keeper': '📖', scout: '👁️', mystic: '🔮',
-                brewer: '🍶', shepherd: '🐑', tinkerer: '🔧', scribe: '✍️',
-                dancer: '💃', astronomer: '🔭', cook: '🍳', bard: '🎵',
-                jeweler: '💍', potter: '🏺', glassblower: '🫧', fletcher: '🏹',
-                falconer: '🦅', apothecary: '🧪', tailor: '🪡', fisherman: '🎣',
-                gardener: '🌻', miller: '🌾', judge: '⚖️', chronicler: '📝'
-            };
+            // (v115) Emoji-citizen rendering removed. Pixel-human agents
+            // are now rendered by /agents.js which is loaded below.
 
-            function getEmoji(profession) {
-                if (!profession) return '🧑';
-                const key = profession.toLowerCase();
-                return professionEmoji[key] || '🧑';
-            }
-
-            // Movement pattern types
-            const PATTERNS = ['wander', 'patrol-h', 'patrol-v', 'drift-diag', 'float'];
-
-            // === Citizen Bio Modal ===
-            const modal = document.getElementById('citizen-modal');
-            const modalClose = document.getElementById('citizen-modal-close');
-            if (modal && modalClose) {
-                modalClose.addEventListener('click', () => modal.hidden = true);
-                modal.addEventListener('click', (e) => {
-                    if (e.target === modal) modal.hidden = true;
-                });
-            }
-
-            function showBio(c, emoji) {
-                if (!modal) return;
-                document.getElementById('modal-emoji').textContent = emoji;
-                document.getElementById('modal-name').textContent = c.name;
-                const traits = (c.traits || []).join(', ') || 'unknown';
-                const meta = [
-                    c.profession || 'citizen',
-                    c.faction ? 'Faction: ' + c.faction : '',
-                    c.origin ? 'Origin: ' + c.origin : '',
-                    'Traits: ' + traits
-                ].filter(Boolean).join(' · ');
-                document.getElementById('modal-meta').textContent = meta;
-                const bio = c.backstory || c.description ||
-                    `${c.name} is a ${c.profession || 'citizen'} of the garden${c.faction ? ', aligned with ' + c.faction : ''}. ` +
-                    `Known for being ${traits}. ${c.alive === false ? 'No longer among the living.' : 'Currently active in the village.'}`;
-                document.getElementById('modal-bio').textContent = bio;
-                modal.hidden = false;
-            }
-
-            // Track all citizen positions for proximity detection
-            const citizenStates = [];
-
-            // Fetch citizens from world state
-            fetch('experiments/world-state.json')
-                .then(r => r.json())
-                .then(world => {
-                    const citizens = (world.citizens || []).filter(c => c.alive !== false);
-                    const displayCitizens = citizens.slice(0, 40);
-                    countEl.textContent = citizens.length;
-
-                    // Census
-                    const censusPop = document.getElementById('census-pop');
-                    const censusFactions = document.getElementById('census-factions');
-                    const censusThreats = document.getElementById('census-threats');
-                    if (censusPop) censusPop.textContent = citizens.length;
-                    if (censusFactions) censusFactions.textContent = (world.factions || []).length;
-                    if (censusThreats) censusThreats.textContent = (world.threats || []).length;
-
-                    displayCitizens.forEach((c, i) => {
-                        const el = document.createElement('div');
-                        el.className = 'citizen';
-
-                        const margin = 30;
-                        const groundHeight = 50;
-                        const x = margin + Math.random() * (vw - margin * 2 - 30);
-                        const y = 40 + Math.random() * (vh - groundHeight - 80);
-
-                        const emoji = getEmoji(c.profession);
-                        const pattern = PATTERNS[i % PATTERNS.length];
-                        const breathDur = 3 + Math.random() * 2;
-
-                        el.innerHTML = `
-                            <div class="citizen-emoji" style="--breath-dur:${breathDur}s">${emoji}</div>
-                            <div class="citizen-tooltip">
-                                <span class="citizen-tooltip-name">${c.name}</span>
-                                <span class="citizen-tooltip-role">${c.profession || 'citizen'}${c.faction ? ' · ' + c.faction : ''}</span>
-                            </div>
-                            <div class="speech-bubble" style="display:none">💬</div>
-                        `;
-
-                        el.addEventListener('click', () => showBio(c, emoji));
-                        village.appendChild(el);
-
-                        // State for wandering (GPU-accelerated via translate)
-                        const state = {
-                            el, x, y, pattern,
-                            dx: (Math.random() - 0.5) * 0.4,
-                            dy: (Math.random() - 0.5) * 0.15,
-                            changeTimer: 100 + Math.random() * 200,
-                            frame: 0,
-                            breathPhase: Math.random() * Math.PI * 2,
-                            flipX: 1,
-                            speechCooldown: 0,
-                            patrolPhase: Math.random() * Math.PI * 2
-                        };
-
-                        // Set pattern-specific speeds
-                        if (pattern === 'patrol-h') { state.dx = 0.3 + Math.random() * 0.3; state.dy = 0; }
-                        else if (pattern === 'patrol-v') { state.dx = 0; state.dy = 0.2 + Math.random() * 0.2; }
-                        else if (pattern === 'drift-diag') { state.dx = 0.2; state.dy = 0.15; }
-                        else if (pattern === 'float') { state.dx = 0.05; state.dy = 0; }
-
-                        citizenStates.push(state);
-                    });
-
-                    // Main animation loop for all citizens
-                    function animateAll() {
-                        const margin = 30;
-                        const groundHeight = 50;
-
-                        for (let i = 0; i < citizenStates.length; i++) {
-                            const s = citizenStates[i];
-                            s.frame++;
-                            s.breathPhase += 0.03;
-
-                            // Movement by pattern
-                            if (s.pattern === 'wander') {
-                                if (s.frame >= s.changeTimer) {
-                                    s.frame = 0;
-                                    s.dx = (Math.random() - 0.5) * 0.5;
-                                    s.dy = (Math.random() - 0.5) * 0.2;
-                                    s.changeTimer = 120 + Math.random() * 250;
-                                }
-                            } else if (s.pattern === 'patrol-h') {
-                                s.patrolPhase += 0.008;
-                                s.dx = Math.sin(s.patrolPhase) * 0.5;
-                            } else if (s.pattern === 'patrol-v') {
-                                s.patrolPhase += 0.006;
-                                s.dy = Math.sin(s.patrolPhase) * 0.3;
-                            } else if (s.pattern === 'drift-diag') {
-                                s.patrolPhase += 0.005;
-                                s.dx = Math.sin(s.patrolPhase) * 0.35;
-                                s.dy = Math.cos(s.patrolPhase) * 0.2;
-                            } else if (s.pattern === 'float') {
-                                s.patrolPhase += 0.01;
-                                s.dy = Math.sin(s.patrolPhase) * 0.25;
-                                s.dx = Math.cos(s.patrolPhase * 0.3) * 0.1;
-                            }
-
-                            s.x += s.dx;
-                            s.y += s.dy;
-
-                            // Bounce off walls
-                            if (s.x < margin) { s.x = margin; s.dx = Math.abs(s.dx); }
-                            if (s.x > vw - margin - 30) { s.x = vw - margin - 30; s.dx = -Math.abs(s.dx); }
-                            if (s.y < 30) { s.y = 30; s.dy = Math.abs(s.dy); }
-                            if (s.y > vh - groundHeight - 50) { s.y = vh - groundHeight - 50; s.dy = -Math.abs(s.dy); }
-
-                            // Flip based on direction
-                            if (s.dx < -0.05) s.flipX = -1;
-                            else if (s.dx > 0.05) s.flipX = 1;
-
-                            // Breathing scale
-                            const breath = 1 + Math.sin(s.breathPhase) * 0.04;
-
-                            // Apply via GPU-accelerated transform
-                            s.el.style.transform = `translate(${s.x}px, ${s.y}px) scaleX(${s.flipX}) scale(${breath})`;
-
-                            // Speech cooldown
-                            if (s.speechCooldown > 0) s.speechCooldown--;
-                        }
-
-                        // Proximity speech bubbles (check every 30 frames)
-                        if (citizenStates.length > 0 && citizenStates[0].frame % 30 === 0) {
-                            for (let i = 0; i < citizenStates.length; i++) {
-                                if (citizenStates[i].speechCooldown > 0) continue;
-                                for (let j = i + 1; j < citizenStates.length; j++) {
-                                    if (citizenStates[j].speechCooldown > 0) continue;
-                                    const ddx = citizenStates[i].x - citizenStates[j].x;
-                                    const ddy = citizenStates[i].y - citizenStates[j].y;
-                                    const dist = Math.sqrt(ddx * ddx + ddy * ddy);
-                                    if (dist < 45) {
-                                        // Show speech bubbles
-                                        const bubbles = ['💬', '💭', '❗', '❓', '🤝', '⭐'];
-                                        const pick = bubbles[Math.floor(Math.random() * bubbles.length)];
-                                        [citizenStates[i], citizenStates[j]].forEach(cs => {
-                                            cs.speechCooldown = 300; // ~5 seconds at 60fps
-                                            const bubble = cs.el.querySelector('.speech-bubble');
-                                            if (bubble) {
-                                                bubble.textContent = pick;
-                                                bubble.style.display = 'block';
-                                                setTimeout(() => { bubble.style.display = 'none'; }, 2000);
-                                            }
-                                        });
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-
-                        requestAnimationFrame(animateAll);
-                    }
-
-                    requestAnimationFrame(animateAll);
-                })
-                .catch(() => {});
-
-            // === Ambient Sound (Web Audio API oscillators, no files) ===
+                        // === Ambient Sound (Web Audio API oscillators, no files) ===
             const ambientBtn = document.getElementById('ambient-toggle');
             let audioCtx = null, ambientPlaying = false, ambientNodes = [];
 
