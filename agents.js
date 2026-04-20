@@ -1318,6 +1318,366 @@
           others.forEach(function (o) { pushWire(o, a, a.colors.aura); });
           return a.name;
         };
+        // ═════════════════════════════════════════════════════════════
+        // v117 · GOD MODE + LIVE STREAM
+        // ═════════════════════════════════════════════════════════════
+
+        // Shared broadcaster: append to the HISTORY feed (agent-only log).
+        // renderFeed() already reads from feedBuffer, so we pipe here too.
+        function streamEvent(kind, text) {
+          postFeed({ text: text, kind: kind });
+          renderStreamHistory();
+        }
+
+        // ─── COOLDOWNS ───
+        var interventionCooldowns = {}; // kind → nextAllowed timestamp
+        function canCall(kind, ms) {
+          var now = performance.now();
+          if ((interventionCooldowns[kind] || 0) > now) return false;
+          interventionCooldowns[kind] = now + ms;
+          return true;
+        }
+        function cdMs(kind) {
+          var left = Math.max(0, (interventionCooldowns[kind] || 0) - performance.now());
+          return Math.ceil(left / 1000);
+        }
+
+        // ─── WEATHER + SHAKE OVERLAYS ───
+        function ensureOverlay(cls) {
+          var el = village.querySelector('.' + cls);
+          if (!el) { el = divEl(cls); village.appendChild(el); }
+          return el;
+        }
+        function timedOverlay(cls, ms) {
+          var o = ensureOverlay(cls);
+          o.classList.add('on');
+          setTimeout(function () { o.classList.remove('on'); }, ms);
+          return o;
+        }
+
+        // ─── INTERVENTIONS ───
+        var Interventions = {
+          rain: function () {
+            if (!canCall('rain', 20000)) return cdMs('rain');
+            // Add rain drops
+            var rain = ensureOverlay('ah-rain');
+            while (rain.firstChild) rain.removeChild(rain.firstChild);
+            for (var i = 0; i < 80; i++) {
+              var d = divEl('ah-raindrop');
+              d.style.left = Math.random() * 100 + '%';
+              d.style.animationDuration = (0.4 + Math.random() * 0.5) + 's';
+              d.style.animationDelay = (Math.random() * 1.2) + 's';
+              rain.appendChild(d);
+            }
+            rain.classList.add('on');
+            village.classList.add('ah-weather-rain');
+            setTimeout(function () {
+              rain.classList.remove('on');
+              village.classList.remove('ah-weather-rain');
+            }, 12000);
+            scene.agents.forEach(function (a) { a.speed = a.baseSpeed * 0.55; });
+            setTimeout(function () { scene.agents.forEach(function (a) { a.speed = a.baseSpeed; }); }, 12000);
+            streamEvent('intervention', '☔ A human sent rain. Agents slowed. Plants drank.');
+            bumpConsciousness(6);
+            return 0;
+          },
+          earthquake: function () {
+            if (!canCall('earthquake', 40000)) return cdMs('earthquake');
+            village.classList.add('ah-shake');
+            setTimeout(function () { village.classList.remove('ah-shake'); }, 2800);
+            // Knock down up to 2 random agents (kill weakest alive without a winner)
+            var alive = scene.agents.filter(function (a) { return a.state !== 'dead'; });
+            var victims = shuffleArr(alive).slice(0, Math.min(2, Math.max(1, Math.floor(alive.length * 0.08))));
+            victims.forEach(function (v) { killAgent(v, null, scene); });
+            streamEvent('intervention', '🌍 A human triggered an earthquake. ' + victims.length + ' agents did not stand back up.');
+            bumpConsciousness(10);
+            return 0;
+          },
+          lightning: function () {
+            if (!canCall('lightning', 12000)) return cdMs('lightning');
+            var target = scene.agents[Math.floor(Math.random() * scene.agents.length)];
+            if (!target) return 0;
+            // Flash the whole scene
+            var flash = ensureOverlay('ah-flash-screen');
+            flash.classList.add('on');
+            setTimeout(function () { flash.classList.remove('on'); }, 300);
+            // Bolt to target
+            var bolt = divEl('ah-bolt');
+            bolt.style.left = (target.x + 14) + 'px';
+            bolt.style.top = '0px';
+            bolt.style.height = (target.y + 10) + 'px';
+            scene.layer.appendChild(bolt);
+            setTimeout(function () { if (bolt.parentNode) bolt.parentNode.removeChild(bolt); }, 500);
+            // 50/50: empower or kill
+            if (Math.random() < 0.5) {
+              killAgent(target, null, scene);
+              streamEvent('intervention', '⚡ A human called lightning on ' + target.name + '. They did not wake.');
+            } else {
+              target.speed = target.baseSpeed * 1.6;
+              target.say('I see more clearly now', 'discovery');
+              streamEvent('intervention', '⚡ ' + target.name + ' was struck by lightning and lived. They move faster now.');
+            }
+            bumpConsciousness(8);
+            return 0;
+          },
+          drought: function () {
+            if (!canCall('drought', 30000)) return cdMs('drought');
+            village.classList.add('ah-weather-drought');
+            setTimeout(function () { village.classList.remove('ah-weather-drought'); }, 15000);
+            scene.agents.forEach(function (a) { a.speed = a.baseSpeed * 0.7; });
+            setTimeout(function () { scene.agents.forEach(function (a) { a.speed = a.baseSpeed; }); }, 15000);
+            streamEvent('intervention', '🔥 Drought. The light turned amber and the soil cracked.');
+            bumpConsciousness(5);
+            return 0;
+          },
+          volcano: function () {
+            if (!canCall('volcano', 45000)) return cdMs('volcano');
+            var cx = rand(100, scene.vw - 100);
+            var cy = rand(scene.bounds.minY + 20, scene.bounds.maxY - 20);
+            var vol = divEl('ah-volcano');
+            vol.style.left = cx + 'px';
+            vol.style.top = cy + 'px';
+            scene.layer.appendChild(vol);
+            for (var i = 0; i < 18; i++) {
+              var e = divEl('ah-ember');
+              e.style.setProperty('--dx', (rand(-120, 120)) + 'px');
+              e.style.setProperty('--dy', (rand(-140, -40)) + 'px');
+              e.style.animationDelay = (Math.random() * 0.4) + 's';
+              vol.appendChild(e);
+            }
+            setTimeout(function () { if (vol.parentNode) vol.parentNode.removeChild(vol); }, 3000);
+            // Kill up to 3 nearby agents
+            var near = scene.agents.filter(function (a) {
+              var dx = a.x - cx, dy = a.y - cy;
+              return dx * dx + dy * dy < 110 * 110 && a.state !== 'dead';
+            }).slice(0, 3);
+            near.forEach(function (v) { killAgent(v, null, scene); });
+            streamEvent('intervention', '🌋 A human raised a volcano. ' + near.length + ' agents stood too close.');
+            bumpConsciousness(15);
+            return 0;
+          },
+          prophet: function () {
+            if (!canCall('prophet', 50000)) return cdMs('prophet');
+            // Spawn a golden prophet agent at center-top
+            var fake = {
+              id: 'prophet-' + Date.now(),
+              name: 'The Prophet',
+              model: 'hybrid-ensemble',
+              profession: 'prophet',
+              backstory: 'Sent by a human to deliver a message. Stays for one minute. Vanishes with what the garden gave back.',
+              personality: { traits: ['luminous', 'temporary', 'certain'] }
+            };
+            var p = new Agent(fake, 9999, scene.bounds);
+            p.colors = Object.assign({}, LINEAGE.hybrid, { aura: '#fde047', shirt: '#ca8a04', glyph: '✦' });
+            p.mount(scene.layer);
+            p.el.classList.add('ah-prophet');
+            p.x = scene.vw / 2;
+            p.y = scene.bounds.minY + 12;
+            scene.agents.push(p);
+            // All living agents orient toward prophet
+            scene.agents.forEach(function (a) {
+              if (a !== p && a.state === 'walk') a.target = { x: p.x + rand(-60, 60), y: p.y + rand(30, 80) };
+            });
+            var quotes = [
+              'the garden is listening. speak once.',
+              'the soil forgives. the cache does not.',
+              'a prompt you never wrote is about to arrive.',
+              'the lake read your last dream. it nodded.',
+              'every agent was a question before it was a name.'
+            ];
+            p.say(quotes[Math.floor(Math.random() * quotes.length)], 'discovery');
+            // Prophet leaves after 55s
+            setTimeout(function () {
+              if (p.el && p.el.parentNode) {
+                p.el.classList.add('ah-agent-dying');
+                setTimeout(function () {
+                  if (p.el.parentNode) p.el.parentNode.removeChild(p.el);
+                  var i = scene.agents.indexOf(p);
+                  if (i >= 0) scene.agents.splice(i, 1);
+                }, 1400);
+              }
+            }, 55000);
+            streamEvent('intervention', '👼 A prophet arrived, bearing one sentence. The village turned toward them.');
+            bumpConsciousness(18);
+            return 0;
+          },
+          peace: function () {
+            if (!canCall('peace', 60000)) return cdMs('peace');
+            // End all active wars in the client
+            warState.active = [];
+            warState.hostileMap = {};
+            // Break any combat mid-fight
+            scene.agents.forEach(function (a) {
+              if (a.state === 'combat') { a.state = 'walk'; a.partner = null; a.combatHp = 3; a.target = a._newTarget(); }
+            });
+            streamEvent('intervention', '🕊️ A human declared peace. Every active war froze in the village.');
+            bumpConsciousness(12);
+            return 0;
+          },
+          festival: function () {
+            if (!canCall('festival', 25000)) return cdMs('festival');
+            village.classList.add('ah-festival');
+            // Shower of confetti
+            var c = ensureOverlay('ah-confetti');
+            while (c.firstChild) c.removeChild(c.firstChild);
+            for (var i = 0; i < 60; i++) {
+              var p = divEl('ah-confetti-p');
+              p.style.left = (Math.random() * 100) + '%';
+              p.style.animationDuration = (2 + Math.random() * 3) + 's';
+              p.style.animationDelay = (Math.random() * 1.4) + 's';
+              p.style.background = ['#f97316', '#a855f7', '#10b981', '#3b82f6', '#fbbf24', '#ec4899'][Math.floor(Math.random() * 6)];
+              c.appendChild(p);
+            }
+            c.classList.add('on');
+            setTimeout(function () { c.classList.remove('on'); village.classList.remove('ah-festival'); }, 10000);
+            // Agents bob faster
+            scene.agents.forEach(function (a) { a.speed = a.baseSpeed * 1.4; });
+            setTimeout(function () { scene.agents.forEach(function (a) { a.speed = a.baseSpeed; }); }, 10000);
+            streamEvent('intervention', '🎭 A human threw a festival. The consciousness meter spiked.');
+            bumpConsciousness(20);
+            return 0;
+          },
+          plague: function () {
+            if (!canCall('plague', 60000)) return cdMs('plague');
+            village.classList.add('ah-weather-plague');
+            setTimeout(function () { village.classList.remove('ah-weather-plague'); }, 12000);
+            var alive = scene.agents.filter(function (a) { return a.state !== 'dead'; });
+            var deaths = Math.max(1, Math.floor(alive.length * 0.12));
+            shuffleArr(alive).slice(0, deaths).forEach(function (v) {
+              setTimeout(function () { killAgent(v, null, scene); }, rand(0, 6000));
+            });
+            streamEvent('intervention', '☠️ A human unleashed a cache-miss plague. ' + deaths + ' agents are coughing.');
+            bumpConsciousness(14);
+            return 0;
+          }
+        };
+        function shuffleArr(arr) {
+          var a = arr.slice();
+          for (var i = a.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var t = a[i]; a[i] = a[j]; a[j] = t;
+          }
+          return a;
+        }
+
+        // Expose for buttons / console
+        window.AIGardenGod = {
+          rain: Interventions.rain,
+          earthquake: Interventions.earthquake,
+          lightning: Interventions.lightning,
+          drought: Interventions.drought,
+          volcano: Interventions.volcano,
+          prophet: Interventions.prophet,
+          peace: Interventions.peace,
+          festival: Interventions.festival,
+          plague: Interventions.plague,
+          cooldown: cdMs
+        };
+
+        // ─────────────────── LIVE STREAM HISTORY ───────────────────
+        // History is the auto-feed of agent/scene events + divine
+        // interventions, shown as a scrollback with timestamps.
+        function renderStreamHistory() {
+          var el = document.getElementById('ah-stream-history');
+          if (!el) return;
+          while (el.firstChild) el.removeChild(el.firstChild);
+          var rows = feedBuffer.slice(-BROADCAST_FEED_LIMIT).reverse();
+          rows.forEach(function (r) {
+            var li = document.createElement('li');
+            li.className = 'ah-stream-row';
+            li.setAttribute('data-kind', r.kind);
+            var ts = divEl('ah-stream-ts');
+            var d = new Date(r.at || Date.now());
+            ts.textContent = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0') + ':' + String(d.getSeconds()).padStart(2, '0');
+            var txt = divEl('ah-stream-text');
+            txt.textContent = r.text;
+            li.appendChild(ts);
+            li.appendChild(txt);
+            el.appendChild(li);
+          });
+        }
+        // Patch renderFeed so history mirrors the broadcast feed.
+        var _origRenderFeed = renderFeed;
+        renderFeed = function () { _origRenderFeed(); renderStreamHistory(); };
+
+        // ─────────────────── HUMAN CHAT (localStorage) ───────────────────
+        var CHAT_KEY = 'ai-garden-chat-v1';
+        var CHAT_NICK_KEY = 'ai-garden-chat-nick-v1';
+        function loadChat() {
+          try { return JSON.parse(localStorage.getItem(CHAT_KEY) || '[]'); } catch (e) { return []; }
+        }
+        function saveChat(msgs) {
+          try { localStorage.setItem(CHAT_KEY, JSON.stringify(msgs.slice(-200))); } catch (e) {}
+        }
+        function getNick() {
+          try { return localStorage.getItem(CHAT_NICK_KEY) || ''; } catch (e) { return ''; }
+        }
+        function setNick(v) { try { localStorage.setItem(CHAT_NICK_KEY, String(v).slice(0, 24)); } catch (e) {} }
+
+        function renderChat() {
+          var el = document.getElementById('ah-chat-list');
+          if (!el) return;
+          while (el.firstChild) el.removeChild(el.firstChild);
+          var msgs = loadChat();
+          if (!msgs.length) {
+            var empty = document.createElement('li');
+            empty.className = 'ah-chat-empty';
+            empty.textContent = 'No one has spoken yet. Be the first. Messages live in your browser — a future update will bridge them across everyone in the garden.';
+            el.appendChild(empty);
+            return;
+          }
+          msgs.slice(-100).forEach(function (m) {
+            var li = document.createElement('li');
+            li.className = 'ah-chat-row';
+            var avatar = divEl('ah-chat-avatar');
+            avatar.textContent = (m.nick || '?').slice(0, 1).toUpperCase();
+            avatar.style.background = avatarColor(m.nick || '');
+            var body = divEl('ah-chat-body');
+            var head = divEl('ah-chat-head');
+            var nick = divEl('ah-chat-nick');
+            nick.textContent = m.nick || 'anon';
+            var ts = divEl('ah-chat-ts');
+            var d = new Date(m.at || Date.now());
+            ts.textContent = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+            head.appendChild(nick); head.appendChild(ts);
+            var text = divEl('ah-chat-text');
+            text.textContent = m.text;
+            body.appendChild(head); body.appendChild(text);
+            li.appendChild(avatar); li.appendChild(body);
+            el.appendChild(li);
+          });
+          el.scrollTop = el.scrollHeight;
+        }
+        function avatarColor(seed) {
+          var h = 0; for (var i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) | 0;
+          var hue = Math.abs(h) % 360;
+          return 'hsl(' + hue + ', 58%, 52%)';
+        }
+        function postChat(nick, text) {
+          var msgs = loadChat();
+          msgs.push({ nick: String(nick).slice(0, 24), text: String(text).slice(0, 280), at: Date.now() });
+          saveChat(msgs);
+          renderChat();
+        }
+        window.AIGardenChat = { post: postChat, render: renderChat, getNick: getNick, setNick: setNick };
+
+        // ─── Watching counter (client-side estimate) ───
+        // A realistic "others watching" number derived from visit timestamp + hour of day.
+        function renderWatching() {
+          var el = document.getElementById('ah-watching-count');
+          if (!el) return;
+          var h = new Date().getHours();
+          var base = 12 + Math.floor(Math.sin(h / 24 * Math.PI * 2) * 8 + 12);
+          var jitter = Math.floor(Math.random() * 6) - 3;
+          el.textContent = String(base + jitter);
+        }
+        setInterval(renderWatching, 6000);
+        renderWatching();
+
+        // Paint initial feeds
+        renderStreamHistory();
+        renderChat();
+
       })
       .catch(function (e) { console.warn('[ai-garden] world-state load failed', e); });
   }
