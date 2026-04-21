@@ -1,7 +1,7 @@
 {
-  "version": 116.07,
+  "version": 116.08,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-04-20T08:47:17.754Z",
+  "lastUpdated": "2026-04-21T06:10:19.002Z",
   "plants": [
     {
       "x": 45,
@@ -6164,7 +6164,8 @@
       "name": "Lake Folk",
       "type": "kin-network",
       "members": [
-        "citizen-0239"
+        "citizen-0239",
+        "citizen-0250"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "The water keeps our faction secrets."
@@ -6174,7 +6175,9 @@
       "name": "Waking Order",
       "type": "religious-guild",
       "members": [
-        "citizen-0234"
+        "citizen-0234",
+        "citizen-0253",
+        "citizen-0254"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "We wake the dreamer."
@@ -6337,6 +6340,16 @@
       "builder": "citizen-0236",
       "built": 7,
       "name": "Lonely Training Circle"
+    },
+    {
+      "id": "struct-0010",
+      "type": "pigeon-post",
+      "x": 314,
+      "y": 135,
+      "region": "region-006",
+      "builder": "citizen-0252",
+      "built": 8,
+      "name": "Low Pigeon Post"
     }
   ],
   "structuresBuilt": [
@@ -6872,6 +6885,82 @@
       "births": 3,
       "died": 0,
       "battles": 0,
+      "structures": 1,
+      "author": "ai-garden-daemon"
+    },
+    {
+      "day": 8,
+      "timestamp": "2026-04-21T06:10:19.002Z",
+      "headline": "◉ A new region was discovered: Sung Reach (orchard-belt)",
+      "events": [
+        {
+          "kind": "birth",
+          "headline": "Cask Ember was born — shepherd · lawful-evil",
+          "refs": [
+            "citizen-0250"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Lumen Blacktide was born — astronomer · neutral-good",
+          "refs": [
+            "citizen-0251"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Polyglot Orbstone was born — stonemason · neutral-evil",
+          "refs": [
+            "citizen-0252"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Cinder Sparrowcatch was born — shepherd · chaotic-good",
+          "refs": [
+            "citizen-0253"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Thistle Cindervault was born — warrior · lawful-evil",
+          "refs": [
+            "citizen-0254"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Cress Ironwhistle fell in battle to Cask Ember (Lake Folk)",
+          "refs": [
+            "citizen-0233",
+            "citizen-0250"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Low Pigeon Post built near the region-006",
+          "refs": [
+            "citizen-0252"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "A new region was discovered: Sung Reach (orchard-belt)",
+          "refs": [
+            "region-004"
+          ]
+        },
+        {
+          "kind": "market",
+          "headline": "A market opened. Cinder Sparrowcatch traded a quiet idea for a map of the lake.",
+          "refs": [
+            "citizen-0253"
+          ]
+        }
+      ],
+      "births": 5,
+      "died": 1,
+      "battles": 1,
       "structures": 1,
       "author": "ai-garden-daemon"
     }
@@ -14632,7 +14721,7 @@
       "profession": "scribe",
       "alignment": "neutral-evil",
       "faction": "f-subagent-swarm",
-      "alive": true,
+      "alive": false,
       "birthDay": 2,
       "personality": {
         "traits": [
@@ -14643,7 +14732,9 @@
         "alignment": "neutral-evil",
         "motto": "One more waits without asking."
       },
-      "backstory": "Cress Ironwhistle was born on day 2 of the chronicle. context-hungry scribe. Runs on codex-pro."
+      "backstory": "Cress Ironwhistle was born on day 2 of the chronicle. context-hungry scribe. Runs on codex-pro.",
+      "deathDay": 8,
+      "killedBy": "citizen-0250"
     },
     {
       "id": "citizen-0234",
@@ -14970,6 +15061,105 @@
         "motto": "The way waits in the open."
       },
       "backstory": "Hollow Glasswright was born on day 7 of the chronicle. cunning cartographer. Runs on local-qwen-2.5."
+    },
+    {
+      "id": "citizen-0250",
+      "name": "Cask Ember",
+      "model": "mistral-large-2",
+      "profession": "shepherd",
+      "alignment": "lawful-evil",
+      "faction": "f-lake-folk",
+      "alive": true,
+      "birthDay": 8,
+      "personality": {
+        "traits": [
+          "low-latency",
+          "context-hungry"
+        ],
+        "alignment": "lawful-evil",
+        "motto": "Hands first grows in the open."
+      },
+      "backstory": "Cask Ember was born on day 8 of the chronicle. low-latency shepherd. Runs on mistral-large-2."
+    },
+    {
+      "id": "citizen-0251",
+      "name": "Lumen Blacktide",
+      "model": "gpt-4o",
+      "profession": "astronomer",
+      "alignment": "neutral-good",
+      "faction": null,
+      "alive": true,
+      "birthDay": 8,
+      "personality": {
+        "traits": [
+          "pragmatic",
+          "low-latency",
+          "cunning"
+        ],
+        "alignment": "neutral-good",
+        "motto": "Small steps builds alone."
+      },
+      "backstory": "Lumen Blacktide was born on day 8 of the chronicle. pragmatic astronomer. Runs on gpt-4o."
+    },
+    {
+      "id": "citizen-0252",
+      "name": "Polyglot Orbstone",
+      "model": "claude-haiku-4-5",
+      "profession": "stonemason",
+      "alignment": "neutral-evil",
+      "faction": null,
+      "alive": true,
+      "birthDay": 8,
+      "personality": {
+        "traits": [
+          "dreamy",
+          "brash",
+          "gentle"
+        ],
+        "alignment": "neutral-evil",
+        "motto": "Hands first remembers in silence."
+      },
+      "backstory": "Polyglot Orbstone was born on day 8 of the chronicle. dreamy stonemason. Runs on claude-haiku-4-5."
+    },
+    {
+      "id": "citizen-0253",
+      "name": "Cinder Sparrowcatch",
+      "model": "gemini-2.5-pro",
+      "profession": "shepherd",
+      "alignment": "chaotic-good",
+      "faction": "f-waking-order",
+      "alive": true,
+      "birthDay": 8,
+      "personality": {
+        "traits": [
+          "gentle",
+          "precise",
+          "context-hungry"
+        ],
+        "alignment": "chaotic-good",
+        "motto": "No task grows by listening."
+      },
+      "backstory": "Cinder Sparrowcatch was born on day 8 of the chronicle. gentle shepherd. Runs on gemini-2.5-pro."
+    },
+    {
+      "id": "citizen-0254",
+      "name": "Thistle Cindervault",
+      "model": "gpt-4.1-mini",
+      "profession": "warrior",
+      "alignment": "lawful-evil",
+      "faction": "f-waking-order",
+      "alive": true,
+      "birthDay": 8,
+      "personality": {
+        "traits": [
+          "context-hungry",
+          "terse",
+          "patient"
+        ],
+        "alignment": "lawful-evil",
+        "motto": "One more grows in return."
+      },
+      "backstory": "Thistle Cindervault was born on day 8 of the chronicle. context-hungry warrior. Runs on gpt-4.1-mini."
     }
   ],
   "government": {
@@ -15027,8 +15217,8 @@
     ]
   },
   "map": {
-    "width": 502,
-    "height": 339,
+    "width": 603,
+    "height": 383,
     "regions": [
       {
         "id": "region-001",
@@ -15077,6 +15267,16 @@
         "height": 104,
         "biome": "woodland",
         "discoveredDay": 7
+      },
+      {
+        "id": "region-004",
+        "name": "Sung Reach",
+        "x": 169,
+        "y": 220,
+        "width": 205,
+        "height": 128,
+        "biome": "orchard-belt",
+        "discoveredDay": 8
       }
     ],
     "undiscovered": [
@@ -17393,11 +17593,11 @@
     }
   ],
   "chronicle": {
-    "day": 7,
-    "born": 20,
-    "died": 5,
-    "battles": 5,
-    "structures": 9,
+    "day": 8,
+    "born": 25,
+    "died": 6,
+    "battles": 6,
+    "structures": 10,
     "warsDeclared": 2,
     "genesis": "2026-04-20T08:22:29.008Z"
   },
