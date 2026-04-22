@@ -208,6 +208,31 @@
     emit: function (msg) { this.subscribers.forEach(function (fn) { try { fn(msg); } catch (_) {} }); }
   };
 
+  // The ntfy.sh topic is public — anyone can publish. Coerce every
+  // incoming field to a bounded string before it touches the DOM or
+  // state. A hostile publisher can still send junk; we just ignore it.
+  function sanitizeIncoming(msg) {
+    if (!msg || typeof msg !== 'object') return null;
+    var type = String(msg.type || '').slice(0, 16);
+    if (type !== 'chat' && type !== 'god' && type !== 'ping') return null;
+    var from = String(msg.from || '').slice(0, 64);
+    if (!from) return null;
+    var tsNum = Number(msg.ts);
+    var n = now();
+    var ts = (isFinite(tsNum) && tsNum > n - 86400000 && tsNum < n + 60000) ? tsNum : n;
+    var out = { type: type, from: from, ts: ts };
+    if (type === 'chat') {
+      out.nick = String(msg.nick || 'anon').slice(0, 24);
+      out.text = String(msg.text || '').slice(0, 280);
+      if (!out.text) return null;
+    } else if (type === 'god') {
+      out.act = String(msg.act || '');
+      if (!EFFECTS[out.act]) return null;
+      out.nick = String(msg.nick || 'observer').slice(0, 24);
+    }
+    return out;
+  }
+
   function initBus() {
     try {
       // Use SSE for live stream + cached history (last 2 min)
@@ -215,8 +240,10 @@
       es.addEventListener('message', function (e) {
         var env = safeJSON(e.data);
         if (!env || !env.message) return;
-        var msg = safeJSON(env.message);
-        if (!msg || msg.from === CLIENT_ID) return;
+        var raw = safeJSON(env.message);
+        if (!raw || raw.from === CLIENT_ID) return;
+        var msg = sanitizeIncoming(raw);
+        if (!msg) return;
         bus.emit(msg);
       });
       es.onerror = function () {
@@ -623,6 +650,16 @@
     form.appendChild(nickIn);
     form.appendChild(msgIn);
     form.appendChild(send);
+    // Prevent the game's document-level key shortcuts (h/s/m/b, arrow keys,
+    // etc.) from triggering while the user is typing in the chat. Capture
+    // phase + stopPropagation is enough — we don't want to preventDefault
+    // because the input needs the character to land.
+    function swallowKeys(e) { e.stopPropagation(); }
+    [nickIn, msgIn].forEach(function (input) {
+      input.addEventListener('keydown', swallowKeys, true);
+      input.addEventListener('keyup', swallowKeys, true);
+      input.addEventListener('keypress', swallowKeys, true);
+    });
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       sendChat(nickIn.value, msgIn.value);

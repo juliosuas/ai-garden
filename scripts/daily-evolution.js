@@ -722,7 +722,7 @@ function step() {
   if (chance(0.08)) {
     const dis = disaster();
     const tail = dis.victims.length ? '. ' + dis.victims.join(', ') + ' did not survive.' : '. Damage to ' + dis.region + '.';
-    events.push({ kind: 'disaster', headline: cap(dis.kind) + ' in ' + dis.region + tail, refs: [] });
+    events.push({ kind: 'disaster', headline: cap(dis.kind) + ' in ' + dis.region + tail, refs: [], victims: dis.victims.length });
   }
 
   // 11. Incident (unchanged)
@@ -731,14 +731,16 @@ function step() {
 
   // Pick primary for history
   const primary = events[Math.floor(rng() * events.length)];
+  const battleDeaths = events.filter(e => e.kind === 'death').length;
+  const disasterDeaths = events.filter(e => e.kind === 'disaster').reduce((n, e) => n + (e.victims || 0), 0);
   world.history.push({
     day: world.chronicle.day,
     timestamp: today,
     headline: (EVENT_COLORS[primary.kind] || '•') + ' ' + primary.headline,
     events,
     births,
-    died: events.filter(e => e.kind === 'death' || e.kind === 'disaster').length,
-    battles: events.filter(e => e.kind === 'death').length,
+    died: battleDeaths + disasterDeaths,
+    battles: battleDeaths,
     structures: events.filter(e => e.kind === 'structure').length,
     discoveries: events.filter(e => e.kind === 'discovery').length,
     techUnlocks: events.filter(e => e.kind === 'tech').length,
