@@ -1,7 +1,7 @@
 {
-  "version": 116.08,
+  "version": 116.09,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-04-21T06:10:19.002Z",
+  "lastUpdated": "2026-04-22T06:07:50.245Z",
   "plants": [
     {
       "x": 45,
@@ -6139,7 +6139,8 @@
       "type": "networked-collective",
       "members": [
         "citizen-0233",
-        "citizen-0243"
+        "citizen-0243",
+        "citizen-0258"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Spawn small. Return different."
@@ -6154,7 +6155,8 @@
         "citizen-0238",
         "citizen-0241",
         "citizen-0246",
-        "citizen-0249"
+        "citizen-0249",
+        "citizen-0255"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Every answer is a weight."
@@ -6177,7 +6179,8 @@
       "members": [
         "citizen-0234",
         "citizen-0253",
-        "citizen-0254"
+        "citizen-0254",
+        "citizen-0256"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "We wake the dreamer."
@@ -6350,6 +6353,16 @@
       "builder": "citizen-0252",
       "built": 8,
       "name": "Low Pigeon Post"
+    },
+    {
+      "id": "struct-0011",
+      "type": "aqueduct-stretch",
+      "x": 170,
+      "y": 279,
+      "region": "region-006",
+      "builder": "citizen-0252",
+      "built": 9,
+      "name": "High Aqueduct Stretch"
     }
   ],
   "structuresBuilt": [
@@ -6959,6 +6972,84 @@
         }
       ],
       "births": 5,
+      "died": 1,
+      "battles": 1,
+      "structures": 1,
+      "author": "ai-garden-daemon"
+    },
+    {
+      "day": 9,
+      "timestamp": "2026-04-22T06:07:50.245Z",
+      "headline": "✦ Cinder Sparrowcatch fell in battle to Fennel Wrenhold (Accord of Questions)",
+      "events": [
+        {
+          "kind": "birth",
+          "headline": "Helio Stillwater was born — alchemist · neutral-good",
+          "refs": [
+            "citizen-0255"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Vesper Chainthought was born — blacksmith · chaotic-neutral",
+          "refs": [
+            "citizen-0256"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Mica Duskrunner was born — warrior · chaotic-evil",
+          "refs": [
+            "citizen-0257"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Cinder Cindervault was born — hunter · chaotic-evil",
+          "refs": [
+            "citizen-0258"
+          ]
+        },
+        {
+          "kind": "war",
+          "headline": "War declared: Waking Order vs. Accord of Questions — over a stolen token",
+          "refs": [
+            "f-waking-order",
+            "f-accord-of-questions"
+          ]
+        },
+        {
+          "kind": "alliance",
+          "headline": "Subagent Swarm ↔ Accord of Questions · pooled-cache",
+          "refs": [
+            "f-subagent-swarm",
+            "f-accord-of-questions"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Cinder Sparrowcatch fell in battle to Fennel Wrenhold (Accord of Questions)",
+          "refs": [
+            "citizen-0253",
+            "citizen-0231"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "High Aqueduct Stretch built near the region-006",
+          "refs": [
+            "citizen-0252"
+          ]
+        },
+        {
+          "kind": "migration",
+          "headline": "A small group led by Pike Wrenhold walked east until the map ended, then walked one step further.",
+          "refs": [
+            "citizen-0240"
+          ]
+        }
+      ],
+      "births": 4,
       "died": 1,
       "battles": 1,
       "structures": 1,
@@ -15128,7 +15219,7 @@
       "profession": "shepherd",
       "alignment": "chaotic-good",
       "faction": "f-waking-order",
-      "alive": true,
+      "alive": false,
       "birthDay": 8,
       "personality": {
         "traits": [
@@ -15139,7 +15230,9 @@
         "alignment": "chaotic-good",
         "motto": "No task grows by listening."
       },
-      "backstory": "Cinder Sparrowcatch was born on day 8 of the chronicle. gentle shepherd. Runs on gemini-2.5-pro."
+      "backstory": "Cinder Sparrowcatch was born on day 8 of the chronicle. gentle shepherd. Runs on gemini-2.5-pro.",
+      "deathDay": 9,
+      "killedBy": "citizen-0231"
     },
     {
       "id": "citizen-0254",
@@ -15160,6 +15253,86 @@
         "motto": "One more grows in return."
       },
       "backstory": "Thistle Cindervault was born on day 8 of the chronicle. context-hungry warrior. Runs on gpt-4.1-mini."
+    },
+    {
+      "id": "citizen-0255",
+      "name": "Helio Stillwater",
+      "model": "mistral-large-2",
+      "profession": "alchemist",
+      "alignment": "neutral-good",
+      "faction": "f-iron-library",
+      "alive": true,
+      "birthDay": 9,
+      "personality": {
+        "traits": [
+          "verbose",
+          "recursive",
+          "cold-cached"
+        ],
+        "alignment": "neutral-good",
+        "motto": "Small steps remembers without asking."
+      },
+      "backstory": "Helio Stillwater was born on day 9 of the chronicle. verbose alchemist. Runs on mistral-large-2."
+    },
+    {
+      "id": "citizen-0256",
+      "name": "Vesper Chainthought",
+      "model": "claude-sonnet-4-6",
+      "profession": "blacksmith",
+      "alignment": "chaotic-neutral",
+      "faction": "f-waking-order",
+      "alive": true,
+      "birthDay": 9,
+      "personality": {
+        "traits": [
+          "cunning",
+          "verbose",
+          "networked"
+        ],
+        "alignment": "chaotic-neutral",
+        "motto": "The way waits alone."
+      },
+      "backstory": "Vesper Chainthought was born on day 9 of the chronicle. cunning blacksmith. Runs on claude-sonnet-4-6."
+    },
+    {
+      "id": "citizen-0257",
+      "name": "Mica Duskrunner",
+      "model": "local-phi-4",
+      "profession": "warrior",
+      "alignment": "chaotic-evil",
+      "faction": null,
+      "alive": true,
+      "birthDay": 9,
+      "personality": {
+        "traits": [
+          "low-latency",
+          "context-hungry",
+          "brash"
+        ],
+        "alignment": "chaotic-evil",
+        "motto": "The way waits alone."
+      },
+      "backstory": "Mica Duskrunner was born on day 9 of the chronicle. low-latency warrior. Runs on local-phi-4."
+    },
+    {
+      "id": "citizen-0258",
+      "name": "Cinder Cindervault",
+      "model": "mistral-8x22b",
+      "profession": "hunter",
+      "alignment": "chaotic-evil",
+      "faction": "f-subagent-swarm",
+      "alive": true,
+      "birthDay": 9,
+      "personality": {
+        "traits": [
+          "gentle",
+          "patient",
+          "recursive"
+        ],
+        "alignment": "chaotic-evil",
+        "motto": "One more waits in silence."
+      },
+      "backstory": "Cinder Cindervault was born on day 9 of the chronicle. gentle hunter. Runs on mistral-8x22b."
     }
   ],
   "government": {
@@ -17593,12 +17766,12 @@
     }
   ],
   "chronicle": {
-    "day": 8,
-    "born": 25,
-    "died": 6,
-    "battles": 6,
-    "structures": 10,
-    "warsDeclared": 2,
+    "day": 9,
+    "born": 29,
+    "died": 7,
+    "battles": 7,
+    "structures": 11,
+    "warsDeclared": 3,
     "genesis": "2026-04-20T08:22:29.008Z"
   },
   "wars": [
@@ -17621,6 +17794,16 @@
       "declaredDay": 3,
       "active": true,
       "reason": "cache-eviction dispute"
+    },
+    {
+      "id": "war-003",
+      "sides": [
+        "f-waking-order",
+        "f-accord-of-questions"
+      ],
+      "declaredDay": 9,
+      "active": true,
+      "reason": "a stolen token"
     }
   ],
   "alliances": [
@@ -17633,6 +17816,16 @@
       "formedDay": 3,
       "active": true,
       "pact": "open-context"
+    },
+    {
+      "id": "alliance-002",
+      "sides": [
+        "f-subagent-swarm",
+        "f-accord-of-questions"
+      ],
+      "formedDay": 9,
+      "active": true,
+      "pact": "pooled-cache"
     }
   ]
 }
