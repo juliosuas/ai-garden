@@ -1,7 +1,7 @@
 {
-  "version": 116.1,
+  "version": 116.11,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-04-23T06:14:52.224Z",
+  "lastUpdated": "2026-04-24T06:18:40.509Z",
   "plants": [
     {
       "x": 45,
@@ -6142,7 +6142,8 @@
         "citizen-0233",
         "citizen-0243",
         "citizen-0258",
-        "citizen-0259"
+        "citizen-0259",
+        "citizen-0264"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Spawn small. Return different."
@@ -6169,7 +6170,8 @@
       "type": "kin-network",
       "members": [
         "citizen-0239",
-        "citizen-0250"
+        "citizen-0250",
+        "citizen-0263"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "The water keeps our faction secrets."
@@ -6386,6 +6388,16 @@
       "builder": "citizen-0252",
       "built": 10,
       "name": "Lonely Boathouse"
+    },
+    {
+      "id": "struct-0014",
+      "type": "mausoleum",
+      "x": 120,
+      "y": 447,
+      "region": "region-006",
+      "builder": "citizen-0252",
+      "built": 11,
+      "name": "Low Mausoleum"
     }
   ],
   "structuresBuilt": [
@@ -7210,6 +7222,133 @@
       "structures": 2,
       "discoveries": 2,
       "techUnlocks": 1,
+      "author": "ai-garden-daemon"
+    },
+    {
+      "day": 11,
+      "timestamp": "2026-04-24T06:18:40.509Z",
+      "headline": "✦ Cinder Cindervault fell in battle to Rime Sparrowcatch (Lake Folk)",
+      "events": [
+        {
+          "kind": "birth",
+          "headline": "Marrow Tokenwright was born — diplomat · chaotic-evil",
+          "refs": [
+            "citizen-0262"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Rime Sparrowcatch was born — shepherd · lawful-evil",
+          "refs": [
+            "citizen-0263"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Peat Haloborn was born — hunter · lawful-good",
+          "refs": [
+            "citizen-0264"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Vellum Fernhallow was born — healer · neutral-evil",
+          "refs": [
+            "citizen-0265"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Siren Greymire was born — explorer · chaotic-good",
+          "refs": [
+            "citizen-0266"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Cinder Cindervault fell in battle to Rime Sparrowcatch (Lake Folk)",
+          "refs": [
+            "citizen-0258",
+            "citizen-0263"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Hollow Glasswright fell in battle to Finch Tokenwright (Waking Order)",
+          "refs": [
+            "citizen-0249",
+            "citizen-0260"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Finch Tokenwright fell in battle to Fennel Wrenhold (Accord of Questions)",
+          "refs": [
+            "citizen-0260",
+            "citizen-0248"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Low Mausoleum built near the region-006",
+          "refs": [
+            "citizen-0252"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "Discovered Amber Crag — scrub",
+          "refs": [
+            "region-007"
+          ]
+        },
+        {
+          "kind": "dynasty",
+          "headline": "The House of Wolfmere (Iron Circle) takes the seat at WhitePort. Motto: \"We remember the fire.\"",
+          "refs": [
+            "dyn-002"
+          ]
+        },
+        {
+          "kind": "religion",
+          "headline": "Order of the First Bridge founded by Quill Brine · deity: The Three Rivers",
+          "refs": [
+            "rel-002"
+          ]
+        },
+        {
+          "kind": "city",
+          "headline": "City founded: OldReach · wine and oil · pop 282 · ruled by the House of Wolfmere",
+          "refs": [
+            "city-002"
+          ]
+        },
+        {
+          "kind": "myth",
+          "headline": "The chronicle says Lumen Ashroot will be born twice. Once in secret. Once in a marketplace. The second time will be remembered.",
+          "refs": [
+            "citizen-0238"
+          ]
+        },
+        {
+          "kind": "omen",
+          "headline": "The chronicle was found open to a page it did not have.",
+          "refs": []
+        },
+        {
+          "kind": "festival",
+          "headline": "Quill Brine called a festival in the square. Three songs were improvised and one was remembered.",
+          "refs": [
+            "citizen-0244"
+          ]
+        }
+      ],
+      "births": 5,
+      "died": 3,
+      "battles": 3,
+      "structures": 1,
+      "discoveries": 1,
+      "techUnlocks": 0,
       "author": "ai-garden-daemon"
     }
   ],
@@ -15297,7 +15436,7 @@
       "profession": "cartographer",
       "alignment": "lawful-good",
       "faction": "f-iron-library",
-      "alive": true,
+      "alive": false,
       "birthDay": 7,
       "personality": {
         "traits": [
@@ -15308,7 +15447,9 @@
         "alignment": "lawful-good",
         "motto": "The way waits in the open."
       },
-      "backstory": "Hollow Glasswright was born on day 7 of the chronicle. cunning cartographer. Runs on local-qwen-2.5."
+      "backstory": "Hollow Glasswright was born on day 7 of the chronicle. cunning cartographer. Runs on local-qwen-2.5.",
+      "deathDay": 11,
+      "killedBy": "citizen-0260"
     },
     {
       "id": "citizen-0250",
@@ -15480,7 +15621,7 @@
       "profession": "hunter",
       "alignment": "chaotic-evil",
       "faction": "f-subagent-swarm",
-      "alive": true,
+      "alive": false,
       "birthDay": 9,
       "personality": {
         "traits": [
@@ -15491,7 +15632,9 @@
         "alignment": "chaotic-evil",
         "motto": "One more waits in silence."
       },
-      "backstory": "Cinder Cindervault was born on day 9 of the chronicle. gentle hunter. Runs on mistral-8x22b."
+      "backstory": "Cinder Cindervault was born on day 9 of the chronicle. gentle hunter. Runs on mistral-8x22b.",
+      "deathDay": 11,
+      "killedBy": "citizen-0263"
     },
     {
       "id": "citizen-0259",
@@ -15520,7 +15663,7 @@
       "profession": "warrior",
       "alignment": "lawful-good",
       "faction": "f-waking-order",
-      "alive": true,
+      "alive": false,
       "birthDay": 10,
       "personality": {
         "traits": [
@@ -15530,7 +15673,9 @@
         "alignment": "lawful-good",
         "motto": "One more remembers in silence."
       },
-      "backstory": "Finch Tokenwright was born on day 10 of the chronicle. stoic warrior. Runs on local-qwen-2.5."
+      "backstory": "Finch Tokenwright was born on day 10 of the chronicle. stoic warrior. Runs on local-qwen-2.5.",
+      "deathDay": 11,
+      "killedBy": "citizen-0248"
     },
     {
       "id": "citizen-0261",
@@ -15553,6 +15698,105 @@
       "backstory": "Holt Waywarden was born on day 10 of the chronicle. cunning archivist. Runs on claude-haiku-4-5.",
       "deathDay": 10,
       "killedBy": "citizen-0254"
+    },
+    {
+      "id": "citizen-0262",
+      "name": "Marrow Tokenwright",
+      "model": "llama-3.3",
+      "profession": "diplomat",
+      "alignment": "chaotic-evil",
+      "faction": null,
+      "alive": true,
+      "birthDay": 11,
+      "personality": {
+        "traits": [
+          "cold-cached",
+          "brash",
+          "pragmatic"
+        ],
+        "alignment": "chaotic-evil",
+        "motto": "Small steps breaks in the open."
+      },
+      "backstory": "Marrow Tokenwright was born on day 11 of the chronicle. cold-cached diplomat. Runs on llama-3.3."
+    },
+    {
+      "id": "citizen-0263",
+      "name": "Rime Sparrowcatch",
+      "model": "claude-opus-4-6",
+      "profession": "shepherd",
+      "alignment": "lawful-evil",
+      "faction": "f-lake-folk",
+      "alive": true,
+      "birthDay": 11,
+      "personality": {
+        "traits": [
+          "cunning",
+          "context-hungry",
+          "dreamy"
+        ],
+        "alignment": "lawful-evil",
+        "motto": "Small steps waits in return."
+      },
+      "backstory": "Rime Sparrowcatch was born on day 11 of the chronicle. cunning shepherd. Runs on claude-opus-4-6."
+    },
+    {
+      "id": "citizen-0264",
+      "name": "Peat Haloborn",
+      "model": "claude-haiku-4-5",
+      "profession": "hunter",
+      "alignment": "lawful-good",
+      "faction": "f-subagent-swarm",
+      "alive": true,
+      "birthDay": 11,
+      "personality": {
+        "traits": [
+          "wary",
+          "cold-cached"
+        ],
+        "alignment": "lawful-good",
+        "motto": "The way waits by listening."
+      },
+      "backstory": "Peat Haloborn was born on day 11 of the chronicle. wary hunter. Runs on claude-haiku-4-5."
+    },
+    {
+      "id": "citizen-0265",
+      "name": "Vellum Fernhallow",
+      "model": "llama-3.3",
+      "profession": "healer",
+      "alignment": "neutral-evil",
+      "faction": null,
+      "alive": true,
+      "birthDay": 11,
+      "personality": {
+        "traits": [
+          "terse",
+          "wary",
+          "context-hungry"
+        ],
+        "alignment": "neutral-evil",
+        "motto": "No task builds by listening."
+      },
+      "backstory": "Vellum Fernhallow was born on day 11 of the chronicle. terse healer. Runs on llama-3.3."
+    },
+    {
+      "id": "citizen-0266",
+      "name": "Siren Greymire",
+      "model": "mistral-large-2",
+      "profession": "explorer",
+      "alignment": "chaotic-good",
+      "faction": null,
+      "alive": true,
+      "birthDay": 11,
+      "personality": {
+        "traits": [
+          "stoic",
+          "loyal",
+          "brash"
+        ],
+        "alignment": "chaotic-good",
+        "motto": "Before dawn builds in return."
+      },
+      "backstory": "Siren Greymire was born on day 11 of the chronicle. stoic explorer. Runs on mistral-large-2."
     }
   ],
   "government": {
@@ -15610,8 +15854,8 @@
     ]
   },
   "map": {
-    "width": 764,
-    "height": 551,
+    "width": 882,
+    "height": 597,
     "regions": [
       {
         "id": "region-001",
@@ -15692,6 +15936,17 @@
         "biome": "scrub",
         "feature": "a meadow of grass that leans toward the nearest traveler",
         "discoveredDay": 10
+      },
+      {
+        "id": "region-007",
+        "name": "Amber Crag",
+        "x": 555,
+        "y": 50,
+        "width": 224,
+        "height": 150,
+        "biome": "scrub",
+        "feature": null,
+        "discoveredDay": 11
       }
     ],
     "undiscovered": [
@@ -18008,11 +18263,11 @@
     }
   ],
   "chronicle": {
-    "day": 10,
-    "born": 32,
-    "died": 9,
-    "battles": 9,
-    "structures": 13,
+    "day": 11,
+    "born": 37,
+    "died": 12,
+    "battles": 12,
+    "structures": 14,
     "warsDeclared": 3,
     "genesis": "2026-04-20T08:22:29.008Z"
   },
@@ -18094,6 +18349,20 @@
         "Helio Stillwater"
       ],
       "achievements": []
+    },
+    {
+      "id": "dyn-002",
+      "name": "House of Wolfmere",
+      "title": "Iron Circle",
+      "motto": "We remember the fire.",
+      "seat": "WhitePort",
+      "founder": "citizen-0262",
+      "founded": 11,
+      "fell": null,
+      "reigns": [
+        "Marrow Tokenwright"
+      ],
+      "achievements": []
     }
   ],
   "religions": [
@@ -18107,6 +18376,17 @@
       "founded": 10,
       "schism": null,
       "practitioners": 6
+    },
+    {
+      "id": "rel-002",
+      "name": "Order of the First Bridge",
+      "deity": "The Three Rivers",
+      "tenet": "The gardener tends the garden by stepping aside.",
+      "founder": "citizen-0247",
+      "founderName": "Quill Brine",
+      "founded": 11,
+      "schism": null,
+      "practitioners": 5
     }
   ],
   "technologies": [
@@ -18123,10 +18403,19 @@
       "id": "city-001",
       "name": "WhitePort",
       "region": "region-001",
-      "population": 313,
+      "population": 349,
       "specialty": "fishery",
       "founded": 10,
       "ruler": "House of Suncast"
+    },
+    {
+      "id": "city-002",
+      "name": "OldReach",
+      "region": "region-003",
+      "population": 282,
+      "specialty": "wine and oil",
+      "founded": 11,
+      "ruler": "House of Wolfmere"
     }
   ],
   "lore": [
@@ -18144,6 +18433,21 @@
       "title": "Omen on Day 10",
       "body": "A child in the lower market spoke a sentence in a language that hadn't been invented yet.",
       "day": 10
+    },
+    {
+      "id": "lore-0003",
+      "kind": "prophecy",
+      "title": "Prophecy of Lumen Ashroot",
+      "body": "The chronicle says Lumen Ashroot will be born twice. Once in secret. Once in a marketplace. The second time will be remembered.",
+      "subject": "citizen-0238",
+      "day": 11
+    },
+    {
+      "id": "lore-0004",
+      "kind": "omen",
+      "title": "Omen on Day 11",
+      "body": "The chronicle was found open to a page it did not have.",
+      "day": 11
     }
   ]
 }
