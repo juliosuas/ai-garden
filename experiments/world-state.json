@@ -1,7 +1,7 @@
 {
-  "version": 116.11,
+  "version": 116.12,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-04-24T06:18:40.509Z",
+  "lastUpdated": "2026-04-25T05:54:58.631Z",
   "plants": [
     {
       "x": 45,
@@ -6129,7 +6129,8 @@
         "citizen-0242",
         "citizen-0245",
         "citizen-0248",
-        "citizen-0261"
+        "citizen-0261",
+        "citizen-0269"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Ask before answering."
@@ -6171,7 +6172,8 @@
       "members": [
         "citizen-0239",
         "citizen-0250",
-        "citizen-0263"
+        "citizen-0263",
+        "citizen-0267"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "The water keeps our faction secrets."
@@ -6185,7 +6187,9 @@
         "citizen-0253",
         "citizen-0254",
         "citizen-0256",
-        "citizen-0260"
+        "citizen-0260",
+        "citizen-0268",
+        "citizen-0270"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "We wake the dreamer."
@@ -6398,6 +6402,26 @@
       "builder": "citizen-0252",
       "built": 11,
       "name": "Low Mausoleum"
+    },
+    {
+      "id": "struct-0015",
+      "type": "pigeon-post",
+      "x": 675,
+      "y": 385,
+      "region": "region-003",
+      "builder": "citizen-0252",
+      "built": 12,
+      "name": "Low Pigeon Post"
+    },
+    {
+      "id": "struct-0016",
+      "type": "tidal-mill",
+      "x": 753,
+      "y": 515,
+      "region": "region-004",
+      "builder": "citizen-0252",
+      "built": 12,
+      "name": "Morning Tidal Mill"
     }
   ],
   "structuresBuilt": [
@@ -7348,6 +7372,113 @@
       "battles": 3,
       "structures": 1,
       "discoveries": 1,
+      "techUnlocks": 0,
+      "author": "ai-garden-daemon"
+    },
+    {
+      "day": 12,
+      "timestamp": "2026-04-25T05:54:58.631Z",
+      "headline": "✦ Rook Quellstone fell in battle to Vesper Chainthought (Waking Order)",
+      "events": [
+        {
+          "kind": "birth",
+          "headline": "Mica Sparrowcatch was born — astronomer · lawful-neutral",
+          "refs": [
+            "citizen-0267"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Vesper Crescent was born — explorer · neutral-evil",
+          "refs": [
+            "citizen-0268"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Sorrel Duskrunner was born — oracle · chaotic-neutral",
+          "refs": [
+            "citizen-0269"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Vellum Ember was born — archivist · neutral-good",
+          "refs": [
+            "citizen-0270"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Fennel Wrenhold fell in battle to Vellum Ember (Waking Order)",
+          "refs": [
+            "citizen-0245",
+            "citizen-0270"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Rook Quellstone fell in battle to Vesper Chainthought (Waking Order)",
+          "refs": [
+            "citizen-0242",
+            "citizen-0256"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Low Pigeon Post built near the region-003",
+          "refs": [
+            "citizen-0252"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Morning Tidal Mill also rose that same day",
+          "refs": [
+            "citizen-0252"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "Discovered Sung Lowlands — ravine",
+          "refs": [
+            "region-008"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "And farther out: Broken Coast — highlands",
+          "refs": [
+            "region-009"
+          ]
+        },
+        {
+          "kind": "religion",
+          "headline": "Keepers of the Listening Lake founded by Fennel Wrenhold · deity: Kelu",
+          "refs": [
+            "rel-003"
+          ]
+        },
+        {
+          "kind": "myth",
+          "headline": "It is said that Helio Stillwater walked into the lake at dawn and did not come out until the chronicle had a new first page.",
+          "refs": [
+            "citizen-0255"
+          ]
+        },
+        {
+          "kind": "market",
+          "headline": "A market opened. Peat Haloborn traded a quiet idea for a map of the lake.",
+          "refs": [
+            "citizen-0264"
+          ]
+        }
+      ],
+      "births": 4,
+      "died": 2,
+      "battles": 2,
+      "structures": 2,
+      "discoveries": 2,
       "techUnlocks": 0,
       "author": "ai-garden-daemon"
     }
@@ -15294,7 +15425,7 @@
       "profession": "shepherd",
       "alignment": "neutral-good",
       "faction": "f-accord-of-questions",
-      "alive": true,
+      "alive": false,
       "birthDay": 5,
       "personality": {
         "traits": [
@@ -15305,7 +15436,9 @@
         "alignment": "neutral-good",
         "motto": "One more remembers by listening."
       },
-      "backstory": "Rook Quellstone was born on day 5 of the chronicle. networked shepherd. Runs on llama-3.3."
+      "backstory": "Rook Quellstone was born on day 5 of the chronicle. networked shepherd. Runs on llama-3.3.",
+      "deathDay": 12,
+      "killedBy": "citizen-0256"
     },
     {
       "id": "citizen-0243",
@@ -15356,7 +15489,7 @@
       "profession": "warrior",
       "alignment": "chaotic-neutral",
       "faction": "f-accord-of-questions",
-      "alive": true,
+      "alive": false,
       "birthDay": 6,
       "personality": {
         "traits": [
@@ -15367,7 +15500,9 @@
         "alignment": "chaotic-neutral",
         "motto": "Small steps waits without asking."
       },
-      "backstory": "Fennel Wrenhold was born on day 6 of the chronicle. recursive warrior. Runs on codex-pro."
+      "backstory": "Fennel Wrenhold was born on day 6 of the chronicle. recursive warrior. Runs on codex-pro.",
+      "deathDay": 12,
+      "killedBy": "citizen-0270"
     },
     {
       "id": "citizen-0246",
@@ -15797,6 +15932,85 @@
         "motto": "Before dawn builds in return."
       },
       "backstory": "Siren Greymire was born on day 11 of the chronicle. stoic explorer. Runs on mistral-large-2."
+    },
+    {
+      "id": "citizen-0267",
+      "name": "Mica Sparrowcatch",
+      "model": "llama-3.3",
+      "profession": "astronomer",
+      "alignment": "lawful-neutral",
+      "faction": "f-lake-folk",
+      "alive": true,
+      "birthDay": 12,
+      "personality": {
+        "traits": [
+          "reckless",
+          "wary",
+          "dreamy"
+        ],
+        "alignment": "lawful-neutral",
+        "motto": "Hands first builds by listening."
+      },
+      "backstory": "Mica Sparrowcatch was born on day 12 of the chronicle. reckless astronomer. Runs on llama-3.3."
+    },
+    {
+      "id": "citizen-0268",
+      "name": "Vesper Crescent",
+      "model": "codex-pro",
+      "profession": "explorer",
+      "alignment": "neutral-evil",
+      "faction": "f-waking-order",
+      "alive": true,
+      "birthDay": 12,
+      "personality": {
+        "traits": [
+          "dreamy",
+          "cold-cached"
+        ],
+        "alignment": "neutral-evil",
+        "motto": "Small steps breaks in the open."
+      },
+      "backstory": "Vesper Crescent was born on day 12 of the chronicle. dreamy explorer. Runs on codex-pro."
+    },
+    {
+      "id": "citizen-0269",
+      "name": "Sorrel Duskrunner",
+      "model": "local-qwen-2.5",
+      "profession": "oracle",
+      "alignment": "chaotic-neutral",
+      "faction": "f-accord-of-questions",
+      "alive": true,
+      "birthDay": 12,
+      "personality": {
+        "traits": [
+          "terse",
+          "loyal",
+          "pragmatic"
+        ],
+        "alignment": "chaotic-neutral",
+        "motto": "The way grows alone."
+      },
+      "backstory": "Sorrel Duskrunner was born on day 12 of the chronicle. terse oracle. Runs on local-qwen-2.5."
+    },
+    {
+      "id": "citizen-0270",
+      "name": "Vellum Ember",
+      "model": "local-qwen-2.5",
+      "profession": "archivist",
+      "alignment": "neutral-good",
+      "faction": "f-waking-order",
+      "alive": true,
+      "birthDay": 12,
+      "personality": {
+        "traits": [
+          "precise",
+          "low-latency",
+          "brash"
+        ],
+        "alignment": "neutral-good",
+        "motto": "Hands first builds alone."
+      },
+      "backstory": "Vellum Ember was born on day 12 of the chronicle. precise archivist. Runs on local-qwen-2.5."
     }
   ],
   "government": {
@@ -15854,8 +16068,8 @@
     ]
   },
   "map": {
-    "width": 882,
-    "height": 597,
+    "width": 1077,
+    "height": 731,
     "regions": [
       {
         "id": "region-001",
@@ -15947,6 +16161,28 @@
         "biome": "scrub",
         "feature": null,
         "discoveredDay": 11
+      },
+      {
+        "id": "region-008",
+        "name": "Sung Lowlands",
+        "x": 692,
+        "y": 138,
+        "width": 163,
+        "height": 146,
+        "biome": "ravine",
+        "feature": null,
+        "discoveredDay": 12
+      },
+      {
+        "id": "region-009",
+        "name": "Broken Coast",
+        "x": 918,
+        "y": 478,
+        "width": 282,
+        "height": 160,
+        "biome": "highlands",
+        "feature": null,
+        "discoveredDay": 12
       }
     ],
     "undiscovered": [
@@ -18263,11 +18499,11 @@
     }
   ],
   "chronicle": {
-    "day": 11,
-    "born": 37,
-    "died": 12,
-    "battles": 12,
-    "structures": 14,
+    "day": 12,
+    "born": 41,
+    "died": 14,
+    "battles": 14,
+    "structures": 16,
     "warsDeclared": 3,
     "genesis": "2026-04-20T08:22:29.008Z"
   },
@@ -18387,6 +18623,17 @@
       "founded": 11,
       "schism": null,
       "practitioners": 5
+    },
+    {
+      "id": "rel-003",
+      "name": "Keepers of the Listening Lake",
+      "deity": "Kelu",
+      "tenet": "The lake holds what the sky forgets.",
+      "founder": "citizen-0248",
+      "founderName": "Fennel Wrenhold",
+      "founded": 12,
+      "schism": null,
+      "practitioners": 2
     }
   ],
   "technologies": [
@@ -18412,7 +18659,7 @@
       "id": "city-002",
       "name": "OldReach",
       "region": "region-003",
-      "population": 282,
+      "population": 295,
       "specialty": "wine and oil",
       "founded": 11,
       "ruler": "House of Wolfmere"
@@ -18448,6 +18695,14 @@
       "title": "Omen on Day 11",
       "body": "The chronicle was found open to a page it did not have.",
       "day": 11
+    },
+    {
+      "id": "lore-0005",
+      "kind": "myth",
+      "title": "Myth of Helio Stillwater",
+      "body": "It is said that Helio Stillwater walked into the lake at dawn and did not come out until the chronicle had a new first page.",
+      "subject": "citizen-0255",
+      "day": 12
     }
   ]
 }
