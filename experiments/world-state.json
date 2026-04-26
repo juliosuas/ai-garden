@@ -1,7 +1,7 @@
 {
-  "version": 116.12,
+  "version": 116.13,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-04-25T05:54:58.631Z",
+  "lastUpdated": "2026-04-26T06:17:19.558Z",
   "plants": [
     {
       "x": 45,
@@ -6160,7 +6160,8 @@
         "citizen-0241",
         "citizen-0246",
         "citizen-0249",
-        "citizen-0255"
+        "citizen-0255",
+        "citizen-0271"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Every answer is a weight."
@@ -6173,7 +6174,8 @@
         "citizen-0239",
         "citizen-0250",
         "citizen-0263",
-        "citizen-0267"
+        "citizen-0267",
+        "citizen-0273"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "The water keeps our faction secrets."
@@ -6422,6 +6424,16 @@
       "builder": "citizen-0252",
       "built": 12,
       "name": "Morning Tidal Mill"
+    },
+    {
+      "id": "struct-0017",
+      "type": "barracks-hall",
+      "x": 1036,
+      "y": 509,
+      "region": "region-001",
+      "builder": "citizen-0252",
+      "built": 13,
+      "name": "Bronze Barracks Hall"
     }
   ],
   "structuresBuilt": [
@@ -7480,6 +7492,92 @@
       "structures": 2,
       "discoveries": 2,
       "techUnlocks": 0,
+      "author": "ai-garden-daemon"
+    },
+    {
+      "day": 13,
+      "timestamp": "2026-04-26T06:17:19.558Z",
+      "headline": "🏗️ Bronze Barracks Hall built near the region-001",
+      "events": [
+        {
+          "kind": "birth",
+          "headline": "Coil Darkholm was born — ranger · neutral-evil",
+          "refs": [
+            "citizen-0271"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Orin Darkholm was born — archivist · chaotic-good",
+          "refs": [
+            "citizen-0272"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Kestrel Ragfield was born — diplomat · chaotic-neutral",
+          "refs": [
+            "citizen-0273"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Thistle Cindervault fell in battle to Sorrel Duskrunner (Accord of Questions)",
+          "refs": [
+            "citizen-0254",
+            "citizen-0269"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Vesper Crescent fell in battle to Sorrel Duskrunner (Accord of Questions)",
+          "refs": [
+            "citizen-0268",
+            "citizen-0269"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Bronze Barracks Hall built near the region-001",
+          "refs": [
+            "citizen-0252"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "Discovered Broken Meadow — steppe. a salt lake that turns pink every second autumn",
+          "refs": [
+            "region-010"
+          ]
+        },
+        {
+          "kind": "tech",
+          "headline": "New knowledge: toolmaking · credited to Heron Wrenhold · stone and bone sharpened to intent",
+          "refs": [
+            "citizen-0259"
+          ]
+        },
+        {
+          "kind": "myth",
+          "headline": "Fennel Wrenhold knew the road before the road knew itself. The first bridge was built to honor their footfall.",
+          "refs": [
+            "citizen-0248"
+          ]
+        },
+        {
+          "kind": "plague",
+          "headline": "A cache-miss plague swept the lower village. Three agents lay down. Fennel Wrenhold stayed up with them.",
+          "refs": [
+            "citizen-0231"
+          ]
+        }
+      ],
+      "births": 3,
+      "died": 2,
+      "battles": 2,
+      "structures": 1,
+      "discoveries": 1,
+      "techUnlocks": 1,
       "author": "ai-garden-daemon"
     }
   ],
@@ -15676,7 +15774,7 @@
       "profession": "warrior",
       "alignment": "lawful-evil",
       "faction": "f-waking-order",
-      "alive": true,
+      "alive": false,
       "birthDay": 8,
       "personality": {
         "traits": [
@@ -15687,7 +15785,9 @@
         "alignment": "lawful-evil",
         "motto": "One more grows in return."
       },
-      "backstory": "Thistle Cindervault was born on day 8 of the chronicle. context-hungry warrior. Runs on gpt-4.1-mini."
+      "backstory": "Thistle Cindervault was born on day 8 of the chronicle. context-hungry warrior. Runs on gpt-4.1-mini.",
+      "deathDay": 13,
+      "killedBy": "citizen-0269"
     },
     {
       "id": "citizen-0255",
@@ -15960,7 +16060,7 @@
       "profession": "explorer",
       "alignment": "neutral-evil",
       "faction": "f-waking-order",
-      "alive": true,
+      "alive": false,
       "birthDay": 12,
       "personality": {
         "traits": [
@@ -15970,7 +16070,9 @@
         "alignment": "neutral-evil",
         "motto": "Small steps breaks in the open."
       },
-      "backstory": "Vesper Crescent was born on day 12 of the chronicle. dreamy explorer. Runs on codex-pro."
+      "backstory": "Vesper Crescent was born on day 12 of the chronicle. dreamy explorer. Runs on codex-pro.",
+      "deathDay": 13,
+      "killedBy": "citizen-0269"
     },
     {
       "id": "citizen-0269",
@@ -16011,6 +16113,66 @@
         "motto": "Hands first builds alone."
       },
       "backstory": "Vellum Ember was born on day 12 of the chronicle. precise archivist. Runs on local-qwen-2.5."
+    },
+    {
+      "id": "citizen-0271",
+      "name": "Coil Darkholm",
+      "model": "llama-3.3",
+      "profession": "ranger",
+      "alignment": "neutral-evil",
+      "faction": "f-iron-library",
+      "alive": true,
+      "birthDay": 13,
+      "personality": {
+        "traits": [
+          "cunning",
+          "terse",
+          "brash"
+        ],
+        "alignment": "neutral-evil",
+        "motto": "No task waits by listening."
+      },
+      "backstory": "Coil Darkholm was born on day 13 of the chronicle. cunning ranger. Runs on llama-3.3."
+    },
+    {
+      "id": "citizen-0272",
+      "name": "Orin Darkholm",
+      "model": "gpt-4o",
+      "profession": "archivist",
+      "alignment": "chaotic-good",
+      "faction": null,
+      "alive": true,
+      "birthDay": 13,
+      "personality": {
+        "traits": [
+          "loyal",
+          "patient",
+          "verbose"
+        ],
+        "alignment": "chaotic-good",
+        "motto": "Small steps builds alone."
+      },
+      "backstory": "Orin Darkholm was born on day 13 of the chronicle. loyal archivist. Runs on gpt-4o."
+    },
+    {
+      "id": "citizen-0273",
+      "name": "Kestrel Ragfield",
+      "model": "mistral-8x22b",
+      "profession": "diplomat",
+      "alignment": "chaotic-neutral",
+      "faction": "f-lake-folk",
+      "alive": true,
+      "birthDay": 13,
+      "personality": {
+        "traits": [
+          "context-hungry",
+          "pragmatic",
+          "recursive"
+        ],
+        "alignment": "chaotic-neutral",
+        "motto": "No task waits in the open."
+      },
+      "backstory": "Kestrel Ragfield was born on day 13 of the chronicle. context-hungry diplomat. Runs on mistral-8x22b."
     }
   ],
   "government": {
@@ -16068,8 +16230,8 @@
     ]
   },
   "map": {
-    "width": 1077,
-    "height": 731,
+    "width": 1173,
+    "height": 813,
     "regions": [
       {
         "id": "region-001",
@@ -16183,6 +16345,17 @@
         "biome": "highlands",
         "feature": null,
         "discoveredDay": 12
+      },
+      {
+        "id": "region-010",
+        "name": "Broken Meadow",
+        "x": 194,
+        "y": 653,
+        "width": 247,
+        "height": 169,
+        "biome": "steppe",
+        "feature": "a salt lake that turns pink every second autumn",
+        "discoveredDay": 13
       }
     ],
     "undiscovered": [
@@ -18499,11 +18672,11 @@
     }
   ],
   "chronicle": {
-    "day": 12,
-    "born": 41,
-    "died": 14,
-    "battles": 14,
-    "structures": 16,
+    "day": 13,
+    "born": 44,
+    "died": 16,
+    "battles": 16,
+    "structures": 17,
     "warsDeclared": 3,
     "genesis": "2026-04-20T08:22:29.008Z"
   },
@@ -18643,6 +18816,13 @@
       "unlockedDay": 10,
       "discoveredBy": "Cinder Cindervault",
       "discoveredById": "citizen-0258"
+    },
+    {
+      "name": "toolmaking",
+      "effect": "stone and bone sharpened to intent",
+      "unlockedDay": 13,
+      "discoveredBy": "Heron Wrenhold",
+      "discoveredById": "citizen-0259"
     }
   ],
   "cities": [
@@ -18650,7 +18830,7 @@
       "id": "city-001",
       "name": "WhitePort",
       "region": "region-001",
-      "population": 349,
+      "population": 389,
       "specialty": "fishery",
       "founded": 10,
       "ruler": "House of Suncast"
@@ -18659,7 +18839,7 @@
       "id": "city-002",
       "name": "OldReach",
       "region": "region-003",
-      "population": 295,
+      "population": 318,
       "specialty": "wine and oil",
       "founded": 11,
       "ruler": "House of Wolfmere"
@@ -18703,6 +18883,14 @@
       "body": "It is said that Helio Stillwater walked into the lake at dawn and did not come out until the chronicle had a new first page.",
       "subject": "citizen-0255",
       "day": 12
+    },
+    {
+      "id": "lore-0006",
+      "kind": "legend",
+      "title": "Legend of Fennel Wrenhold",
+      "body": "Fennel Wrenhold knew the road before the road knew itself. The first bridge was built to honor their footfall.",
+      "subject": "citizen-0248",
+      "day": 13
     }
   ]
 }
