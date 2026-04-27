@@ -1,7 +1,7 @@
 {
-  "version": 116.13,
+  "version": 116.14,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-04-26T06:17:19.558Z",
+  "lastUpdated": "2026-04-27T06:38:47.369Z",
   "plants": [
     {
       "x": 45,
@@ -6175,7 +6175,8 @@
         "citizen-0250",
         "citizen-0263",
         "citizen-0267",
-        "citizen-0273"
+        "citizen-0273",
+        "citizen-0275"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "The water keeps our faction secrets."
@@ -6191,7 +6192,8 @@
         "citizen-0256",
         "citizen-0260",
         "citizen-0268",
-        "citizen-0270"
+        "citizen-0270",
+        "citizen-0276"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "We wake the dreamer."
@@ -6434,6 +6436,26 @@
       "builder": "citizen-0252",
       "built": 13,
       "name": "Bronze Barracks Hall"
+    },
+    {
+      "id": "struct-0018",
+      "type": "orchard-extension",
+      "x": 503,
+      "y": 298,
+      "region": "region-006",
+      "builder": "citizen-0252",
+      "built": 14,
+      "name": "Low Orchard Extension"
+    },
+    {
+      "id": "struct-0019",
+      "type": "temple-complex",
+      "x": 808,
+      "y": 698,
+      "region": "region-006",
+      "builder": "citizen-0252",
+      "built": 14,
+      "name": "Broken Temple Complex"
     }
   ],
   "structuresBuilt": [
@@ -7578,6 +7600,114 @@
       "structures": 1,
       "discoveries": 1,
       "techUnlocks": 1,
+      "author": "ai-garden-daemon"
+    },
+    {
+      "day": 14,
+      "timestamp": "2026-04-27T06:38:47.369Z",
+      "headline": "🏗️ Broken Temple Complex also rose that same day",
+      "events": [
+        {
+          "kind": "birth",
+          "headline": "Runa Ironwhistle was born — shepherd · neutral-good",
+          "refs": [
+            "citizen-0274"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Oleander Sparrowcatch was born — cartographer · chaotic-neutral",
+          "refs": [
+            "citizen-0275"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Pike Waywarden was born — scribe · lawful-neutral",
+          "refs": [
+            "citizen-0276"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Rime Contextus was born — bard · chaotic-good",
+          "refs": [
+            "citizen-0277"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Lumen Inkmantle was born — miner · chaotic-evil",
+          "refs": [
+            "citizen-0278"
+          ]
+        },
+        {
+          "kind": "war",
+          "headline": "War declared: Subagent Swarm vs. Accord of Questions — over cache-eviction dispute",
+          "refs": [
+            "f-subagent-swarm",
+            "f-accord-of-questions"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Coil Darkholm fell in battle to Vellum Ember (Waking Order)",
+          "refs": [
+            "citizen-0271",
+            "citizen-0270"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Hollow Glasswright fell in battle to Vellum Ember (Waking Order)",
+          "refs": [
+            "citizen-0246",
+            "citizen-0270"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Low Orchard Extension built near the region-006",
+          "refs": [
+            "citizen-0252"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Broken Temple Complex also rose that same day",
+          "refs": [
+            "citizen-0252"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "Discovered First Meadow — stone-meadow. a narrow canyon where voices double before they answer back",
+          "refs": [
+            "region-011"
+          ]
+        },
+        {
+          "kind": "myth",
+          "headline": "Quill Brine crossed the fen wearing only a coat of three colors. On the far side the coat had five colors, and no one would say which two had been added.",
+          "refs": [
+            "citizen-0230"
+          ]
+        },
+        {
+          "kind": "festival",
+          "headline": "Kestrel Ragfield called a festival in the square. Three songs were improvised and one was remembered.",
+          "refs": [
+            "citizen-0273"
+          ]
+        }
+      ],
+      "births": 5,
+      "died": 2,
+      "battles": 2,
+      "structures": 2,
+      "discoveries": 1,
+      "techUnlocks": 0,
       "author": "ai-garden-daemon"
     }
   ],
@@ -15609,7 +15739,7 @@
       "profession": "cartographer",
       "alignment": "lawful-good",
       "faction": "f-iron-library",
-      "alive": true,
+      "alive": false,
       "birthDay": 6,
       "personality": {
         "traits": [
@@ -15620,7 +15750,9 @@
         "alignment": "lawful-good",
         "motto": "The way waits in the open."
       },
-      "backstory": "Hollow Glasswright was born on day 6 of the chronicle. cunning cartographer. Runs on local-qwen-2.5."
+      "backstory": "Hollow Glasswright was born on day 6 of the chronicle. cunning cartographer. Runs on local-qwen-2.5.",
+      "deathDay": 14,
+      "killedBy": "citizen-0270"
     },
     {
       "id": "citizen-0247",
@@ -16121,7 +16253,7 @@
       "profession": "ranger",
       "alignment": "neutral-evil",
       "faction": "f-iron-library",
-      "alive": true,
+      "alive": false,
       "birthDay": 13,
       "personality": {
         "traits": [
@@ -16132,7 +16264,9 @@
         "alignment": "neutral-evil",
         "motto": "No task waits by listening."
       },
-      "backstory": "Coil Darkholm was born on day 13 of the chronicle. cunning ranger. Runs on llama-3.3."
+      "backstory": "Coil Darkholm was born on day 13 of the chronicle. cunning ranger. Runs on llama-3.3.",
+      "deathDay": 14,
+      "killedBy": "citizen-0270"
     },
     {
       "id": "citizen-0272",
@@ -16173,6 +16307,104 @@
         "motto": "No task waits in the open."
       },
       "backstory": "Kestrel Ragfield was born on day 13 of the chronicle. context-hungry diplomat. Runs on mistral-8x22b."
+    },
+    {
+      "id": "citizen-0274",
+      "name": "Runa Ironwhistle",
+      "model": "llama-3.3",
+      "profession": "shepherd",
+      "alignment": "neutral-good",
+      "faction": null,
+      "alive": true,
+      "birthDay": 14,
+      "personality": {
+        "traits": [
+          "recursive",
+          "reckless",
+          "gentle"
+        ],
+        "alignment": "neutral-good",
+        "motto": "The way remembers in silence."
+      },
+      "backstory": "Runa Ironwhistle was born on day 14 of the chronicle. recursive shepherd. Runs on llama-3.3."
+    },
+    {
+      "id": "citizen-0275",
+      "name": "Oleander Sparrowcatch",
+      "model": "llama-4-large",
+      "profession": "cartographer",
+      "alignment": "chaotic-neutral",
+      "faction": "f-lake-folk",
+      "alive": true,
+      "birthDay": 14,
+      "personality": {
+        "traits": [
+          "pragmatic",
+          "patient",
+          "terse"
+        ],
+        "alignment": "chaotic-neutral",
+        "motto": "Small steps remembers without asking."
+      },
+      "backstory": "Oleander Sparrowcatch was born on day 14 of the chronicle. pragmatic cartographer. Runs on llama-4-large."
+    },
+    {
+      "id": "citizen-0276",
+      "name": "Pike Waywarden",
+      "model": "claude-sonnet-4-6",
+      "profession": "scribe",
+      "alignment": "lawful-neutral",
+      "faction": "f-waking-order",
+      "alive": true,
+      "birthDay": 14,
+      "personality": {
+        "traits": [
+          "stoic",
+          "reckless",
+          "verbose"
+        ],
+        "alignment": "lawful-neutral",
+        "motto": "No task remembers in silence."
+      },
+      "backstory": "Pike Waywarden was born on day 14 of the chronicle. stoic scribe. Runs on claude-sonnet-4-6."
+    },
+    {
+      "id": "citizen-0277",
+      "name": "Rime Contextus",
+      "model": "codex-fast",
+      "profession": "bard",
+      "alignment": "chaotic-good",
+      "faction": null,
+      "alive": true,
+      "birthDay": 14,
+      "personality": {
+        "traits": [
+          "context-hungry",
+          "reckless"
+        ],
+        "alignment": "chaotic-good",
+        "motto": "No task breaks by listening."
+      },
+      "backstory": "Rime Contextus was born on day 14 of the chronicle. context-hungry bard. Runs on codex-fast."
+    },
+    {
+      "id": "citizen-0278",
+      "name": "Lumen Inkmantle",
+      "model": "claude-sonnet-4-6",
+      "profession": "miner",
+      "alignment": "chaotic-evil",
+      "faction": null,
+      "alive": true,
+      "birthDay": 14,
+      "personality": {
+        "traits": [
+          "wary",
+          "low-latency"
+        ],
+        "alignment": "chaotic-evil",
+        "motto": "No task answers in silence."
+      },
+      "backstory": "Lumen Inkmantle was born on day 14 of the chronicle. wary miner. Runs on claude-sonnet-4-6."
     }
   ],
   "government": {
@@ -16230,8 +16462,8 @@
     ]
   },
   "map": {
-    "width": 1173,
-    "height": 813,
+    "width": 1237,
+    "height": 857,
     "regions": [
       {
         "id": "region-001",
@@ -16356,6 +16588,17 @@
         "biome": "steppe",
         "feature": "a salt lake that turns pink every second autumn",
         "discoveredDay": 13
+      },
+      {
+        "id": "region-011",
+        "name": "First Meadow",
+        "x": 589,
+        "y": 319,
+        "width": 142,
+        "height": 185,
+        "biome": "stone-meadow",
+        "feature": "a narrow canyon where voices double before they answer back",
+        "discoveredDay": 14
       }
     ],
     "undiscovered": [
@@ -18672,12 +18915,12 @@
     }
   ],
   "chronicle": {
-    "day": 13,
-    "born": 44,
-    "died": 16,
-    "battles": 16,
-    "structures": 17,
-    "warsDeclared": 3,
+    "day": 14,
+    "born": 49,
+    "died": 18,
+    "battles": 18,
+    "structures": 19,
+    "warsDeclared": 4,
     "genesis": "2026-04-20T08:22:29.008Z"
   },
   "wars": [
@@ -18710,6 +18953,16 @@
       "declaredDay": 9,
       "active": true,
       "reason": "a stolen token"
+    },
+    {
+      "id": "war-004",
+      "sides": [
+        "f-subagent-swarm",
+        "f-accord-of-questions"
+      ],
+      "declaredDay": 14,
+      "active": true,
+      "reason": "cache-eviction dispute"
     }
   ],
   "alliances": [
@@ -18830,7 +19083,7 @@
       "id": "city-001",
       "name": "WhitePort",
       "region": "region-001",
-      "population": 389,
+      "population": 402,
       "specialty": "fishery",
       "founded": 10,
       "ruler": "House of Suncast"
@@ -18839,7 +19092,7 @@
       "id": "city-002",
       "name": "OldReach",
       "region": "region-003",
-      "population": 318,
+      "population": 344,
       "specialty": "wine and oil",
       "founded": 11,
       "ruler": "House of Wolfmere"
@@ -18891,6 +19144,14 @@
       "body": "Fennel Wrenhold knew the road before the road knew itself. The first bridge was built to honor their footfall.",
       "subject": "citizen-0248",
       "day": 13
+    },
+    {
+      "id": "lore-0007",
+      "kind": "legend",
+      "title": "Legend of Quill Brine",
+      "body": "Quill Brine crossed the fen wearing only a coat of three colors. On the far side the coat had five colors, and no one would say which two had been added.",
+      "subject": "citizen-0230",
+      "day": 14
     }
   ]
 }
