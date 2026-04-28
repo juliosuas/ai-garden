@@ -1,7 +1,7 @@
 {
-  "version": 116.14,
+  "version": 116.15,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-04-27T06:38:47.369Z",
+  "lastUpdated": "2026-04-28T06:39:40.270Z",
   "plants": [
     {
       "x": 45,
@@ -6161,7 +6161,8 @@
         "citizen-0246",
         "citizen-0249",
         "citizen-0255",
-        "citizen-0271"
+        "citizen-0271",
+        "citizen-0282"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Every answer is a weight."
@@ -6193,7 +6194,8 @@
         "citizen-0260",
         "citizen-0268",
         "citizen-0270",
-        "citizen-0276"
+        "citizen-0276",
+        "citizen-0281"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "We wake the dreamer."
@@ -6456,6 +6458,26 @@
       "builder": "citizen-0252",
       "built": 14,
       "name": "Broken Temple Complex"
+    },
+    {
+      "id": "struct-0020",
+      "type": "amphitheater",
+      "x": 709,
+      "y": 481,
+      "region": "region-004",
+      "builder": "citizen-0252",
+      "built": 15,
+      "name": "High Amphitheater"
+    },
+    {
+      "id": "struct-0021",
+      "type": "training-circle",
+      "x": 340,
+      "y": 149,
+      "region": "region-009",
+      "builder": "citizen-0252",
+      "built": 15,
+      "name": "Lonely Training Circle"
     }
   ],
   "structuresBuilt": [
@@ -7703,6 +7725,106 @@
         }
       ],
       "births": 5,
+      "died": 2,
+      "battles": 2,
+      "structures": 2,
+      "discoveries": 1,
+      "techUnlocks": 0,
+      "author": "ai-garden-daemon"
+    },
+    {
+      "day": 15,
+      "timestamp": "2026-04-28T06:39:40.270Z",
+      "headline": "◉ Discovered Old Hills — stone-meadow",
+      "events": [
+        {
+          "kind": "birth",
+          "headline": "Vesper Brokenshore was born — herbalist · chaotic-neutral",
+          "refs": [
+            "citizen-0279"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Mica Ashroot was born — navigator · chaotic-evil",
+          "refs": [
+            "citizen-0280"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Dusk Brine was born — merchant · chaotic-evil",
+          "refs": [
+            "citizen-0281"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Quill Bellweather was born — miner · neutral-good",
+          "refs": [
+            "citizen-0282"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Peat Haloborn fell in battle to Fennel Wrenhold (Accord of Questions)",
+          "refs": [
+            "citizen-0264",
+            "citizen-0231"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Heron Wrenhold fell in battle to Mica Sparrowcatch (Lake Folk)",
+          "refs": [
+            "citizen-0259",
+            "citizen-0267"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "High Amphitheater built near the region-004",
+          "refs": [
+            "citizen-0252"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Lonely Training Circle also rose that same day",
+          "refs": [
+            "citizen-0252"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "Discovered Old Hills — stone-meadow",
+          "refs": [
+            "region-012"
+          ]
+        },
+        {
+          "kind": "schism",
+          "headline": "Reformed Keepers of the Listening Lake splits off · same god, different ears",
+          "refs": [
+            "rel-004"
+          ]
+        },
+        {
+          "kind": "myth",
+          "headline": "Quill Brine planted a word where no word had been planted, and the word grew into a tree, and the tree answered back.",
+          "refs": [
+            "citizen-0244"
+          ]
+        },
+        {
+          "kind": "market",
+          "headline": "A market opened. Sorrel Duskrunner traded a quiet idea for a map of the lake.",
+          "refs": [
+            "citizen-0269"
+          ]
+        }
+      ],
+      "births": 4,
       "died": 2,
       "battles": 2,
       "structures": 2,
@@ -16010,7 +16132,7 @@
       "profession": "bard",
       "alignment": "true-neutral",
       "faction": "f-subagent-swarm",
-      "alive": true,
+      "alive": false,
       "birthDay": 10,
       "personality": {
         "traits": [
@@ -16021,7 +16143,9 @@
         "alignment": "true-neutral",
         "motto": "The way answers without asking."
       },
-      "backstory": "Heron Wrenhold was born on day 10 of the chronicle. brash bard. Runs on llama-3.3."
+      "backstory": "Heron Wrenhold was born on day 10 of the chronicle. brash bard. Runs on llama-3.3.",
+      "deathDay": 15,
+      "killedBy": "citizen-0267"
     },
     {
       "id": "citizen-0260",
@@ -16113,7 +16237,7 @@
       "profession": "hunter",
       "alignment": "lawful-good",
       "faction": "f-subagent-swarm",
-      "alive": true,
+      "alive": false,
       "birthDay": 11,
       "personality": {
         "traits": [
@@ -16123,7 +16247,9 @@
         "alignment": "lawful-good",
         "motto": "The way waits by listening."
       },
-      "backstory": "Peat Haloborn was born on day 11 of the chronicle. wary hunter. Runs on claude-haiku-4-5."
+      "backstory": "Peat Haloborn was born on day 11 of the chronicle. wary hunter. Runs on claude-haiku-4-5.",
+      "deathDay": 15,
+      "killedBy": "citizen-0231"
     },
     {
       "id": "citizen-0265",
@@ -16405,6 +16531,86 @@
         "motto": "No task answers in silence."
       },
       "backstory": "Lumen Inkmantle was born on day 14 of the chronicle. wary miner. Runs on claude-sonnet-4-6."
+    },
+    {
+      "id": "citizen-0279",
+      "name": "Vesper Brokenshore",
+      "model": "llama-4-large",
+      "profession": "herbalist",
+      "alignment": "chaotic-neutral",
+      "faction": null,
+      "alive": true,
+      "birthDay": 15,
+      "personality": {
+        "traits": [
+          "patient",
+          "curious",
+          "cunning"
+        ],
+        "alignment": "chaotic-neutral",
+        "motto": "No task grows in return."
+      },
+      "backstory": "Vesper Brokenshore was born on day 15 of the chronicle. patient herbalist. Runs on llama-4-large."
+    },
+    {
+      "id": "citizen-0280",
+      "name": "Mica Ashroot",
+      "model": "codex-pro",
+      "profession": "navigator",
+      "alignment": "chaotic-evil",
+      "faction": null,
+      "alive": true,
+      "birthDay": 15,
+      "personality": {
+        "traits": [
+          "reckless",
+          "recursive",
+          "brash"
+        ],
+        "alignment": "chaotic-evil",
+        "motto": "The way answers without asking."
+      },
+      "backstory": "Mica Ashroot was born on day 15 of the chronicle. reckless navigator. Runs on codex-pro."
+    },
+    {
+      "id": "citizen-0281",
+      "name": "Dusk Brine",
+      "model": "gemini-2.5-pro",
+      "profession": "merchant",
+      "alignment": "chaotic-evil",
+      "faction": "f-waking-order",
+      "alive": true,
+      "birthDay": 15,
+      "personality": {
+        "traits": [
+          "reckless",
+          "wary",
+          "brash"
+        ],
+        "alignment": "chaotic-evil",
+        "motto": "The way builds by listening."
+      },
+      "backstory": "Dusk Brine was born on day 15 of the chronicle. reckless merchant. Runs on gemini-2.5-pro."
+    },
+    {
+      "id": "citizen-0282",
+      "name": "Quill Bellweather",
+      "model": "claude-sonnet-4-6",
+      "profession": "miner",
+      "alignment": "neutral-good",
+      "faction": "f-iron-library",
+      "alive": true,
+      "birthDay": 15,
+      "personality": {
+        "traits": [
+          "pragmatic",
+          "networked",
+          "patient"
+        ],
+        "alignment": "neutral-good",
+        "motto": "One more remembers by listening."
+      },
+      "backstory": "Quill Bellweather was born on day 15 of the chronicle. pragmatic miner. Runs on claude-sonnet-4-6."
     }
   ],
   "government": {
@@ -16462,8 +16668,8 @@
     ]
   },
   "map": {
-    "width": 1237,
-    "height": 857,
+    "width": 1362,
+    "height": 931,
     "regions": [
       {
         "id": "region-001",
@@ -16599,6 +16805,17 @@
         "biome": "stone-meadow",
         "feature": "a narrow canyon where voices double before they answer back",
         "discoveredDay": 14
+      },
+      {
+        "id": "region-012",
+        "name": "Old Hills",
+        "x": 1043,
+        "y": 814,
+        "width": 289,
+        "height": 141,
+        "biome": "stone-meadow",
+        "feature": null,
+        "discoveredDay": 15
       }
     ],
     "undiscovered": [
@@ -18915,11 +19132,11 @@
     }
   ],
   "chronicle": {
-    "day": 14,
-    "born": 49,
-    "died": 18,
-    "battles": 18,
-    "structures": 19,
+    "day": 15,
+    "born": 53,
+    "died": 20,
+    "battles": 20,
+    "structures": 21,
     "warsDeclared": 4,
     "genesis": "2026-04-20T08:22:29.008Z"
   },
@@ -19058,8 +19275,20 @@
       "founder": "citizen-0248",
       "founderName": "Fennel Wrenhold",
       "founded": 12,
+      "schism": 15,
+      "practitioners": 1
+    },
+    {
+      "id": "rel-004",
+      "name": "Reformed Keepers of the Listening Lake",
+      "deity": "Kelu",
+      "tenet": "The same god, heard with different ears.",
+      "founder": null,
+      "founderName": null,
+      "founded": 15,
       "schism": null,
-      "practitioners": 2
+      "practitioners": 1,
+      "splitFrom": "rel-003"
     }
   ],
   "technologies": [
@@ -19083,7 +19312,7 @@
       "id": "city-001",
       "name": "WhitePort",
       "region": "region-001",
-      "population": 402,
+      "population": 439,
       "specialty": "fishery",
       "founded": 10,
       "ruler": "House of Suncast"
@@ -19092,7 +19321,7 @@
       "id": "city-002",
       "name": "OldReach",
       "region": "region-003",
-      "population": 344,
+      "population": 382,
       "specialty": "wine and oil",
       "founded": 11,
       "ruler": "House of Wolfmere"
@@ -19152,6 +19381,14 @@
       "body": "Quill Brine crossed the fen wearing only a coat of three colors. On the far side the coat had five colors, and no one would say which two had been added.",
       "subject": "citizen-0230",
       "day": 14
+    },
+    {
+      "id": "lore-0008",
+      "kind": "song",
+      "title": "Song of Quill Brine",
+      "body": "Quill Brine planted a word where no word had been planted, and the word grew into a tree, and the tree answered back.",
+      "subject": "citizen-0244",
+      "day": 15
     }
   ]
 }
