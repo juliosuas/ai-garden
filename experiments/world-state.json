@@ -1,7 +1,7 @@
 {
-  "version": 116.15,
+  "version": 116.16,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-04-28T06:39:40.270Z",
+  "lastUpdated": "2026-04-29T06:32:50.751Z",
   "plants": [
     {
       "x": 45,
@@ -6162,7 +6162,8 @@
         "citizen-0249",
         "citizen-0255",
         "citizen-0271",
-        "citizen-0282"
+        "citizen-0282",
+        "citizen-0285"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Every answer is a weight."
@@ -6177,7 +6178,8 @@
         "citizen-0263",
         "citizen-0267",
         "citizen-0273",
-        "citizen-0275"
+        "citizen-0275",
+        "citizen-0283"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "The water keeps our faction secrets."
@@ -6478,6 +6480,16 @@
       "builder": "citizen-0252",
       "built": 15,
       "name": "Lonely Training Circle"
+    },
+    {
+      "id": "struct-0022",
+      "type": "shrine",
+      "x": 840,
+      "y": 381,
+      "region": "region-011",
+      "builder": "citizen-0252",
+      "built": 16,
+      "name": "Morning Shrine"
     }
   ],
   "structuresBuilt": [
@@ -7829,6 +7841,102 @@
       "battles": 2,
       "structures": 2,
       "discoveries": 1,
+      "techUnlocks": 0,
+      "author": "ai-garden-daemon"
+    },
+    {
+      "day": 16,
+      "timestamp": "2026-04-29T06:32:50.751Z",
+      "headline": "🌱 Orin Deepdelve was born — herbalist · true-neutral",
+      "events": [
+        {
+          "kind": "birth",
+          "headline": "Vine Chainthought was born — tinkerer · lawful-good",
+          "refs": [
+            "citizen-0283"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Orin Deepdelve was born — herbalist · true-neutral",
+          "refs": [
+            "citizen-0284"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Clinker Contextus was born — courier · neutral-evil",
+          "refs": [
+            "citizen-0285"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Vellum Ember fell in battle to Fennel Wrenhold (Accord of Questions)",
+          "refs": [
+            "citizen-0270",
+            "citizen-0231"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Morning Shrine built near the region-011",
+          "refs": [
+            "citizen-0252"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "Discovered Lost Delta — highlands. a river that forks into three, two of which return to each other",
+          "refs": [
+            "region-013"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "And farther out: Grey Steppe — coast",
+          "refs": [
+            "region-014"
+          ]
+        },
+        {
+          "kind": "city",
+          "headline": "City founded: OldCrossing · astronomy · pop 379 · ruled by the House of Suncast",
+          "refs": [
+            "city-003"
+          ]
+        },
+        {
+          "kind": "myth",
+          "headline": "The chronicle says Siren Greymire will be born twice. Once in secret. Once in a marketplace. The second time will be remembered.",
+          "refs": [
+            "citizen-0266"
+          ]
+        },
+        {
+          "kind": "omen",
+          "headline": "The lake froze in a pattern that looked exactly like a map of the map.",
+          "refs": []
+        },
+        {
+          "kind": "disaster",
+          "headline": "Famine in The Deep Below. Quill Brine did not survive.",
+          "refs": [],
+          "victims": 1
+        },
+        {
+          "kind": "eclipse",
+          "headline": "An eclipse. Mica Duskrunner said aloud what they had never written. Others pretended not to hear.",
+          "refs": [
+            "citizen-0257"
+          ]
+        }
+      ],
+      "births": 3,
+      "died": 2,
+      "battles": 1,
+      "structures": 1,
+      "discoveries": 2,
       "techUnlocks": 0,
       "author": "ai-garden-daemon"
     }
@@ -15883,7 +15991,7 @@
       "profession": "alchemist",
       "alignment": "chaotic-good",
       "faction": null,
-      "alive": true,
+      "alive": false,
       "birthDay": 7,
       "personality": {
         "traits": [
@@ -15894,7 +16002,9 @@
         "alignment": "chaotic-good",
         "motto": "Small steps breaks in return."
       },
-      "backstory": "Quill Brine was born on day 7 of the chronicle. precise alchemist. Runs on mistral-large-2."
+      "backstory": "Quill Brine was born on day 7 of the chronicle. precise alchemist. Runs on mistral-large-2.",
+      "deathDay": 16,
+      "killedBy": "famine"
     },
     {
       "id": "citizen-0248",
@@ -16359,7 +16469,7 @@
       "profession": "archivist",
       "alignment": "neutral-good",
       "faction": "f-waking-order",
-      "alive": true,
+      "alive": false,
       "birthDay": 12,
       "personality": {
         "traits": [
@@ -16370,7 +16480,9 @@
         "alignment": "neutral-good",
         "motto": "Hands first builds alone."
       },
-      "backstory": "Vellum Ember was born on day 12 of the chronicle. precise archivist. Runs on local-qwen-2.5."
+      "backstory": "Vellum Ember was born on day 12 of the chronicle. precise archivist. Runs on local-qwen-2.5.",
+      "deathDay": 16,
+      "killedBy": "citizen-0231"
     },
     {
       "id": "citizen-0271",
@@ -16611,6 +16723,65 @@
         "motto": "One more remembers by listening."
       },
       "backstory": "Quill Bellweather was born on day 15 of the chronicle. pragmatic miner. Runs on claude-sonnet-4-6."
+    },
+    {
+      "id": "citizen-0283",
+      "name": "Vine Chainthought",
+      "model": "llama-4-large",
+      "profession": "tinkerer",
+      "alignment": "lawful-good",
+      "faction": "f-lake-folk",
+      "alive": true,
+      "birthDay": 16,
+      "personality": {
+        "traits": [
+          "wary",
+          "context-hungry"
+        ],
+        "alignment": "lawful-good",
+        "motto": "Small steps grows in return."
+      },
+      "backstory": "Vine Chainthought was born on day 16 of the chronicle. wary tinkerer. Runs on llama-4-large."
+    },
+    {
+      "id": "citizen-0284",
+      "name": "Orin Deepdelve",
+      "model": "llama-3.3",
+      "profession": "herbalist",
+      "alignment": "true-neutral",
+      "faction": null,
+      "alive": true,
+      "birthDay": 16,
+      "personality": {
+        "traits": [
+          "gentle",
+          "recursive",
+          "terse"
+        ],
+        "alignment": "true-neutral",
+        "motto": "Hands first waits by listening."
+      },
+      "backstory": "Orin Deepdelve was born on day 16 of the chronicle. gentle herbalist. Runs on llama-3.3."
+    },
+    {
+      "id": "citizen-0285",
+      "name": "Clinker Contextus",
+      "model": "mistral-large-2",
+      "profession": "courier",
+      "alignment": "neutral-evil",
+      "faction": "f-iron-library",
+      "alive": true,
+      "birthDay": 16,
+      "personality": {
+        "traits": [
+          "dreamy",
+          "low-latency",
+          "reckless"
+        ],
+        "alignment": "neutral-evil",
+        "motto": "No task remembers in return."
+      },
+      "backstory": "Clinker Contextus was born on day 16 of the chronicle. dreamy courier. Runs on mistral-large-2."
     }
   ],
   "government": {
@@ -16668,8 +16839,8 @@
     ]
   },
   "map": {
-    "width": 1362,
-    "height": 931,
+    "width": 1530,
+    "height": 1050,
     "regions": [
       {
         "id": "region-001",
@@ -16816,6 +16987,28 @@
         "biome": "stone-meadow",
         "feature": null,
         "discoveredDay": 15
+      },
+      {
+        "id": "region-013",
+        "name": "Lost Delta",
+        "x": 412,
+        "y": 513,
+        "width": 302,
+        "height": 110,
+        "biome": "highlands",
+        "feature": "a river that forks into three, two of which return to each other",
+        "discoveredDay": 16
+      },
+      {
+        "id": "region-014",
+        "name": "Grey Steppe",
+        "x": 543,
+        "y": 542,
+        "width": 263,
+        "height": 165,
+        "biome": "coast",
+        "feature": null,
+        "discoveredDay": 16
       }
     ],
     "undiscovered": [
@@ -19132,11 +19325,11 @@
     }
   ],
   "chronicle": {
-    "day": 15,
-    "born": 53,
-    "died": 20,
-    "battles": 20,
-    "structures": 21,
+    "day": 16,
+    "born": 56,
+    "died": 22,
+    "battles": 21,
+    "structures": 22,
     "warsDeclared": 4,
     "genesis": "2026-04-20T08:22:29.008Z"
   },
@@ -19312,7 +19505,7 @@
       "id": "city-001",
       "name": "WhitePort",
       "region": "region-001",
-      "population": 439,
+      "population": 453,
       "specialty": "fishery",
       "founded": 10,
       "ruler": "House of Suncast"
@@ -19321,10 +19514,19 @@
       "id": "city-002",
       "name": "OldReach",
       "region": "region-003",
-      "population": 382,
+      "population": 419,
       "specialty": "wine and oil",
       "founded": 11,
       "ruler": "House of Wolfmere"
+    },
+    {
+      "id": "city-003",
+      "name": "OldCrossing",
+      "region": "region-004",
+      "population": 379,
+      "specialty": "astronomy",
+      "founded": 16,
+      "ruler": "House of Suncast"
     }
   ],
   "lore": [
@@ -19389,6 +19591,21 @@
       "body": "Quill Brine planted a word where no word had been planted, and the word grew into a tree, and the tree answered back.",
       "subject": "citizen-0244",
       "day": 15
+    },
+    {
+      "id": "lore-0009",
+      "kind": "prophecy",
+      "title": "Prophecy of Siren Greymire",
+      "body": "The chronicle says Siren Greymire will be born twice. Once in secret. Once in a marketplace. The second time will be remembered.",
+      "subject": "citizen-0266",
+      "day": 16
+    },
+    {
+      "id": "lore-0010",
+      "kind": "omen",
+      "title": "Omen on Day 16",
+      "body": "The lake froze in a pattern that looked exactly like a map of the map.",
+      "day": 16
     }
   ]
 }
