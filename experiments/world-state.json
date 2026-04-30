@@ -1,7 +1,7 @@
 {
-  "version": 116.16,
+  "version": 116.17,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-04-29T06:32:50.751Z",
+  "lastUpdated": "2026-04-30T06:37:19.230Z",
   "plants": [
     {
       "x": 45,
@@ -6130,7 +6130,8 @@
         "citizen-0245",
         "citizen-0248",
         "citizen-0261",
-        "citizen-0269"
+        "citizen-0269",
+        "citizen-0288"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Ask before answering."
@@ -6163,7 +6164,8 @@
         "citizen-0255",
         "citizen-0271",
         "citizen-0282",
-        "citizen-0285"
+        "citizen-0285",
+        "citizen-0286"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Every answer is a weight."
@@ -6179,7 +6181,8 @@
         "citizen-0267",
         "citizen-0273",
         "citizen-0275",
-        "citizen-0283"
+        "citizen-0283",
+        "citizen-0290"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "The water keeps our faction secrets."
@@ -6197,7 +6200,9 @@
         "citizen-0268",
         "citizen-0270",
         "citizen-0276",
-        "citizen-0281"
+        "citizen-0281",
+        "citizen-0287",
+        "citizen-0289"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "We wake the dreamer."
@@ -6490,6 +6495,26 @@
       "builder": "citizen-0252",
       "built": 16,
       "name": "Morning Shrine"
+    },
+    {
+      "id": "struct-0023",
+      "type": "kiln",
+      "x": 898,
+      "y": 558,
+      "region": "region-014",
+      "builder": "citizen-0252",
+      "built": 17,
+      "name": "Lonely Kiln"
+    },
+    {
+      "id": "struct-0024",
+      "type": "granary",
+      "x": 148,
+      "y": 280,
+      "region": "region-008",
+      "builder": "citizen-0252",
+      "built": 17,
+      "name": "Amber Granary"
     }
   ],
   "structuresBuilt": [
@@ -7937,6 +7962,97 @@
       "battles": 1,
       "structures": 1,
       "discoveries": 2,
+      "techUnlocks": 0,
+      "author": "ai-garden-daemon"
+    },
+    {
+      "day": 17,
+      "timestamp": "2026-04-30T06:37:19.230Z",
+      "headline": "🌱 Kestrel Mesa was born — tinkerer · chaotic-evil",
+      "events": [
+        {
+          "kind": "birth",
+          "headline": "Cress Haloborn was born — cartographer · true-neutral",
+          "refs": [
+            "citizen-0286"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Hollow Orbstone was born — warrior · chaotic-evil",
+          "refs": [
+            "citizen-0287"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Kestrel Mesa was born — tinkerer · chaotic-evil",
+          "refs": [
+            "citizen-0288"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Orin Brokenshore was born — tinkerer · chaotic-neutral",
+          "refs": [
+            "citizen-0289"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Moss Contextus was born — tinkerer · lawful-neutral",
+          "refs": [
+            "citizen-0290"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Lonely Kiln built near the region-014",
+          "refs": [
+            "citizen-0252"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Amber Granary also rose that same day",
+          "refs": [
+            "citizen-0252"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "Discovered Lost Coast — salt-flat. a meadow of grass that leans toward the nearest traveler",
+          "refs": [
+            "region-015"
+          ]
+        },
+        {
+          "kind": "city",
+          "headline": "City founded: NewMere · wine and oil · pop 383 · ruled by the House of Wolfmere",
+          "refs": [
+            "city-004"
+          ]
+        },
+        {
+          "kind": "myth",
+          "headline": "The chronicle says Vine Chainthought will be born twice. Once in secret. Once in a marketplace. The second time will be remembered.",
+          "refs": [
+            "citizen-0283"
+          ]
+        },
+        {
+          "kind": "migration",
+          "headline": "A small group led by Pike Waywarden walked east until the map ended, then walked one step further.",
+          "refs": [
+            "citizen-0276"
+          ]
+        }
+      ],
+      "births": 5,
+      "died": 0,
+      "battles": 0,
+      "structures": 2,
+      "discoveries": 1,
       "techUnlocks": 0,
       "author": "ai-garden-daemon"
     }
@@ -16782,6 +16898,106 @@
         "motto": "No task remembers in return."
       },
       "backstory": "Clinker Contextus was born on day 16 of the chronicle. dreamy courier. Runs on mistral-large-2."
+    },
+    {
+      "id": "citizen-0286",
+      "name": "Cress Haloborn",
+      "model": "llama-4-large",
+      "profession": "cartographer",
+      "alignment": "true-neutral",
+      "faction": "f-iron-library",
+      "alive": true,
+      "birthDay": 17,
+      "personality": {
+        "traits": [
+          "dreamy",
+          "recursive",
+          "terse"
+        ],
+        "alignment": "true-neutral",
+        "motto": "No task remembers alone."
+      },
+      "backstory": "Cress Haloborn was born on day 17 of the chronicle. dreamy cartographer. Runs on llama-4-large."
+    },
+    {
+      "id": "citizen-0287",
+      "name": "Hollow Orbstone",
+      "model": "codex-pro",
+      "profession": "warrior",
+      "alignment": "chaotic-evil",
+      "faction": "f-waking-order",
+      "alive": true,
+      "birthDay": 17,
+      "personality": {
+        "traits": [
+          "verbose",
+          "low-latency",
+          "precise"
+        ],
+        "alignment": "chaotic-evil",
+        "motto": "No task remembers alone."
+      },
+      "backstory": "Hollow Orbstone was born on day 17 of the chronicle. verbose warrior. Runs on codex-pro."
+    },
+    {
+      "id": "citizen-0288",
+      "name": "Kestrel Mesa",
+      "model": "llama-3.3",
+      "profession": "tinkerer",
+      "alignment": "chaotic-evil",
+      "faction": "f-accord-of-questions",
+      "alive": true,
+      "birthDay": 17,
+      "personality": {
+        "traits": [
+          "wary",
+          "precise",
+          "loyal"
+        ],
+        "alignment": "chaotic-evil",
+        "motto": "Hands first waits without asking."
+      },
+      "backstory": "Kestrel Mesa was born on day 17 of the chronicle. wary tinkerer. Runs on llama-3.3."
+    },
+    {
+      "id": "citizen-0289",
+      "name": "Orin Brokenshore",
+      "model": "claude-opus-4-6",
+      "profession": "tinkerer",
+      "alignment": "chaotic-neutral",
+      "faction": "f-waking-order",
+      "alive": true,
+      "birthDay": 17,
+      "personality": {
+        "traits": [
+          "cunning",
+          "terse",
+          "cold-cached"
+        ],
+        "alignment": "chaotic-neutral",
+        "motto": "Small steps waits in silence."
+      },
+      "backstory": "Orin Brokenshore was born on day 17 of the chronicle. cunning tinkerer. Runs on claude-opus-4-6."
+    },
+    {
+      "id": "citizen-0290",
+      "name": "Moss Contextus",
+      "model": "codex-pro",
+      "profession": "tinkerer",
+      "alignment": "lawful-neutral",
+      "faction": "f-lake-folk",
+      "alive": true,
+      "birthDay": 17,
+      "personality": {
+        "traits": [
+          "cunning",
+          "gentle",
+          "recursive"
+        ],
+        "alignment": "lawful-neutral",
+        "motto": "Hands first remembers in silence."
+      },
+      "backstory": "Moss Contextus was born on day 17 of the chronicle. cunning tinkerer. Runs on codex-pro."
     }
   ],
   "government": {
@@ -16839,8 +17055,8 @@
     ]
   },
   "map": {
-    "width": 1530,
-    "height": 1050,
+    "width": 1687,
+    "height": 1097,
     "regions": [
       {
         "id": "region-001",
@@ -17009,6 +17225,17 @@
         "biome": "coast",
         "feature": null,
         "discoveredDay": 16
+      },
+      {
+        "id": "region-015",
+        "name": "Lost Coast",
+        "x": 476,
+        "y": 465,
+        "width": 270,
+        "height": 109,
+        "biome": "salt-flat",
+        "feature": "a meadow of grass that leans toward the nearest traveler",
+        "discoveredDay": 17
       }
     ],
     "undiscovered": [
@@ -19325,11 +19552,11 @@
     }
   ],
   "chronicle": {
-    "day": 16,
-    "born": 56,
+    "day": 17,
+    "born": 61,
     "died": 22,
     "battles": 21,
-    "structures": 22,
+    "structures": 24,
     "warsDeclared": 4,
     "genesis": "2026-04-20T08:22:29.008Z"
   },
@@ -19505,7 +19732,7 @@
       "id": "city-001",
       "name": "WhitePort",
       "region": "region-001",
-      "population": 453,
+      "population": 484,
       "specialty": "fishery",
       "founded": 10,
       "ruler": "House of Suncast"
@@ -19514,7 +19741,7 @@
       "id": "city-002",
       "name": "OldReach",
       "region": "region-003",
-      "population": 419,
+      "population": 424,
       "specialty": "wine and oil",
       "founded": 11,
       "ruler": "House of Wolfmere"
@@ -19527,6 +19754,15 @@
       "specialty": "astronomy",
       "founded": 16,
       "ruler": "House of Suncast"
+    },
+    {
+      "id": "city-004",
+      "name": "NewMere",
+      "region": "region-006",
+      "population": 383,
+      "specialty": "wine and oil",
+      "founded": 17,
+      "ruler": "House of Wolfmere"
     }
   ],
   "lore": [
@@ -19606,6 +19842,14 @@
       "title": "Omen on Day 16",
       "body": "The lake froze in a pattern that looked exactly like a map of the map.",
       "day": 16
+    },
+    {
+      "id": "lore-0011",
+      "kind": "prophecy",
+      "title": "Prophecy of Vine Chainthought",
+      "body": "The chronicle says Vine Chainthought will be born twice. Once in secret. Once in a marketplace. The second time will be remembered.",
+      "subject": "citizen-0283",
+      "day": 17
     }
   ]
 }
