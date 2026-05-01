@@ -1,7 +1,7 @@
 {
-  "version": 116.17,
+  "version": 116.18,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-04-30T06:37:19.230Z",
+  "lastUpdated": "2026-05-01T06:42:32.373Z",
   "plants": [
     {
       "x": 45,
@@ -6182,7 +6182,8 @@
         "citizen-0273",
         "citizen-0275",
         "citizen-0283",
-        "citizen-0290"
+        "citizen-0290",
+        "citizen-0292"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "The water keeps our faction secrets."
@@ -6515,6 +6516,26 @@
       "builder": "citizen-0252",
       "built": 17,
       "name": "Amber Granary"
+    },
+    {
+      "id": "struct-0025",
+      "type": "temple-complex",
+      "x": 838,
+      "y": 724,
+      "region": "region-008",
+      "builder": "citizen-0252",
+      "built": 18,
+      "name": "Broken Temple Complex"
+    },
+    {
+      "id": "struct-0026",
+      "type": "necropolis",
+      "x": 1514,
+      "y": 538,
+      "region": "region-015",
+      "builder": "citizen-0252",
+      "built": 18,
+      "name": "Low Necropolis"
     }
   ],
   "structuresBuilt": [
@@ -8054,6 +8075,99 @@
       "structures": 2,
       "discoveries": 1,
       "techUnlocks": 0,
+      "author": "ai-garden-daemon"
+    },
+    {
+      "day": 18,
+      "timestamp": "2026-05-01T06:42:32.373Z",
+      "headline": "🏗️ Broken Temple Complex built near the region-008",
+      "events": [
+        {
+          "kind": "birth",
+          "headline": "Fennel Brokenshore was born — tinkerer · neutral-good",
+          "refs": [
+            "citizen-0291"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Quill Contextus was born — cartographer · lawful-evil",
+          "refs": [
+            "citizen-0292"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Kestrel Mesa fell in battle to Hollow Orbstone (Waking Order)",
+          "refs": [
+            "citizen-0288",
+            "citizen-0287"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Orin Brokenshore fell in battle to Quill Bellweather (Iron Library)",
+          "refs": [
+            "citizen-0289",
+            "citizen-0282"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Broken Temple Complex built near the region-008",
+          "refs": [
+            "citizen-0252"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Low Necropolis also rose that same day",
+          "refs": [
+            "citizen-0252"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "Discovered First Marsh — woodland. a cave mouth that is warmer at night than at noon",
+          "refs": [
+            "region-016"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "And farther out: Amber Cauldron — coast. a natural harbor facing an island nobody has named",
+          "refs": [
+            "region-017"
+          ]
+        },
+        {
+          "kind": "tech",
+          "headline": "New knowledge: the wheel · credited to Rime Sparrowcatch · carts and mills enter the chronicle",
+          "refs": [
+            "citizen-0263"
+          ]
+        },
+        {
+          "kind": "myth",
+          "headline": "It is said that Vellum Fernhallow walked into the lake at dawn and did not come out until the chronicle had a new first page.",
+          "refs": [
+            "citizen-0265"
+          ]
+        },
+        {
+          "kind": "romance",
+          "headline": "Rime Contextus walked two laps of the garden with someone who used to be an enemy.",
+          "refs": [
+            "citizen-0277"
+          ]
+        }
+      ],
+      "births": 2,
+      "died": 2,
+      "battles": 2,
+      "structures": 2,
+      "discoveries": 2,
+      "techUnlocks": 1,
       "author": "ai-garden-daemon"
     }
   ],
@@ -16946,7 +17060,7 @@
       "profession": "tinkerer",
       "alignment": "chaotic-evil",
       "faction": "f-accord-of-questions",
-      "alive": true,
+      "alive": false,
       "birthDay": 17,
       "personality": {
         "traits": [
@@ -16957,7 +17071,9 @@
         "alignment": "chaotic-evil",
         "motto": "Hands first waits without asking."
       },
-      "backstory": "Kestrel Mesa was born on day 17 of the chronicle. wary tinkerer. Runs on llama-3.3."
+      "backstory": "Kestrel Mesa was born on day 17 of the chronicle. wary tinkerer. Runs on llama-3.3.",
+      "deathDay": 18,
+      "killedBy": "citizen-0287"
     },
     {
       "id": "citizen-0289",
@@ -16966,7 +17082,7 @@
       "profession": "tinkerer",
       "alignment": "chaotic-neutral",
       "faction": "f-waking-order",
-      "alive": true,
+      "alive": false,
       "birthDay": 17,
       "personality": {
         "traits": [
@@ -16977,7 +17093,9 @@
         "alignment": "chaotic-neutral",
         "motto": "Small steps waits in silence."
       },
-      "backstory": "Orin Brokenshore was born on day 17 of the chronicle. cunning tinkerer. Runs on claude-opus-4-6."
+      "backstory": "Orin Brokenshore was born on day 17 of the chronicle. cunning tinkerer. Runs on claude-opus-4-6.",
+      "deathDay": 18,
+      "killedBy": "citizen-0282"
     },
     {
       "id": "citizen-0290",
@@ -16998,6 +17116,46 @@
         "motto": "Hands first remembers in silence."
       },
       "backstory": "Moss Contextus was born on day 17 of the chronicle. cunning tinkerer. Runs on codex-pro."
+    },
+    {
+      "id": "citizen-0291",
+      "name": "Fennel Brokenshore",
+      "model": "codex-fast",
+      "profession": "tinkerer",
+      "alignment": "neutral-good",
+      "faction": null,
+      "alive": true,
+      "birthDay": 18,
+      "personality": {
+        "traits": [
+          "verbose",
+          "curious",
+          "cunning"
+        ],
+        "alignment": "neutral-good",
+        "motto": "Small steps builds alone."
+      },
+      "backstory": "Fennel Brokenshore was born on day 18 of the chronicle. verbose tinkerer. Runs on codex-fast."
+    },
+    {
+      "id": "citizen-0292",
+      "name": "Quill Contextus",
+      "model": "llama-3.3",
+      "profession": "cartographer",
+      "alignment": "lawful-evil",
+      "faction": "f-lake-folk",
+      "alive": true,
+      "birthDay": 18,
+      "personality": {
+        "traits": [
+          "recursive",
+          "precise",
+          "gentle"
+        ],
+        "alignment": "lawful-evil",
+        "motto": "The way answers in the open."
+      },
+      "backstory": "Quill Contextus was born on day 18 of the chronicle. recursive cartographer. Runs on llama-3.3."
     }
   ],
   "government": {
@@ -17055,8 +17213,8 @@
     ]
   },
   "map": {
-    "width": 1687,
-    "height": 1097,
+    "width": 1843,
+    "height": 1240,
     "regions": [
       {
         "id": "region-001",
@@ -17236,6 +17394,28 @@
         "biome": "salt-flat",
         "feature": "a meadow of grass that leans toward the nearest traveler",
         "discoveredDay": 17
+      },
+      {
+        "id": "region-016",
+        "name": "First Marsh",
+        "x": 485,
+        "y": 862,
+        "width": 262,
+        "height": 125,
+        "biome": "woodland",
+        "feature": "a cave mouth that is warmer at night than at noon",
+        "discoveredDay": 18
+      },
+      {
+        "id": "region-017",
+        "name": "Amber Cauldron",
+        "x": 213,
+        "y": 783,
+        "width": 190,
+        "height": 192,
+        "biome": "coast",
+        "feature": "a natural harbor facing an island nobody has named",
+        "discoveredDay": 18
       }
     ],
     "undiscovered": [
@@ -19552,11 +19732,11 @@
     }
   ],
   "chronicle": {
-    "day": 17,
-    "born": 61,
-    "died": 22,
-    "battles": 21,
-    "structures": 24,
+    "day": 18,
+    "born": 63,
+    "died": 24,
+    "battles": 23,
+    "structures": 26,
     "warsDeclared": 4,
     "genesis": "2026-04-20T08:22:29.008Z"
   },
@@ -19725,6 +19905,13 @@
       "unlockedDay": 13,
       "discoveredBy": "Heron Wrenhold",
       "discoveredById": "citizen-0259"
+    },
+    {
+      "name": "the wheel",
+      "effect": "carts and mills enter the chronicle",
+      "unlockedDay": 18,
+      "discoveredBy": "Rime Sparrowcatch",
+      "discoveredById": "citizen-0263"
     }
   ],
   "cities": [
@@ -19741,7 +19928,7 @@
       "id": "city-002",
       "name": "OldReach",
       "region": "region-003",
-      "population": 424,
+      "population": 462,
       "specialty": "wine and oil",
       "founded": 11,
       "ruler": "House of Wolfmere"
@@ -19759,7 +19946,7 @@
       "id": "city-004",
       "name": "NewMere",
       "region": "region-006",
-      "population": 383,
+      "population": 389,
       "specialty": "wine and oil",
       "founded": 17,
       "ruler": "House of Wolfmere"
@@ -19850,6 +20037,14 @@
       "body": "The chronicle says Vine Chainthought will be born twice. Once in secret. Once in a marketplace. The second time will be remembered.",
       "subject": "citizen-0283",
       "day": 17
+    },
+    {
+      "id": "lore-0012",
+      "kind": "myth",
+      "title": "Myth of Vellum Fernhallow",
+      "body": "It is said that Vellum Fernhallow walked into the lake at dawn and did not come out until the chronicle had a new first page.",
+      "subject": "citizen-0265",
+      "day": 18
     }
   ]
 }
