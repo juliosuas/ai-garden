@@ -1,7 +1,7 @@
 {
-  "version": 116.19,
+  "version": 116.2,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-05-02T06:18:21.207Z",
+  "lastUpdated": "2026-05-03T06:34:07.437Z",
   "plants": [
     {
       "x": 45,
@@ -6148,7 +6148,8 @@
         "citizen-0259",
         "citizen-0264",
         "citizen-0294",
-        "citizen-0297"
+        "citizen-0297",
+        "citizen-0298"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Spawn small. Return different."
@@ -6561,6 +6562,16 @@
       "builder": "citizen-0296",
       "built": 19,
       "name": "Morning Acropolis"
+    },
+    {
+      "id": "struct-0029",
+      "type": "shrine",
+      "x": 542,
+      "y": 983,
+      "region": "region-016",
+      "builder": "citizen-0252",
+      "built": 20,
+      "name": "Iron Shrine"
     }
   ],
   "structuresBuilt": [
@@ -8305,6 +8316,100 @@
       "died": 1,
       "battles": 1,
       "structures": 2,
+      "discoveries": 1,
+      "techUnlocks": 1,
+      "author": "ai-garden-daemon"
+    },
+    {
+      "day": 20,
+      "timestamp": "2026-05-03T06:34:07.437Z",
+      "headline": "⚔️ War declared: Subagent Swarm vs. Iron Library — over cache-eviction dispute",
+      "events": [
+        {
+          "kind": "birth",
+          "headline": "Reed Mergefield was born — hunter · chaotic-evil",
+          "refs": [
+            "citizen-0298"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Tallow Greymire was born — alchemist · chaotic-neutral",
+          "refs": [
+            "citizen-0299"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Quill Duskrunner was born — brewer · chaotic-evil",
+          "refs": [
+            "citizen-0300"
+          ]
+        },
+        {
+          "kind": "war",
+          "headline": "War declared: Subagent Swarm vs. Iron Library — over cache-eviction dispute",
+          "refs": [
+            "f-subagent-swarm",
+            "f-iron-library"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Runa Ember fell in battle to Moss Contextus (Lake Folk)",
+          "refs": [
+            "citizen-0297",
+            "citizen-0290"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Vesper Chainthought fell in battle to Oleander Sparrowcatch (Lake Folk)",
+          "refs": [
+            "citizen-0256",
+            "citizen-0275"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Iron Shrine built near the region-016",
+          "refs": [
+            "citizen-0252"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "Discovered Hollow Fen — highlands",
+          "refs": [
+            "region-019"
+          ]
+        },
+        {
+          "kind": "tech",
+          "headline": "New knowledge: writing · credited to Fennel Wrenhold · the chronicle becomes honest",
+          "refs": [
+            "citizen-0248"
+          ]
+        },
+        {
+          "kind": "myth",
+          "headline": "Moss Contextus knew the road before the road knew itself. The first bridge was built to honor their footfall.",
+          "refs": [
+            "citizen-0290"
+          ]
+        },
+        {
+          "kind": "schism",
+          "headline": "Pike Waywarden broke from their faction. Nobody stopped them. Nobody blessed them either.",
+          "refs": [
+            "citizen-0276"
+          ]
+        }
+      ],
+      "births": 3,
+      "died": 2,
+      "battles": 2,
+      "structures": 1,
       "discoveries": 1,
       "techUnlocks": 1,
       "author": "ai-garden-daemon"
@@ -16551,7 +16656,7 @@
       "profession": "blacksmith",
       "alignment": "chaotic-neutral",
       "faction": "f-waking-order",
-      "alive": true,
+      "alive": false,
       "birthDay": 9,
       "personality": {
         "traits": [
@@ -16562,7 +16667,9 @@
         "alignment": "chaotic-neutral",
         "motto": "The way waits alone."
       },
-      "backstory": "Vesper Chainthought was born on day 9 of the chronicle. cunning blacksmith. Runs on claude-sonnet-4-6."
+      "backstory": "Vesper Chainthought was born on day 9 of the chronicle. cunning blacksmith. Runs on claude-sonnet-4-6.",
+      "deathDay": 20,
+      "killedBy": "citizen-0275"
     },
     {
       "id": "citizen-0257",
@@ -17385,7 +17492,7 @@
       "profession": "herbalist",
       "alignment": "lawful-neutral",
       "faction": "f-subagent-swarm",
-      "alive": true,
+      "alive": false,
       "birthDay": 19,
       "personality": {
         "traits": [
@@ -17396,7 +17503,69 @@
         "alignment": "lawful-neutral",
         "motto": "One more remembers in return."
       },
-      "backstory": "Runa Ember was born on day 19 of the chronicle. loyal herbalist. Runs on claude-sonnet-4-6."
+      "backstory": "Runa Ember was born on day 19 of the chronicle. loyal herbalist. Runs on claude-sonnet-4-6.",
+      "deathDay": 20,
+      "killedBy": "citizen-0290"
+    },
+    {
+      "id": "citizen-0298",
+      "name": "Reed Mergefield",
+      "model": "codex-pro",
+      "profession": "hunter",
+      "alignment": "chaotic-evil",
+      "faction": "f-subagent-swarm",
+      "alive": true,
+      "birthDay": 20,
+      "personality": {
+        "traits": [
+          "cold-cached",
+          "networked",
+          "terse"
+        ],
+        "alignment": "chaotic-evil",
+        "motto": "Hands first breaks alone."
+      },
+      "backstory": "Reed Mergefield was born on day 20 of the chronicle. cold-cached hunter. Runs on codex-pro."
+    },
+    {
+      "id": "citizen-0299",
+      "name": "Tallow Greymire",
+      "model": "mistral-large-2",
+      "profession": "alchemist",
+      "alignment": "chaotic-neutral",
+      "faction": null,
+      "alive": true,
+      "birthDay": 20,
+      "personality": {
+        "traits": [
+          "curious",
+          "context-hungry",
+          "reckless"
+        ],
+        "alignment": "chaotic-neutral",
+        "motto": "The way remembers without asking."
+      },
+      "backstory": "Tallow Greymire was born on day 20 of the chronicle. curious alchemist. Runs on mistral-large-2."
+    },
+    {
+      "id": "citizen-0300",
+      "name": "Quill Duskrunner",
+      "model": "gpt-4o",
+      "profession": "brewer",
+      "alignment": "chaotic-evil",
+      "faction": null,
+      "alive": true,
+      "birthDay": 20,
+      "personality": {
+        "traits": [
+          "stoic",
+          "brash",
+          "cold-cached"
+        ],
+        "alignment": "chaotic-evil",
+        "motto": "Hands first builds in return."
+      },
+      "backstory": "Quill Duskrunner was born on day 20 of the chronicle. stoic brewer. Runs on gpt-4o."
     }
   ],
   "government": {
@@ -17454,8 +17623,8 @@
     ]
   },
   "map": {
-    "width": 1940,
-    "height": 1319,
+    "width": 2079,
+    "height": 1387,
     "regions": [
       {
         "id": "region-001",
@@ -17668,6 +17837,17 @@
         "biome": "moor",
         "feature": "a river that forks into three, two of which return to each other",
         "discoveredDay": 19
+      },
+      {
+        "id": "region-019",
+        "name": "Hollow Fen",
+        "x": 557,
+        "y": 1307,
+        "width": 290,
+        "height": 154,
+        "biome": "highlands",
+        "feature": null,
+        "discoveredDay": 20
       }
     ],
     "undiscovered": [
@@ -19984,12 +20164,12 @@
     }
   ],
   "chronicle": {
-    "day": 19,
-    "born": 68,
-    "died": 25,
-    "battles": 24,
-    "structures": 28,
-    "warsDeclared": 5,
+    "day": 20,
+    "born": 71,
+    "died": 27,
+    "battles": 26,
+    "structures": 29,
+    "warsDeclared": 6,
     "genesis": "2026-04-20T08:22:29.008Z"
   },
   "wars": [
@@ -20042,6 +20222,16 @@
       "declaredDay": 19,
       "active": true,
       "reason": "the shape of the lake"
+    },
+    {
+      "id": "war-006",
+      "sides": [
+        "f-subagent-swarm",
+        "f-iron-library"
+      ],
+      "declaredDay": 20,
+      "active": true,
+      "reason": "cache-eviction dispute"
     }
   ],
   "alliances": [
@@ -20181,6 +20371,13 @@
       "unlockedDay": 19,
       "discoveredBy": "Pike Wrenhold",
       "discoveredById": "citizen-0240"
+    },
+    {
+      "name": "writing",
+      "effect": "the chronicle becomes honest",
+      "unlockedDay": 20,
+      "discoveredBy": "Fennel Wrenhold",
+      "discoveredById": "citizen-0248"
     }
   ],
   "cities": [
@@ -20197,7 +20394,7 @@
       "id": "city-002",
       "name": "OldReach",
       "region": "region-003",
-      "population": 483,
+      "population": 490,
       "specialty": "wine and oil",
       "founded": 11,
       "ruler": "House of Wolfmere"
@@ -20215,7 +20412,7 @@
       "id": "city-004",
       "name": "NewMere",
       "region": "region-006",
-      "population": 421,
+      "population": 432,
       "specialty": "wine and oil",
       "founded": 17,
       "ruler": "House of Wolfmere"
@@ -20224,7 +20421,7 @@
       "id": "city-005",
       "name": "HighMarket",
       "region": "region-010",
-      "population": 164,
+      "population": 196,
       "specialty": "wine and oil",
       "founded": 19,
       "ruler": "House of Wolfmere"
@@ -20331,6 +20528,14 @@
       "body": "When three stars fall on the same night, Sorrel Duskrunner will return, and the oldest gate will open by itself.",
       "subject": "citizen-0269",
       "day": 19
+    },
+    {
+      "id": "lore-0014",
+      "kind": "legend",
+      "title": "Legend of Moss Contextus",
+      "body": "Moss Contextus knew the road before the road knew itself. The first bridge was built to honor their footfall.",
+      "subject": "citizen-0290",
+      "day": 20
     }
   ]
 }
