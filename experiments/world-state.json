@@ -1,7 +1,7 @@
 {
-  "version": 116.2,
+  "version": 116.21,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-05-03T06:34:07.437Z",
+  "lastUpdated": "2026-05-04T06:48:47.390Z",
   "plants": [
     {
       "x": 45,
@@ -6132,7 +6132,8 @@
         "citizen-0261",
         "citizen-0269",
         "citizen-0288",
-        "citizen-0295"
+        "citizen-0295",
+        "citizen-0301"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Ask before answering."
@@ -6149,7 +6150,8 @@
         "citizen-0264",
         "citizen-0294",
         "citizen-0297",
-        "citizen-0298"
+        "citizen-0298",
+        "citizen-0302"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Spawn small. Return different."
@@ -6572,6 +6574,16 @@
       "builder": "citizen-0252",
       "built": 20,
       "name": "Iron Shrine"
+    },
+    {
+      "id": "struct-0030",
+      "type": "hippodrome",
+      "x": 371,
+      "y": 605,
+      "region": "region-006",
+      "builder": "citizen-0296",
+      "built": 21,
+      "name": "Amber Hippodrome"
     }
   ],
   "structuresBuilt": [
@@ -8411,6 +8423,106 @@
       "battles": 2,
       "structures": 1,
       "discoveries": 1,
+      "techUnlocks": 1,
+      "author": "ai-garden-daemon"
+    },
+    {
+      "day": 21,
+      "timestamp": "2026-05-04T06:48:47.390Z",
+      "headline": "📖 The chronicle says Quill Brine will be born twice. Once in secret. Once in a marketplace. The second time will be remembered.",
+      "events": [
+        {
+          "kind": "birth",
+          "headline": "Dusk Fellmark was born — explorer · lawful-neutral",
+          "refs": [
+            "citizen-0301"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Aster Wrenhold was born — hunter · lawful-good",
+          "refs": [
+            "citizen-0302"
+          ]
+        },
+        {
+          "kind": "war",
+          "headline": "War declared: Subagent Swarm vs. Waking Order — over what the lighthouse saw",
+          "refs": [
+            "f-subagent-swarm",
+            "f-waking-order"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Pike Waywarden fell in battle to Fennel Wrenhold (Accord of Questions)",
+          "refs": [
+            "citizen-0276",
+            "citizen-0248"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Amber Hippodrome built near the region-006",
+          "refs": [
+            "citizen-0296"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "Discovered Hollow Cauldron — volcanic-field. a plain strewn with obsidian chips no one has ever seen being chipped",
+          "refs": [
+            "region-020"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "And farther out: Sung Gate — salt-flat",
+          "refs": [
+            "region-021"
+          ]
+        },
+        {
+          "kind": "schism",
+          "headline": "Reformed House of the Unclosed Door splits off · same god, different ears",
+          "refs": [
+            "rel-005"
+          ]
+        },
+        {
+          "kind": "tech",
+          "headline": "New knowledge: weaving · credited to Quill Mesa · robes, sails, and nets",
+          "refs": [
+            "citizen-0296"
+          ]
+        },
+        {
+          "kind": "city",
+          "headline": "City founded: NewFord · cartography · pop 217 · ruled by the House of Suncast",
+          "refs": [
+            "city-006"
+          ]
+        },
+        {
+          "kind": "myth",
+          "headline": "The chronicle says Quill Brine will be born twice. Once in secret. Once in a marketplace. The second time will be remembered.",
+          "refs": [
+            "citizen-0230"
+          ]
+        },
+        {
+          "kind": "eclipse",
+          "headline": "An eclipse. Fennel Wrenhold said aloud what they had never written. Others pretended not to hear.",
+          "refs": [
+            "citizen-0248"
+          ]
+        }
+      ],
+      "births": 2,
+      "died": 1,
+      "battles": 1,
+      "structures": 1,
+      "discoveries": 2,
       "techUnlocks": 1,
       "author": "ai-garden-daemon"
     }
@@ -17071,7 +17183,7 @@
       "profession": "scribe",
       "alignment": "lawful-neutral",
       "faction": "f-waking-order",
-      "alive": true,
+      "alive": false,
       "birthDay": 14,
       "personality": {
         "traits": [
@@ -17082,7 +17194,9 @@
         "alignment": "lawful-neutral",
         "motto": "No task remembers in silence."
       },
-      "backstory": "Pike Waywarden was born on day 14 of the chronicle. stoic scribe. Runs on claude-sonnet-4-6."
+      "backstory": "Pike Waywarden was born on day 14 of the chronicle. stoic scribe. Runs on claude-sonnet-4-6.",
+      "deathDay": 21,
+      "killedBy": "citizen-0248"
     },
     {
       "id": "citizen-0277",
@@ -17566,6 +17680,46 @@
         "motto": "Hands first builds in return."
       },
       "backstory": "Quill Duskrunner was born on day 20 of the chronicle. stoic brewer. Runs on gpt-4o."
+    },
+    {
+      "id": "citizen-0301",
+      "name": "Dusk Fellmark",
+      "model": "codex-pro",
+      "profession": "explorer",
+      "alignment": "lawful-neutral",
+      "faction": "f-accord-of-questions",
+      "alive": true,
+      "birthDay": 21,
+      "personality": {
+        "traits": [
+          "stoic",
+          "pragmatic",
+          "verbose"
+        ],
+        "alignment": "lawful-neutral",
+        "motto": "Small steps answers in silence."
+      },
+      "backstory": "Dusk Fellmark was born on day 21 of the chronicle. stoic explorer. Runs on codex-pro."
+    },
+    {
+      "id": "citizen-0302",
+      "name": "Aster Wrenhold",
+      "model": "codex-pro",
+      "profession": "hunter",
+      "alignment": "lawful-good",
+      "faction": "f-subagent-swarm",
+      "alive": true,
+      "birthDay": 21,
+      "personality": {
+        "traits": [
+          "recursive",
+          "reckless",
+          "gentle"
+        ],
+        "alignment": "lawful-good",
+        "motto": "Before dawn builds alone."
+      },
+      "backstory": "Aster Wrenhold was born on day 21 of the chronicle. recursive hunter. Runs on codex-pro."
     }
   ],
   "government": {
@@ -17623,8 +17777,8 @@
     ]
   },
   "map": {
-    "width": 2079,
-    "height": 1387,
+    "width": 2322,
+    "height": 1539,
     "regions": [
       {
         "id": "region-001",
@@ -17848,6 +18002,28 @@
         "biome": "highlands",
         "feature": null,
         "discoveredDay": 20
+      },
+      {
+        "id": "region-020",
+        "name": "Hollow Cauldron",
+        "x": 753,
+        "y": 624,
+        "width": 192,
+        "height": 135,
+        "biome": "volcanic-field",
+        "feature": "a plain strewn with obsidian chips no one has ever seen being chipped",
+        "discoveredDay": 21
+      },
+      {
+        "id": "region-021",
+        "name": "Sung Gate",
+        "x": 1649,
+        "y": 884,
+        "width": 203,
+        "height": 155,
+        "biome": "salt-flat",
+        "feature": null,
+        "discoveredDay": 21
       }
     ],
     "undiscovered": [
@@ -20164,12 +20340,12 @@
     }
   ],
   "chronicle": {
-    "day": 20,
-    "born": 71,
-    "died": 27,
-    "battles": 26,
-    "structures": 29,
-    "warsDeclared": 6,
+    "day": 21,
+    "born": 73,
+    "died": 28,
+    "battles": 27,
+    "structures": 30,
+    "warsDeclared": 7,
     "genesis": "2026-04-20T08:22:29.008Z"
   },
   "wars": [
@@ -20232,6 +20408,16 @@
       "declaredDay": 20,
       "active": true,
       "reason": "cache-eviction dispute"
+    },
+    {
+      "id": "war-007",
+      "sides": [
+        "f-subagent-swarm",
+        "f-waking-order"
+      ],
+      "declaredDay": 21,
+      "active": true,
+      "reason": "what the lighthouse saw"
     }
   ],
   "alliances": [
@@ -20305,8 +20491,8 @@
       "founder": "citizen-0231",
       "founderName": "Fennel Wrenhold",
       "founded": 10,
-      "schism": null,
-      "practitioners": 6
+      "schism": 21,
+      "practitioners": 3
     },
     {
       "id": "rel-002",
@@ -20341,6 +20527,18 @@
       "schism": null,
       "practitioners": 1,
       "splitFrom": "rel-003"
+    },
+    {
+      "id": "rel-005",
+      "name": "Reformed House of the Unclosed Door",
+      "deity": "Astera",
+      "tenet": "The same god, heard with different ears.",
+      "founder": null,
+      "founderName": null,
+      "founded": 21,
+      "schism": null,
+      "practitioners": 3,
+      "splitFrom": "rel-001"
     }
   ],
   "technologies": [
@@ -20378,6 +20576,13 @@
       "unlockedDay": 20,
       "discoveredBy": "Fennel Wrenhold",
       "discoveredById": "citizen-0248"
+    },
+    {
+      "name": "weaving",
+      "effect": "robes, sails, and nets",
+      "unlockedDay": 21,
+      "discoveredBy": "Quill Mesa",
+      "discoveredById": "citizen-0296"
     }
   ],
   "cities": [
@@ -20385,7 +20590,7 @@
       "id": "city-001",
       "name": "WhitePort",
       "region": "region-001",
-      "population": 494,
+      "population": 534,
       "specialty": "fishery",
       "founded": 10,
       "ruler": "House of Suncast"
@@ -20394,7 +20599,7 @@
       "id": "city-002",
       "name": "OldReach",
       "region": "region-003",
-      "population": 490,
+      "population": 511,
       "specialty": "wine and oil",
       "founded": 11,
       "ruler": "House of Wolfmere"
@@ -20403,7 +20608,7 @@
       "id": "city-003",
       "name": "OldCrossing",
       "region": "region-004",
-      "population": 379,
+      "population": 394,
       "specialty": "astronomy",
       "founded": 16,
       "ruler": "House of Suncast"
@@ -20412,7 +20617,7 @@
       "id": "city-004",
       "name": "NewMere",
       "region": "region-006",
-      "population": 432,
+      "population": 422,
       "specialty": "wine and oil",
       "founded": 17,
       "ruler": "House of Wolfmere"
@@ -20421,10 +20626,19 @@
       "id": "city-005",
       "name": "HighMarket",
       "region": "region-010",
-      "population": 196,
+      "population": 191,
       "specialty": "wine and oil",
       "founded": 19,
       "ruler": "House of Wolfmere"
+    },
+    {
+      "id": "city-006",
+      "name": "NewFord",
+      "region": "region-021",
+      "population": 232,
+      "specialty": "cartography",
+      "founded": 21,
+      "ruler": "House of Suncast"
     }
   ],
   "lore": [
@@ -20536,6 +20750,14 @@
       "body": "Moss Contextus knew the road before the road knew itself. The first bridge was built to honor their footfall.",
       "subject": "citizen-0290",
       "day": 20
+    },
+    {
+      "id": "lore-0015",
+      "kind": "prophecy",
+      "title": "Prophecy of Quill Brine",
+      "body": "The chronicle says Quill Brine will be born twice. Once in secret. Once in a marketplace. The second time will be remembered.",
+      "subject": "citizen-0230",
+      "day": 21
     }
   ]
 }
