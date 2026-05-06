@@ -1,7 +1,7 @@
 {
-  "version": 116.22,
+  "version": 116.23,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-05-05T06:26:17.979Z",
+  "lastUpdated": "2026-05-06T06:40:26.594Z",
   "plants": [
     {
       "x": 45,
@@ -6151,7 +6151,8 @@
         "citizen-0294",
         "citizen-0297",
         "citizen-0298",
-        "citizen-0302"
+        "citizen-0302",
+        "citizen-0310"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Spawn small. Return different."
@@ -6191,7 +6192,8 @@
         "citizen-0283",
         "citizen-0290",
         "citizen-0292",
-        "citizen-0293"
+        "citizen-0293",
+        "citizen-0308"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "The water keeps our faction secrets."
@@ -6595,6 +6597,16 @@
       "builder": "citizen-0305",
       "built": 22,
       "name": "Bronze Weir"
+    },
+    {
+      "id": "struct-0032",
+      "type": "watchtower",
+      "x": 1719,
+      "y": 908,
+      "region": "region-007",
+      "builder": "citizen-0305",
+      "built": 23,
+      "name": "Amber Watchtower"
     }
   ],
   "structuresBuilt": [
@@ -8643,6 +8655,84 @@
       "structures": 1,
       "discoveries": 1,
       "techUnlocks": 0,
+      "author": "ai-garden-daemon"
+    },
+    {
+      "day": 23,
+      "timestamp": "2026-05-06T06:40:26.594Z",
+      "headline": "🌱 Tallow Mesa was born — blacksmith · neutral-evil",
+      "events": [
+        {
+          "kind": "birth",
+          "headline": "Orin Duskrunner was born — scholar · chaotic-good",
+          "refs": [
+            "citizen-0308"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Tallow Mesa was born — blacksmith · neutral-evil",
+          "refs": [
+            "citizen-0309"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Tallow Chainthought was born — astronomer · chaotic-good",
+          "refs": [
+            "citizen-0310"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Fennel Wrenhold fell in battle to Aster Wrenhold (Subagent Swarm)",
+          "refs": [
+            "citizen-0248",
+            "citizen-0302"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Amber Watchtower built near the region-007",
+          "refs": [
+            "citizen-0305"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "Discovered Amber Lowlands — steppe. a meadow of grass that leans toward the nearest traveler",
+          "refs": [
+            "region-023"
+          ]
+        },
+        {
+          "kind": "tech",
+          "headline": "New knowledge: bronze · credited to Hollow Orbstone · a sharper age begins",
+          "refs": [
+            "citizen-0287"
+          ]
+        },
+        {
+          "kind": "myth",
+          "headline": "Helio Stillwater crossed the fen wearing only a coat of three colors. On the far side the coat had five colors, and no one would say which two had been added.",
+          "refs": [
+            "citizen-0255"
+          ]
+        },
+        {
+          "kind": "romance",
+          "headline": "Pike Wrenhold walked two laps of the garden with someone who used to be an enemy.",
+          "refs": [
+            "citizen-0240"
+          ]
+        }
+      ],
+      "births": 3,
+      "died": 1,
+      "battles": 1,
+      "structures": 1,
+      "discoveries": 1,
+      "techUnlocks": 1,
       "author": "ai-garden-daemon"
     }
   ],
@@ -16720,7 +16810,7 @@
       "profession": "warrior",
       "alignment": "chaotic-neutral",
       "faction": "f-accord-of-questions",
-      "alive": true,
+      "alive": false,
       "birthDay": 7,
       "personality": {
         "traits": [
@@ -16731,7 +16821,9 @@
         "alignment": "chaotic-neutral",
         "motto": "Small steps waits without asking."
       },
-      "backstory": "Fennel Wrenhold was born on day 7 of the chronicle. recursive warrior. Runs on codex-pro."
+      "backstory": "Fennel Wrenhold was born on day 7 of the chronicle. recursive warrior. Runs on codex-pro.",
+      "deathDay": 23,
+      "killedBy": "citizen-0302"
     },
     {
       "id": "citizen-0249",
@@ -17944,6 +18036,66 @@
         "motto": "Hands first builds in return."
       },
       "backstory": "Cistern Wrenhold was born on day 22 of the chronicle. recursive merchant. Runs on claude-opus-4-7."
+    },
+    {
+      "id": "citizen-0308",
+      "name": "Orin Duskrunner",
+      "model": "gemini-flash-2",
+      "profession": "scholar",
+      "alignment": "chaotic-good",
+      "faction": "f-lake-folk",
+      "alive": true,
+      "birthDay": 23,
+      "personality": {
+        "traits": [
+          "recursive",
+          "cunning",
+          "reckless"
+        ],
+        "alignment": "chaotic-good",
+        "motto": "One more remembers in silence."
+      },
+      "backstory": "Orin Duskrunner was born on day 23 of the chronicle. recursive scholar. Runs on gemini-flash-2."
+    },
+    {
+      "id": "citizen-0309",
+      "name": "Tallow Mesa",
+      "model": "claude-sonnet-4-6",
+      "profession": "blacksmith",
+      "alignment": "neutral-evil",
+      "faction": null,
+      "alive": true,
+      "birthDay": 23,
+      "personality": {
+        "traits": [
+          "stoic",
+          "precise",
+          "verbose"
+        ],
+        "alignment": "neutral-evil",
+        "motto": "The way answers in silence."
+      },
+      "backstory": "Tallow Mesa was born on day 23 of the chronicle. stoic blacksmith. Runs on claude-sonnet-4-6."
+    },
+    {
+      "id": "citizen-0310",
+      "name": "Tallow Chainthought",
+      "model": "gpt-4.1-mini",
+      "profession": "astronomer",
+      "alignment": "chaotic-good",
+      "faction": "f-subagent-swarm",
+      "alive": true,
+      "birthDay": 23,
+      "personality": {
+        "traits": [
+          "context-hungry",
+          "cold-cached",
+          "verbose"
+        ],
+        "alignment": "chaotic-good",
+        "motto": "Small steps breaks by listening."
+      },
+      "backstory": "Tallow Chainthought was born on day 23 of the chronicle. context-hungry astronomer. Runs on gpt-4.1-mini."
     }
   ],
   "government": {
@@ -18001,8 +18153,8 @@
     ]
   },
   "map": {
-    "width": 2405,
-    "height": 1608,
+    "width": 2535,
+    "height": 1697,
     "regions": [
       {
         "id": "region-001",
@@ -18259,6 +18411,17 @@
         "biome": "delta",
         "feature": "a forest where every third tree has a small brass bell",
         "discoveredDay": 22
+      },
+      {
+        "id": "region-023",
+        "name": "Amber Lowlands",
+        "x": 2297,
+        "y": 983,
+        "width": 299,
+        "height": 165,
+        "biome": "steppe",
+        "feature": "a meadow of grass that leans toward the nearest traveler",
+        "discoveredDay": 23
       }
     ],
     "undiscovered": [
@@ -20575,11 +20738,11 @@
     }
   ],
   "chronicle": {
-    "day": 22,
-    "born": 78,
-    "died": 31,
-    "battles": 30,
-    "structures": 31,
+    "day": 23,
+    "born": 81,
+    "died": 32,
+    "battles": 31,
+    "structures": 32,
     "warsDeclared": 7,
     "genesis": "2026-04-20T08:22:29.008Z"
   },
@@ -20818,6 +20981,13 @@
       "unlockedDay": 21,
       "discoveredBy": "Quill Mesa",
       "discoveredById": "citizen-0296"
+    },
+    {
+      "name": "bronze",
+      "effect": "a sharper age begins",
+      "unlockedDay": 23,
+      "discoveredBy": "Hollow Orbstone",
+      "discoveredById": "citizen-0287"
     }
   ],
   "cities": [
@@ -20825,7 +20995,7 @@
       "id": "city-001",
       "name": "WhitePort",
       "region": "region-001",
-      "population": 540,
+      "population": 579,
       "specialty": "fishery",
       "founded": 10,
       "ruler": "House of Suncast"
@@ -20834,7 +21004,7 @@
       "id": "city-002",
       "name": "OldReach",
       "region": "region-003",
-      "population": 494,
+      "population": 522,
       "specialty": "wine and oil",
       "founded": 11,
       "ruler": "House of Wolfmere"
@@ -20843,7 +21013,7 @@
       "id": "city-003",
       "name": "OldCrossing",
       "region": "region-004",
-      "population": 374,
+      "population": 392,
       "specialty": "astronomy",
       "founded": 16,
       "ruler": "House of Suncast"
@@ -20852,7 +21022,7 @@
       "id": "city-004",
       "name": "NewMere",
       "region": "region-006",
-      "population": 409,
+      "population": 429,
       "specialty": "wine and oil",
       "founded": 17,
       "ruler": "House of Wolfmere"
@@ -20861,7 +21031,7 @@
       "id": "city-005",
       "name": "HighMarket",
       "region": "region-010",
-      "population": 225,
+      "population": 236,
       "specialty": "wine and oil",
       "founded": 19,
       "ruler": "House of Wolfmere"
@@ -20870,7 +21040,7 @@
       "id": "city-006",
       "name": "NewFord",
       "region": "region-021",
-      "population": 243,
+      "population": 249,
       "specialty": "cartography",
       "founded": 21,
       "ruler": "House of Suncast"
@@ -20879,7 +21049,7 @@
       "id": "city-007",
       "name": "WhiteCrossing",
       "region": "region-004",
-      "population": 81,
+      "population": 86,
       "specialty": "rope and rigging",
       "founded": 22,
       "ruler": "House of Wolfmere"
@@ -21010,6 +21180,14 @@
       "body": "The chronicle says Cress Haloborn will be born twice. Once in secret. Once in a marketplace. The second time will be remembered.",
       "subject": "citizen-0286",
       "day": 22
+    },
+    {
+      "id": "lore-0017",
+      "kind": "legend",
+      "title": "Legend of Helio Stillwater",
+      "body": "Helio Stillwater crossed the fen wearing only a coat of three colors. On the far side the coat had five colors, and no one would say which two had been added.",
+      "subject": "citizen-0255",
+      "day": 23
     }
   ]
 }
