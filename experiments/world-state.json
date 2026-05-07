@@ -1,7 +1,7 @@
 {
-  "version": 116.23,
+  "version": 116.24,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-05-06T06:40:26.594Z",
+  "lastUpdated": "2026-05-07T06:47:37.239Z",
   "plants": [
     {
       "x": 45,
@@ -6152,7 +6152,9 @@
         "citizen-0297",
         "citizen-0298",
         "citizen-0302",
-        "citizen-0310"
+        "citizen-0310",
+        "citizen-0311",
+        "citizen-0312"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Spawn small. Return different."
@@ -6607,6 +6609,16 @@
       "builder": "citizen-0305",
       "built": 23,
       "name": "Amber Watchtower"
+    },
+    {
+      "id": "struct-0033",
+      "type": "tidal-mill",
+      "x": 2133,
+      "y": 110,
+      "region": "region-011",
+      "builder": "citizen-0252",
+      "built": 24,
+      "name": "Lonely Tidal Mill"
     }
   ],
   "structuresBuilt": [
@@ -8732,6 +8744,84 @@
       "battles": 1,
       "structures": 1,
       "discoveries": 1,
+      "techUnlocks": 1,
+      "author": "ai-garden-daemon"
+    },
+    {
+      "day": 24,
+      "timestamp": "2026-05-07T06:47:37.239Z",
+      "headline": "◉ And farther out: Amber Lowlands — moor. a narrow canyon where voices double before they answer back",
+      "events": [
+        {
+          "kind": "birth",
+          "headline": "Oleander Inkmantle was born — healer · chaotic-neutral",
+          "refs": [
+            "citizen-0311"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Aster Bellweather was born — merchant · chaotic-good",
+          "refs": [
+            "citizen-0312"
+          ]
+        },
+        {
+          "kind": "alliance",
+          "headline": "Iron Library ↔ Subagent Swarm · pooled-cache",
+          "refs": [
+            "f-iron-library",
+            "f-subagent-swarm"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Lonely Tidal Mill built near the region-011",
+          "refs": [
+            "citizen-0252"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "Discovered Grey Steppe — scrub. a plain strewn with obsidian chips no one has ever seen being chipped",
+          "refs": [
+            "region-024"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "And farther out: Amber Lowlands — moor. a narrow canyon where voices double before they answer back",
+          "refs": [
+            "region-025"
+          ]
+        },
+        {
+          "kind": "tech",
+          "headline": "New knowledge: masonry · credited to Rook Ember · permanent structures are trusted to last",
+          "refs": [
+            "citizen-0304"
+          ]
+        },
+        {
+          "kind": "myth",
+          "headline": "\"Do not close a door Polyglot Orbstone has only half-opened.\" — first spoken by a mother to a child in a marketplace nobody remembers.",
+          "refs": [
+            "citizen-0252"
+          ]
+        },
+        {
+          "kind": "migration",
+          "headline": "A small group led by Polyglot Orbstone walked east until the map ended, then walked one step further.",
+          "refs": [
+            "citizen-0252"
+          ]
+        }
+      ],
+      "births": 2,
+      "died": 0,
+      "battles": 0,
+      "structures": 1,
+      "discoveries": 2,
       "techUnlocks": 1,
       "author": "ai-garden-daemon"
     }
@@ -18096,6 +18186,45 @@
         "motto": "Small steps breaks by listening."
       },
       "backstory": "Tallow Chainthought was born on day 23 of the chronicle. context-hungry astronomer. Runs on gpt-4.1-mini."
+    },
+    {
+      "id": "citizen-0311",
+      "name": "Oleander Inkmantle",
+      "model": "codex-pro",
+      "profession": "healer",
+      "alignment": "chaotic-neutral",
+      "faction": "f-subagent-swarm",
+      "alive": true,
+      "birthDay": 24,
+      "personality": {
+        "traits": [
+          "patient",
+          "loyal"
+        ],
+        "alignment": "chaotic-neutral",
+        "motto": "Hands first answers in the open."
+      },
+      "backstory": "Oleander Inkmantle was born on day 24 of the chronicle. patient healer. Runs on codex-pro."
+    },
+    {
+      "id": "citizen-0312",
+      "name": "Aster Bellweather",
+      "model": "local-qwen-2.5",
+      "profession": "merchant",
+      "alignment": "chaotic-good",
+      "faction": "f-subagent-swarm",
+      "alive": true,
+      "birthDay": 24,
+      "personality": {
+        "traits": [
+          "context-hungry",
+          "networked",
+          "precise"
+        ],
+        "alignment": "chaotic-good",
+        "motto": "The way answers in the open."
+      },
+      "backstory": "Aster Bellweather was born on day 24 of the chronicle. context-hungry merchant. Runs on local-qwen-2.5."
     }
   ],
   "government": {
@@ -18153,8 +18282,8 @@
     ]
   },
   "map": {
-    "width": 2535,
-    "height": 1697,
+    "width": 2831,
+    "height": 1853,
     "regions": [
       {
         "id": "region-001",
@@ -18422,6 +18551,28 @@
         "biome": "steppe",
         "feature": "a meadow of grass that leans toward the nearest traveler",
         "discoveredDay": 23
+      },
+      {
+        "id": "region-024",
+        "name": "Grey Steppe",
+        "x": 2237,
+        "y": 20,
+        "width": 293,
+        "height": 100,
+        "biome": "scrub",
+        "feature": "a plain strewn with obsidian chips no one has ever seen being chipped",
+        "discoveredDay": 24
+      },
+      {
+        "id": "region-025",
+        "name": "Amber Lowlands",
+        "x": 1372,
+        "y": 1349,
+        "width": 160,
+        "height": 202,
+        "biome": "moor",
+        "feature": "a narrow canyon where voices double before they answer back",
+        "discoveredDay": 24
       }
     ],
     "undiscovered": [
@@ -20738,11 +20889,11 @@
     }
   ],
   "chronicle": {
-    "day": 23,
-    "born": 81,
+    "day": 24,
+    "born": 83,
     "died": 32,
     "battles": 31,
-    "structures": 32,
+    "structures": 33,
     "warsDeclared": 7,
     "genesis": "2026-04-20T08:22:29.008Z"
   },
@@ -20848,6 +20999,16 @@
       "formedDay": 10,
       "active": true,
       "pact": "shared-tools"
+    },
+    {
+      "id": "alliance-004",
+      "sides": [
+        "f-iron-library",
+        "f-subagent-swarm"
+      ],
+      "formedDay": 24,
+      "active": true,
+      "pact": "pooled-cache"
     }
   ],
   "dynasties": [
@@ -20988,6 +21149,13 @@
       "unlockedDay": 23,
       "discoveredBy": "Hollow Orbstone",
       "discoveredById": "citizen-0287"
+    },
+    {
+      "name": "masonry",
+      "effect": "permanent structures are trusted to last",
+      "unlockedDay": 24,
+      "discoveredBy": "Rook Ember",
+      "discoveredById": "citizen-0304"
     }
   ],
   "cities": [
@@ -21022,7 +21190,7 @@
       "id": "city-004",
       "name": "NewMere",
       "region": "region-006",
-      "population": 429,
+      "population": 455,
       "specialty": "wine and oil",
       "founded": 17,
       "ruler": "House of Wolfmere"
@@ -21031,7 +21199,7 @@
       "id": "city-005",
       "name": "HighMarket",
       "region": "region-010",
-      "population": 236,
+      "population": 260,
       "specialty": "wine and oil",
       "founded": 19,
       "ruler": "House of Wolfmere"
@@ -21040,7 +21208,7 @@
       "id": "city-006",
       "name": "NewFord",
       "region": "region-021",
-      "population": 249,
+      "population": 256,
       "specialty": "cartography",
       "founded": 21,
       "ruler": "House of Suncast"
@@ -21188,6 +21356,14 @@
       "body": "Helio Stillwater crossed the fen wearing only a coat of three colors. On the far side the coat had five colors, and no one would say which two had been added.",
       "subject": "citizen-0255",
       "day": 23
+    },
+    {
+      "id": "lore-0018",
+      "kind": "proverb",
+      "title": "Proverb of Polyglot Orbstone",
+      "body": "\"Do not close a door Polyglot Orbstone has only half-opened.\" — first spoken by a mother to a child in a marketplace nobody remembers.",
+      "subject": "citizen-0252",
+      "day": 24
     }
   ]
 }
