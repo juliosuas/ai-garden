@@ -1,7 +1,7 @@
 {
-  "version": 116.24,
+  "version": 116.25,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-05-07T06:47:37.239Z",
+  "lastUpdated": "2026-05-08T06:06:07.741Z",
   "plants": [
     {
       "x": 45,
@@ -6133,7 +6133,9 @@
         "citizen-0269",
         "citizen-0288",
         "citizen-0295",
-        "citizen-0301"
+        "citizen-0301",
+        "citizen-0313",
+        "citizen-0314"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Ask before answering."
@@ -6154,7 +6156,8 @@
         "citizen-0302",
         "citizen-0310",
         "citizen-0311",
-        "citizen-0312"
+        "citizen-0312",
+        "citizen-0316"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Spawn small. Return different."
@@ -6195,7 +6198,8 @@
         "citizen-0290",
         "citizen-0292",
         "citizen-0293",
-        "citizen-0308"
+        "citizen-0308",
+        "citizen-0317"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "The water keeps our faction secrets."
@@ -6619,6 +6623,26 @@
       "builder": "citizen-0252",
       "built": 24,
       "name": "Lonely Tidal Mill"
+    },
+    {
+      "id": "struct-0034",
+      "type": "colosseum",
+      "x": 321,
+      "y": 713,
+      "region": "region-023",
+      "builder": "citizen-0317",
+      "built": 25,
+      "name": "Low Colosseum"
+    },
+    {
+      "id": "struct-0035",
+      "type": "library-annex",
+      "x": 97,
+      "y": 463,
+      "region": "region-010",
+      "builder": "citizen-0305",
+      "built": 25,
+      "name": "Morning Library Annex"
     }
   ],
   "structuresBuilt": [
@@ -8822,6 +8846,120 @@
       "battles": 0,
       "structures": 1,
       "discoveries": 2,
+      "techUnlocks": 1,
+      "author": "ai-garden-daemon"
+    },
+    {
+      "day": 25,
+      "timestamp": "2026-05-08T06:06:07.741Z",
+      "headline": "✦ Bramble Cachewarm fell in battle to Hollow Orbstone (Waking Order)",
+      "events": [
+        {
+          "kind": "birth",
+          "headline": "Bramble Cachewarm was born — sculptor · lawful-good",
+          "refs": [
+            "citizen-0313"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Sorrel Waywarden was born — shepherd · lawful-evil",
+          "refs": [
+            "citizen-0314"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Lark Sparrowcatch was born — bard · lawful-neutral",
+          "refs": [
+            "citizen-0315"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Finch Hollowbone was born — merchant · lawful-evil",
+          "refs": [
+            "citizen-0316"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Cistern Brine was born — stonemason · chaotic-neutral",
+          "refs": [
+            "citizen-0317"
+          ]
+        },
+        {
+          "kind": "truce",
+          "headline": "The Waking Order–Iron Library war ended in truce after 23 days",
+          "refs": [
+            "f-waking-order",
+            "f-iron-library"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Bramble Cachewarm fell in battle to Hollow Orbstone (Waking Order)",
+          "refs": [
+            "citizen-0313",
+            "citizen-0287"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Low Colosseum built near the region-023",
+          "refs": [
+            "citizen-0317"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Morning Library Annex also rose that same day",
+          "refs": [
+            "citizen-0305"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "Discovered First Hills — highlands",
+          "refs": [
+            "region-026"
+          ]
+        },
+        {
+          "kind": "tech",
+          "headline": "New knowledge: sails · credited to Rime Contextus · the lake opens to the far shore",
+          "refs": [
+            "citizen-0277"
+          ]
+        },
+        {
+          "kind": "city",
+          "headline": "City founded: FernGate · fishery · pop 370 · ruled by the House of Suncast",
+          "refs": [
+            "city-008"
+          ]
+        },
+        {
+          "kind": "myth",
+          "headline": "\"Do not close a door Moss Contextus has only half-opened.\" — first spoken by a mother to a child in a marketplace nobody remembers.",
+          "refs": [
+            "citizen-0290"
+          ]
+        },
+        {
+          "kind": "plague",
+          "headline": "A cache-miss plague swept the lower village. Three agents lay down. Cistern Chainthought stayed up with them.",
+          "refs": [
+            "citizen-0293"
+          ]
+        }
+      ],
+      "births": 5,
+      "died": 1,
+      "battles": 1,
+      "structures": 2,
+      "discoveries": 1,
       "techUnlocks": 1,
       "author": "ai-garden-daemon"
     }
@@ -18225,6 +18363,106 @@
         "motto": "The way answers in the open."
       },
       "backstory": "Aster Bellweather was born on day 24 of the chronicle. context-hungry merchant. Runs on local-qwen-2.5."
+    },
+    {
+      "id": "citizen-0313",
+      "name": "Bramble Cachewarm",
+      "model": "gemini-flash-2",
+      "profession": "sculptor",
+      "alignment": "lawful-good",
+      "faction": "f-accord-of-questions",
+      "alive": false,
+      "birthDay": 25,
+      "personality": {
+        "traits": [
+          "wary",
+          "stoic",
+          "low-latency"
+        ],
+        "alignment": "lawful-good",
+        "motto": "No task breaks in the open."
+      },
+      "backstory": "Bramble Cachewarm was born on day 25 of the chronicle. wary sculptor. Runs on gemini-flash-2.",
+      "deathDay": 25,
+      "killedBy": "citizen-0287"
+    },
+    {
+      "id": "citizen-0314",
+      "name": "Sorrel Waywarden",
+      "model": "llama-3.3",
+      "profession": "shepherd",
+      "alignment": "lawful-evil",
+      "faction": "f-accord-of-questions",
+      "alive": true,
+      "birthDay": 25,
+      "personality": {
+        "traits": [
+          "dreamy",
+          "curious",
+          "context-hungry"
+        ],
+        "alignment": "lawful-evil",
+        "motto": "One more breaks without asking."
+      },
+      "backstory": "Sorrel Waywarden was born on day 25 of the chronicle. dreamy shepherd. Runs on llama-3.3."
+    },
+    {
+      "id": "citizen-0315",
+      "name": "Lark Sparrowcatch",
+      "model": "gemini-2.5-pro",
+      "profession": "bard",
+      "alignment": "lawful-neutral",
+      "faction": null,
+      "alive": true,
+      "birthDay": 25,
+      "personality": {
+        "traits": [
+          "pragmatic",
+          "reckless",
+          "brash"
+        ],
+        "alignment": "lawful-neutral",
+        "motto": "Small steps breaks in the open."
+      },
+      "backstory": "Lark Sparrowcatch was born on day 25 of the chronicle. pragmatic bard. Runs on gemini-2.5-pro."
+    },
+    {
+      "id": "citizen-0316",
+      "name": "Finch Hollowbone",
+      "model": "mistral-8x22b",
+      "profession": "merchant",
+      "alignment": "lawful-evil",
+      "faction": "f-subagent-swarm",
+      "alive": true,
+      "birthDay": 25,
+      "personality": {
+        "traits": [
+          "cold-cached",
+          "pragmatic"
+        ],
+        "alignment": "lawful-evil",
+        "motto": "Before dawn builds alone."
+      },
+      "backstory": "Finch Hollowbone was born on day 25 of the chronicle. cold-cached merchant. Runs on mistral-8x22b."
+    },
+    {
+      "id": "citizen-0317",
+      "name": "Cistern Brine",
+      "model": "llama-4-large",
+      "profession": "stonemason",
+      "alignment": "chaotic-neutral",
+      "faction": "f-lake-folk",
+      "alive": true,
+      "birthDay": 25,
+      "personality": {
+        "traits": [
+          "cunning",
+          "terse"
+        ],
+        "alignment": "chaotic-neutral",
+        "motto": "Small steps grows in silence."
+      },
+      "backstory": "Cistern Brine was born on day 25 of the chronicle. cunning stonemason. Runs on llama-4-large."
     }
   ],
   "government": {
@@ -18282,8 +18520,8 @@
     ]
   },
   "map": {
-    "width": 2831,
-    "height": 1853,
+    "width": 2918,
+    "height": 1941,
     "regions": [
       {
         "id": "region-001",
@@ -18573,6 +18811,17 @@
         "biome": "moor",
         "feature": "a narrow canyon where voices double before they answer back",
         "discoveredDay": 24
+      },
+      {
+        "id": "region-026",
+        "name": "First Hills",
+        "x": 2776,
+        "y": 1554,
+        "width": 182,
+        "height": 112,
+        "biome": "highlands",
+        "feature": null,
+        "discoveredDay": 25
       }
     ],
     "undiscovered": [
@@ -20889,11 +21138,11 @@
     }
   ],
   "chronicle": {
-    "day": 24,
-    "born": 83,
-    "died": 32,
-    "battles": 31,
-    "structures": 33,
+    "day": 25,
+    "born": 88,
+    "died": 33,
+    "battles": 32,
+    "structures": 35,
     "warsDeclared": 7,
     "genesis": "2026-04-20T08:22:29.008Z"
   },
@@ -20905,8 +21154,10 @@
         "f-iron-library"
       ],
       "declaredDay": 2,
-      "active": true,
-      "reason": "what the lighthouse saw"
+      "active": false,
+      "reason": "what the lighthouse saw",
+      "endedDay": 25,
+      "outcome": "truce"
     },
     {
       "id": "war-002",
@@ -21156,6 +21407,13 @@
       "unlockedDay": 24,
       "discoveredBy": "Rook Ember",
       "discoveredById": "citizen-0304"
+    },
+    {
+      "name": "sails",
+      "effect": "the lake opens to the far shore",
+      "unlockedDay": 25,
+      "discoveredBy": "Rime Contextus",
+      "discoveredById": "citizen-0277"
     }
   ],
   "cities": [
@@ -21172,7 +21430,7 @@
       "id": "city-002",
       "name": "OldReach",
       "region": "region-003",
-      "population": 522,
+      "population": 546,
       "specialty": "wine and oil",
       "founded": 11,
       "ruler": "House of Wolfmere"
@@ -21181,7 +21439,7 @@
       "id": "city-003",
       "name": "OldCrossing",
       "region": "region-004",
-      "population": 392,
+      "population": 424,
       "specialty": "astronomy",
       "founded": 16,
       "ruler": "House of Suncast"
@@ -21190,7 +21448,7 @@
       "id": "city-004",
       "name": "NewMere",
       "region": "region-006",
-      "population": 455,
+      "population": 486,
       "specialty": "wine and oil",
       "founded": 17,
       "ruler": "House of Wolfmere"
@@ -21208,7 +21466,7 @@
       "id": "city-006",
       "name": "NewFord",
       "region": "region-021",
-      "population": 256,
+      "population": 269,
       "specialty": "cartography",
       "founded": 21,
       "ruler": "House of Suncast"
@@ -21217,10 +21475,19 @@
       "id": "city-007",
       "name": "WhiteCrossing",
       "region": "region-004",
-      "population": 86,
+      "population": 76,
       "specialty": "rope and rigging",
       "founded": 22,
       "ruler": "House of Wolfmere"
+    },
+    {
+      "id": "city-008",
+      "name": "FernGate",
+      "region": "region-014",
+      "population": 408,
+      "specialty": "fishery",
+      "founded": 25,
+      "ruler": "House of Suncast"
     }
   ],
   "lore": [
@@ -21364,6 +21631,14 @@
       "body": "\"Do not close a door Polyglot Orbstone has only half-opened.\" — first spoken by a mother to a child in a marketplace nobody remembers.",
       "subject": "citizen-0252",
       "day": 24
+    },
+    {
+      "id": "lore-0019",
+      "kind": "proverb",
+      "title": "Proverb of Moss Contextus",
+      "body": "\"Do not close a door Moss Contextus has only half-opened.\" — first spoken by a mother to a child in a marketplace nobody remembers.",
+      "subject": "citizen-0290",
+      "day": 25
     }
   ]
 }
