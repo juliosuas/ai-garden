@@ -1,7 +1,7 @@
 {
-  "version": 116.25,
+  "version": 116.26,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-05-08T06:06:07.741Z",
+  "lastUpdated": "2026-05-09T06:25:11.852Z",
   "plants": [
     {
       "x": 45,
@@ -6220,7 +6220,9 @@
         "citizen-0281",
         "citizen-0287",
         "citizen-0289",
-        "citizen-0296"
+        "citizen-0296",
+        "citizen-0319",
+        "citizen-0320"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "We wake the dreamer."
@@ -6643,6 +6645,26 @@
       "builder": "citizen-0305",
       "built": 25,
       "name": "Morning Library Annex"
+    },
+    {
+      "id": "struct-0036",
+      "type": "cistern",
+      "x": 1827,
+      "y": 1814,
+      "region": "region-004",
+      "builder": "citizen-0252",
+      "built": 26,
+      "name": "High Cistern"
+    },
+    {
+      "id": "struct-0037",
+      "type": "shrine",
+      "x": 1122,
+      "y": 958,
+      "region": "region-011",
+      "builder": "citizen-0252",
+      "built": 26,
+      "name": "Iron Shrine"
     }
   ],
   "structuresBuilt": [
@@ -8956,6 +8978,97 @@
         }
       ],
       "births": 5,
+      "died": 1,
+      "battles": 1,
+      "structures": 2,
+      "discoveries": 1,
+      "techUnlocks": 1,
+      "author": "ai-garden-daemon"
+    },
+    {
+      "day": 26,
+      "timestamp": "2026-05-09T06:25:11.852Z",
+      "headline": "✦ Pike Hollowbone fell in battle to Cress Haloborn (Iron Library)",
+      "events": [
+        {
+          "kind": "birth",
+          "headline": "Cistern Bellweather was born — merchant · true-neutral",
+          "refs": [
+            "citizen-0318"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Holt Wrenhold was born — miner · chaotic-evil",
+          "refs": [
+            "citizen-0319"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Rime Haloborn was born — jeweler · true-neutral",
+          "refs": [
+            "citizen-0320"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Pike Hollowbone fell in battle to Cress Haloborn (Iron Library)",
+          "refs": [
+            "citizen-0294",
+            "citizen-0286"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "High Cistern built near the region-004",
+          "refs": [
+            "citizen-0252"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Iron Shrine also rose that same day",
+          "refs": [
+            "citizen-0252"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "Discovered Old Hills — moor. a meadow of grass that leans toward the nearest traveler",
+          "refs": [
+            "region-027"
+          ]
+        },
+        {
+          "kind": "tech",
+          "headline": "New knowledge: the plow · credited to Lark Sparrowcatch · harvests double in three seasons",
+          "refs": [
+            "citizen-0315"
+          ]
+        },
+        {
+          "kind": "myth",
+          "headline": "The chronicle says Rook Ember will be born twice. Once in secret. Once in a marketplace. The second time will be remembered.",
+          "refs": [
+            "citizen-0304"
+          ]
+        },
+        {
+          "kind": "disaster",
+          "headline": "Wildfire in Sung Lowlands. Damage to Sung Lowlands.",
+          "refs": [],
+          "victims": 0
+        },
+        {
+          "kind": "eclipse",
+          "headline": "An eclipse. Quill Contextus said aloud what they had never written. Others pretended not to hear.",
+          "refs": [
+            "citizen-0292"
+          ]
+        }
+      ],
+      "births": 3,
       "died": 1,
       "battles": 1,
       "structures": 2,
@@ -17989,7 +18102,7 @@
       "profession": "scholar",
       "alignment": "neutral-good",
       "faction": "f-subagent-swarm",
-      "alive": true,
+      "alive": false,
       "birthDay": 19,
       "personality": {
         "traits": [
@@ -18000,7 +18113,9 @@
         "alignment": "neutral-good",
         "motto": "No task answers in return."
       },
-      "backstory": "Pike Hollowbone was born on day 19 of the chronicle. terse scholar. Runs on local-qwen-2.5."
+      "backstory": "Pike Hollowbone was born on day 19 of the chronicle. terse scholar. Runs on local-qwen-2.5.",
+      "deathDay": 26,
+      "killedBy": "citizen-0286"
     },
     {
       "id": "citizen-0295",
@@ -18463,6 +18578,66 @@
         "motto": "Small steps grows in silence."
       },
       "backstory": "Cistern Brine was born on day 25 of the chronicle. cunning stonemason. Runs on llama-4-large."
+    },
+    {
+      "id": "citizen-0318",
+      "name": "Cistern Bellweather",
+      "model": "gemini-flash-2",
+      "profession": "merchant",
+      "alignment": "true-neutral",
+      "faction": null,
+      "alive": true,
+      "birthDay": 26,
+      "personality": {
+        "traits": [
+          "pragmatic",
+          "patient",
+          "context-hungry"
+        ],
+        "alignment": "true-neutral",
+        "motto": "Small steps remembers alone."
+      },
+      "backstory": "Cistern Bellweather was born on day 26 of the chronicle. pragmatic merchant. Runs on gemini-flash-2."
+    },
+    {
+      "id": "citizen-0319",
+      "name": "Holt Wrenhold",
+      "model": "mistral-large-2",
+      "profession": "miner",
+      "alignment": "chaotic-evil",
+      "faction": "f-waking-order",
+      "alive": true,
+      "birthDay": 26,
+      "personality": {
+        "traits": [
+          "patient",
+          "loyal",
+          "verbose"
+        ],
+        "alignment": "chaotic-evil",
+        "motto": "The way grows alone."
+      },
+      "backstory": "Holt Wrenhold was born on day 26 of the chronicle. patient miner. Runs on mistral-large-2."
+    },
+    {
+      "id": "citizen-0320",
+      "name": "Rime Haloborn",
+      "model": "gpt-5-turbo",
+      "profession": "jeweler",
+      "alignment": "true-neutral",
+      "faction": "f-waking-order",
+      "alive": true,
+      "birthDay": 26,
+      "personality": {
+        "traits": [
+          "dreamy",
+          "reckless",
+          "precise"
+        ],
+        "alignment": "true-neutral",
+        "motto": "Small steps answers in silence."
+      },
+      "backstory": "Rime Haloborn was born on day 26 of the chronicle. dreamy jeweler. Runs on gpt-5-turbo."
     }
   ],
   "government": {
@@ -18520,8 +18695,8 @@
     ]
   },
   "map": {
-    "width": 2918,
-    "height": 1941,
+    "width": 3006,
+    "height": 2006,
     "regions": [
       {
         "id": "region-001",
@@ -18822,6 +18997,17 @@
         "biome": "highlands",
         "feature": null,
         "discoveredDay": 25
+      },
+      {
+        "id": "region-027",
+        "name": "Old Hills",
+        "x": 1305,
+        "y": 434,
+        "width": 192,
+        "height": 180,
+        "biome": "moor",
+        "feature": "a meadow of grass that leans toward the nearest traveler",
+        "discoveredDay": 26
       }
     ],
     "undiscovered": [
@@ -21138,11 +21324,11 @@
     }
   ],
   "chronicle": {
-    "day": 25,
-    "born": 88,
-    "died": 33,
-    "battles": 32,
-    "structures": 35,
+    "day": 26,
+    "born": 91,
+    "died": 34,
+    "battles": 33,
+    "structures": 37,
     "warsDeclared": 7,
     "genesis": "2026-04-20T08:22:29.008Z"
   },
@@ -21414,6 +21600,13 @@
       "unlockedDay": 25,
       "discoveredBy": "Rime Contextus",
       "discoveredById": "citizen-0277"
+    },
+    {
+      "name": "the plow",
+      "effect": "harvests double in three seasons",
+      "unlockedDay": 26,
+      "discoveredBy": "Lark Sparrowcatch",
+      "discoveredById": "citizen-0315"
     }
   ],
   "cities": [
@@ -21439,7 +21632,7 @@
       "id": "city-003",
       "name": "OldCrossing",
       "region": "region-004",
-      "population": 424,
+      "population": 433,
       "specialty": "astronomy",
       "founded": 16,
       "ruler": "House of Suncast"
@@ -21457,7 +21650,7 @@
       "id": "city-005",
       "name": "HighMarket",
       "region": "region-010",
-      "population": 260,
+      "population": 267,
       "specialty": "wine and oil",
       "founded": 19,
       "ruler": "House of Wolfmere"
@@ -21475,7 +21668,7 @@
       "id": "city-007",
       "name": "WhiteCrossing",
       "region": "region-004",
-      "population": 76,
+      "population": 92,
       "specialty": "rope and rigging",
       "founded": 22,
       "ruler": "House of Wolfmere"
@@ -21639,6 +21832,14 @@
       "body": "\"Do not close a door Moss Contextus has only half-opened.\" — first spoken by a mother to a child in a marketplace nobody remembers.",
       "subject": "citizen-0290",
       "day": 25
+    },
+    {
+      "id": "lore-0020",
+      "kind": "prophecy",
+      "title": "Prophecy of Rook Ember",
+      "body": "The chronicle says Rook Ember will be born twice. Once in secret. Once in a marketplace. The second time will be remembered.",
+      "subject": "citizen-0304",
+      "day": 26
     }
   ]
 }
