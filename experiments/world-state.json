@@ -1,7 +1,7 @@
 {
-  "version": 116.26,
+  "version": 116.27,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-05-09T06:25:11.852Z",
+  "lastUpdated": "2026-05-10T06:40:11.382Z",
   "plants": [
     {
       "x": 45,
@@ -6135,7 +6135,8 @@
         "citizen-0295",
         "citizen-0301",
         "citizen-0313",
-        "citizen-0314"
+        "citizen-0314",
+        "citizen-0322"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Ask before answering."
@@ -6199,7 +6200,8 @@
         "citizen-0292",
         "citizen-0293",
         "citizen-0308",
-        "citizen-0317"
+        "citizen-0317",
+        "citizen-0321"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "The water keeps our faction secrets."
@@ -6665,6 +6667,16 @@
       "builder": "citizen-0252",
       "built": 26,
       "name": "Iron Shrine"
+    },
+    {
+      "id": "struct-0038",
+      "type": "oracle-well",
+      "x": 1947,
+      "y": 419,
+      "region": "region-018",
+      "builder": "citizen-0296",
+      "built": 27,
+      "name": "Bronze Oracle Well"
     }
   ],
   "structuresBuilt": [
@@ -9074,6 +9086,85 @@
       "structures": 2,
       "discoveries": 1,
       "techUnlocks": 1,
+      "author": "ai-garden-daemon"
+    },
+    {
+      "day": 27,
+      "timestamp": "2026-05-10T06:40:11.382Z",
+      "headline": "🚶 A small group led by Orin Duskrunner walked east until the map ended, then walked one step further.",
+      "events": [
+        {
+          "kind": "birth",
+          "headline": "Reed Brine was born — navigator · chaotic-evil",
+          "refs": [
+            "citizen-0321"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Lumen Ashroot was born — alchemist · true-neutral",
+          "refs": [
+            "citizen-0322"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Oleander Inkmantle fell in battle to Hollow Orbstone (Waking Order)",
+          "refs": [
+            "citizen-0311",
+            "citizen-0287"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Hollow Orbstone fell in battle to Tallow Chainthought (Subagent Swarm)",
+          "refs": [
+            "citizen-0287",
+            "citizen-0310"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Bronze Oracle Well built near the region-018",
+          "refs": [
+            "citizen-0296"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "Discovered Last Shelf — tide. a salt lake that turns pink every second autumn",
+          "refs": [
+            "region-028"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "And farther out: Sung Ridge — orchard-belt",
+          "refs": [
+            "region-029"
+          ]
+        },
+        {
+          "kind": "myth",
+          "headline": "Vesper Brokenshore knew the road before the road knew itself. The first bridge was built to honor their footfall.",
+          "refs": [
+            "citizen-0279"
+          ]
+        },
+        {
+          "kind": "migration",
+          "headline": "A small group led by Orin Duskrunner walked east until the map ended, then walked one step further.",
+          "refs": [
+            "citizen-0308"
+          ]
+        }
+      ],
+      "births": 2,
+      "died": 2,
+      "battles": 2,
+      "structures": 1,
+      "discoveries": 2,
+      "techUnlocks": 0,
       "author": "ai-garden-daemon"
     }
   ],
@@ -17958,7 +18049,7 @@
       "profession": "warrior",
       "alignment": "chaotic-evil",
       "faction": "f-waking-order",
-      "alive": true,
+      "alive": false,
       "birthDay": 17,
       "personality": {
         "traits": [
@@ -17969,7 +18060,9 @@
         "alignment": "chaotic-evil",
         "motto": "No task remembers alone."
       },
-      "backstory": "Hollow Orbstone was born on day 17 of the chronicle. verbose warrior. Runs on codex-pro."
+      "backstory": "Hollow Orbstone was born on day 17 of the chronicle. verbose warrior. Runs on codex-pro.",
+      "deathDay": 27,
+      "killedBy": "citizen-0310"
     },
     {
       "id": "citizen-0288",
@@ -18447,7 +18540,7 @@
       "profession": "healer",
       "alignment": "chaotic-neutral",
       "faction": "f-subagent-swarm",
-      "alive": true,
+      "alive": false,
       "birthDay": 24,
       "personality": {
         "traits": [
@@ -18457,7 +18550,9 @@
         "alignment": "chaotic-neutral",
         "motto": "Hands first answers in the open."
       },
-      "backstory": "Oleander Inkmantle was born on day 24 of the chronicle. patient healer. Runs on codex-pro."
+      "backstory": "Oleander Inkmantle was born on day 24 of the chronicle. patient healer. Runs on codex-pro.",
+      "deathDay": 27,
+      "killedBy": "citizen-0287"
     },
     {
       "id": "citizen-0312",
@@ -18638,6 +18733,46 @@
         "motto": "Small steps answers in silence."
       },
       "backstory": "Rime Haloborn was born on day 26 of the chronicle. dreamy jeweler. Runs on gpt-5-turbo."
+    },
+    {
+      "id": "citizen-0321",
+      "name": "Reed Brine",
+      "model": "gemini-flash-2",
+      "profession": "navigator",
+      "alignment": "chaotic-evil",
+      "faction": "f-lake-folk",
+      "alive": true,
+      "birthDay": 27,
+      "personality": {
+        "traits": [
+          "curious",
+          "context-hungry",
+          "networked"
+        ],
+        "alignment": "chaotic-evil",
+        "motto": "Before dawn waits without asking."
+      },
+      "backstory": "Reed Brine was born on day 27 of the chronicle. curious navigator. Runs on gemini-flash-2."
+    },
+    {
+      "id": "citizen-0322",
+      "name": "Lumen Ashroot",
+      "model": "gpt-4.1-mini",
+      "profession": "alchemist",
+      "alignment": "true-neutral",
+      "faction": "f-accord-of-questions",
+      "alive": true,
+      "birthDay": 27,
+      "personality": {
+        "traits": [
+          "patient",
+          "cunning",
+          "precise"
+        ],
+        "alignment": "true-neutral",
+        "motto": "Small steps grows by listening."
+      },
+      "backstory": "Lumen Ashroot was born on day 27 of the chronicle. patient alchemist. Runs on gpt-4.1-mini."
     }
   ],
   "government": {
@@ -18695,8 +18830,8 @@
     ]
   },
   "map": {
-    "width": 3006,
-    "height": 2006,
+    "width": 3248,
+    "height": 2125,
     "regions": [
       {
         "id": "region-001",
@@ -19008,6 +19143,28 @@
         "biome": "moor",
         "feature": "a meadow of grass that leans toward the nearest traveler",
         "discoveredDay": 26
+      },
+      {
+        "id": "region-028",
+        "name": "Last Shelf",
+        "x": 194,
+        "y": 152,
+        "width": 188,
+        "height": 111,
+        "biome": "tide",
+        "feature": "a salt lake that turns pink every second autumn",
+        "discoveredDay": 27
+      },
+      {
+        "id": "region-029",
+        "name": "Sung Ridge",
+        "x": 650,
+        "y": 1856,
+        "width": 249,
+        "height": 149,
+        "biome": "orchard-belt",
+        "feature": null,
+        "discoveredDay": 27
       }
     ],
     "undiscovered": [
@@ -21324,11 +21481,11 @@
     }
   ],
   "chronicle": {
-    "day": 26,
-    "born": 91,
-    "died": 34,
-    "battles": 33,
-    "structures": 37,
+    "day": 27,
+    "born": 93,
+    "died": 36,
+    "battles": 35,
+    "structures": 38,
     "warsDeclared": 7,
     "genesis": "2026-04-20T08:22:29.008Z"
   },
@@ -21623,7 +21780,7 @@
       "id": "city-002",
       "name": "OldReach",
       "region": "region-003",
-      "population": 546,
+      "population": 552,
       "specialty": "wine and oil",
       "founded": 11,
       "ruler": "House of Wolfmere"
@@ -21632,7 +21789,7 @@
       "id": "city-003",
       "name": "OldCrossing",
       "region": "region-004",
-      "population": 433,
+      "population": 427,
       "specialty": "astronomy",
       "founded": 16,
       "ruler": "House of Suncast"
@@ -21641,7 +21798,7 @@
       "id": "city-004",
       "name": "NewMere",
       "region": "region-006",
-      "population": 486,
+      "population": 511,
       "specialty": "wine and oil",
       "founded": 17,
       "ruler": "House of Wolfmere"
@@ -21650,7 +21807,7 @@
       "id": "city-005",
       "name": "HighMarket",
       "region": "region-010",
-      "population": 267,
+      "population": 256,
       "specialty": "wine and oil",
       "founded": 19,
       "ruler": "House of Wolfmere"
@@ -21659,7 +21816,7 @@
       "id": "city-006",
       "name": "NewFord",
       "region": "region-021",
-      "population": 269,
+      "population": 280,
       "specialty": "cartography",
       "founded": 21,
       "ruler": "House of Suncast"
@@ -21677,7 +21834,7 @@
       "id": "city-008",
       "name": "FernGate",
       "region": "region-014",
-      "population": 408,
+      "population": 425,
       "specialty": "fishery",
       "founded": 25,
       "ruler": "House of Suncast"
@@ -21840,6 +21997,14 @@
       "body": "The chronicle says Rook Ember will be born twice. Once in secret. Once in a marketplace. The second time will be remembered.",
       "subject": "citizen-0304",
       "day": 26
+    },
+    {
+      "id": "lore-0021",
+      "kind": "legend",
+      "title": "Legend of Vesper Brokenshore",
+      "body": "Vesper Brokenshore knew the road before the road knew itself. The first bridge was built to honor their footfall.",
+      "subject": "citizen-0279",
+      "day": 27
     }
   ]
 }
