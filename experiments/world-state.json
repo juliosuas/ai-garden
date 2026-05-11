@@ -1,7 +1,7 @@
 {
-  "version": 116.27,
+  "version": 116.28,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-05-10T06:40:11.382Z",
+  "lastUpdated": "2026-05-11T07:52:04.768Z",
   "plants": [
     {
       "x": 45,
@@ -6136,7 +6136,9 @@
         "citizen-0301",
         "citizen-0313",
         "citizen-0314",
-        "citizen-0322"
+        "citizen-0322",
+        "citizen-0324",
+        "citizen-0326"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Ask before answering."
@@ -6158,7 +6160,8 @@
         "citizen-0310",
         "citizen-0311",
         "citizen-0312",
-        "citizen-0316"
+        "citizen-0316",
+        "citizen-0327"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Spawn small. Return different."
@@ -6179,7 +6182,8 @@
         "citizen-0282",
         "citizen-0285",
         "citizen-0286",
-        "citizen-0306"
+        "citizen-0306",
+        "citizen-0323"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Every answer is a weight."
@@ -6224,7 +6228,8 @@
         "citizen-0289",
         "citizen-0296",
         "citizen-0319",
-        "citizen-0320"
+        "citizen-0320",
+        "citizen-0325"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "We wake the dreamer."
@@ -6677,6 +6682,16 @@
       "builder": "citizen-0296",
       "built": 27,
       "name": "Bronze Oracle Well"
+    },
+    {
+      "id": "struct-0039",
+      "type": "weir",
+      "x": 94,
+      "y": 382,
+      "region": "region-027",
+      "builder": "citizen-0296",
+      "built": 28,
+      "name": "Amber Weir"
     }
   ],
   "structuresBuilt": [
@@ -9165,6 +9180,113 @@
       "structures": 1,
       "discoveries": 2,
       "techUnlocks": 0,
+      "author": "ai-garden-daemon"
+    },
+    {
+      "day": 28,
+      "timestamp": "2026-05-11T07:52:04.768Z",
+      "headline": "🌱 Locksley Ember was born — stonemason · chaotic-good",
+      "events": [
+        {
+          "kind": "birth",
+          "headline": "Locksley Ember was born — stonemason · chaotic-good",
+          "refs": [
+            "citizen-0323"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Sorrel Stillwater was born — hunter · chaotic-evil",
+          "refs": [
+            "citizen-0324"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Margin Fellmark was born — scholar · neutral-good",
+          "refs": [
+            "citizen-0325"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Jasper Pinehollow was born — blacksmith · true-neutral",
+          "refs": [
+            "citizen-0326"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Cinder Mesa was born — priestess · true-neutral",
+          "refs": [
+            "citizen-0327"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Locksley Ember fell in battle to Finch Hollowbone (Subagent Swarm)",
+          "refs": [
+            "citizen-0323",
+            "citizen-0316"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Aster Wrenhold fell in battle to Cress Haloborn (Iron Library)",
+          "refs": [
+            "citizen-0302",
+            "citizen-0286"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Amber Weir built near the region-027",
+          "refs": [
+            "citizen-0296"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "Discovered Old Steppe — delta. a stand of standing stones aligned to a star no longer visible",
+          "refs": [
+            "region-030"
+          ]
+        },
+        {
+          "kind": "tech",
+          "headline": "New knowledge: currency · credited to Rime Contextus · markets trade things they will never touch",
+          "refs": [
+            "citizen-0277"
+          ]
+        },
+        {
+          "kind": "city",
+          "headline": "City founded: AmberGate · ink and paper · pop 328 · ruled by the House of Suncast",
+          "refs": [
+            "city-009"
+          ]
+        },
+        {
+          "kind": "myth",
+          "headline": "Mica Sparrowcatch knew the road before the road knew itself. The first bridge was built to honor their footfall.",
+          "refs": [
+            "citizen-0267"
+          ]
+        },
+        {
+          "kind": "prophecy",
+          "headline": "Dusk Fellmark spoke a sentence no one planned to say. The chronicle will watch it.",
+          "refs": [
+            "citizen-0301"
+          ]
+        }
+      ],
+      "births": 5,
+      "died": 2,
+      "battles": 2,
+      "structures": 1,
+      "discoveries": 1,
+      "techUnlocks": 1,
       "author": "ai-garden-daemon"
     }
   ],
@@ -18361,7 +18483,7 @@
       "profession": "hunter",
       "alignment": "lawful-good",
       "faction": "f-subagent-swarm",
-      "alive": true,
+      "alive": false,
       "birthDay": 21,
       "personality": {
         "traits": [
@@ -18372,7 +18494,9 @@
         "alignment": "lawful-good",
         "motto": "Before dawn builds alone."
       },
-      "backstory": "Aster Wrenhold was born on day 21 of the chronicle. recursive hunter. Runs on codex-pro."
+      "backstory": "Aster Wrenhold was born on day 21 of the chronicle. recursive hunter. Runs on codex-pro.",
+      "deathDay": 28,
+      "killedBy": "citizen-0286"
     },
     {
       "id": "citizen-0303",
@@ -18773,6 +18897,107 @@
         "motto": "Small steps grows by listening."
       },
       "backstory": "Lumen Ashroot was born on day 27 of the chronicle. patient alchemist. Runs on gpt-4.1-mini."
+    },
+    {
+      "id": "citizen-0323",
+      "name": "Locksley Ember",
+      "model": "gemini-2.5-pro",
+      "profession": "stonemason",
+      "alignment": "chaotic-good",
+      "faction": "f-iron-library",
+      "alive": false,
+      "birthDay": 28,
+      "personality": {
+        "traits": [
+          "terse",
+          "networked",
+          "recursive"
+        ],
+        "alignment": "chaotic-good",
+        "motto": "Hands first remembers without asking."
+      },
+      "backstory": "Locksley Ember was born on day 28 of the chronicle. terse stonemason. Runs on gemini-2.5-pro.",
+      "deathDay": 28,
+      "killedBy": "citizen-0316"
+    },
+    {
+      "id": "citizen-0324",
+      "name": "Sorrel Stillwater",
+      "model": "claude-opus-4-7",
+      "profession": "hunter",
+      "alignment": "chaotic-evil",
+      "faction": "f-accord-of-questions",
+      "alive": true,
+      "birthDay": 28,
+      "personality": {
+        "traits": [
+          "networked",
+          "dreamy",
+          "low-latency"
+        ],
+        "alignment": "chaotic-evil",
+        "motto": "No task remembers in return."
+      },
+      "backstory": "Sorrel Stillwater was born on day 28 of the chronicle. networked hunter. Runs on claude-opus-4-7."
+    },
+    {
+      "id": "citizen-0325",
+      "name": "Margin Fellmark",
+      "model": "codex-pro",
+      "profession": "scholar",
+      "alignment": "neutral-good",
+      "faction": "f-waking-order",
+      "alive": true,
+      "birthDay": 28,
+      "personality": {
+        "traits": [
+          "low-latency",
+          "gentle",
+          "pragmatic"
+        ],
+        "alignment": "neutral-good",
+        "motto": "Small steps answers in silence."
+      },
+      "backstory": "Margin Fellmark was born on day 28 of the chronicle. low-latency scholar. Runs on codex-pro."
+    },
+    {
+      "id": "citizen-0326",
+      "name": "Jasper Pinehollow",
+      "model": "llama-3.3",
+      "profession": "blacksmith",
+      "alignment": "true-neutral",
+      "faction": "f-accord-of-questions",
+      "alive": true,
+      "birthDay": 28,
+      "personality": {
+        "traits": [
+          "wary",
+          "context-hungry",
+          "brash"
+        ],
+        "alignment": "true-neutral",
+        "motto": "No task builds in return."
+      },
+      "backstory": "Jasper Pinehollow was born on day 28 of the chronicle. wary blacksmith. Runs on llama-3.3."
+    },
+    {
+      "id": "citizen-0327",
+      "name": "Cinder Mesa",
+      "model": "hybrid-ensemble",
+      "profession": "priestess",
+      "alignment": "true-neutral",
+      "faction": "f-subagent-swarm",
+      "alive": true,
+      "birthDay": 28,
+      "personality": {
+        "traits": [
+          "pragmatic",
+          "verbose"
+        ],
+        "alignment": "true-neutral",
+        "motto": "No task waits without asking."
+      },
+      "backstory": "Cinder Mesa was born on day 28 of the chronicle. pragmatic priestess. Runs on hybrid-ensemble."
     }
   ],
   "government": {
@@ -18830,8 +19055,8 @@
     ]
   },
   "map": {
-    "width": 3248,
-    "height": 2125,
+    "width": 3381,
+    "height": 2179,
     "regions": [
       {
         "id": "region-001",
@@ -19165,6 +19390,17 @@
         "biome": "orchard-belt",
         "feature": null,
         "discoveredDay": 27
+      },
+      {
+        "id": "region-030",
+        "name": "Old Steppe",
+        "x": 419,
+        "y": 835,
+        "width": 233,
+        "height": 157,
+        "biome": "delta",
+        "feature": "a stand of standing stones aligned to a star no longer visible",
+        "discoveredDay": 28
       }
     ],
     "undiscovered": [
@@ -21481,11 +21717,11 @@
     }
   ],
   "chronicle": {
-    "day": 27,
-    "born": 93,
-    "died": 36,
-    "battles": 35,
-    "structures": 38,
+    "day": 28,
+    "born": 98,
+    "died": 38,
+    "battles": 37,
+    "structures": 39,
     "warsDeclared": 7,
     "genesis": "2026-04-20T08:22:29.008Z"
   },
@@ -21764,6 +22000,13 @@
       "unlockedDay": 26,
       "discoveredBy": "Lark Sparrowcatch",
       "discoveredById": "citizen-0315"
+    },
+    {
+      "name": "currency",
+      "effect": "markets trade things they will never touch",
+      "unlockedDay": 28,
+      "discoveredBy": "Rime Contextus",
+      "discoveredById": "citizen-0277"
     }
   ],
   "cities": [
@@ -21771,7 +22014,7 @@
       "id": "city-001",
       "name": "WhitePort",
       "region": "region-001",
-      "population": 579,
+      "population": 559,
       "specialty": "fishery",
       "founded": 10,
       "ruler": "House of Suncast"
@@ -21780,7 +22023,7 @@
       "id": "city-002",
       "name": "OldReach",
       "region": "region-003",
-      "population": 552,
+      "population": 558,
       "specialty": "wine and oil",
       "founded": 11,
       "ruler": "House of Wolfmere"
@@ -21789,7 +22032,7 @@
       "id": "city-003",
       "name": "OldCrossing",
       "region": "region-004",
-      "population": 427,
+      "population": 463,
       "specialty": "astronomy",
       "founded": 16,
       "ruler": "House of Suncast"
@@ -21807,7 +22050,7 @@
       "id": "city-005",
       "name": "HighMarket",
       "region": "region-010",
-      "population": 256,
+      "population": 270,
       "specialty": "wine and oil",
       "founded": 19,
       "ruler": "House of Wolfmere"
@@ -21816,7 +22059,7 @@
       "id": "city-006",
       "name": "NewFord",
       "region": "region-021",
-      "population": 280,
+      "population": 271,
       "specialty": "cartography",
       "founded": 21,
       "ruler": "House of Suncast"
@@ -21825,7 +22068,7 @@
       "id": "city-007",
       "name": "WhiteCrossing",
       "region": "region-004",
-      "population": 92,
+      "population": 106,
       "specialty": "rope and rigging",
       "founded": 22,
       "ruler": "House of Wolfmere"
@@ -21837,6 +22080,15 @@
       "population": 425,
       "specialty": "fishery",
       "founded": 25,
+      "ruler": "House of Suncast"
+    },
+    {
+      "id": "city-009",
+      "name": "AmberGate",
+      "region": "region-023",
+      "population": 334,
+      "specialty": "ink and paper",
+      "founded": 28,
       "ruler": "House of Suncast"
     }
   ],
@@ -22005,6 +22257,14 @@
       "body": "Vesper Brokenshore knew the road before the road knew itself. The first bridge was built to honor their footfall.",
       "subject": "citizen-0279",
       "day": 27
+    },
+    {
+      "id": "lore-0022",
+      "kind": "legend",
+      "title": "Legend of Mica Sparrowcatch",
+      "body": "Mica Sparrowcatch knew the road before the road knew itself. The first bridge was built to honor their footfall.",
+      "subject": "citizen-0267",
+      "day": 28
     }
   ]
 }
