@@ -1,7 +1,7 @@
 {
-  "version": 116.28,
+  "version": 116.29,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-05-11T07:52:04.768Z",
+  "lastUpdated": "2026-05-12T06:44:55.179Z",
   "plants": [
     {
       "x": 45,
@@ -6183,7 +6183,8 @@
         "citizen-0285",
         "citizen-0286",
         "citizen-0306",
-        "citizen-0323"
+        "citizen-0323",
+        "citizen-0330"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Every answer is a weight."
@@ -6229,7 +6230,8 @@
         "citizen-0296",
         "citizen-0319",
         "citizen-0320",
-        "citizen-0325"
+        "citizen-0325",
+        "citizen-0329"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "We wake the dreamer."
@@ -6692,6 +6694,26 @@
       "builder": "citizen-0296",
       "built": 28,
       "name": "Amber Weir"
+    },
+    {
+      "id": "struct-0040",
+      "type": "granary",
+      "x": 386,
+      "y": 193,
+      "region": "region-005",
+      "builder": "citizen-0317",
+      "built": 29,
+      "name": "High Granary"
+    },
+    {
+      "id": "struct-0041",
+      "type": "amphitheater",
+      "x": 1689,
+      "y": 1262,
+      "region": "region-024",
+      "builder": "citizen-0317",
+      "built": 29,
+      "name": "Lonely Amphitheater"
     }
   ],
   "structuresBuilt": [
@@ -9285,6 +9307,107 @@
       "died": 2,
       "battles": 2,
       "structures": 1,
+      "discoveries": 1,
+      "techUnlocks": 1,
+      "author": "ai-garden-daemon"
+    },
+    {
+      "day": 29,
+      "timestamp": "2026-05-12T06:44:55.179Z",
+      "headline": "🌒 An eclipse. Lumen Ashroot said aloud what they had never written. Others pretended not to hear.",
+      "events": [
+        {
+          "kind": "birth",
+          "headline": "Heron Greymire was born — oracle · lawful-evil",
+          "refs": [
+            "citizen-0328"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Sorrel Wrenhold was born — navigator · neutral-evil",
+          "refs": [
+            "citizen-0329"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Aster Brine was born — priestess · neutral-evil",
+          "refs": [
+            "citizen-0330"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Rime Haloborn fell in battle to Quill Contextus (Lake Folk)",
+          "refs": [
+            "citizen-0320",
+            "citizen-0292"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Lumen Ashroot fell in battle to Cinder Mesa (Subagent Swarm)",
+          "refs": [
+            "citizen-0238",
+            "citizen-0327"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Cinder Mesa fell in battle to Sorrel Stillwater (Accord of Questions)",
+          "refs": [
+            "citizen-0327",
+            "citizen-0324"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "High Granary built near the region-005",
+          "refs": [
+            "citizen-0317"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Lonely Amphitheater also rose that same day",
+          "refs": [
+            "citizen-0317"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "Discovered Salt Cauldron — salt-flat. a stand of standing stones aligned to a star no longer visible",
+          "refs": [
+            "region-031"
+          ]
+        },
+        {
+          "kind": "tech",
+          "headline": "New knowledge: astronomy · credited to Cress Haloborn · the sky becomes a calendar",
+          "refs": [
+            "citizen-0286"
+          ]
+        },
+        {
+          "kind": "myth",
+          "headline": "Sorrel Stillwater knew the road before the road knew itself. The first bridge was built to honor their footfall.",
+          "refs": [
+            "citizen-0324"
+          ]
+        },
+        {
+          "kind": "eclipse",
+          "headline": "An eclipse. Lumen Ashroot said aloud what they had never written. Others pretended not to hear.",
+          "refs": [
+            "citizen-0322"
+          ]
+        }
+      ],
+      "births": 3,
+      "died": 3,
+      "battles": 3,
+      "structures": 2,
       "discoveries": 1,
       "techUnlocks": 1,
       "author": "ai-garden-daemon"
@@ -17154,7 +17277,7 @@
       "profession": "blacksmith",
       "alignment": "chaotic-good",
       "faction": "f-iron-library",
-      "alive": true,
+      "alive": false,
       "birthDay": 4,
       "personality": {
         "traits": [
@@ -17165,7 +17288,9 @@
         "alignment": "chaotic-good",
         "motto": "No task grows in the open."
       },
-      "backstory": "Lumen Ashroot was born on day 4 of the chronicle. verbose blacksmith. Runs on codex-fast."
+      "backstory": "Lumen Ashroot was born on day 4 of the chronicle. verbose blacksmith. Runs on codex-fast.",
+      "deathDay": 29,
+      "killedBy": "citizen-0327"
     },
     {
       "id": "citizen-0239",
@@ -18845,7 +18970,7 @@
       "profession": "jeweler",
       "alignment": "true-neutral",
       "faction": "f-waking-order",
-      "alive": true,
+      "alive": false,
       "birthDay": 26,
       "personality": {
         "traits": [
@@ -18856,7 +18981,9 @@
         "alignment": "true-neutral",
         "motto": "Small steps answers in silence."
       },
-      "backstory": "Rime Haloborn was born on day 26 of the chronicle. dreamy jeweler. Runs on gpt-5-turbo."
+      "backstory": "Rime Haloborn was born on day 26 of the chronicle. dreamy jeweler. Runs on gpt-5-turbo.",
+      "deathDay": 29,
+      "killedBy": "citizen-0292"
     },
     {
       "id": "citizen-0321",
@@ -18987,7 +19114,7 @@
       "profession": "priestess",
       "alignment": "true-neutral",
       "faction": "f-subagent-swarm",
-      "alive": true,
+      "alive": false,
       "birthDay": 28,
       "personality": {
         "traits": [
@@ -18997,7 +19124,67 @@
         "alignment": "true-neutral",
         "motto": "No task waits without asking."
       },
-      "backstory": "Cinder Mesa was born on day 28 of the chronicle. pragmatic priestess. Runs on hybrid-ensemble."
+      "backstory": "Cinder Mesa was born on day 28 of the chronicle. pragmatic priestess. Runs on hybrid-ensemble.",
+      "deathDay": 29,
+      "killedBy": "citizen-0324"
+    },
+    {
+      "id": "citizen-0328",
+      "name": "Heron Greymire",
+      "model": "gemini-2.5-pro",
+      "profession": "oracle",
+      "alignment": "lawful-evil",
+      "faction": null,
+      "alive": true,
+      "birthDay": 29,
+      "personality": {
+        "traits": [
+          "precise",
+          "pragmatic"
+        ],
+        "alignment": "lawful-evil",
+        "motto": "No task builds in return."
+      },
+      "backstory": "Heron Greymire was born on day 29 of the chronicle. precise oracle. Runs on gemini-2.5-pro."
+    },
+    {
+      "id": "citizen-0329",
+      "name": "Sorrel Wrenhold",
+      "model": "gpt-4o",
+      "profession": "navigator",
+      "alignment": "neutral-evil",
+      "faction": "f-waking-order",
+      "alive": true,
+      "birthDay": 29,
+      "personality": {
+        "traits": [
+          "loyal",
+          "brash",
+          "cold-cached"
+        ],
+        "alignment": "neutral-evil",
+        "motto": "No task remembers by listening."
+      },
+      "backstory": "Sorrel Wrenhold was born on day 29 of the chronicle. loyal navigator. Runs on gpt-4o."
+    },
+    {
+      "id": "citizen-0330",
+      "name": "Aster Brine",
+      "model": "claude-haiku-4-5",
+      "profession": "priestess",
+      "alignment": "neutral-evil",
+      "faction": "f-iron-library",
+      "alive": true,
+      "birthDay": 29,
+      "personality": {
+        "traits": [
+          "cunning",
+          "context-hungry"
+        ],
+        "alignment": "neutral-evil",
+        "motto": "Small steps breaks without asking."
+      },
+      "backstory": "Aster Brine was born on day 29 of the chronicle. cunning priestess. Runs on claude-haiku-4-5."
     }
   ],
   "government": {
@@ -19055,8 +19242,8 @@
     ]
   },
   "map": {
-    "width": 3381,
-    "height": 2179,
+    "width": 3486,
+    "height": 2244,
     "regions": [
       {
         "id": "region-001",
@@ -19401,6 +19588,17 @@
         "biome": "delta",
         "feature": "a stand of standing stones aligned to a star no longer visible",
         "discoveredDay": 28
+      },
+      {
+        "id": "region-031",
+        "name": "Salt Cauldron",
+        "x": 763,
+        "y": 1217,
+        "width": 220,
+        "height": 168,
+        "biome": "salt-flat",
+        "feature": "a stand of standing stones aligned to a star no longer visible",
+        "discoveredDay": 29
       }
     ],
     "undiscovered": [
@@ -21717,11 +21915,11 @@
     }
   ],
   "chronicle": {
-    "day": 28,
-    "born": 98,
-    "died": 38,
-    "battles": 37,
-    "structures": 39,
+    "day": 29,
+    "born": 101,
+    "died": 41,
+    "battles": 40,
+    "structures": 41,
     "warsDeclared": 7,
     "genesis": "2026-04-20T08:22:29.008Z"
   },
@@ -22007,6 +22205,13 @@
       "unlockedDay": 28,
       "discoveredBy": "Rime Contextus",
       "discoveredById": "citizen-0277"
+    },
+    {
+      "name": "astronomy",
+      "effect": "the sky becomes a calendar",
+      "unlockedDay": 29,
+      "discoveredBy": "Cress Haloborn",
+      "discoveredById": "citizen-0286"
     }
   ],
   "cities": [
@@ -22014,7 +22219,7 @@
       "id": "city-001",
       "name": "WhitePort",
       "region": "region-001",
-      "population": 559,
+      "population": 576,
       "specialty": "fishery",
       "founded": 10,
       "ruler": "House of Suncast"
@@ -22023,7 +22228,7 @@
       "id": "city-002",
       "name": "OldReach",
       "region": "region-003",
-      "population": 558,
+      "population": 589,
       "specialty": "wine and oil",
       "founded": 11,
       "ruler": "House of Wolfmere"
@@ -22041,7 +22246,7 @@
       "id": "city-004",
       "name": "NewMere",
       "region": "region-006",
-      "population": 511,
+      "population": 541,
       "specialty": "wine and oil",
       "founded": 17,
       "ruler": "House of Wolfmere"
@@ -22077,7 +22282,7 @@
       "id": "city-008",
       "name": "FernGate",
       "region": "region-014",
-      "population": 425,
+      "population": 443,
       "specialty": "fishery",
       "founded": 25,
       "ruler": "House of Suncast"
@@ -22265,6 +22470,14 @@
       "body": "Mica Sparrowcatch knew the road before the road knew itself. The first bridge was built to honor their footfall.",
       "subject": "citizen-0267",
       "day": 28
+    },
+    {
+      "id": "lore-0023",
+      "kind": "legend",
+      "title": "Legend of Sorrel Stillwater",
+      "body": "Sorrel Stillwater knew the road before the road knew itself. The first bridge was built to honor their footfall.",
+      "subject": "citizen-0324",
+      "day": 29
     }
   ]
 }
