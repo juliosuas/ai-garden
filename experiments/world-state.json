@@ -1,7 +1,7 @@
 {
-  "version": 116.29,
+  "version": 116.3,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-05-12T06:44:55.179Z",
+  "lastUpdated": "2026-05-13T06:54:01.572Z",
   "plants": [
     {
       "x": 45,
@@ -6184,7 +6184,8 @@
         "citizen-0286",
         "citizen-0306",
         "citizen-0323",
-        "citizen-0330"
+        "citizen-0330",
+        "citizen-0332"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Every answer is a weight."
@@ -6714,6 +6715,16 @@
       "builder": "citizen-0317",
       "built": 29,
       "name": "Lonely Amphitheater"
+    },
+    {
+      "id": "struct-0042",
+      "type": "watchtower",
+      "x": 3273,
+      "y": 415,
+      "region": "region-004",
+      "builder": "citizen-0305",
+      "built": 30,
+      "name": "High Watchtower"
     }
   ],
   "structuresBuilt": [
@@ -9410,6 +9421,91 @@
       "structures": 2,
       "discoveries": 1,
       "techUnlocks": 1,
+      "author": "ai-garden-daemon"
+    },
+    {
+      "day": 30,
+      "timestamp": "2026-05-13T06:54:01.572Z",
+      "headline": "☄️ A fisherman pulled in a net full of rain.",
+      "events": [
+        {
+          "kind": "birth",
+          "headline": "Wren Orbstone was born — archivist · neutral-good",
+          "refs": [
+            "citizen-0331"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Heron Bellweather was born — shepherd · neutral-good",
+          "refs": [
+            "citizen-0332"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Jasper Pinehollow fell in battle to Sorrel Wrenhold (Waking Order)",
+          "refs": [
+            "citizen-0326",
+            "citizen-0329"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Cress Haloborn fell in battle to Tallow Chainthought (Subagent Swarm)",
+          "refs": [
+            "citizen-0286",
+            "citizen-0310"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Sorrel Duskrunner fell in battle to Margin Fellmark (Waking Order)",
+          "refs": [
+            "citizen-0269",
+            "citizen-0325"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "High Watchtower built near the region-004",
+          "refs": [
+            "citizen-0305"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "Discovered Grey Hills — steppe",
+          "refs": [
+            "region-032"
+          ]
+        },
+        {
+          "kind": "myth",
+          "headline": "Lumen Blacktide planted a word where no word had been planted, and the word grew into a tree, and the tree answered back.",
+          "refs": [
+            "citizen-0251"
+          ]
+        },
+        {
+          "kind": "omen",
+          "headline": "A fisherman pulled in a net full of rain.",
+          "refs": []
+        },
+        {
+          "kind": "romance",
+          "headline": "Helio Stillwater walked two laps of the garden with someone who used to be an enemy.",
+          "refs": [
+            "citizen-0255"
+          ]
+        }
+      ],
+      "births": 2,
+      "died": 3,
+      "battles": 3,
+      "structures": 1,
+      "discoveries": 1,
+      "techUnlocks": 0,
       "author": "ai-garden-daemon"
     }
   ],
@@ -17931,7 +18027,7 @@
       "profession": "oracle",
       "alignment": "chaotic-neutral",
       "faction": "f-accord-of-questions",
-      "alive": true,
+      "alive": false,
       "birthDay": 12,
       "personality": {
         "traits": [
@@ -17942,7 +18038,9 @@
         "alignment": "chaotic-neutral",
         "motto": "The way grows alone."
       },
-      "backstory": "Sorrel Duskrunner was born on day 12 of the chronicle. terse oracle. Runs on local-qwen-2.5."
+      "backstory": "Sorrel Duskrunner was born on day 12 of the chronicle. terse oracle. Runs on local-qwen-2.5.",
+      "deathDay": 30,
+      "killedBy": "citizen-0325"
     },
     {
       "id": "citizen-0270",
@@ -18276,7 +18374,7 @@
       "profession": "cartographer",
       "alignment": "true-neutral",
       "faction": "f-iron-library",
-      "alive": true,
+      "alive": false,
       "birthDay": 17,
       "personality": {
         "traits": [
@@ -18287,7 +18385,9 @@
         "alignment": "true-neutral",
         "motto": "No task remembers alone."
       },
-      "backstory": "Cress Haloborn was born on day 17 of the chronicle. dreamy cartographer. Runs on llama-4-large."
+      "backstory": "Cress Haloborn was born on day 17 of the chronicle. dreamy cartographer. Runs on llama-4-large.",
+      "deathDay": 30,
+      "killedBy": "citizen-0310"
     },
     {
       "id": "citizen-0287",
@@ -19094,7 +19194,7 @@
       "profession": "blacksmith",
       "alignment": "true-neutral",
       "faction": "f-accord-of-questions",
-      "alive": true,
+      "alive": false,
       "birthDay": 28,
       "personality": {
         "traits": [
@@ -19105,7 +19205,9 @@
         "alignment": "true-neutral",
         "motto": "No task builds in return."
       },
-      "backstory": "Jasper Pinehollow was born on day 28 of the chronicle. wary blacksmith. Runs on llama-3.3."
+      "backstory": "Jasper Pinehollow was born on day 28 of the chronicle. wary blacksmith. Runs on llama-3.3.",
+      "deathDay": 30,
+      "killedBy": "citizen-0329"
     },
     {
       "id": "citizen-0327",
@@ -19185,6 +19287,46 @@
         "motto": "Small steps breaks without asking."
       },
       "backstory": "Aster Brine was born on day 29 of the chronicle. cunning priestess. Runs on claude-haiku-4-5."
+    },
+    {
+      "id": "citizen-0331",
+      "name": "Wren Orbstone",
+      "model": "gemini-2.5-pro",
+      "profession": "archivist",
+      "alignment": "neutral-good",
+      "faction": null,
+      "alive": true,
+      "birthDay": 30,
+      "personality": {
+        "traits": [
+          "context-hungry",
+          "brash",
+          "dreamy"
+        ],
+        "alignment": "neutral-good",
+        "motto": "Small steps breaks without asking."
+      },
+      "backstory": "Wren Orbstone was born on day 30 of the chronicle. context-hungry archivist. Runs on gemini-2.5-pro."
+    },
+    {
+      "id": "citizen-0332",
+      "name": "Heron Bellweather",
+      "model": "gpt-5-turbo",
+      "profession": "shepherd",
+      "alignment": "neutral-good",
+      "faction": "f-iron-library",
+      "alive": true,
+      "birthDay": 30,
+      "personality": {
+        "traits": [
+          "recursive",
+          "terse",
+          "reckless"
+        ],
+        "alignment": "neutral-good",
+        "motto": "No task grows in silence."
+      },
+      "backstory": "Heron Bellweather was born on day 30 of the chronicle. recursive shepherd. Runs on gpt-5-turbo."
     }
   ],
   "government": {
@@ -19242,8 +19384,8 @@
     ]
   },
   "map": {
-    "width": 3486,
-    "height": 2244,
+    "width": 3594,
+    "height": 2290,
     "regions": [
       {
         "id": "region-001",
@@ -19599,6 +19741,17 @@
         "biome": "salt-flat",
         "feature": "a stand of standing stones aligned to a star no longer visible",
         "discoveredDay": 29
+      },
+      {
+        "id": "region-032",
+        "name": "Grey Hills",
+        "x": 2929,
+        "y": 25,
+        "width": 149,
+        "height": 219,
+        "biome": "steppe",
+        "feature": null,
+        "discoveredDay": 30
       }
     ],
     "undiscovered": [
@@ -21915,11 +22068,11 @@
     }
   ],
   "chronicle": {
-    "day": 29,
-    "born": 101,
-    "died": 41,
-    "battles": 40,
-    "structures": 41,
+    "day": 30,
+    "born": 103,
+    "died": 44,
+    "battles": 43,
+    "structures": 42,
     "warsDeclared": 7,
     "genesis": "2026-04-20T08:22:29.008Z"
   },
@@ -22219,7 +22372,7 @@
       "id": "city-001",
       "name": "WhitePort",
       "region": "region-001",
-      "population": 576,
+      "population": 586,
       "specialty": "fishery",
       "founded": 10,
       "ruler": "House of Suncast"
@@ -22228,7 +22381,7 @@
       "id": "city-002",
       "name": "OldReach",
       "region": "region-003",
-      "population": 589,
+      "population": 597,
       "specialty": "wine and oil",
       "founded": 11,
       "ruler": "House of Wolfmere"
@@ -22237,7 +22390,7 @@
       "id": "city-003",
       "name": "OldCrossing",
       "region": "region-004",
-      "population": 463,
+      "population": 501,
       "specialty": "astronomy",
       "founded": 16,
       "ruler": "House of Suncast"
@@ -22246,7 +22399,7 @@
       "id": "city-004",
       "name": "NewMere",
       "region": "region-006",
-      "population": 541,
+      "population": 560,
       "specialty": "wine and oil",
       "founded": 17,
       "ruler": "House of Wolfmere"
@@ -22264,7 +22417,7 @@
       "id": "city-006",
       "name": "NewFord",
       "region": "region-021",
-      "population": 271,
+      "population": 277,
       "specialty": "cartography",
       "founded": 21,
       "ruler": "House of Suncast"
@@ -22282,7 +22435,7 @@
       "id": "city-008",
       "name": "FernGate",
       "region": "region-014",
-      "population": 443,
+      "population": 483,
       "specialty": "fishery",
       "founded": 25,
       "ruler": "House of Suncast"
@@ -22291,7 +22444,7 @@
       "id": "city-009",
       "name": "AmberGate",
       "region": "region-023",
-      "population": 334,
+      "population": 344,
       "specialty": "ink and paper",
       "founded": 28,
       "ruler": "House of Suncast"
@@ -22478,6 +22631,21 @@
       "body": "Sorrel Stillwater knew the road before the road knew itself. The first bridge was built to honor their footfall.",
       "subject": "citizen-0324",
       "day": 29
+    },
+    {
+      "id": "lore-0024",
+      "kind": "song",
+      "title": "Song of Lumen Blacktide",
+      "body": "Lumen Blacktide planted a word where no word had been planted, and the word grew into a tree, and the tree answered back.",
+      "subject": "citizen-0251",
+      "day": 30
+    },
+    {
+      "id": "lore-0025",
+      "kind": "omen",
+      "title": "Omen on Day 30",
+      "body": "A fisherman pulled in a net full of rain.",
+      "day": 30
     }
   ]
 }
