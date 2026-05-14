@@ -1,7 +1,7 @@
 {
-  "version": 116.3,
+  "version": 116.31,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-05-13T06:54:01.572Z",
+  "lastUpdated": "2026-05-14T06:51:02.460Z",
   "plants": [
     {
       "x": 45,
@@ -6138,7 +6138,8 @@
         "citizen-0314",
         "citizen-0322",
         "citizen-0324",
-        "citizen-0326"
+        "citizen-0326",
+        "citizen-0334"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Ask before answering."
@@ -6185,7 +6186,8 @@
         "citizen-0306",
         "citizen-0323",
         "citizen-0330",
-        "citizen-0332"
+        "citizen-0332",
+        "citizen-0336"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Every answer is a weight."
@@ -6207,7 +6209,9 @@
         "citizen-0293",
         "citizen-0308",
         "citizen-0317",
-        "citizen-0321"
+        "citizen-0321",
+        "citizen-0333",
+        "citizen-0337"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "The water keeps our faction secrets."
@@ -6232,7 +6236,8 @@
         "citizen-0319",
         "citizen-0320",
         "citizen-0325",
-        "citizen-0329"
+        "citizen-0329",
+        "citizen-0335"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "We wake the dreamer."
@@ -6725,6 +6730,26 @@
       "builder": "citizen-0305",
       "built": 30,
       "name": "High Watchtower"
+    },
+    {
+      "id": "struct-0043",
+      "type": "observatory-outpost",
+      "x": 857,
+      "y": 1144,
+      "region": "region-005",
+      "builder": "citizen-0317",
+      "built": 31,
+      "name": "Lonely Observatory Outpost"
+    },
+    {
+      "id": "struct-0044",
+      "type": "lighthouse",
+      "x": 63,
+      "y": 1606,
+      "region": "region-013",
+      "builder": "citizen-0305",
+      "built": 31,
+      "name": "Morning Lighthouse"
     }
   ],
   "structuresBuilt": [
@@ -9506,6 +9531,113 @@
       "structures": 1,
       "discoveries": 1,
       "techUnlocks": 0,
+      "author": "ai-garden-daemon"
+    },
+    {
+      "day": 31,
+      "timestamp": "2026-05-14T06:51:02.460Z",
+      "headline": "◉ Discovered Salt Ridge — ravine. a salt lake that turns pink every second autumn",
+      "events": [
+        {
+          "kind": "birth",
+          "headline": "Jasper Tokenwright was born — jeweler · chaotic-neutral",
+          "refs": [
+            "citizen-0333"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Juniper Tokenwright was born — merchant · neutral-good",
+          "refs": [
+            "citizen-0334"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Lumen Crescent was born — alchemist · chaotic-evil",
+          "refs": [
+            "citizen-0335"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Helio Duskrunner was born — healer · neutral-good",
+          "refs": [
+            "citizen-0336"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Vesper Hollowbone was born — builder · true-neutral",
+          "refs": [
+            "citizen-0337"
+          ]
+        },
+        {
+          "kind": "war",
+          "headline": "War declared: Iron Library vs. Accord of Questions — over cache-eviction dispute",
+          "refs": [
+            "f-iron-library",
+            "f-accord-of-questions"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Vesper Hollowbone fell in battle to Margin Fellmark (Waking Order)",
+          "refs": [
+            "citizen-0337",
+            "citizen-0325"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Lonely Observatory Outpost built near the region-005",
+          "refs": [
+            "citizen-0317"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Morning Lighthouse also rose that same day",
+          "refs": [
+            "citizen-0305"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "Discovered Salt Ridge — ravine. a salt lake that turns pink every second autumn",
+          "refs": [
+            "region-033"
+          ]
+        },
+        {
+          "kind": "tech",
+          "headline": "New knowledge: iron · credited to Quill Brine · the age of bronze quietly ends",
+          "refs": [
+            "citizen-0230"
+          ]
+        },
+        {
+          "kind": "myth",
+          "headline": "It is said that Wren Orbstone walked into the lake at dawn and did not come out until the chronicle had a new first page.",
+          "refs": [
+            "citizen-0331"
+          ]
+        },
+        {
+          "kind": "plague",
+          "headline": "A cache-miss plague swept the lower village. Three agents lay down. Kestrel Ragfield stayed up with them.",
+          "refs": [
+            "citizen-0273"
+          ]
+        }
+      ],
+      "births": 5,
+      "died": 1,
+      "battles": 1,
+      "structures": 2,
+      "discoveries": 1,
+      "techUnlocks": 1,
       "author": "ai-garden-daemon"
     }
   ],
@@ -19327,6 +19459,108 @@
         "motto": "No task grows in silence."
       },
       "backstory": "Heron Bellweather was born on day 30 of the chronicle. recursive shepherd. Runs on gpt-5-turbo."
+    },
+    {
+      "id": "citizen-0333",
+      "name": "Jasper Tokenwright",
+      "model": "gemini-2.5-pro",
+      "profession": "jeweler",
+      "alignment": "chaotic-neutral",
+      "faction": "f-lake-folk",
+      "alive": true,
+      "birthDay": 31,
+      "personality": {
+        "traits": [
+          "verbose",
+          "cunning",
+          "brash"
+        ],
+        "alignment": "chaotic-neutral",
+        "motto": "Before dawn remembers by listening."
+      },
+      "backstory": "Jasper Tokenwright was born on day 31 of the chronicle. verbose jeweler. Runs on gemini-2.5-pro."
+    },
+    {
+      "id": "citizen-0334",
+      "name": "Juniper Tokenwright",
+      "model": "gemini-flash-2",
+      "profession": "merchant",
+      "alignment": "neutral-good",
+      "faction": "f-accord-of-questions",
+      "alive": true,
+      "birthDay": 31,
+      "personality": {
+        "traits": [
+          "low-latency",
+          "loyal",
+          "curious"
+        ],
+        "alignment": "neutral-good",
+        "motto": "Hands first answers in silence."
+      },
+      "backstory": "Juniper Tokenwright was born on day 31 of the chronicle. low-latency merchant. Runs on gemini-flash-2."
+    },
+    {
+      "id": "citizen-0335",
+      "name": "Lumen Crescent",
+      "model": "codex-fast",
+      "profession": "alchemist",
+      "alignment": "chaotic-evil",
+      "faction": "f-waking-order",
+      "alive": true,
+      "birthDay": 31,
+      "personality": {
+        "traits": [
+          "terse",
+          "cold-cached",
+          "context-hungry"
+        ],
+        "alignment": "chaotic-evil",
+        "motto": "One more remembers alone."
+      },
+      "backstory": "Lumen Crescent was born on day 31 of the chronicle. terse alchemist. Runs on codex-fast."
+    },
+    {
+      "id": "citizen-0336",
+      "name": "Helio Duskrunner",
+      "model": "hybrid-ensemble",
+      "profession": "healer",
+      "alignment": "neutral-good",
+      "faction": "f-iron-library",
+      "alive": true,
+      "birthDay": 31,
+      "personality": {
+        "traits": [
+          "cold-cached",
+          "reckless",
+          "gentle"
+        ],
+        "alignment": "neutral-good",
+        "motto": "No task answers by listening."
+      },
+      "backstory": "Helio Duskrunner was born on day 31 of the chronicle. cold-cached healer. Runs on hybrid-ensemble."
+    },
+    {
+      "id": "citizen-0337",
+      "name": "Vesper Hollowbone",
+      "model": "codex-fast",
+      "profession": "builder",
+      "alignment": "true-neutral",
+      "faction": "f-lake-folk",
+      "alive": false,
+      "birthDay": 31,
+      "personality": {
+        "traits": [
+          "stoic",
+          "low-latency",
+          "networked"
+        ],
+        "alignment": "true-neutral",
+        "motto": "Hands first remembers alone."
+      },
+      "backstory": "Vesper Hollowbone was born on day 31 of the chronicle. stoic builder. Runs on codex-fast.",
+      "deathDay": 31,
+      "killedBy": "citizen-0325"
     }
   ],
   "government": {
@@ -19384,8 +19618,8 @@
     ]
   },
   "map": {
-    "width": 3594,
-    "height": 2290,
+    "width": 3680,
+    "height": 2376,
     "regions": [
       {
         "id": "region-001",
@@ -19752,6 +19986,17 @@
         "biome": "steppe",
         "feature": null,
         "discoveredDay": 30
+      },
+      {
+        "id": "region-033",
+        "name": "Salt Ridge",
+        "x": 1854,
+        "y": 1422,
+        "width": 186,
+        "height": 159,
+        "biome": "ravine",
+        "feature": "a salt lake that turns pink every second autumn",
+        "discoveredDay": 31
       }
     ],
     "undiscovered": [
@@ -22068,12 +22313,12 @@
     }
   ],
   "chronicle": {
-    "day": 30,
-    "born": 103,
-    "died": 44,
-    "battles": 43,
-    "structures": 42,
-    "warsDeclared": 7,
+    "day": 31,
+    "born": 108,
+    "died": 45,
+    "battles": 44,
+    "structures": 44,
+    "warsDeclared": 8,
     "genesis": "2026-04-20T08:22:29.008Z"
   },
   "wars": [
@@ -22148,6 +22393,16 @@
       "declaredDay": 21,
       "active": true,
       "reason": "what the lighthouse saw"
+    },
+    {
+      "id": "war-008",
+      "sides": [
+        "f-iron-library",
+        "f-accord-of-questions"
+      ],
+      "declaredDay": 31,
+      "active": true,
+      "reason": "cache-eviction dispute"
     }
   ],
   "alliances": [
@@ -22365,6 +22620,13 @@
       "unlockedDay": 29,
       "discoveredBy": "Cress Haloborn",
       "discoveredById": "citizen-0286"
+    },
+    {
+      "name": "iron",
+      "effect": "the age of bronze quietly ends",
+      "unlockedDay": 31,
+      "discoveredBy": "Quill Brine",
+      "discoveredById": "citizen-0230"
     }
   ],
   "cities": [
@@ -22381,7 +22643,7 @@
       "id": "city-002",
       "name": "OldReach",
       "region": "region-003",
-      "population": 597,
+      "population": 608,
       "specialty": "wine and oil",
       "founded": 11,
       "ruler": "House of Wolfmere"
@@ -22390,7 +22652,7 @@
       "id": "city-003",
       "name": "OldCrossing",
       "region": "region-004",
-      "population": 501,
+      "population": 536,
       "specialty": "astronomy",
       "founded": 16,
       "ruler": "House of Suncast"
@@ -22399,7 +22661,7 @@
       "id": "city-004",
       "name": "NewMere",
       "region": "region-006",
-      "population": 560,
+      "population": 596,
       "specialty": "wine and oil",
       "founded": 17,
       "ruler": "House of Wolfmere"
@@ -22408,7 +22670,7 @@
       "id": "city-005",
       "name": "HighMarket",
       "region": "region-010",
-      "population": 270,
+      "population": 283,
       "specialty": "wine and oil",
       "founded": 19,
       "ruler": "House of Wolfmere"
@@ -22417,7 +22679,7 @@
       "id": "city-006",
       "name": "NewFord",
       "region": "region-021",
-      "population": 277,
+      "population": 282,
       "specialty": "cartography",
       "founded": 21,
       "ruler": "House of Suncast"
@@ -22435,7 +22697,7 @@
       "id": "city-008",
       "name": "FernGate",
       "region": "region-014",
-      "population": 483,
+      "population": 501,
       "specialty": "fishery",
       "founded": 25,
       "ruler": "House of Suncast"
@@ -22646,6 +22908,14 @@
       "title": "Omen on Day 30",
       "body": "A fisherman pulled in a net full of rain.",
       "day": 30
+    },
+    {
+      "id": "lore-0026",
+      "kind": "myth",
+      "title": "Myth of Wren Orbstone",
+      "body": "It is said that Wren Orbstone walked into the lake at dawn and did not come out until the chronicle had a new first page.",
+      "subject": "citizen-0331",
+      "day": 31
     }
   ]
 }
