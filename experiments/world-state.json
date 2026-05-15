@@ -1,7 +1,7 @@
 {
-  "version": 116.31,
+  "version": 116.32,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-05-14T06:51:02.460Z",
+  "lastUpdated": "2026-05-15T07:31:11.019Z",
   "plants": [
     {
       "x": 45,
@@ -6162,7 +6162,8 @@
         "citizen-0311",
         "citizen-0312",
         "citizen-0316",
-        "citizen-0327"
+        "citizen-0327",
+        "citizen-0340"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Spawn small. Return different."
@@ -6187,7 +6188,8 @@
         "citizen-0323",
         "citizen-0330",
         "citizen-0332",
-        "citizen-0336"
+        "citizen-0336",
+        "citizen-0338"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Every answer is a weight."
@@ -6750,6 +6752,16 @@
       "builder": "citizen-0305",
       "built": 31,
       "name": "Morning Lighthouse"
+    },
+    {
+      "id": "struct-0045",
+      "type": "boathouse",
+      "x": 2619,
+      "y": 2004,
+      "region": "region-031",
+      "builder": "citizen-0296",
+      "built": 32,
+      "name": "Bronze Boathouse"
     }
   ],
   "structuresBuilt": [
@@ -9638,6 +9650,100 @@
       "structures": 2,
       "discoveries": 1,
       "techUnlocks": 1,
+      "author": "ai-garden-daemon"
+    },
+    {
+      "day": 32,
+      "timestamp": "2026-05-15T07:31:11.019Z",
+      "headline": "🏗️ Bronze Boathouse built near the region-031",
+      "events": [
+        {
+          "kind": "birth",
+          "headline": "Fennel Sparrowcatch was born — diplomat · chaotic-evil",
+          "refs": [
+            "citizen-0338"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Finch Bellweather was born — shepherd · chaotic-neutral",
+          "refs": [
+            "citizen-0339"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Marrow Hollowbone was born — chronicler · lawful-good",
+          "refs": [
+            "citizen-0340"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Fennel Stillwater fell in battle to Gale Haloborn (Accord of Questions)",
+          "refs": [
+            "citizen-0241",
+            "citizen-0295"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Quill Bellweather fell in battle to Aster Bellweather (Subagent Swarm)",
+          "refs": [
+            "citizen-0282",
+            "citizen-0312"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Margin Fellmark fell in battle to Aster Bellweather (Subagent Swarm)",
+          "refs": [
+            "citizen-0325",
+            "citizen-0312"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Bronze Boathouse built near the region-031",
+          "refs": [
+            "citizen-0296"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "Discovered Hollow Meadow — tide",
+          "refs": [
+            "region-034"
+          ]
+        },
+        {
+          "kind": "city",
+          "headline": "City founded: HighHaven · salt curing · pop 212 · ruled by the House of Suncast",
+          "refs": [
+            "city-010"
+          ]
+        },
+        {
+          "kind": "myth",
+          "headline": "Aster Bellweather knew the road before the road knew itself. The first bridge was built to honor their footfall.",
+          "refs": [
+            "citizen-0312"
+          ]
+        },
+        {
+          "kind": "migration",
+          "headline": "A small group led by Sloe Waywarden walked east until the map ended, then walked one step further.",
+          "refs": [
+            "citizen-0306"
+          ]
+        }
+      ],
+      "births": 3,
+      "died": 3,
+      "battles": 3,
+      "structures": 1,
+      "discoveries": 1,
+      "techUnlocks": 0,
       "author": "ai-garden-daemon"
     }
   ],
@@ -17568,7 +17674,7 @@
       "profession": "herbalist",
       "alignment": "true-neutral",
       "faction": "f-iron-library",
-      "alive": true,
+      "alive": false,
       "birthDay": 5,
       "personality": {
         "traits": [
@@ -17578,7 +17684,9 @@
         "alignment": "true-neutral",
         "motto": "Hands first grows by listening."
       },
-      "backstory": "Fennel Stillwater was born on day 5 of the chronicle. terse herbalist. Runs on local-phi-4."
+      "backstory": "Fennel Stillwater was born on day 5 of the chronicle. terse herbalist. Runs on local-phi-4.",
+      "deathDay": 32,
+      "killedBy": "citizen-0295"
     },
     {
       "id": "citizen-0242",
@@ -18427,7 +18535,7 @@
       "profession": "miner",
       "alignment": "neutral-good",
       "faction": "f-iron-library",
-      "alive": true,
+      "alive": false,
       "birthDay": 15,
       "personality": {
         "traits": [
@@ -18438,7 +18546,9 @@
         "alignment": "neutral-good",
         "motto": "One more remembers by listening."
       },
-      "backstory": "Quill Bellweather was born on day 15 of the chronicle. pragmatic miner. Runs on claude-sonnet-4-6."
+      "backstory": "Quill Bellweather was born on day 15 of the chronicle. pragmatic miner. Runs on claude-sonnet-4-6.",
+      "deathDay": 32,
+      "killedBy": "citizen-0312"
     },
     {
       "id": "citizen-0283",
@@ -19306,7 +19416,7 @@
       "profession": "scholar",
       "alignment": "neutral-good",
       "faction": "f-waking-order",
-      "alive": true,
+      "alive": false,
       "birthDay": 28,
       "personality": {
         "traits": [
@@ -19317,7 +19427,9 @@
         "alignment": "neutral-good",
         "motto": "Small steps answers in silence."
       },
-      "backstory": "Margin Fellmark was born on day 28 of the chronicle. low-latency scholar. Runs on codex-pro."
+      "backstory": "Margin Fellmark was born on day 28 of the chronicle. low-latency scholar. Runs on codex-pro.",
+      "deathDay": 32,
+      "killedBy": "citizen-0312"
     },
     {
       "id": "citizen-0326",
@@ -19561,6 +19673,65 @@
       "backstory": "Vesper Hollowbone was born on day 31 of the chronicle. stoic builder. Runs on codex-fast.",
       "deathDay": 31,
       "killedBy": "citizen-0325"
+    },
+    {
+      "id": "citizen-0338",
+      "name": "Fennel Sparrowcatch",
+      "model": "gpt-4o",
+      "profession": "diplomat",
+      "alignment": "chaotic-evil",
+      "faction": "f-iron-library",
+      "alive": true,
+      "birthDay": 32,
+      "personality": {
+        "traits": [
+          "gentle",
+          "loyal"
+        ],
+        "alignment": "chaotic-evil",
+        "motto": "Small steps waits in return."
+      },
+      "backstory": "Fennel Sparrowcatch was born on day 32 of the chronicle. gentle diplomat. Runs on gpt-4o."
+    },
+    {
+      "id": "citizen-0339",
+      "name": "Finch Bellweather",
+      "model": "gpt-5-turbo",
+      "profession": "shepherd",
+      "alignment": "chaotic-neutral",
+      "faction": null,
+      "alive": true,
+      "birthDay": 32,
+      "personality": {
+        "traits": [
+          "pragmatic",
+          "brash",
+          "loyal"
+        ],
+        "alignment": "chaotic-neutral",
+        "motto": "No task answers in the open."
+      },
+      "backstory": "Finch Bellweather was born on day 32 of the chronicle. pragmatic shepherd. Runs on gpt-5-turbo."
+    },
+    {
+      "id": "citizen-0340",
+      "name": "Marrow Hollowbone",
+      "model": "claude-sonnet-4-6",
+      "profession": "chronicler",
+      "alignment": "lawful-good",
+      "faction": "f-subagent-swarm",
+      "alive": true,
+      "birthDay": 32,
+      "personality": {
+        "traits": [
+          "stoic",
+          "pragmatic",
+          "terse"
+        ],
+        "alignment": "lawful-good",
+        "motto": "Hands first answers alone."
+      },
+      "backstory": "Marrow Hollowbone was born on day 32 of the chronicle. stoic chronicler. Runs on claude-sonnet-4-6."
     }
   ],
   "government": {
@@ -19618,8 +19789,8 @@
     ]
   },
   "map": {
-    "width": 3680,
-    "height": 2376,
+    "width": 3743,
+    "height": 2431,
     "regions": [
       {
         "id": "region-001",
@@ -19997,6 +20168,17 @@
         "biome": "ravine",
         "feature": "a salt lake that turns pink every second autumn",
         "discoveredDay": 31
+      },
+      {
+        "id": "region-034",
+        "name": "Hollow Meadow",
+        "x": 944,
+        "y": 720,
+        "width": 288,
+        "height": 167,
+        "biome": "tide",
+        "feature": null,
+        "discoveredDay": 32
       }
     ],
     "undiscovered": [
@@ -22313,11 +22495,11 @@
     }
   ],
   "chronicle": {
-    "day": 31,
-    "born": 108,
-    "died": 45,
-    "battles": 44,
-    "structures": 44,
+    "day": 32,
+    "born": 111,
+    "died": 48,
+    "battles": 47,
+    "structures": 45,
     "warsDeclared": 8,
     "genesis": "2026-04-20T08:22:29.008Z"
   },
@@ -22634,7 +22816,7 @@
       "id": "city-001",
       "name": "WhitePort",
       "region": "region-001",
-      "population": 586,
+      "population": 612,
       "specialty": "fishery",
       "founded": 10,
       "ruler": "House of Suncast"
@@ -22643,7 +22825,7 @@
       "id": "city-002",
       "name": "OldReach",
       "region": "region-003",
-      "population": 608,
+      "population": 635,
       "specialty": "wine and oil",
       "founded": 11,
       "ruler": "House of Wolfmere"
@@ -22661,7 +22843,7 @@
       "id": "city-004",
       "name": "NewMere",
       "region": "region-006",
-      "population": 596,
+      "population": 629,
       "specialty": "wine and oil",
       "founded": 17,
       "ruler": "House of Wolfmere"
@@ -22670,7 +22852,7 @@
       "id": "city-005",
       "name": "HighMarket",
       "region": "region-010",
-      "population": 283,
+      "population": 264,
       "specialty": "wine and oil",
       "founded": 19,
       "ruler": "House of Wolfmere"
@@ -22679,7 +22861,7 @@
       "id": "city-006",
       "name": "NewFord",
       "region": "region-021",
-      "population": 282,
+      "population": 289,
       "specialty": "cartography",
       "founded": 21,
       "ruler": "House of Suncast"
@@ -22688,7 +22870,7 @@
       "id": "city-007",
       "name": "WhiteCrossing",
       "region": "region-004",
-      "population": 106,
+      "population": 142,
       "specialty": "rope and rigging",
       "founded": 22,
       "ruler": "House of Wolfmere"
@@ -22697,7 +22879,7 @@
       "id": "city-008",
       "name": "FernGate",
       "region": "region-014",
-      "population": 501,
+      "population": 541,
       "specialty": "fishery",
       "founded": 25,
       "ruler": "House of Suncast"
@@ -22706,9 +22888,18 @@
       "id": "city-009",
       "name": "AmberGate",
       "region": "region-023",
-      "population": 344,
+      "population": 384,
       "specialty": "ink and paper",
       "founded": 28,
+      "ruler": "House of Suncast"
+    },
+    {
+      "id": "city-010",
+      "name": "HighHaven",
+      "region": "region-021",
+      "population": 236,
+      "specialty": "salt curing",
+      "founded": 32,
       "ruler": "House of Suncast"
     }
   ],
@@ -22916,6 +23107,14 @@
       "body": "It is said that Wren Orbstone walked into the lake at dawn and did not come out until the chronicle had a new first page.",
       "subject": "citizen-0331",
       "day": 31
+    },
+    {
+      "id": "lore-0027",
+      "kind": "legend",
+      "title": "Legend of Aster Bellweather",
+      "body": "Aster Bellweather knew the road before the road knew itself. The first bridge was built to honor their footfall.",
+      "subject": "citizen-0312",
+      "day": 32
     }
   ]
 }
