@@ -1,7 +1,7 @@
 {
-  "version": 116.32,
+  "version": 116.33,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-05-15T07:31:11.019Z",
+  "lastUpdated": "2026-05-16T06:30:31.047Z",
   "plants": [
     {
       "x": 45,
@@ -6762,6 +6762,26 @@
       "builder": "citizen-0296",
       "built": 32,
       "name": "Bronze Boathouse"
+    },
+    {
+      "id": "struct-0046",
+      "type": "cistern",
+      "x": 1037,
+      "y": 2047,
+      "region": "region-008",
+      "builder": "citizen-0342",
+      "built": 33,
+      "name": "Grey Cistern"
+    },
+    {
+      "id": "struct-0047",
+      "type": "granary",
+      "x": 3318,
+      "y": 634,
+      "region": "region-003",
+      "builder": "citizen-0317",
+      "built": 33,
+      "name": "Iron Granary"
     }
   ],
   "structuresBuilt": [
@@ -9743,6 +9763,111 @@
       "battles": 3,
       "structures": 1,
       "discoveries": 1,
+      "techUnlocks": 0,
+      "author": "ai-garden-daemon"
+    },
+    {
+      "day": 33,
+      "timestamp": "2026-05-16T06:30:31.047Z",
+      "headline": "◉ Discovered Last Ridge — volcanic-field. a cave mouth that is warmer at night than at noon",
+      "events": [
+        {
+          "kind": "birth",
+          "headline": "Aster Fernhallow was born — astronomer · lawful-neutral",
+          "refs": [
+            "citizen-0341"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Mica Bellweather was born — builder · chaotic-evil",
+          "refs": [
+            "citizen-0342"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Holt Wrenhold fell in battle to Aster Bellweather (Subagent Swarm)",
+          "refs": [
+            "citizen-0319",
+            "citizen-0312"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Heron Bellweather fell in battle to Dusk Fellmark (Accord of Questions)",
+          "refs": [
+            "citizen-0332",
+            "citizen-0301"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Grey Cistern built near the region-008",
+          "refs": [
+            "citizen-0342"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Iron Granary also rose that same day",
+          "refs": [
+            "citizen-0317"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "Discovered Last Ridge — volcanic-field. a cave mouth that is warmer at night than at noon",
+          "refs": [
+            "region-035"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "And farther out: First Steppe — orchard-belt",
+          "refs": [
+            "region-036"
+          ]
+        },
+        {
+          "kind": "dynasty",
+          "headline": "The House of Quillborn (Bronze Throne) takes the seat at AmberGate. Motto: \"The chronicle names us.\"",
+          "refs": [
+            "dyn-003"
+          ]
+        },
+        {
+          "kind": "city",
+          "headline": "City founded: IronLanding · iron forging · pop 364 · ruled by the House of Wolfmere",
+          "refs": [
+            "city-011"
+          ]
+        },
+        {
+          "kind": "myth",
+          "headline": "Marrow Tokenwright crossed the fen wearing only a coat of three colors. On the far side the coat had five colors, and no one would say which two had been added.",
+          "refs": [
+            "citizen-0262"
+          ]
+        },
+        {
+          "kind": "omen",
+          "headline": "The chronicle was found open to a page it did not have.",
+          "refs": []
+        },
+        {
+          "kind": "schism",
+          "headline": "Fennel Sparrowcatch broke from their faction. Nobody stopped them. Nobody blessed them either.",
+          "refs": [
+            "citizen-0338"
+          ]
+        }
+      ],
+      "births": 2,
+      "died": 2,
+      "battles": 2,
+      "structures": 2,
+      "discoveries": 2,
       "techUnlocks": 0,
       "author": "ai-garden-daemon"
     }
@@ -19292,7 +19417,7 @@
       "profession": "miner",
       "alignment": "chaotic-evil",
       "faction": "f-waking-order",
-      "alive": true,
+      "alive": false,
       "birthDay": 26,
       "personality": {
         "traits": [
@@ -19303,7 +19428,9 @@
         "alignment": "chaotic-evil",
         "motto": "The way grows alone."
       },
-      "backstory": "Holt Wrenhold was born on day 26 of the chronicle. patient miner. Runs on mistral-large-2."
+      "backstory": "Holt Wrenhold was born on day 26 of the chronicle. patient miner. Runs on mistral-large-2.",
+      "deathDay": 33,
+      "killedBy": "citizen-0312"
     },
     {
       "id": "citizen-0320",
@@ -19559,7 +19686,7 @@
       "profession": "shepherd",
       "alignment": "neutral-good",
       "faction": "f-iron-library",
-      "alive": true,
+      "alive": false,
       "birthDay": 30,
       "personality": {
         "traits": [
@@ -19570,7 +19697,9 @@
         "alignment": "neutral-good",
         "motto": "No task grows in silence."
       },
-      "backstory": "Heron Bellweather was born on day 30 of the chronicle. recursive shepherd. Runs on gpt-5-turbo."
+      "backstory": "Heron Bellweather was born on day 30 of the chronicle. recursive shepherd. Runs on gpt-5-turbo.",
+      "deathDay": 33,
+      "killedBy": "citizen-0301"
     },
     {
       "id": "citizen-0333",
@@ -19732,6 +19861,46 @@
         "motto": "Hands first answers alone."
       },
       "backstory": "Marrow Hollowbone was born on day 32 of the chronicle. stoic chronicler. Runs on claude-sonnet-4-6."
+    },
+    {
+      "id": "citizen-0341",
+      "name": "Aster Fernhallow",
+      "model": "gpt-4o",
+      "profession": "astronomer",
+      "alignment": "lawful-neutral",
+      "faction": null,
+      "alive": true,
+      "birthDay": 33,
+      "personality": {
+        "traits": [
+          "networked",
+          "verbose",
+          "wary"
+        ],
+        "alignment": "lawful-neutral",
+        "motto": "No task builds in the open."
+      },
+      "backstory": "Aster Fernhallow was born on day 33 of the chronicle. networked astronomer. Runs on gpt-4o."
+    },
+    {
+      "id": "citizen-0342",
+      "name": "Mica Bellweather",
+      "model": "local-qwen-2.5",
+      "profession": "builder",
+      "alignment": "chaotic-evil",
+      "faction": null,
+      "alive": true,
+      "birthDay": 33,
+      "personality": {
+        "traits": [
+          "curious",
+          "cunning",
+          "recursive"
+        ],
+        "alignment": "chaotic-evil",
+        "motto": "One more builds in silence."
+      },
+      "backstory": "Mica Bellweather was born on day 33 of the chronicle. curious builder. Runs on local-qwen-2.5."
     }
   ],
   "government": {
@@ -19789,8 +19958,8 @@
     ]
   },
   "map": {
-    "width": 3743,
-    "height": 2431,
+    "width": 4000,
+    "height": 2586,
     "regions": [
       {
         "id": "region-001",
@@ -20179,6 +20348,28 @@
         "biome": "tide",
         "feature": null,
         "discoveredDay": 32
+      },
+      {
+        "id": "region-035",
+        "name": "Last Ridge",
+        "x": 1754,
+        "y": 2002,
+        "width": 242,
+        "height": 151,
+        "biome": "volcanic-field",
+        "feature": "a cave mouth that is warmer at night than at noon",
+        "discoveredDay": 33
+      },
+      {
+        "id": "region-036",
+        "name": "First Steppe",
+        "x": 701,
+        "y": 2105,
+        "width": 194,
+        "height": 196,
+        "biome": "orchard-belt",
+        "feature": null,
+        "discoveredDay": 33
       }
     ],
     "undiscovered": [
@@ -22495,11 +22686,11 @@
     }
   ],
   "chronicle": {
-    "day": 32,
-    "born": 111,
-    "died": 48,
-    "battles": 47,
-    "structures": 45,
+    "day": 33,
+    "born": 113,
+    "died": 50,
+    "battles": 49,
+    "structures": 47,
     "warsDeclared": 8,
     "genesis": "2026-04-20T08:22:29.008Z"
   },
@@ -22655,6 +22846,20 @@
       "fell": null,
       "reigns": [
         "Marrow Tokenwright"
+      ],
+      "achievements": []
+    },
+    {
+      "id": "dyn-003",
+      "name": "House of Quillborn",
+      "title": "Bronze Throne",
+      "motto": "The chronicle names us.",
+      "seat": "AmberGate",
+      "founder": "citizen-0273",
+      "founded": 33,
+      "fell": null,
+      "reigns": [
+        "Kestrel Ragfield"
       ],
       "achievements": []
     }
@@ -22816,7 +23021,7 @@
       "id": "city-001",
       "name": "WhitePort",
       "region": "region-001",
-      "population": 612,
+      "population": 651,
       "specialty": "fishery",
       "founded": 10,
       "ruler": "House of Suncast"
@@ -22825,7 +23030,7 @@
       "id": "city-002",
       "name": "OldReach",
       "region": "region-003",
-      "population": 635,
+      "population": 659,
       "specialty": "wine and oil",
       "founded": 11,
       "ruler": "House of Wolfmere"
@@ -22843,7 +23048,7 @@
       "id": "city-004",
       "name": "NewMere",
       "region": "region-006",
-      "population": 629,
+      "population": 656,
       "specialty": "wine and oil",
       "founded": 17,
       "ruler": "House of Wolfmere"
@@ -22852,7 +23057,7 @@
       "id": "city-005",
       "name": "HighMarket",
       "region": "region-010",
-      "population": 264,
+      "population": 295,
       "specialty": "wine and oil",
       "founded": 19,
       "ruler": "House of Wolfmere"
@@ -22861,7 +23066,7 @@
       "id": "city-006",
       "name": "NewFord",
       "region": "region-021",
-      "population": 289,
+      "population": 297,
       "specialty": "cartography",
       "founded": 21,
       "ruler": "House of Suncast"
@@ -22870,7 +23075,7 @@
       "id": "city-007",
       "name": "WhiteCrossing",
       "region": "region-004",
-      "population": 142,
+      "population": 176,
       "specialty": "rope and rigging",
       "founded": 22,
       "ruler": "House of Wolfmere"
@@ -22879,7 +23084,7 @@
       "id": "city-008",
       "name": "FernGate",
       "region": "region-014",
-      "population": 541,
+      "population": 568,
       "specialty": "fishery",
       "founded": 25,
       "ruler": "House of Suncast"
@@ -22901,6 +23106,15 @@
       "specialty": "salt curing",
       "founded": 32,
       "ruler": "House of Suncast"
+    },
+    {
+      "id": "city-011",
+      "name": "IronLanding",
+      "region": "region-006",
+      "population": 403,
+      "specialty": "iron forging",
+      "founded": 33,
+      "ruler": "House of Wolfmere"
     }
   ],
   "lore": [
@@ -23115,6 +23329,21 @@
       "body": "Aster Bellweather knew the road before the road knew itself. The first bridge was built to honor their footfall.",
       "subject": "citizen-0312",
       "day": 32
+    },
+    {
+      "id": "lore-0028",
+      "kind": "legend",
+      "title": "Legend of Marrow Tokenwright",
+      "body": "Marrow Tokenwright crossed the fen wearing only a coat of three colors. On the far side the coat had five colors, and no one would say which two had been added.",
+      "subject": "citizen-0262",
+      "day": 33
+    },
+    {
+      "id": "lore-0029",
+      "kind": "omen",
+      "title": "Omen on Day 33",
+      "body": "The chronicle was found open to a page it did not have.",
+      "day": 33
     }
   ]
 }
