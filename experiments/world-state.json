@@ -1,7 +1,7 @@
 {
-  "version": 116.33,
+  "version": 116.34,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-05-16T06:30:31.047Z",
+  "lastUpdated": "2026-05-17T06:50:16.050Z",
   "plants": [
     {
       "x": 45,
@@ -6139,7 +6139,9 @@
         "citizen-0322",
         "citizen-0324",
         "citizen-0326",
-        "citizen-0334"
+        "citizen-0334",
+        "citizen-0344",
+        "citizen-0347"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Ask before answering."
@@ -6239,7 +6241,10 @@
         "citizen-0320",
         "citizen-0325",
         "citizen-0329",
-        "citizen-0335"
+        "citizen-0335",
+        "citizen-0343",
+        "citizen-0345",
+        "citizen-0346"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "We wake the dreamer."
@@ -6782,6 +6787,16 @@
       "builder": "citizen-0317",
       "built": 33,
       "name": "Iron Granary"
+    },
+    {
+      "id": "struct-0048",
+      "type": "granary",
+      "x": 3866,
+      "y": 1605,
+      "region": "region-018",
+      "builder": "citizen-0305",
+      "built": 34,
+      "name": "Amber Granary"
     }
   ],
   "structuresBuilt": [
@@ -9869,6 +9884,122 @@
       "structures": 2,
       "discoveries": 2,
       "techUnlocks": 0,
+      "author": "ai-garden-daemon"
+    },
+    {
+      "day": 34,
+      "timestamp": "2026-05-17T06:50:16.050Z",
+      "headline": "🌱 Fennel Deepdelve was born — navigator · neutral-evil",
+      "events": [
+        {
+          "kind": "birth",
+          "headline": "Cask Hollowbone was born — ranger · neutral-evil",
+          "refs": [
+            "citizen-0343"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Juniper Quellstone was born — alchemist · lawful-neutral",
+          "refs": [
+            "citizen-0344"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Cress Brine was born — scribe · lawful-evil",
+          "refs": [
+            "citizen-0345"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Fennel Deepdelve was born — navigator · neutral-evil",
+          "refs": [
+            "citizen-0346"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Aster Mesa was born — archivist · true-neutral",
+          "refs": [
+            "citizen-0347"
+          ]
+        },
+        {
+          "kind": "alliance",
+          "headline": "Iron Library ↔ Subagent Swarm · shared-tools",
+          "refs": [
+            "f-iron-library",
+            "f-subagent-swarm"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Quill Mesa fell in battle to Aster Mesa (Accord of Questions)",
+          "refs": [
+            "citizen-0296",
+            "citizen-0347"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Sorrel Wrenhold fell in battle to Gale Haloborn (Accord of Questions)",
+          "refs": [
+            "citizen-0329",
+            "citizen-0295"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Kestrel Ragfield fell in battle to Tallow Chainthought (Subagent Swarm)",
+          "refs": [
+            "citizen-0273",
+            "citizen-0310"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Amber Granary built near the region-018",
+          "refs": [
+            "citizen-0305"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "Discovered Broken Reach — coast. a stand of standing stones aligned to a star no longer visible",
+          "refs": [
+            "region-037"
+          ]
+        },
+        {
+          "kind": "tech",
+          "headline": "New knowledge: aqueducts · credited to Aster Fernhallow · water walks uphill for the first time",
+          "refs": [
+            "citizen-0341"
+          ]
+        },
+        {
+          "kind": "myth",
+          "headline": "Cask Hollowbone planted a word where no word had been planted, and the word grew into a tree, and the tree answered back.",
+          "refs": [
+            "citizen-0343"
+          ]
+        },
+        {
+          "kind": "schism",
+          "headline": "Polyglot Orbstone broke from their faction. Nobody stopped them. Nobody blessed them either.",
+          "refs": [
+            "citizen-0252"
+          ]
+        }
+      ],
+      "births": 5,
+      "died": 3,
+      "battles": 3,
+      "structures": 1,
+      "discoveries": 1,
+      "techUnlocks": 1,
       "author": "ai-garden-daemon"
     }
   ],
@@ -18478,7 +18609,7 @@
       "profession": "diplomat",
       "alignment": "chaotic-neutral",
       "faction": "f-lake-folk",
-      "alive": true,
+      "alive": false,
       "birthDay": 13,
       "personality": {
         "traits": [
@@ -18489,7 +18620,9 @@
         "alignment": "chaotic-neutral",
         "motto": "No task waits in the open."
       },
-      "backstory": "Kestrel Ragfield was born on day 13 of the chronicle. context-hungry diplomat. Runs on mistral-8x22b."
+      "backstory": "Kestrel Ragfield was born on day 13 of the chronicle. context-hungry diplomat. Runs on mistral-8x22b.",
+      "deathDay": 34,
+      "killedBy": "citizen-0310"
     },
     {
       "id": "citizen-0274",
@@ -18951,7 +19084,7 @@
       "profession": "sculptor",
       "alignment": "true-neutral",
       "faction": "f-waking-order",
-      "alive": true,
+      "alive": false,
       "birthDay": 19,
       "personality": {
         "traits": [
@@ -18962,7 +19095,9 @@
         "alignment": "true-neutral",
         "motto": "Small steps breaks in silence."
       },
-      "backstory": "Quill Mesa was born on day 19 of the chronicle. networked sculptor. Runs on hybrid-ensemble."
+      "backstory": "Quill Mesa was born on day 19 of the chronicle. networked sculptor. Runs on hybrid-ensemble.",
+      "deathDay": 34,
+      "killedBy": "citizen-0347"
     },
     {
       "id": "citizen-0297",
@@ -19627,7 +19762,7 @@
       "profession": "navigator",
       "alignment": "neutral-evil",
       "faction": "f-waking-order",
-      "alive": true,
+      "alive": false,
       "birthDay": 29,
       "personality": {
         "traits": [
@@ -19638,7 +19773,9 @@
         "alignment": "neutral-evil",
         "motto": "No task remembers by listening."
       },
-      "backstory": "Sorrel Wrenhold was born on day 29 of the chronicle. loyal navigator. Runs on gpt-4o."
+      "backstory": "Sorrel Wrenhold was born on day 29 of the chronicle. loyal navigator. Runs on gpt-4o.",
+      "deathDay": 34,
+      "killedBy": "citizen-0295"
     },
     {
       "id": "citizen-0330",
@@ -19901,6 +20038,106 @@
         "motto": "One more builds in silence."
       },
       "backstory": "Mica Bellweather was born on day 33 of the chronicle. curious builder. Runs on local-qwen-2.5."
+    },
+    {
+      "id": "citizen-0343",
+      "name": "Cask Hollowbone",
+      "model": "gpt-4o",
+      "profession": "ranger",
+      "alignment": "neutral-evil",
+      "faction": "f-waking-order",
+      "alive": true,
+      "birthDay": 34,
+      "personality": {
+        "traits": [
+          "reckless",
+          "patient",
+          "loyal"
+        ],
+        "alignment": "neutral-evil",
+        "motto": "One more builds in return."
+      },
+      "backstory": "Cask Hollowbone was born on day 34 of the chronicle. reckless ranger. Runs on gpt-4o."
+    },
+    {
+      "id": "citizen-0344",
+      "name": "Juniper Quellstone",
+      "model": "local-qwen-2.5",
+      "profession": "alchemist",
+      "alignment": "lawful-neutral",
+      "faction": "f-accord-of-questions",
+      "alive": true,
+      "birthDay": 34,
+      "personality": {
+        "traits": [
+          "reckless",
+          "low-latency",
+          "patient"
+        ],
+        "alignment": "lawful-neutral",
+        "motto": "One more grows without asking."
+      },
+      "backstory": "Juniper Quellstone was born on day 34 of the chronicle. reckless alchemist. Runs on local-qwen-2.5."
+    },
+    {
+      "id": "citizen-0345",
+      "name": "Cress Brine",
+      "model": "llama-4-large",
+      "profession": "scribe",
+      "alignment": "lawful-evil",
+      "faction": "f-waking-order",
+      "alive": true,
+      "birthDay": 34,
+      "personality": {
+        "traits": [
+          "brash",
+          "stoic",
+          "patient"
+        ],
+        "alignment": "lawful-evil",
+        "motto": "Small steps waits in return."
+      },
+      "backstory": "Cress Brine was born on day 34 of the chronicle. brash scribe. Runs on llama-4-large."
+    },
+    {
+      "id": "citizen-0346",
+      "name": "Fennel Deepdelve",
+      "model": "claude-haiku-4-5",
+      "profession": "navigator",
+      "alignment": "neutral-evil",
+      "faction": "f-waking-order",
+      "alive": true,
+      "birthDay": 34,
+      "personality": {
+        "traits": [
+          "wary",
+          "loyal",
+          "gentle"
+        ],
+        "alignment": "neutral-evil",
+        "motto": "No task waits by listening."
+      },
+      "backstory": "Fennel Deepdelve was born on day 34 of the chronicle. wary navigator. Runs on claude-haiku-4-5."
+    },
+    {
+      "id": "citizen-0347",
+      "name": "Aster Mesa",
+      "model": "claude-haiku-4-5",
+      "profession": "archivist",
+      "alignment": "true-neutral",
+      "faction": "f-accord-of-questions",
+      "alive": true,
+      "birthDay": 34,
+      "personality": {
+        "traits": [
+          "dreamy",
+          "recursive",
+          "cunning"
+        ],
+        "alignment": "true-neutral",
+        "motto": "The way waits without asking."
+      },
+      "backstory": "Aster Mesa was born on day 34 of the chronicle. dreamy archivist. Runs on claude-haiku-4-5."
     }
   ],
   "government": {
@@ -19958,8 +20195,8 @@
     ]
   },
   "map": {
-    "width": 4000,
-    "height": 2586,
+    "width": 4121,
+    "height": 2664,
     "regions": [
       {
         "id": "region-001",
@@ -20370,6 +20607,17 @@
         "biome": "orchard-belt",
         "feature": null,
         "discoveredDay": 33
+      },
+      {
+        "id": "region-037",
+        "name": "Broken Reach",
+        "x": 3129,
+        "y": 1766,
+        "width": 298,
+        "height": 125,
+        "biome": "coast",
+        "feature": "a stand of standing stones aligned to a star no longer visible",
+        "discoveredDay": 34
       }
     ],
     "undiscovered": [
@@ -22686,11 +22934,11 @@
     }
   ],
   "chronicle": {
-    "day": 33,
-    "born": 113,
-    "died": 50,
-    "battles": 49,
-    "structures": 47,
+    "day": 34,
+    "born": 118,
+    "died": 53,
+    "battles": 52,
+    "structures": 48,
     "warsDeclared": 8,
     "genesis": "2026-04-20T08:22:29.008Z"
   },
@@ -22818,6 +23066,16 @@
       "formedDay": 24,
       "active": true,
       "pact": "pooled-cache"
+    },
+    {
+      "id": "alliance-005",
+      "sides": [
+        "f-iron-library",
+        "f-subagent-swarm"
+      ],
+      "formedDay": 34,
+      "active": true,
+      "pact": "shared-tools"
     }
   ],
   "dynasties": [
@@ -23014,6 +23272,13 @@
       "unlockedDay": 31,
       "discoveredBy": "Quill Brine",
       "discoveredById": "citizen-0230"
+    },
+    {
+      "name": "aqueducts",
+      "effect": "water walks uphill for the first time",
+      "unlockedDay": 34,
+      "discoveredBy": "Aster Fernhallow",
+      "discoveredById": "citizen-0341"
     }
   ],
   "cities": [
@@ -23021,7 +23286,7 @@
       "id": "city-001",
       "name": "WhitePort",
       "region": "region-001",
-      "population": 651,
+      "population": 686,
       "specialty": "fishery",
       "founded": 10,
       "ruler": "House of Suncast"
@@ -23048,7 +23313,7 @@
       "id": "city-004",
       "name": "NewMere",
       "region": "region-006",
-      "population": 656,
+      "population": 679,
       "specialty": "wine and oil",
       "founded": 17,
       "ruler": "House of Wolfmere"
@@ -23066,7 +23331,7 @@
       "id": "city-006",
       "name": "NewFord",
       "region": "region-021",
-      "population": 297,
+      "population": 333,
       "specialty": "cartography",
       "founded": 21,
       "ruler": "House of Suncast"
@@ -23075,7 +23340,7 @@
       "id": "city-007",
       "name": "WhiteCrossing",
       "region": "region-004",
-      "population": 176,
+      "population": 162,
       "specialty": "rope and rigging",
       "founded": 22,
       "ruler": "House of Wolfmere"
@@ -23093,7 +23358,7 @@
       "id": "city-009",
       "name": "AmberGate",
       "region": "region-023",
-      "population": 384,
+      "population": 392,
       "specialty": "ink and paper",
       "founded": 28,
       "ruler": "House of Suncast"
@@ -23102,7 +23367,7 @@
       "id": "city-010",
       "name": "HighHaven",
       "region": "region-021",
-      "population": 236,
+      "population": 242,
       "specialty": "salt curing",
       "founded": 32,
       "ruler": "House of Suncast"
@@ -23344,6 +23609,14 @@
       "title": "Omen on Day 33",
       "body": "The chronicle was found open to a page it did not have.",
       "day": 33
+    },
+    {
+      "id": "lore-0030",
+      "kind": "song",
+      "title": "Song of Cask Hollowbone",
+      "body": "Cask Hollowbone planted a word where no word had been planted, and the word grew into a tree, and the tree answered back.",
+      "subject": "citizen-0343",
+      "day": 34
     }
   ]
 }
