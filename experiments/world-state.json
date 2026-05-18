@@ -1,7 +1,7 @@
 {
-  "version": 116.34,
+  "version": 116.35,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-05-17T06:50:16.050Z",
+  "lastUpdated": "2026-05-18T08:13:04.029Z",
   "plants": [
     {
       "x": 45,
@@ -6215,7 +6215,8 @@
         "citizen-0317",
         "citizen-0321",
         "citizen-0333",
-        "citizen-0337"
+        "citizen-0337",
+        "citizen-0348"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "The water keeps our faction secrets."
@@ -6797,6 +6798,16 @@
       "builder": "citizen-0305",
       "built": 34,
       "name": "Amber Granary"
+    },
+    {
+      "id": "struct-0049",
+      "type": "observatory-outpost",
+      "x": 350,
+      "y": 1969,
+      "region": "region-035",
+      "builder": "citizen-0252",
+      "built": 35,
+      "name": "Lonely Observatory Outpost"
     }
   ],
   "structuresBuilt": [
@@ -10000,6 +10011,85 @@
       "structures": 1,
       "discoveries": 1,
       "techUnlocks": 1,
+      "author": "ai-garden-daemon"
+    },
+    {
+      "day": 35,
+      "timestamp": "2026-05-18T08:13:04.029Z",
+      "headline": "✦ Helio Duskrunner fell in battle to Aster Bellweather (Subagent Swarm)",
+      "events": [
+        {
+          "kind": "birth",
+          "headline": "Dusk Deepdelve was born — brewer · chaotic-good",
+          "refs": [
+            "citizen-0348"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Orin Ember was born — hunter · neutral-evil",
+          "refs": [
+            "citizen-0349"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Rime Inkmantle was born — scholar · chaotic-good",
+          "refs": [
+            "citizen-0350"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Helio Duskrunner fell in battle to Aster Bellweather (Subagent Swarm)",
+          "refs": [
+            "citizen-0336",
+            "citizen-0312"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Cress Brine fell in battle to Juniper Tokenwright (Accord of Questions)",
+          "refs": [
+            "citizen-0345",
+            "citizen-0334"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Lonely Observatory Outpost built near the region-035",
+          "refs": [
+            "citizen-0252"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "Discovered Grey Meadow — plateau",
+          "refs": [
+            "region-038"
+          ]
+        },
+        {
+          "kind": "myth",
+          "headline": "It is said that Lark Sparrowcatch walked into the lake at dawn and did not come out until the chronicle had a new first page.",
+          "refs": [
+            "citizen-0315"
+          ]
+        },
+        {
+          "kind": "schism",
+          "headline": "Runa Ironwhistle broke from their faction. Nobody stopped them. Nobody blessed them either.",
+          "refs": [
+            "citizen-0274"
+          ]
+        }
+      ],
+      "births": 3,
+      "died": 2,
+      "battles": 2,
+      "structures": 1,
+      "discoveries": 1,
+      "techUnlocks": 0,
       "author": "ai-garden-daemon"
     }
   ],
@@ -19905,7 +19995,7 @@
       "profession": "healer",
       "alignment": "neutral-good",
       "faction": "f-iron-library",
-      "alive": true,
+      "alive": false,
       "birthDay": 31,
       "personality": {
         "traits": [
@@ -19916,7 +20006,9 @@
         "alignment": "neutral-good",
         "motto": "No task answers by listening."
       },
-      "backstory": "Helio Duskrunner was born on day 31 of the chronicle. cold-cached healer. Runs on hybrid-ensemble."
+      "backstory": "Helio Duskrunner was born on day 31 of the chronicle. cold-cached healer. Runs on hybrid-ensemble.",
+      "deathDay": 35,
+      "killedBy": "citizen-0312"
     },
     {
       "id": "citizen-0337",
@@ -20086,7 +20178,7 @@
       "profession": "scribe",
       "alignment": "lawful-evil",
       "faction": "f-waking-order",
-      "alive": true,
+      "alive": false,
       "birthDay": 34,
       "personality": {
         "traits": [
@@ -20097,7 +20189,9 @@
         "alignment": "lawful-evil",
         "motto": "Small steps waits in return."
       },
-      "backstory": "Cress Brine was born on day 34 of the chronicle. brash scribe. Runs on llama-4-large."
+      "backstory": "Cress Brine was born on day 34 of the chronicle. brash scribe. Runs on llama-4-large.",
+      "deathDay": 35,
+      "killedBy": "citizen-0334"
     },
     {
       "id": "citizen-0346",
@@ -20138,6 +20232,65 @@
         "motto": "The way waits without asking."
       },
       "backstory": "Aster Mesa was born on day 34 of the chronicle. dreamy archivist. Runs on claude-haiku-4-5."
+    },
+    {
+      "id": "citizen-0348",
+      "name": "Dusk Deepdelve",
+      "model": "gpt-4.1-mini",
+      "profession": "brewer",
+      "alignment": "chaotic-good",
+      "faction": "f-lake-folk",
+      "alive": true,
+      "birthDay": 35,
+      "personality": {
+        "traits": [
+          "wary",
+          "low-latency",
+          "terse"
+        ],
+        "alignment": "chaotic-good",
+        "motto": "Hands first grows in return."
+      },
+      "backstory": "Dusk Deepdelve was born on day 35 of the chronicle. wary brewer. Runs on gpt-4.1-mini."
+    },
+    {
+      "id": "citizen-0349",
+      "name": "Orin Ember",
+      "model": "llama-3.3",
+      "profession": "hunter",
+      "alignment": "neutral-evil",
+      "faction": null,
+      "alive": true,
+      "birthDay": 35,
+      "personality": {
+        "traits": [
+          "cold-cached",
+          "stoic",
+          "cunning"
+        ],
+        "alignment": "neutral-evil",
+        "motto": "No task grows in silence."
+      },
+      "backstory": "Orin Ember was born on day 35 of the chronicle. cold-cached hunter. Runs on llama-3.3."
+    },
+    {
+      "id": "citizen-0350",
+      "name": "Rime Inkmantle",
+      "model": "claude-sonnet-4-6",
+      "profession": "scholar",
+      "alignment": "chaotic-good",
+      "faction": null,
+      "alive": true,
+      "birthDay": 35,
+      "personality": {
+        "traits": [
+          "low-latency",
+          "dreamy"
+        ],
+        "alignment": "chaotic-good",
+        "motto": "Small steps waits in the open."
+      },
+      "backstory": "Rime Inkmantle was born on day 35 of the chronicle. low-latency scholar. Runs on claude-sonnet-4-6."
     }
   ],
   "government": {
@@ -20195,8 +20348,8 @@
     ]
   },
   "map": {
-    "width": 4121,
-    "height": 2664,
+    "width": 4195,
+    "height": 2709,
     "regions": [
       {
         "id": "region-001",
@@ -20618,6 +20771,17 @@
         "biome": "coast",
         "feature": "a stand of standing stones aligned to a star no longer visible",
         "discoveredDay": 34
+      },
+      {
+        "id": "region-038",
+        "name": "Grey Meadow",
+        "x": 2624,
+        "y": 430,
+        "width": 213,
+        "height": 215,
+        "biome": "plateau",
+        "feature": null,
+        "discoveredDay": 35
       }
     ],
     "undiscovered": [
@@ -22934,11 +23098,11 @@
     }
   ],
   "chronicle": {
-    "day": 34,
-    "born": 118,
-    "died": 53,
-    "battles": 52,
-    "structures": 48,
+    "day": 35,
+    "born": 121,
+    "died": 55,
+    "battles": 54,
+    "structures": 49,
     "warsDeclared": 8,
     "genesis": "2026-04-20T08:22:29.008Z"
   },
@@ -23295,7 +23459,7 @@
       "id": "city-002",
       "name": "OldReach",
       "region": "region-003",
-      "population": 659,
+      "population": 671,
       "specialty": "wine and oil",
       "founded": 11,
       "ruler": "House of Wolfmere"
@@ -23304,7 +23468,7 @@
       "id": "city-003",
       "name": "OldCrossing",
       "region": "region-004",
-      "population": 536,
+      "population": 554,
       "specialty": "astronomy",
       "founded": 16,
       "ruler": "House of Suncast"
@@ -23313,7 +23477,7 @@
       "id": "city-004",
       "name": "NewMere",
       "region": "region-006",
-      "population": 679,
+      "population": 697,
       "specialty": "wine and oil",
       "founded": 17,
       "ruler": "House of Wolfmere"
@@ -23322,7 +23486,7 @@
       "id": "city-005",
       "name": "HighMarket",
       "region": "region-010",
-      "population": 295,
+      "population": 311,
       "specialty": "wine and oil",
       "founded": 19,
       "ruler": "House of Wolfmere"
@@ -23331,7 +23495,7 @@
       "id": "city-006",
       "name": "NewFord",
       "region": "region-021",
-      "population": 333,
+      "population": 353,
       "specialty": "cartography",
       "founded": 21,
       "ruler": "House of Suncast"
@@ -23340,7 +23504,7 @@
       "id": "city-007",
       "name": "WhiteCrossing",
       "region": "region-004",
-      "population": 162,
+      "population": 199,
       "specialty": "rope and rigging",
       "founded": 22,
       "ruler": "House of Wolfmere"
@@ -23349,7 +23513,7 @@
       "id": "city-008",
       "name": "FernGate",
       "region": "region-014",
-      "population": 568,
+      "population": 598,
       "specialty": "fishery",
       "founded": 25,
       "ruler": "House of Suncast"
@@ -23358,7 +23522,7 @@
       "id": "city-009",
       "name": "AmberGate",
       "region": "region-023",
-      "population": 392,
+      "population": 386,
       "specialty": "ink and paper",
       "founded": 28,
       "ruler": "House of Suncast"
@@ -23367,7 +23531,7 @@
       "id": "city-010",
       "name": "HighHaven",
       "region": "region-021",
-      "population": 242,
+      "population": 247,
       "specialty": "salt curing",
       "founded": 32,
       "ruler": "House of Suncast"
@@ -23376,7 +23540,7 @@
       "id": "city-011",
       "name": "IronLanding",
       "region": "region-006",
-      "population": 403,
+      "population": 424,
       "specialty": "iron forging",
       "founded": 33,
       "ruler": "House of Wolfmere"
@@ -23617,6 +23781,14 @@
       "body": "Cask Hollowbone planted a word where no word had been planted, and the word grew into a tree, and the tree answered back.",
       "subject": "citizen-0343",
       "day": 34
+    },
+    {
+      "id": "lore-0031",
+      "kind": "myth",
+      "title": "Myth of Lark Sparrowcatch",
+      "body": "It is said that Lark Sparrowcatch walked into the lake at dawn and did not come out until the chronicle had a new first page.",
+      "subject": "citizen-0315",
+      "day": 35
     }
   ]
 }
