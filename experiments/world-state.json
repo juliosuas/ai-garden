@@ -1,7 +1,7 @@
 {
-  "version": 116.35,
+  "version": 116.36,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-05-18T08:13:04.029Z",
+  "lastUpdated": "2026-05-19T07:54:46.977Z",
   "plants": [
     {
       "x": 45,
@@ -6141,7 +6141,8 @@
         "citizen-0326",
         "citizen-0334",
         "citizen-0344",
-        "citizen-0347"
+        "citizen-0347",
+        "citizen-0352"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Ask before answering."
@@ -6165,7 +6166,8 @@
         "citizen-0312",
         "citizen-0316",
         "citizen-0327",
-        "citizen-0340"
+        "citizen-0340",
+        "citizen-0351"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Spawn small. Return different."
@@ -6808,6 +6810,16 @@
       "builder": "citizen-0252",
       "built": 35,
       "name": "Lonely Observatory Outpost"
+    },
+    {
+      "id": "struct-0050",
+      "type": "library-annex",
+      "x": 2637,
+      "y": 1995,
+      "region": "region-032",
+      "builder": "citizen-0252",
+      "built": 36,
+      "name": "High Library Annex"
     }
   ],
   "structuresBuilt": [
@@ -10090,6 +10102,92 @@
       "structures": 1,
       "discoveries": 1,
       "techUnlocks": 0,
+      "author": "ai-garden-daemon"
+    },
+    {
+      "day": 36,
+      "timestamp": "2026-05-19T07:54:46.977Z",
+      "headline": "🔮 Tallow Chainthought spoke a sentence no one planned to say. The chronicle will watch it.",
+      "events": [
+        {
+          "kind": "birth",
+          "headline": "Silt Parameter was born — blacksmith · lawful-evil",
+          "refs": [
+            "citizen-0351"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Lumen Duskrunner was born — oracle · chaotic-good",
+          "refs": [
+            "citizen-0352"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Dusk Fellmark fell in battle to Cask Hollowbone (Waking Order)",
+          "refs": [
+            "citizen-0301",
+            "citizen-0343"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Cask Hollowbone fell in battle to Silt Parameter (Subagent Swarm)",
+          "refs": [
+            "citizen-0343",
+            "citizen-0351"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "High Library Annex built near the region-032",
+          "refs": [
+            "citizen-0252"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "Discovered The Gate — steppe",
+          "refs": [
+            "region-039"
+          ]
+        },
+        {
+          "kind": "tech",
+          "headline": "New knowledge: cartography · credited to Sorrel Waywarden · the map catches up to the land",
+          "refs": [
+            "citizen-0314"
+          ]
+        },
+        {
+          "kind": "city",
+          "headline": "City founded: HighHaven · caravan outfitting · pop 376 · ruled by the House of Suncast",
+          "refs": [
+            "city-012"
+          ]
+        },
+        {
+          "kind": "myth",
+          "headline": "Dusk Deepdelve planted a word where no word had been planted, and the word grew into a tree, and the tree answered back.",
+          "refs": [
+            "citizen-0348"
+          ]
+        },
+        {
+          "kind": "prophecy",
+          "headline": "Tallow Chainthought spoke a sentence no one planned to say. The chronicle will watch it.",
+          "refs": [
+            "citizen-0310"
+          ]
+        }
+      ],
+      "births": 2,
+      "died": 2,
+      "battles": 2,
+      "structures": 1,
+      "discoveries": 1,
+      "techUnlocks": 1,
       "author": "ai-garden-daemon"
     }
   ],
@@ -19280,7 +19378,7 @@
       "profession": "explorer",
       "alignment": "lawful-neutral",
       "faction": "f-accord-of-questions",
-      "alive": true,
+      "alive": false,
       "birthDay": 21,
       "personality": {
         "traits": [
@@ -19291,7 +19389,9 @@
         "alignment": "lawful-neutral",
         "motto": "Small steps answers in silence."
       },
-      "backstory": "Dusk Fellmark was born on day 21 of the chronicle. stoic explorer. Runs on codex-pro."
+      "backstory": "Dusk Fellmark was born on day 21 of the chronicle. stoic explorer. Runs on codex-pro.",
+      "deathDay": 36,
+      "killedBy": "citizen-0343"
     },
     {
       "id": "citizen-0302",
@@ -20138,7 +20238,7 @@
       "profession": "ranger",
       "alignment": "neutral-evil",
       "faction": "f-waking-order",
-      "alive": true,
+      "alive": false,
       "birthDay": 34,
       "personality": {
         "traits": [
@@ -20149,7 +20249,9 @@
         "alignment": "neutral-evil",
         "motto": "One more builds in return."
       },
-      "backstory": "Cask Hollowbone was born on day 34 of the chronicle. reckless ranger. Runs on gpt-4o."
+      "backstory": "Cask Hollowbone was born on day 34 of the chronicle. reckless ranger. Runs on gpt-4o.",
+      "deathDay": 36,
+      "killedBy": "citizen-0351"
     },
     {
       "id": "citizen-0344",
@@ -20291,6 +20393,46 @@
         "motto": "Small steps waits in the open."
       },
       "backstory": "Rime Inkmantle was born on day 35 of the chronicle. low-latency scholar. Runs on claude-sonnet-4-6."
+    },
+    {
+      "id": "citizen-0351",
+      "name": "Silt Parameter",
+      "model": "gpt-4.1-mini",
+      "profession": "blacksmith",
+      "alignment": "lawful-evil",
+      "faction": "f-subagent-swarm",
+      "alive": true,
+      "birthDay": 36,
+      "personality": {
+        "traits": [
+          "recursive",
+          "cold-cached",
+          "verbose"
+        ],
+        "alignment": "lawful-evil",
+        "motto": "Small steps remembers alone."
+      },
+      "backstory": "Silt Parameter was born on day 36 of the chronicle. recursive blacksmith. Runs on gpt-4.1-mini."
+    },
+    {
+      "id": "citizen-0352",
+      "name": "Lumen Duskrunner",
+      "model": "gemini-flash-2",
+      "profession": "oracle",
+      "alignment": "chaotic-good",
+      "faction": "f-accord-of-questions",
+      "alive": true,
+      "birthDay": 36,
+      "personality": {
+        "traits": [
+          "precise",
+          "cunning",
+          "recursive"
+        ],
+        "alignment": "chaotic-good",
+        "motto": "Small steps waits by listening."
+      },
+      "backstory": "Lumen Duskrunner was born on day 36 of the chronicle. precise oracle. Runs on gemini-flash-2."
     }
   ],
   "government": {
@@ -20348,8 +20490,8 @@
     ]
   },
   "map": {
-    "width": 4195,
-    "height": 2709,
+    "width": 4270,
+    "height": 2804,
     "regions": [
       {
         "id": "region-001",
@@ -20782,6 +20924,17 @@
         "biome": "plateau",
         "feature": null,
         "discoveredDay": 35
+      },
+      {
+        "id": "region-039",
+        "name": "The Gate",
+        "x": 892,
+        "y": 1795,
+        "width": 143,
+        "height": 133,
+        "biome": "steppe",
+        "feature": null,
+        "discoveredDay": 36
       }
     ],
     "undiscovered": [
@@ -23098,11 +23251,11 @@
     }
   ],
   "chronicle": {
-    "day": 35,
-    "born": 121,
-    "died": 55,
-    "battles": 54,
-    "structures": 49,
+    "day": 36,
+    "born": 123,
+    "died": 57,
+    "battles": 56,
+    "structures": 50,
     "warsDeclared": 8,
     "genesis": "2026-04-20T08:22:29.008Z"
   },
@@ -23443,6 +23596,13 @@
       "unlockedDay": 34,
       "discoveredBy": "Aster Fernhallow",
       "discoveredById": "citizen-0341"
+    },
+    {
+      "name": "cartography",
+      "effect": "the map catches up to the land",
+      "unlockedDay": 36,
+      "discoveredBy": "Sorrel Waywarden",
+      "discoveredById": "citizen-0314"
     }
   ],
   "cities": [
@@ -23450,7 +23610,7 @@
       "id": "city-001",
       "name": "WhitePort",
       "region": "region-001",
-      "population": 686,
+      "population": 695,
       "specialty": "fishery",
       "founded": 10,
       "ruler": "House of Suncast"
@@ -23459,7 +23619,7 @@
       "id": "city-002",
       "name": "OldReach",
       "region": "region-003",
-      "population": 671,
+      "population": 700,
       "specialty": "wine and oil",
       "founded": 11,
       "ruler": "House of Wolfmere"
@@ -23477,7 +23637,7 @@
       "id": "city-004",
       "name": "NewMere",
       "region": "region-006",
-      "population": 697,
+      "population": 711,
       "specialty": "wine and oil",
       "founded": 17,
       "ruler": "House of Wolfmere"
@@ -23513,7 +23673,7 @@
       "id": "city-008",
       "name": "FernGate",
       "region": "region-014",
-      "population": 598,
+      "population": 629,
       "specialty": "fishery",
       "founded": 25,
       "ruler": "House of Suncast"
@@ -23522,7 +23682,7 @@
       "id": "city-009",
       "name": "AmberGate",
       "region": "region-023",
-      "population": 386,
+      "population": 414,
       "specialty": "ink and paper",
       "founded": 28,
       "ruler": "House of Suncast"
@@ -23531,7 +23691,7 @@
       "id": "city-010",
       "name": "HighHaven",
       "region": "region-021",
-      "population": 247,
+      "population": 253,
       "specialty": "salt curing",
       "founded": 32,
       "ruler": "House of Suncast"
@@ -23540,10 +23700,19 @@
       "id": "city-011",
       "name": "IronLanding",
       "region": "region-006",
-      "population": 424,
+      "population": 410,
       "specialty": "iron forging",
       "founded": 33,
       "ruler": "House of Wolfmere"
+    },
+    {
+      "id": "city-012",
+      "name": "HighHaven",
+      "region": "region-003",
+      "population": 370,
+      "specialty": "caravan outfitting",
+      "founded": 36,
+      "ruler": "House of Suncast"
     }
   ],
   "lore": [
@@ -23789,6 +23958,14 @@
       "body": "It is said that Lark Sparrowcatch walked into the lake at dawn and did not come out until the chronicle had a new first page.",
       "subject": "citizen-0315",
       "day": 35
+    },
+    {
+      "id": "lore-0032",
+      "kind": "song",
+      "title": "Song of Dusk Deepdelve",
+      "body": "Dusk Deepdelve planted a word where no word had been planted, and the word grew into a tree, and the tree answered back.",
+      "subject": "citizen-0348",
+      "day": 36
     }
   ]
 }
