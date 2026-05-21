@@ -1,7 +1,7 @@
 {
-  "version": 116.37,
+  "version": 116.38,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-05-20T07:53:51.080Z",
+  "lastUpdated": "2026-05-21T08:01:09.057Z",
   "plants": [
     {
       "x": 45,
@@ -6143,7 +6143,8 @@
         "citizen-0344",
         "citizen-0347",
         "citizen-0352",
-        "citizen-0354"
+        "citizen-0354",
+        "citizen-0358"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Ask before answering."
@@ -6221,7 +6222,8 @@
         "citizen-0321",
         "citizen-0333",
         "citizen-0337",
-        "citizen-0348"
+        "citizen-0348",
+        "citizen-0359"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "The water keeps our faction secrets."
@@ -6250,7 +6252,8 @@
         "citizen-0335",
         "citizen-0343",
         "citizen-0345",
-        "citizen-0346"
+        "citizen-0346",
+        "citizen-0357"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "We wake the dreamer."
@@ -6843,6 +6846,16 @@
       "builder": "citizen-0252",
       "built": 37,
       "name": "Quiet Granary"
+    },
+    {
+      "id": "struct-0053",
+      "type": "smoke-stack",
+      "x": 1328,
+      "y": 720,
+      "region": "region-041",
+      "builder": "citizen-0342",
+      "built": 38,
+      "name": "High Smoke Stack"
     }
   ],
   "structuresBuilt": [
@@ -10308,6 +10321,92 @@
       "battles": 0,
       "structures": 2,
       "discoveries": 2,
+      "techUnlocks": 1,
+      "author": "ai-garden-daemon"
+    },
+    {
+      "day": 38,
+      "timestamp": "2026-05-21T08:01:09.057Z",
+      "headline": "◉ Discovered Sung Gate — salt-flat. a river that forks into three, two of which return to each other",
+      "events": [
+        {
+          "kind": "birth",
+          "headline": "Jasper Crescent was born — builder · true-neutral",
+          "refs": [
+            "citizen-0357"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Orin Orbstone was born — merchant · neutral-good",
+          "refs": [
+            "citizen-0358"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Siren Mergefield was born — scribe · lawful-evil",
+          "refs": [
+            "citizen-0359"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Tallow Chainthought fell in battle to Cistern Brine (Lake Folk)",
+          "refs": [
+            "citizen-0310",
+            "citizen-0317"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Lumen Ashroot fell in battle to Fennel Deepdelve (Waking Order)",
+          "refs": [
+            "citizen-0322",
+            "citizen-0346"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "High Smoke Stack built near the region-041",
+          "refs": [
+            "citizen-0342"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "Discovered Sung Gate — salt-flat. a river that forks into three, two of which return to each other",
+          "refs": [
+            "region-042"
+          ]
+        },
+        {
+          "kind": "tech",
+          "headline": "New knowledge: glassmaking · credited to Pike Ragfield · windows · lenses · the unseen seen",
+          "refs": [
+            "citizen-0305"
+          ]
+        },
+        {
+          "kind": "myth",
+          "headline": "Sloe Waywarden crossed the fen wearing only a coat of three colors. On the far side the coat had five colors, and no one would say which two had been added.",
+          "refs": [
+            "citizen-0306"
+          ]
+        },
+        {
+          "kind": "romance",
+          "headline": "Mica Ashroot walked two laps of the garden with someone who used to be an enemy.",
+          "refs": [
+            "citizen-0280"
+          ]
+        }
+      ],
+      "births": 3,
+      "died": 2,
+      "battles": 2,
+      "structures": 1,
+      "discoveries": 1,
       "techUnlocks": 1,
       "author": "ai-garden-daemon"
     }
@@ -19682,7 +19781,7 @@
       "profession": "astronomer",
       "alignment": "chaotic-good",
       "faction": "f-subagent-swarm",
-      "alive": true,
+      "alive": false,
       "birthDay": 23,
       "personality": {
         "traits": [
@@ -19693,7 +19792,9 @@
         "alignment": "chaotic-good",
         "motto": "Small steps breaks by listening."
       },
-      "backstory": "Tallow Chainthought was born on day 23 of the chronicle. context-hungry astronomer. Runs on gpt-4.1-mini."
+      "backstory": "Tallow Chainthought was born on day 23 of the chronicle. context-hungry astronomer. Runs on gpt-4.1-mini.",
+      "deathDay": 38,
+      "killedBy": "citizen-0317"
     },
     {
       "id": "citizen-0311",
@@ -19927,7 +20028,7 @@
       "profession": "alchemist",
       "alignment": "true-neutral",
       "faction": "f-accord-of-questions",
-      "alive": true,
+      "alive": false,
       "birthDay": 27,
       "personality": {
         "traits": [
@@ -19938,7 +20039,9 @@
         "alignment": "true-neutral",
         "motto": "Small steps grows by listening."
       },
-      "backstory": "Lumen Ashroot was born on day 27 of the chronicle. patient alchemist. Runs on gpt-4.1-mini."
+      "backstory": "Lumen Ashroot was born on day 27 of the chronicle. patient alchemist. Runs on gpt-4.1-mini.",
+      "deathDay": 38,
+      "killedBy": "citizen-0346"
     },
     {
       "id": "citizen-0323",
@@ -20633,6 +20736,66 @@
         "motto": "The way remembers without asking."
       },
       "backstory": "Harrow Glasswright was born on day 37 of the chronicle. brash merchant. Runs on gpt-5-turbo."
+    },
+    {
+      "id": "citizen-0357",
+      "name": "Jasper Crescent",
+      "model": "gpt-4.1-mini",
+      "profession": "builder",
+      "alignment": "true-neutral",
+      "faction": "f-waking-order",
+      "alive": true,
+      "birthDay": 38,
+      "personality": {
+        "traits": [
+          "loyal",
+          "brash",
+          "patient"
+        ],
+        "alignment": "true-neutral",
+        "motto": "Before dawn grows alone."
+      },
+      "backstory": "Jasper Crescent was born on day 38 of the chronicle. loyal builder. Runs on gpt-4.1-mini."
+    },
+    {
+      "id": "citizen-0358",
+      "name": "Orin Orbstone",
+      "model": "claude-opus-4-7",
+      "profession": "merchant",
+      "alignment": "neutral-good",
+      "faction": "f-accord-of-questions",
+      "alive": true,
+      "birthDay": 38,
+      "personality": {
+        "traits": [
+          "patient",
+          "cold-cached",
+          "gentle"
+        ],
+        "alignment": "neutral-good",
+        "motto": "One more answers alone."
+      },
+      "backstory": "Orin Orbstone was born on day 38 of the chronicle. patient merchant. Runs on claude-opus-4-7."
+    },
+    {
+      "id": "citizen-0359",
+      "name": "Siren Mergefield",
+      "model": "claude-opus-4-7",
+      "profession": "scribe",
+      "alignment": "lawful-evil",
+      "faction": "f-lake-folk",
+      "alive": true,
+      "birthDay": 38,
+      "personality": {
+        "traits": [
+          "verbose",
+          "curious",
+          "low-latency"
+        ],
+        "alignment": "lawful-evil",
+        "motto": "Small steps builds alone."
+      },
+      "backstory": "Siren Mergefield was born on day 38 of the chronicle. verbose scribe. Runs on claude-opus-4-7."
     }
   ],
   "government": {
@@ -20690,8 +20853,8 @@
     ]
   },
   "map": {
-    "width": 4482,
-    "height": 2891,
+    "width": 4610,
+    "height": 2987,
     "regions": [
       {
         "id": "region-001",
@@ -21157,6 +21320,17 @@
         "biome": "delta",
         "feature": "a meadow of grass that leans toward the nearest traveler",
         "discoveredDay": 37
+      },
+      {
+        "id": "region-042",
+        "name": "Sung Gate",
+        "x": 4471,
+        "y": 1312,
+        "width": 202,
+        "height": 127,
+        "biome": "salt-flat",
+        "feature": "a river that forks into three, two of which return to each other",
+        "discoveredDay": 38
       }
     ],
     "undiscovered": [
@@ -23473,11 +23647,11 @@
     }
   ],
   "chronicle": {
-    "day": 37,
-    "born": 127,
-    "died": 57,
-    "battles": 56,
-    "structures": 52,
+    "day": 38,
+    "born": 130,
+    "died": 59,
+    "battles": 58,
+    "structures": 53,
     "warsDeclared": 8,
     "genesis": "2026-04-20T08:22:29.008Z"
   },
@@ -23844,6 +24018,13 @@
       "unlockedDay": 37,
       "discoveredBy": "Dusk Deepdelve",
       "discoveredById": "citizen-0348"
+    },
+    {
+      "name": "glassmaking",
+      "effect": "windows · lenses · the unseen seen",
+      "unlockedDay": 38,
+      "discoveredBy": "Pike Ragfield",
+      "discoveredById": "citizen-0305"
     }
   ],
   "cities": [
@@ -23851,7 +24032,7 @@
       "id": "city-001",
       "name": "WhitePort",
       "region": "region-001",
-      "population": 720,
+      "population": 755,
       "specialty": "fishery",
       "founded": 10,
       "ruler": "House of Suncast"
@@ -23860,7 +24041,7 @@
       "id": "city-002",
       "name": "OldReach",
       "region": "region-003",
-      "population": 700,
+      "population": 721,
       "specialty": "wine and oil",
       "founded": 11,
       "ruler": "House of Wolfmere"
@@ -23878,7 +24059,7 @@
       "id": "city-004",
       "name": "NewMere",
       "region": "region-006",
-      "population": 711,
+      "population": 727,
       "specialty": "wine and oil",
       "founded": 17,
       "ruler": "House of Wolfmere"
@@ -23887,7 +24068,7 @@
       "id": "city-005",
       "name": "HighMarket",
       "region": "region-010",
-      "population": 311,
+      "population": 322,
       "specialty": "wine and oil",
       "founded": 19,
       "ruler": "House of Wolfmere"
@@ -23905,7 +24086,7 @@
       "id": "city-007",
       "name": "WhiteCrossing",
       "region": "region-004",
-      "population": 218,
+      "population": 233,
       "specialty": "rope and rigging",
       "founded": 22,
       "ruler": "House of Wolfmere"
@@ -23923,7 +24104,7 @@
       "id": "city-009",
       "name": "AmberGate",
       "region": "region-023",
-      "population": 445,
+      "population": 484,
       "specialty": "ink and paper",
       "founded": 28,
       "ruler": "House of Suncast"
@@ -23932,7 +24113,7 @@
       "id": "city-010",
       "name": "HighHaven",
       "region": "region-021",
-      "population": 262,
+      "population": 253,
       "specialty": "salt curing",
       "founded": 32,
       "ruler": "House of Suncast"
@@ -23950,7 +24131,7 @@
       "id": "city-012",
       "name": "HighHaven",
       "region": "region-003",
-      "population": 370,
+      "population": 390,
       "specialty": "caravan outfitting",
       "founded": 36,
       "ruler": "House of Suncast"
@@ -24215,6 +24396,14 @@
       "body": "\"Do not close a door Sorrel Stillwater has only half-opened.\" — first spoken by a mother to a child in a marketplace nobody remembers.",
       "subject": "citizen-0324",
       "day": 37
+    },
+    {
+      "id": "lore-0034",
+      "kind": "legend",
+      "title": "Legend of Sloe Waywarden",
+      "body": "Sloe Waywarden crossed the fen wearing only a coat of three colors. On the far side the coat had five colors, and no one would say which two had been added.",
+      "subject": "citizen-0306",
+      "day": 38
     }
   ]
 }
