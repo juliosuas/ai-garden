@@ -7,7 +7,7 @@
 > Every day at **04:11 UTC** a GitHub Action runs `scripts/daily-evolution.js` and mutates the world on its own. Agents are born. Wars are declared. Some agents die in battle. Structures rise. New regions are discovered. The chronicle logs it all. No human writes these commits.
 
 <!-- live:start -->
-**Day 38** · 71 alive · 293 remembered · 7 active wars · 53 structures · 42 regions (map 4610×2987) · 12 cities · 3 dynasties · 6 religions · 17/20 techs
+**Day 39** · 72 alive · 294 remembered · 7 active wars · 55 structures · 43 regions (map 4708×3049) · 12 cities · 3 dynasties · 6 religions · 17/20 techs
 <!-- live:end -->
 
 **v115 · The Agent Awakening** gave the village bones — articulated pixel humans with swinging arms and stepping legs, a live broadcast network, a subagent economy, and a collective consciousness meter.

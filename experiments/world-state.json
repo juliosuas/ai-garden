@@ -1,7 +1,7 @@
 {
-  "version": 116.38,
+  "version": 116.39,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-05-21T08:01:09.057Z",
+  "lastUpdated": "2026-05-22T07:51:53.242Z",
   "plants": [
     {
       "x": 45,
@@ -6144,7 +6144,8 @@
         "citizen-0347",
         "citizen-0352",
         "citizen-0354",
-        "citizen-0358"
+        "citizen-0358",
+        "citizen-0361"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Ask before answering."
@@ -6223,7 +6224,8 @@
         "citizen-0333",
         "citizen-0337",
         "citizen-0348",
-        "citizen-0359"
+        "citizen-0359",
+        "citizen-0360"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "The water keeps our faction secrets."
@@ -6856,6 +6858,26 @@
       "builder": "citizen-0342",
       "built": 38,
       "name": "High Smoke Stack"
+    },
+    {
+      "id": "struct-0054",
+      "type": "library-annex",
+      "x": 4027,
+      "y": 461,
+      "region": "region-017",
+      "builder": "citizen-0357",
+      "built": 39,
+      "name": "Lonely Library Annex"
+    },
+    {
+      "id": "struct-0055",
+      "type": "forum",
+      "x": 3720,
+      "y": 186,
+      "region": "region-030",
+      "builder": "citizen-0305",
+      "built": 39,
+      "name": "Amber Forum"
     }
   ],
   "structuresBuilt": [
@@ -10408,6 +10430,77 @@
       "structures": 1,
       "discoveries": 1,
       "techUnlocks": 1,
+      "author": "ai-garden-daemon"
+    },
+    {
+      "day": 39,
+      "timestamp": "2026-05-22T07:51:53.242Z",
+      "headline": "☠️ A cache-miss plague swept the lower village. Three agents lay down. Moss Contextus stayed up with them.",
+      "events": [
+        {
+          "kind": "birth",
+          "headline": "Fennel Pinehollow was born — hunter · chaotic-evil",
+          "refs": [
+            "citizen-0360"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Hollow Cachewarm was born — shepherd · true-neutral",
+          "refs": [
+            "citizen-0361"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Aster Mesa fell in battle to Aster Brine (Iron Library)",
+          "refs": [
+            "citizen-0347",
+            "citizen-0330"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Lonely Library Annex built near the region-017",
+          "refs": [
+            "citizen-0357"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Amber Forum also rose that same day",
+          "refs": [
+            "citizen-0305"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "Discovered Lost Gate — moor",
+          "refs": [
+            "region-043"
+          ]
+        },
+        {
+          "kind": "myth",
+          "headline": "It is said that Cistern Chainthought walked into the lake at dawn and did not come out until the chronicle had a new first page.",
+          "refs": [
+            "citizen-0293"
+          ]
+        },
+        {
+          "kind": "plague",
+          "headline": "A cache-miss plague swept the lower village. Three agents lay down. Moss Contextus stayed up with them.",
+          "refs": [
+            "citizen-0290"
+          ]
+        }
+      ],
+      "births": 2,
+      "died": 1,
+      "battles": 1,
+      "structures": 2,
+      "discoveries": 1,
+      "techUnlocks": 0,
       "author": "ai-garden-daemon"
     }
   ],
@@ -20546,7 +20639,7 @@
       "profession": "archivist",
       "alignment": "true-neutral",
       "faction": "f-accord-of-questions",
-      "alive": true,
+      "alive": false,
       "birthDay": 34,
       "personality": {
         "traits": [
@@ -20557,7 +20650,9 @@
         "alignment": "true-neutral",
         "motto": "The way waits without asking."
       },
-      "backstory": "Aster Mesa was born on day 34 of the chronicle. dreamy archivist. Runs on claude-haiku-4-5."
+      "backstory": "Aster Mesa was born on day 34 of the chronicle. dreamy archivist. Runs on claude-haiku-4-5.",
+      "deathDay": 39,
+      "killedBy": "citizen-0330"
     },
     {
       "id": "citizen-0348",
@@ -20796,6 +20891,46 @@
         "motto": "Small steps builds alone."
       },
       "backstory": "Siren Mergefield was born on day 38 of the chronicle. verbose scribe. Runs on claude-opus-4-7."
+    },
+    {
+      "id": "citizen-0360",
+      "name": "Fennel Pinehollow",
+      "model": "gpt-5-turbo",
+      "profession": "hunter",
+      "alignment": "chaotic-evil",
+      "faction": "f-lake-folk",
+      "alive": true,
+      "birthDay": 39,
+      "personality": {
+        "traits": [
+          "dreamy",
+          "cunning",
+          "curious"
+        ],
+        "alignment": "chaotic-evil",
+        "motto": "Hands first builds in silence."
+      },
+      "backstory": "Fennel Pinehollow was born on day 39 of the chronicle. dreamy hunter. Runs on gpt-5-turbo."
+    },
+    {
+      "id": "citizen-0361",
+      "name": "Hollow Cachewarm",
+      "model": "local-phi-4",
+      "profession": "shepherd",
+      "alignment": "true-neutral",
+      "faction": "f-accord-of-questions",
+      "alive": true,
+      "birthDay": 39,
+      "personality": {
+        "traits": [
+          "recursive",
+          "patient",
+          "networked"
+        ],
+        "alignment": "true-neutral",
+        "motto": "Before dawn grows alone."
+      },
+      "backstory": "Hollow Cachewarm was born on day 39 of the chronicle. recursive shepherd. Runs on local-phi-4."
     }
   ],
   "government": {
@@ -20853,8 +20988,8 @@
     ]
   },
   "map": {
-    "width": 4610,
-    "height": 2987,
+    "width": 4708,
+    "height": 3049,
     "regions": [
       {
         "id": "region-001",
@@ -21331,6 +21466,17 @@
         "biome": "salt-flat",
         "feature": "a river that forks into three, two of which return to each other",
         "discoveredDay": 38
+      },
+      {
+        "id": "region-043",
+        "name": "Lost Gate",
+        "x": 4286,
+        "y": 1987,
+        "width": 181,
+        "height": 168,
+        "biome": "moor",
+        "feature": null,
+        "discoveredDay": 39
       }
     ],
     "undiscovered": [
@@ -23647,11 +23793,11 @@
     }
   ],
   "chronicle": {
-    "day": 38,
-    "born": 130,
-    "died": 59,
-    "battles": 58,
-    "structures": 53,
+    "day": 39,
+    "born": 132,
+    "died": 60,
+    "battles": 59,
+    "structures": 55,
     "warsDeclared": 8,
     "genesis": "2026-04-20T08:22:29.008Z"
   },
@@ -24032,7 +24178,7 @@
       "id": "city-001",
       "name": "WhitePort",
       "region": "region-001",
-      "population": 755,
+      "population": 792,
       "specialty": "fishery",
       "founded": 10,
       "ruler": "House of Suncast"
@@ -24041,7 +24187,7 @@
       "id": "city-002",
       "name": "OldReach",
       "region": "region-003",
-      "population": 721,
+      "population": 733,
       "specialty": "wine and oil",
       "founded": 11,
       "ruler": "House of Wolfmere"
@@ -24050,7 +24196,7 @@
       "id": "city-003",
       "name": "OldCrossing",
       "region": "region-004",
-      "population": 561,
+      "population": 572,
       "specialty": "astronomy",
       "founded": 16,
       "ruler": "House of Suncast"
@@ -24077,7 +24223,7 @@
       "id": "city-006",
       "name": "NewFord",
       "region": "region-021",
-      "population": 371,
+      "population": 397,
       "specialty": "cartography",
       "founded": 21,
       "ruler": "House of Suncast"
@@ -24086,7 +24232,7 @@
       "id": "city-007",
       "name": "WhiteCrossing",
       "region": "region-004",
-      "population": 233,
+      "population": 250,
       "specialty": "rope and rigging",
       "founded": 22,
       "ruler": "House of Wolfmere"
@@ -24095,7 +24241,7 @@
       "id": "city-008",
       "name": "FernGate",
       "region": "region-014",
-      "population": 661,
+      "population": 688,
       "specialty": "fishery",
       "founded": 25,
       "ruler": "House of Suncast"
@@ -24104,7 +24250,7 @@
       "id": "city-009",
       "name": "AmberGate",
       "region": "region-023",
-      "population": 484,
+      "population": 473,
       "specialty": "ink and paper",
       "founded": 28,
       "ruler": "House of Suncast"
@@ -24122,7 +24268,7 @@
       "id": "city-011",
       "name": "IronLanding",
       "region": "region-006",
-      "population": 444,
+      "population": 481,
       "specialty": "iron forging",
       "founded": 33,
       "ruler": "House of Wolfmere"
@@ -24131,7 +24277,7 @@
       "id": "city-012",
       "name": "HighHaven",
       "region": "region-003",
-      "population": 390,
+      "population": 380,
       "specialty": "caravan outfitting",
       "founded": 36,
       "ruler": "House of Suncast"
@@ -24404,6 +24550,14 @@
       "body": "Sloe Waywarden crossed the fen wearing only a coat of three colors. On the far side the coat had five colors, and no one would say which two had been added.",
       "subject": "citizen-0306",
       "day": 38
+    },
+    {
+      "id": "lore-0035",
+      "kind": "myth",
+      "title": "Myth of Cistern Chainthought",
+      "body": "It is said that Cistern Chainthought walked into the lake at dawn and did not come out until the chronicle had a new first page.",
+      "subject": "citizen-0293",
+      "day": 39
     }
   ]
 }
