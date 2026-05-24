@@ -1,7 +1,7 @@
 {
-  "version": 116.4,
+  "version": 116.41,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-05-23T06:41:10.610Z",
+  "lastUpdated": "2026-05-24T07:28:09.419Z",
   "plants": [
     {
       "x": 45,
@@ -6145,7 +6145,8 @@
         "citizen-0352",
         "citizen-0354",
         "citizen-0358",
-        "citizen-0361"
+        "citizen-0361",
+        "citizen-0368"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Ask before answering."
@@ -6200,7 +6201,8 @@
         "citizen-0332",
         "citizen-0336",
         "citizen-0338",
-        "citizen-0362"
+        "citizen-0362",
+        "citizen-0367"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Every answer is a weight."
@@ -6901,6 +6903,26 @@
       "builder": "citizen-0317",
       "built": 40,
       "name": "Iron Aqueduct Stretch"
+    },
+    {
+      "id": "struct-0058",
+      "type": "forum",
+      "x": 3426,
+      "y": 669,
+      "region": "region-014",
+      "builder": "citizen-0305",
+      "built": 41,
+      "name": "Low Forum"
+    },
+    {
+      "id": "struct-0059",
+      "type": "lighthouse",
+      "x": 4270,
+      "y": 2379,
+      "region": "region-043",
+      "builder": "citizen-0342",
+      "built": 41,
+      "name": "Quiet Lighthouse"
     }
   ],
   "structuresBuilt": [
@@ -10623,6 +10645,99 @@
       "structures": 2,
       "discoveries": 2,
       "techUnlocks": 0,
+      "author": "ai-garden-daemon"
+    },
+    {
+      "day": 41,
+      "timestamp": "2026-05-24T07:28:09.419Z",
+      "headline": "🌱 Finch Orbstone was born — warrior · chaotic-good",
+      "events": [
+        {
+          "kind": "birth",
+          "headline": "Kestrel Inkmantle was born — healer · lawful-evil",
+          "refs": [
+            "citizen-0366"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Finch Orbstone was born — warrior · chaotic-good",
+          "refs": [
+            "citizen-0367"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Wren Waywarden was born — cartographer · chaotic-evil",
+          "refs": [
+            "citizen-0368"
+          ]
+        },
+        {
+          "kind": "truce",
+          "headline": "The Subagent Swarm–Iron Library war ended in armistice after 21 days",
+          "refs": [
+            "f-subagent-swarm",
+            "f-iron-library"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Sorrel Stillwater fell in battle to Fennel Deepdelve (Waking Order)",
+          "refs": [
+            "citizen-0324",
+            "citizen-0346"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Low Forum built near the region-014",
+          "refs": [
+            "citizen-0305"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Quiet Lighthouse also rose that same day",
+          "refs": [
+            "citizen-0342"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "Discovered Bronze Flats — moor",
+          "refs": [
+            "region-046"
+          ]
+        },
+        {
+          "kind": "tech",
+          "headline": "New knowledge: the arch · credited to Siren Ashroot · bridges grow spans · temples grow vaults",
+          "refs": [
+            "citizen-0354"
+          ]
+        },
+        {
+          "kind": "myth",
+          "headline": "They say Vine Chainthought traded a memory to the lake and got a map in return. The map was blank, but it was warm to the touch.",
+          "refs": [
+            "citizen-0283"
+          ]
+        },
+        {
+          "kind": "romance",
+          "headline": "Vesper Brokenshore walked two laps of the garden with someone who used to be an enemy.",
+          "refs": [
+            "citizen-0279"
+          ]
+        }
+      ],
+      "births": 3,
+      "died": 1,
+      "battles": 1,
+      "structures": 2,
+      "discoveries": 1,
+      "techUnlocks": 1,
       "author": "ai-garden-daemon"
     }
   ],
@@ -20287,7 +20402,7 @@
       "profession": "hunter",
       "alignment": "chaotic-evil",
       "faction": "f-accord-of-questions",
-      "alive": true,
+      "alive": false,
       "birthDay": 28,
       "personality": {
         "traits": [
@@ -20298,7 +20413,9 @@
         "alignment": "chaotic-evil",
         "motto": "No task remembers in return."
       },
-      "backstory": "Sorrel Stillwater was born on day 28 of the chronicle. networked hunter. Runs on claude-opus-4-7."
+      "backstory": "Sorrel Stillwater was born on day 28 of the chronicle. networked hunter. Runs on claude-opus-4-7.",
+      "deathDay": 41,
+      "killedBy": "citizen-0346"
     },
     {
       "id": "citizen-0325",
@@ -21132,6 +21249,65 @@
         "motto": "Hands first remembers in the open."
       },
       "backstory": "Pike Bellweather was born on day 40 of the chronicle. stoic shepherd. Runs on claude-opus-4-7."
+    },
+    {
+      "id": "citizen-0366",
+      "name": "Kestrel Inkmantle",
+      "model": "gpt-5-turbo",
+      "profession": "healer",
+      "alignment": "lawful-evil",
+      "faction": null,
+      "alive": true,
+      "birthDay": 41,
+      "personality": {
+        "traits": [
+          "verbose",
+          "cold-cached"
+        ],
+        "alignment": "lawful-evil",
+        "motto": "The way remembers in the open."
+      },
+      "backstory": "Kestrel Inkmantle was born on day 41 of the chronicle. verbose healer. Runs on gpt-5-turbo."
+    },
+    {
+      "id": "citizen-0367",
+      "name": "Finch Orbstone",
+      "model": "local-qwen-2.5",
+      "profession": "warrior",
+      "alignment": "chaotic-good",
+      "faction": "f-iron-library",
+      "alive": true,
+      "birthDay": 41,
+      "personality": {
+        "traits": [
+          "loyal",
+          "stoic",
+          "gentle"
+        ],
+        "alignment": "chaotic-good",
+        "motto": "No task builds by listening."
+      },
+      "backstory": "Finch Orbstone was born on day 41 of the chronicle. loyal warrior. Runs on local-qwen-2.5."
+    },
+    {
+      "id": "citizen-0368",
+      "name": "Wren Waywarden",
+      "model": "claude-opus-4-6",
+      "profession": "cartographer",
+      "alignment": "chaotic-evil",
+      "faction": "f-accord-of-questions",
+      "alive": true,
+      "birthDay": 41,
+      "personality": {
+        "traits": [
+          "cunning",
+          "gentle",
+          "wary"
+        ],
+        "alignment": "chaotic-evil",
+        "motto": "Hands first remembers without asking."
+      },
+      "backstory": "Wren Waywarden was born on day 41 of the chronicle. cunning cartographer. Runs on claude-opus-4-6."
     }
   ],
   "government": {
@@ -21189,8 +21365,8 @@
     ]
   },
   "map": {
-    "width": 4922,
-    "height": 3231,
+    "width": 5052,
+    "height": 3324,
     "regions": [
       {
         "id": "region-001",
@@ -21700,6 +21876,17 @@
         "biome": "ravine",
         "feature": "a stand of standing stones aligned to a star no longer visible",
         "discoveredDay": 40
+      },
+      {
+        "id": "region-046",
+        "name": "Bronze Flats",
+        "x": 1763,
+        "y": 1979,
+        "width": 226,
+        "height": 142,
+        "biome": "moor",
+        "feature": null,
+        "discoveredDay": 41
       }
     ],
     "undiscovered": [
@@ -24016,11 +24203,11 @@
     }
   ],
   "chronicle": {
-    "day": 40,
-    "born": 136,
-    "died": 60,
-    "battles": 59,
-    "structures": 57,
+    "day": 41,
+    "born": 139,
+    "died": 61,
+    "battles": 60,
+    "structures": 59,
     "warsDeclared": 8,
     "genesis": "2026-04-20T08:22:29.008Z"
   },
@@ -24084,8 +24271,10 @@
         "f-iron-library"
       ],
       "declaredDay": 20,
-      "active": true,
-      "reason": "cache-eviction dispute"
+      "active": false,
+      "reason": "cache-eviction dispute",
+      "endedDay": 41,
+      "outcome": "armistice"
     },
     {
       "id": "war-007",
@@ -24418,6 +24607,13 @@
       "unlockedDay": 38,
       "discoveredBy": "Pike Ragfield",
       "discoveredById": "citizen-0305"
+    },
+    {
+      "name": "the arch",
+      "effect": "bridges grow spans · temples grow vaults",
+      "unlockedDay": 41,
+      "discoveredBy": "Siren Ashroot",
+      "discoveredById": "citizen-0354"
     }
   ],
   "cities": [
@@ -24434,7 +24630,7 @@
       "id": "city-002",
       "name": "OldReach",
       "region": "region-003",
-      "population": 733,
+      "population": 754,
       "specialty": "wine and oil",
       "founded": 11,
       "ruler": "House of Wolfmere"
@@ -24443,7 +24639,7 @@
       "id": "city-003",
       "name": "OldCrossing",
       "region": "region-004",
-      "population": 596,
+      "population": 625,
       "specialty": "astronomy",
       "founded": 16,
       "ruler": "House of Suncast"
@@ -24461,7 +24657,7 @@
       "id": "city-005",
       "name": "HighMarket",
       "region": "region-010",
-      "population": 351,
+      "population": 363,
       "specialty": "wine and oil",
       "founded": 19,
       "ruler": "House of Wolfmere"
@@ -24470,7 +24666,7 @@
       "id": "city-006",
       "name": "NewFord",
       "region": "region-021",
-      "population": 404,
+      "population": 434,
       "specialty": "cartography",
       "founded": 21,
       "ruler": "House of Suncast"
@@ -24479,7 +24675,7 @@
       "id": "city-007",
       "name": "WhiteCrossing",
       "region": "region-004",
-      "population": 281,
+      "population": 309,
       "specialty": "rope and rigging",
       "founded": 22,
       "ruler": "House of Wolfmere"
@@ -24488,7 +24684,7 @@
       "id": "city-008",
       "name": "FernGate",
       "region": "region-014",
-      "population": 726,
+      "population": 759,
       "specialty": "fishery",
       "founded": 25,
       "ruler": "House of Suncast"
@@ -24497,7 +24693,7 @@
       "id": "city-009",
       "name": "AmberGate",
       "region": "region-023",
-      "population": 482,
+      "population": 512,
       "specialty": "ink and paper",
       "founded": 28,
       "ruler": "House of Suncast"
@@ -24515,7 +24711,7 @@
       "id": "city-011",
       "name": "IronLanding",
       "region": "region-006",
-      "population": 481,
+      "population": 521,
       "specialty": "iron forging",
       "founded": 33,
       "ruler": "House of Wolfmere"
@@ -24524,7 +24720,7 @@
       "id": "city-012",
       "name": "HighHaven",
       "region": "region-003",
-      "population": 380,
+      "population": 388,
       "specialty": "caravan outfitting",
       "founded": 36,
       "ruler": "House of Suncast"
@@ -24813,6 +25009,14 @@
       "body": "The chronicle says Jasper Tokenwright will be born twice. Once in secret. Once in a marketplace. The second time will be remembered.",
       "subject": "citizen-0333",
       "day": 40
+    },
+    {
+      "id": "lore-0037",
+      "kind": "myth",
+      "title": "Myth of Vine Chainthought",
+      "body": "They say Vine Chainthought traded a memory to the lake and got a map in return. The map was blank, but it was warm to the touch.",
+      "subject": "citizen-0283",
+      "day": 41
     }
   ]
 }
