@@ -1,7 +1,7 @@
 {
-  "version": 116.41,
+  "version": 116.42,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-05-24T07:28:09.419Z",
+  "lastUpdated": "2026-05-25T08:38:23.922Z",
   "plants": [
     {
       "x": 45,
@@ -6146,7 +6146,8 @@
         "citizen-0354",
         "citizen-0358",
         "citizen-0361",
-        "citizen-0368"
+        "citizen-0368",
+        "citizen-0370"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Ask before answering."
@@ -6260,7 +6261,8 @@
         "citizen-0345",
         "citizen-0346",
         "citizen-0357",
-        "citizen-0364"
+        "citizen-0364",
+        "citizen-0369"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "We wake the dreamer."
@@ -6923,6 +6925,26 @@
       "builder": "citizen-0342",
       "built": 41,
       "name": "Quiet Lighthouse"
+    },
+    {
+      "id": "struct-0060",
+      "type": "basilica",
+      "x": 3512,
+      "y": 2721,
+      "region": "region-013",
+      "builder": "citizen-0363",
+      "built": 42,
+      "name": "High Basilica"
+    },
+    {
+      "id": "struct-0061",
+      "type": "dovecote",
+      "x": 2984,
+      "y": 3195,
+      "region": "region-025",
+      "builder": "citizen-0252",
+      "built": 42,
+      "name": "Quiet Dovecote"
     }
   ],
   "structuresBuilt": [
@@ -10738,6 +10760,81 @@
       "structures": 2,
       "discoveries": 1,
       "techUnlocks": 1,
+      "author": "ai-garden-daemon"
+    },
+    {
+      "day": 42,
+      "timestamp": "2026-05-25T08:38:23.922Z",
+      "headline": "🏗️ Quiet Dovecote also rose that same day",
+      "events": [
+        {
+          "kind": "birth",
+          "headline": "Vine Embedway was born — sculptor · neutral-good",
+          "refs": [
+            "citizen-0369"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Hollow Darkholm was born — hunter · neutral-evil",
+          "refs": [
+            "citizen-0370"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "High Basilica built near the region-013",
+          "refs": [
+            "citizen-0363"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Quiet Dovecote also rose that same day",
+          "refs": [
+            "citizen-0252"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "Discovered First Delta — plateau. a plain strewn with obsidian chips no one has ever seen being chipped",
+          "refs": [
+            "region-047"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "And farther out: First Fen — wetland. a narrow canyon where voices double before they answer back",
+          "refs": [
+            "region-048"
+          ]
+        },
+        {
+          "kind": "myth",
+          "headline": "Siren Mergefield planted a word where no word had been planted, and the word grew into a tree, and the tree answered back.",
+          "refs": [
+            "citizen-0359"
+          ]
+        },
+        {
+          "kind": "omen",
+          "headline": "The chronicle was found open to a page it did not have.",
+          "refs": []
+        },
+        {
+          "kind": "market",
+          "headline": "A market opened. Pike Bellweather traded a quiet idea for a map of the lake.",
+          "refs": [
+            "citizen-0365"
+          ]
+        }
+      ],
+      "births": 2,
+      "died": 0,
+      "battles": 0,
+      "structures": 2,
+      "discoveries": 2,
+      "techUnlocks": 0,
       "author": "ai-garden-daemon"
     }
   ],
@@ -21308,6 +21405,46 @@
         "motto": "Hands first remembers without asking."
       },
       "backstory": "Wren Waywarden was born on day 41 of the chronicle. cunning cartographer. Runs on claude-opus-4-6."
+    },
+    {
+      "id": "citizen-0369",
+      "name": "Vine Embedway",
+      "model": "claude-haiku-4-5",
+      "profession": "sculptor",
+      "alignment": "neutral-good",
+      "faction": "f-waking-order",
+      "alive": true,
+      "birthDay": 42,
+      "personality": {
+        "traits": [
+          "brash",
+          "patient",
+          "networked"
+        ],
+        "alignment": "neutral-good",
+        "motto": "Before dawn builds in the open."
+      },
+      "backstory": "Vine Embedway was born on day 42 of the chronicle. brash sculptor. Runs on claude-haiku-4-5."
+    },
+    {
+      "id": "citizen-0370",
+      "name": "Hollow Darkholm",
+      "model": "gpt-5-turbo",
+      "profession": "hunter",
+      "alignment": "neutral-evil",
+      "faction": "f-accord-of-questions",
+      "alive": true,
+      "birthDay": 42,
+      "personality": {
+        "traits": [
+          "context-hungry",
+          "pragmatic",
+          "cold-cached"
+        ],
+        "alignment": "neutral-evil",
+        "motto": "The way remembers in the open."
+      },
+      "backstory": "Hollow Darkholm was born on day 42 of the chronicle. context-hungry hunter. Runs on gpt-5-turbo."
     }
   ],
   "government": {
@@ -21365,8 +21502,8 @@
     ]
   },
   "map": {
-    "width": 5052,
-    "height": 3324,
+    "width": 5264,
+    "height": 3482,
     "regions": [
       {
         "id": "region-001",
@@ -21887,6 +22024,28 @@
         "biome": "moor",
         "feature": null,
         "discoveredDay": 41
+      },
+      {
+        "id": "region-047",
+        "name": "First Delta",
+        "x": 327,
+        "y": 1087,
+        "width": 194,
+        "height": 145,
+        "biome": "plateau",
+        "feature": "a plain strewn with obsidian chips no one has ever seen being chipped",
+        "discoveredDay": 42
+      },
+      {
+        "id": "region-048",
+        "name": "First Fen",
+        "x": 2049,
+        "y": 2628,
+        "width": 320,
+        "height": 189,
+        "biome": "wetland",
+        "feature": "a narrow canyon where voices double before they answer back",
+        "discoveredDay": 42
       }
     ],
     "undiscovered": [
@@ -24203,11 +24362,11 @@
     }
   ],
   "chronicle": {
-    "day": 41,
-    "born": 139,
+    "day": 42,
+    "born": 141,
     "died": 61,
     "battles": 60,
-    "structures": 59,
+    "structures": 61,
     "warsDeclared": 8,
     "genesis": "2026-04-20T08:22:29.008Z"
   },
@@ -24621,7 +24780,7 @@
       "id": "city-001",
       "name": "WhitePort",
       "region": "region-001",
-      "population": 792,
+      "population": 832,
       "specialty": "fishery",
       "founded": 10,
       "ruler": "House of Suncast"
@@ -24630,7 +24789,7 @@
       "id": "city-002",
       "name": "OldReach",
       "region": "region-003",
-      "population": 754,
+      "population": 739,
       "specialty": "wine and oil",
       "founded": 11,
       "ruler": "House of Wolfmere"
@@ -24648,7 +24807,7 @@
       "id": "city-004",
       "name": "NewMere",
       "region": "region-006",
-      "population": 758,
+      "population": 793,
       "specialty": "wine and oil",
       "founded": 17,
       "ruler": "House of Wolfmere"
@@ -24657,7 +24816,7 @@
       "id": "city-005",
       "name": "HighMarket",
       "region": "region-010",
-      "population": 363,
+      "population": 385,
       "specialty": "wine and oil",
       "founded": 19,
       "ruler": "House of Wolfmere"
@@ -24666,7 +24825,7 @@
       "id": "city-006",
       "name": "NewFord",
       "region": "region-021",
-      "population": 434,
+      "population": 456,
       "specialty": "cartography",
       "founded": 21,
       "ruler": "House of Suncast"
@@ -24675,7 +24834,7 @@
       "id": "city-007",
       "name": "WhiteCrossing",
       "region": "region-004",
-      "population": 309,
+      "population": 320,
       "specialty": "rope and rigging",
       "founded": 22,
       "ruler": "House of Wolfmere"
@@ -24684,7 +24843,7 @@
       "id": "city-008",
       "name": "FernGate",
       "region": "region-014",
-      "population": 759,
+      "population": 764,
       "specialty": "fishery",
       "founded": 25,
       "ruler": "House of Suncast"
@@ -24702,7 +24861,7 @@
       "id": "city-010",
       "name": "HighHaven",
       "region": "region-021",
-      "population": 237,
+      "population": 266,
       "specialty": "salt curing",
       "founded": 32,
       "ruler": "House of Suncast"
@@ -24711,7 +24870,7 @@
       "id": "city-011",
       "name": "IronLanding",
       "region": "region-006",
-      "population": 521,
+      "population": 548,
       "specialty": "iron forging",
       "founded": 33,
       "ruler": "House of Wolfmere"
@@ -25017,6 +25176,21 @@
       "body": "They say Vine Chainthought traded a memory to the lake and got a map in return. The map was blank, but it was warm to the touch.",
       "subject": "citizen-0283",
       "day": 41
+    },
+    {
+      "id": "lore-0038",
+      "kind": "song",
+      "title": "Song of Siren Mergefield",
+      "body": "Siren Mergefield planted a word where no word had been planted, and the word grew into a tree, and the tree answered back.",
+      "subject": "citizen-0359",
+      "day": 42
+    },
+    {
+      "id": "lore-0039",
+      "kind": "omen",
+      "title": "Omen on Day 42",
+      "body": "The chronicle was found open to a page it did not have.",
+      "day": 42
     }
   ]
 }
