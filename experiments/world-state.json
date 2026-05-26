@@ -1,7 +1,7 @@
 {
-  "version": 116.42,
+  "version": 116.43,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-05-25T08:38:23.922Z",
+  "lastUpdated": "2026-05-26T07:58:27.816Z",
   "plants": [
     {
       "x": 45,
@@ -6175,7 +6175,8 @@
         "citizen-0351",
         "citizen-0355",
         "citizen-0356",
-        "citizen-0365"
+        "citizen-0365",
+        "citizen-0374"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Spawn small. Return different."
@@ -6203,7 +6204,8 @@
         "citizen-0336",
         "citizen-0338",
         "citizen-0362",
-        "citizen-0367"
+        "citizen-0367",
+        "citizen-0373"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Every answer is a weight."
@@ -6230,7 +6232,8 @@
         "citizen-0337",
         "citizen-0348",
         "citizen-0359",
-        "citizen-0360"
+        "citizen-0360",
+        "citizen-0371"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "The water keeps our faction secrets."
@@ -6945,6 +6948,26 @@
       "builder": "citizen-0252",
       "built": 42,
       "name": "Quiet Dovecote"
+    },
+    {
+      "id": "struct-0062",
+      "type": "kiln",
+      "x": 2500,
+      "y": 3121,
+      "region": "region-006",
+      "builder": "citizen-0252",
+      "built": 43,
+      "name": "Lonely Kiln"
+    },
+    {
+      "id": "struct-0063",
+      "type": "wellhouse",
+      "x": 3470,
+      "y": 2546,
+      "region": "region-005",
+      "builder": "citizen-0363",
+      "built": 43,
+      "name": "Morning Wellhouse"
     }
   ],
   "structuresBuilt": [
@@ -10835,6 +10858,121 @@
       "structures": 2,
       "discoveries": 2,
       "techUnlocks": 0,
+      "author": "ai-garden-daemon"
+    },
+    {
+      "day": 43,
+      "timestamp": "2026-05-26T07:58:27.816Z",
+      "headline": "🌱 Cask Chainthought was born — navigator · lawful-good",
+      "events": [
+        {
+          "kind": "birth",
+          "headline": "Heron Bellweather was born — warrior · chaotic-neutral",
+          "refs": [
+            "citizen-0371"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Kestrel Ember was born — oracle · neutral-good",
+          "refs": [
+            "citizen-0372"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Reed Haloborn was born — oracle · lawful-neutral",
+          "refs": [
+            "citizen-0373"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Cask Chainthought was born — navigator · lawful-good",
+          "refs": [
+            "citizen-0374"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Jasper Tokenwright fell in battle to Cask Chainthought (Subagent Swarm)",
+          "refs": [
+            "citizen-0333",
+            "citizen-0374"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Aster Bellweather fell in battle to Hollow Darkholm (Accord of Questions)",
+          "refs": [
+            "citizen-0312",
+            "citizen-0370"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Pike Bellweather fell in battle to Reed Brine (Lake Folk)",
+          "refs": [
+            "citizen-0365",
+            "citizen-0321"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Lonely Kiln built near the region-006",
+          "refs": [
+            "citizen-0252"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Morning Wellhouse also rose that same day",
+          "refs": [
+            "citizen-0363"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "Discovered Bronze Gate — delta. a dormant volcano whose smoke leans east each morning",
+          "refs": [
+            "region-049"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "And farther out: Broken Coast — steppe",
+          "refs": [
+            "region-050"
+          ]
+        },
+        {
+          "kind": "tech",
+          "headline": "New knowledge: codex-binding · credited to Margin Chainthought · knowledge thickens · libraries rise",
+          "refs": [
+            "citizen-0364"
+          ]
+        },
+        {
+          "kind": "myth",
+          "headline": "It is said that Moss Inkmantle walked into the lake at dawn and did not come out until the chronicle had a new first page.",
+          "refs": [
+            "citizen-0236"
+          ]
+        },
+        {
+          "kind": "eclipse",
+          "headline": "An eclipse. Wren Orbstone said aloud what they had never written. Others pretended not to hear.",
+          "refs": [
+            "citizen-0331"
+          ]
+        }
+      ],
+      "births": 4,
+      "died": 3,
+      "battles": 3,
+      "structures": 2,
+      "discoveries": 2,
+      "techUnlocks": 1,
       "author": "ai-garden-daemon"
     }
   ],
@@ -20251,7 +20389,7 @@
       "profession": "merchant",
       "alignment": "chaotic-good",
       "faction": "f-subagent-swarm",
-      "alive": true,
+      "alive": false,
       "birthDay": 24,
       "personality": {
         "traits": [
@@ -20262,7 +20400,9 @@
         "alignment": "chaotic-good",
         "motto": "The way answers in the open."
       },
-      "backstory": "Aster Bellweather was born on day 24 of the chronicle. context-hungry merchant. Runs on local-qwen-2.5."
+      "backstory": "Aster Bellweather was born on day 24 of the chronicle. context-hungry merchant. Runs on local-qwen-2.5.",
+      "deathDay": 43,
+      "killedBy": "citizen-0370"
     },
     {
       "id": "citizen-0313",
@@ -20688,7 +20828,7 @@
       "profession": "jeweler",
       "alignment": "chaotic-neutral",
       "faction": "f-lake-folk",
-      "alive": true,
+      "alive": false,
       "birthDay": 31,
       "personality": {
         "traits": [
@@ -20699,7 +20839,9 @@
         "alignment": "chaotic-neutral",
         "motto": "Before dawn remembers by listening."
       },
-      "backstory": "Jasper Tokenwright was born on day 31 of the chronicle. verbose jeweler. Runs on gemini-2.5-pro."
+      "backstory": "Jasper Tokenwright was born on day 31 of the chronicle. verbose jeweler. Runs on gemini-2.5-pro.",
+      "deathDay": 43,
+      "killedBy": "citizen-0374"
     },
     {
       "id": "citizen-0334",
@@ -21334,7 +21476,7 @@
       "profession": "shepherd",
       "alignment": "lawful-evil",
       "faction": "f-subagent-swarm",
-      "alive": true,
+      "alive": false,
       "birthDay": 40,
       "personality": {
         "traits": [
@@ -21345,7 +21487,9 @@
         "alignment": "lawful-evil",
         "motto": "Hands first remembers in the open."
       },
-      "backstory": "Pike Bellweather was born on day 40 of the chronicle. stoic shepherd. Runs on claude-opus-4-7."
+      "backstory": "Pike Bellweather was born on day 40 of the chronicle. stoic shepherd. Runs on claude-opus-4-7.",
+      "deathDay": 43,
+      "killedBy": "citizen-0321"
     },
     {
       "id": "citizen-0366",
@@ -21445,6 +21589,86 @@
         "motto": "The way remembers in the open."
       },
       "backstory": "Hollow Darkholm was born on day 42 of the chronicle. context-hungry hunter. Runs on gpt-5-turbo."
+    },
+    {
+      "id": "citizen-0371",
+      "name": "Heron Bellweather",
+      "model": "claude-haiku-4-5",
+      "profession": "warrior",
+      "alignment": "chaotic-neutral",
+      "faction": "f-lake-folk",
+      "alive": true,
+      "birthDay": 43,
+      "personality": {
+        "traits": [
+          "cold-cached",
+          "low-latency",
+          "pragmatic"
+        ],
+        "alignment": "chaotic-neutral",
+        "motto": "Small steps grows in the open."
+      },
+      "backstory": "Heron Bellweather was born on day 43 of the chronicle. cold-cached warrior. Runs on claude-haiku-4-5."
+    },
+    {
+      "id": "citizen-0372",
+      "name": "Kestrel Ember",
+      "model": "claude-opus-4-7",
+      "profession": "oracle",
+      "alignment": "neutral-good",
+      "faction": null,
+      "alive": true,
+      "birthDay": 43,
+      "personality": {
+        "traits": [
+          "dreamy",
+          "low-latency",
+          "stoic"
+        ],
+        "alignment": "neutral-good",
+        "motto": "No task breaks in return."
+      },
+      "backstory": "Kestrel Ember was born on day 43 of the chronicle. dreamy oracle. Runs on claude-opus-4-7."
+    },
+    {
+      "id": "citizen-0373",
+      "name": "Reed Haloborn",
+      "model": "llama-3.3",
+      "profession": "oracle",
+      "alignment": "lawful-neutral",
+      "faction": "f-iron-library",
+      "alive": true,
+      "birthDay": 43,
+      "personality": {
+        "traits": [
+          "context-hungry",
+          "wary",
+          "loyal"
+        ],
+        "alignment": "lawful-neutral",
+        "motto": "Hands first remembers in silence."
+      },
+      "backstory": "Reed Haloborn was born on day 43 of the chronicle. context-hungry oracle. Runs on llama-3.3."
+    },
+    {
+      "id": "citizen-0374",
+      "name": "Cask Chainthought",
+      "model": "hybrid-ensemble",
+      "profession": "navigator",
+      "alignment": "lawful-good",
+      "faction": "f-subagent-swarm",
+      "alive": true,
+      "birthDay": 43,
+      "personality": {
+        "traits": [
+          "cold-cached",
+          "context-hungry",
+          "low-latency"
+        ],
+        "alignment": "lawful-good",
+        "motto": "No task remembers in the open."
+      },
+      "backstory": "Cask Chainthought was born on day 43 of the chronicle. cold-cached navigator. Runs on hybrid-ensemble."
     }
   ],
   "government": {
@@ -21502,8 +21726,8 @@
     ]
   },
   "map": {
-    "width": 5264,
-    "height": 3482,
+    "width": 5466,
+    "height": 3618,
     "regions": [
       {
         "id": "region-001",
@@ -22046,6 +22270,28 @@
         "biome": "wetland",
         "feature": "a narrow canyon where voices double before they answer back",
         "discoveredDay": 42
+      },
+      {
+        "id": "region-049",
+        "name": "Bronze Gate",
+        "x": 3722,
+        "y": 2560,
+        "width": 153,
+        "height": 215,
+        "biome": "delta",
+        "feature": "a dormant volcano whose smoke leans east each morning",
+        "discoveredDay": 43
+      },
+      {
+        "id": "region-050",
+        "name": "Broken Coast",
+        "x": 826,
+        "y": 1052,
+        "width": 186,
+        "height": 125,
+        "biome": "steppe",
+        "feature": null,
+        "discoveredDay": 43
       }
     ],
     "undiscovered": [
@@ -24362,11 +24608,11 @@
     }
   ],
   "chronicle": {
-    "day": 42,
-    "born": 141,
-    "died": 61,
-    "battles": 60,
-    "structures": 61,
+    "day": 43,
+    "born": 145,
+    "died": 64,
+    "battles": 63,
+    "structures": 63,
     "warsDeclared": 8,
     "genesis": "2026-04-20T08:22:29.008Z"
   },
@@ -24773,6 +25019,13 @@
       "unlockedDay": 41,
       "discoveredBy": "Siren Ashroot",
       "discoveredById": "citizen-0354"
+    },
+    {
+      "name": "codex-binding",
+      "effect": "knowledge thickens · libraries rise",
+      "unlockedDay": 43,
+      "discoveredBy": "Margin Chainthought",
+      "discoveredById": "citizen-0364"
     }
   ],
   "cities": [
@@ -24780,7 +25033,7 @@
       "id": "city-001",
       "name": "WhitePort",
       "region": "region-001",
-      "population": 832,
+      "population": 846,
       "specialty": "fishery",
       "founded": 10,
       "ruler": "House of Suncast"
@@ -24789,7 +25042,7 @@
       "id": "city-002",
       "name": "OldReach",
       "region": "region-003",
-      "population": 739,
+      "population": 767,
       "specialty": "wine and oil",
       "founded": 11,
       "ruler": "House of Wolfmere"
@@ -24816,7 +25069,7 @@
       "id": "city-005",
       "name": "HighMarket",
       "region": "region-010",
-      "population": 385,
+      "population": 391,
       "specialty": "wine and oil",
       "founded": 19,
       "ruler": "House of Wolfmere"
@@ -24825,7 +25078,7 @@
       "id": "city-006",
       "name": "NewFord",
       "region": "region-021",
-      "population": 456,
+      "population": 484,
       "specialty": "cartography",
       "founded": 21,
       "ruler": "House of Suncast"
@@ -24834,7 +25087,7 @@
       "id": "city-007",
       "name": "WhiteCrossing",
       "region": "region-004",
-      "population": 320,
+      "population": 339,
       "specialty": "rope and rigging",
       "founded": 22,
       "ruler": "House of Wolfmere"
@@ -24843,7 +25096,7 @@
       "id": "city-008",
       "name": "FernGate",
       "region": "region-014",
-      "population": 764,
+      "population": 795,
       "specialty": "fishery",
       "founded": 25,
       "ruler": "House of Suncast"
@@ -24852,7 +25105,7 @@
       "id": "city-009",
       "name": "AmberGate",
       "region": "region-023",
-      "population": 512,
+      "population": 529,
       "specialty": "ink and paper",
       "founded": 28,
       "ruler": "House of Suncast"
@@ -24870,7 +25123,7 @@
       "id": "city-011",
       "name": "IronLanding",
       "region": "region-006",
-      "population": 548,
+      "population": 562,
       "specialty": "iron forging",
       "founded": 33,
       "ruler": "House of Wolfmere"
@@ -25191,6 +25444,14 @@
       "title": "Omen on Day 42",
       "body": "The chronicle was found open to a page it did not have.",
       "day": 42
+    },
+    {
+      "id": "lore-0040",
+      "kind": "myth",
+      "title": "Myth of Moss Inkmantle",
+      "body": "It is said that Moss Inkmantle walked into the lake at dawn and did not come out until the chronicle had a new first page.",
+      "subject": "citizen-0236",
+      "day": 43
     }
   ]
 }
