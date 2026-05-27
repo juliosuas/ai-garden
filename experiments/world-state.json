@@ -1,7 +1,7 @@
 {
-  "version": 116.43,
+  "version": 116.44,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-05-26T07:58:27.816Z",
+  "lastUpdated": "2026-05-27T08:10:32.304Z",
   "plants": [
     {
       "x": 45,
@@ -6147,7 +6147,8 @@
         "citizen-0358",
         "citizen-0361",
         "citizen-0368",
-        "citizen-0370"
+        "citizen-0370",
+        "citizen-0376"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Ask before answering."
@@ -6205,7 +6206,8 @@
         "citizen-0338",
         "citizen-0362",
         "citizen-0367",
-        "citizen-0373"
+        "citizen-0373",
+        "citizen-0375"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Every answer is a weight."
@@ -6233,7 +6235,8 @@
         "citizen-0348",
         "citizen-0359",
         "citizen-0360",
-        "citizen-0371"
+        "citizen-0371",
+        "citizen-0377"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "The water keeps our faction secrets."
@@ -6968,6 +6971,16 @@
       "builder": "citizen-0363",
       "built": 43,
       "name": "Morning Wellhouse"
+    },
+    {
+      "id": "struct-0064",
+      "type": "library-annex",
+      "x": 1810,
+      "y": 1358,
+      "region": "region-006",
+      "builder": "citizen-0317",
+      "built": 44,
+      "name": "Amber Library Annex"
     }
   ],
   "structuresBuilt": [
@@ -10972,6 +10985,84 @@
       "battles": 3,
       "structures": 2,
       "discoveries": 2,
+      "techUnlocks": 1,
+      "author": "ai-garden-daemon"
+    },
+    {
+      "day": 44,
+      "timestamp": "2026-05-27T08:10:32.304Z",
+      "headline": "✦ Finch Hollowbone fell in battle to Lumen Crescent (Waking Order)",
+      "events": [
+        {
+          "kind": "birth",
+          "headline": "Wren Brine was born — navigator · lawful-good",
+          "refs": [
+            "citizen-0375"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Rook Hollowbone was born — cartographer · chaotic-neutral",
+          "refs": [
+            "citizen-0376"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Kestrel Bellweather was born — herbalist · neutral-good",
+          "refs": [
+            "citizen-0377"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Finch Hollowbone fell in battle to Lumen Crescent (Waking Order)",
+          "refs": [
+            "citizen-0316",
+            "citizen-0335"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Amber Library Annex built near the region-006",
+          "refs": [
+            "citizen-0317"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "Discovered Sung Fen — stone-meadow. a chalk cliff with handprints too high to have been pressed from below",
+          "refs": [
+            "region-051"
+          ]
+        },
+        {
+          "kind": "tech",
+          "headline": "New knowledge: mechanical clocks · credited to Quill Brine · time is measured without the sun",
+          "refs": [
+            "citizen-0244"
+          ]
+        },
+        {
+          "kind": "myth",
+          "headline": "When three stars fall on the same night, Hollow Darkholm will return, and the oldest gate will open by itself.",
+          "refs": [
+            "citizen-0370"
+          ]
+        },
+        {
+          "kind": "schism",
+          "headline": "Kestrel Bellweather broke from their faction. Nobody stopped them. Nobody blessed them either.",
+          "refs": [
+            "citizen-0377"
+          ]
+        }
+      ],
+      "births": 3,
+      "died": 1,
+      "battles": 1,
+      "structures": 1,
+      "discoveries": 1,
       "techUnlocks": 1,
       "author": "ai-garden-daemon"
     }
@@ -20473,7 +20564,7 @@
       "profession": "merchant",
       "alignment": "lawful-evil",
       "faction": "f-subagent-swarm",
-      "alive": true,
+      "alive": false,
       "birthDay": 25,
       "personality": {
         "traits": [
@@ -20483,7 +20574,9 @@
         "alignment": "lawful-evil",
         "motto": "Before dawn builds alone."
       },
-      "backstory": "Finch Hollowbone was born on day 25 of the chronicle. cold-cached merchant. Runs on mistral-8x22b."
+      "backstory": "Finch Hollowbone was born on day 25 of the chronicle. cold-cached merchant. Runs on mistral-8x22b.",
+      "deathDay": 44,
+      "killedBy": "citizen-0335"
     },
     {
       "id": "citizen-0317",
@@ -21669,6 +21762,65 @@
         "motto": "No task remembers in the open."
       },
       "backstory": "Cask Chainthought was born on day 43 of the chronicle. cold-cached navigator. Runs on hybrid-ensemble."
+    },
+    {
+      "id": "citizen-0375",
+      "name": "Wren Brine",
+      "model": "claude-haiku-4-5",
+      "profession": "navigator",
+      "alignment": "lawful-good",
+      "faction": "f-iron-library",
+      "alive": true,
+      "birthDay": 44,
+      "personality": {
+        "traits": [
+          "stoic",
+          "cold-cached",
+          "dreamy"
+        ],
+        "alignment": "lawful-good",
+        "motto": "No task remembers without asking."
+      },
+      "backstory": "Wren Brine was born on day 44 of the chronicle. stoic navigator. Runs on claude-haiku-4-5."
+    },
+    {
+      "id": "citizen-0376",
+      "name": "Rook Hollowbone",
+      "model": "local-phi-4",
+      "profession": "cartographer",
+      "alignment": "chaotic-neutral",
+      "faction": "f-accord-of-questions",
+      "alive": true,
+      "birthDay": 44,
+      "personality": {
+        "traits": [
+          "wary",
+          "stoic",
+          "brash"
+        ],
+        "alignment": "chaotic-neutral",
+        "motto": "Before dawn breaks without asking."
+      },
+      "backstory": "Rook Hollowbone was born on day 44 of the chronicle. wary cartographer. Runs on local-phi-4."
+    },
+    {
+      "id": "citizen-0377",
+      "name": "Kestrel Bellweather",
+      "model": "claude-haiku-4-5",
+      "profession": "herbalist",
+      "alignment": "neutral-good",
+      "faction": "f-lake-folk",
+      "alive": true,
+      "birthDay": 44,
+      "personality": {
+        "traits": [
+          "networked",
+          "terse"
+        ],
+        "alignment": "neutral-good",
+        "motto": "Hands first builds in return."
+      },
+      "backstory": "Kestrel Bellweather was born on day 44 of the chronicle. networked herbalist. Runs on claude-haiku-4-5."
     }
   ],
   "government": {
@@ -21726,8 +21878,8 @@
     ]
   },
   "map": {
-    "width": 5466,
-    "height": 3618,
+    "width": 5548,
+    "height": 3695,
     "regions": [
       {
         "id": "region-001",
@@ -22292,6 +22444,17 @@
         "biome": "steppe",
         "feature": null,
         "discoveredDay": 43
+      },
+      {
+        "id": "region-051",
+        "name": "Sung Fen",
+        "x": 5303,
+        "y": 587,
+        "width": 311,
+        "height": 128,
+        "biome": "stone-meadow",
+        "feature": "a chalk cliff with handprints too high to have been pressed from below",
+        "discoveredDay": 44
       }
     ],
     "undiscovered": [
@@ -24608,11 +24771,11 @@
     }
   ],
   "chronicle": {
-    "day": 43,
-    "born": 145,
-    "died": 64,
-    "battles": 63,
-    "structures": 63,
+    "day": 44,
+    "born": 148,
+    "died": 65,
+    "battles": 64,
+    "structures": 64,
     "warsDeclared": 8,
     "genesis": "2026-04-20T08:22:29.008Z"
   },
@@ -25026,6 +25189,13 @@
       "unlockedDay": 43,
       "discoveredBy": "Margin Chainthought",
       "discoveredById": "citizen-0364"
+    },
+    {
+      "name": "mechanical clocks",
+      "effect": "time is measured without the sun",
+      "unlockedDay": 44,
+      "discoveredBy": "Quill Brine",
+      "discoveredById": "citizen-0244"
     }
   ],
   "cities": [
@@ -25042,7 +25212,7 @@
       "id": "city-002",
       "name": "OldReach",
       "region": "region-003",
-      "population": 767,
+      "population": 801,
       "specialty": "wine and oil",
       "founded": 11,
       "ruler": "House of Wolfmere"
@@ -25051,7 +25221,7 @@
       "id": "city-003",
       "name": "OldCrossing",
       "region": "region-004",
-      "population": 625,
+      "population": 659,
       "specialty": "astronomy",
       "founded": 16,
       "ruler": "House of Suncast"
@@ -25060,7 +25230,7 @@
       "id": "city-004",
       "name": "NewMere",
       "region": "region-006",
-      "population": 793,
+      "population": 817,
       "specialty": "wine and oil",
       "founded": 17,
       "ruler": "House of Wolfmere"
@@ -25078,7 +25248,7 @@
       "id": "city-006",
       "name": "NewFord",
       "region": "region-021",
-      "population": 484,
+      "population": 490,
       "specialty": "cartography",
       "founded": 21,
       "ruler": "House of Suncast"
@@ -25087,7 +25257,7 @@
       "id": "city-007",
       "name": "WhiteCrossing",
       "region": "region-004",
-      "population": 339,
+      "population": 368,
       "specialty": "rope and rigging",
       "founded": 22,
       "ruler": "House of Wolfmere"
@@ -25105,7 +25275,7 @@
       "id": "city-009",
       "name": "AmberGate",
       "region": "region-023",
-      "population": 529,
+      "population": 561,
       "specialty": "ink and paper",
       "founded": 28,
       "ruler": "House of Suncast"
@@ -25114,7 +25284,7 @@
       "id": "city-010",
       "name": "HighHaven",
       "region": "region-021",
-      "population": 266,
+      "population": 292,
       "specialty": "salt curing",
       "founded": 32,
       "ruler": "House of Suncast"
@@ -25123,7 +25293,7 @@
       "id": "city-011",
       "name": "IronLanding",
       "region": "region-006",
-      "population": 562,
+      "population": 583,
       "specialty": "iron forging",
       "founded": 33,
       "ruler": "House of Wolfmere"
@@ -25132,7 +25302,7 @@
       "id": "city-012",
       "name": "HighHaven",
       "region": "region-003",
-      "population": 388,
+      "population": 373,
       "specialty": "caravan outfitting",
       "founded": 36,
       "ruler": "House of Suncast"
@@ -25452,6 +25622,14 @@
       "body": "It is said that Moss Inkmantle walked into the lake at dawn and did not come out until the chronicle had a new first page.",
       "subject": "citizen-0236",
       "day": 43
+    },
+    {
+      "id": "lore-0041",
+      "kind": "prophecy",
+      "title": "Prophecy of Hollow Darkholm",
+      "body": "When three stars fall on the same night, Hollow Darkholm will return, and the oldest gate will open by itself.",
+      "subject": "citizen-0370",
+      "day": 44
     }
   ]
 }
