@@ -1,7 +1,7 @@
 {
-  "version": 116.44,
+  "version": 116.45,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-05-27T08:10:32.304Z",
+  "lastUpdated": "2026-05-28T08:09:38.754Z",
   "plants": [
     {
       "x": 45,
@@ -6981,6 +6981,26 @@
       "builder": "citizen-0317",
       "built": 44,
       "name": "Amber Library Annex"
+    },
+    {
+      "id": "struct-0065",
+      "type": "colosseum",
+      "x": 4437,
+      "y": 325,
+      "region": "region-006",
+      "builder": "citizen-0317",
+      "built": 45,
+      "name": "Quiet Colosseum"
+    },
+    {
+      "id": "struct-0066",
+      "type": "obelisk",
+      "x": 1175,
+      "y": 2833,
+      "region": "region-024",
+      "builder": "citizen-0363",
+      "built": 45,
+      "name": "Bronze Obelisk"
     }
   ],
   "structuresBuilt": [
@@ -11064,6 +11084,98 @@
       "structures": 1,
       "discoveries": 1,
       "techUnlocks": 1,
+      "author": "ai-garden-daemon"
+    },
+    {
+      "day": 45,
+      "timestamp": "2026-05-28T08:09:38.754Z",
+      "headline": "⚔️ War declared: Iron Library vs. Subagent Swarm — over what the lighthouse saw",
+      "events": [
+        {
+          "kind": "birth",
+          "headline": "Sloe Ironwhistle was born — stonemason · lawful-neutral",
+          "refs": [
+            "citizen-0378"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Reed Driftstone was born — tinkerer · lawful-neutral",
+          "refs": [
+            "citizen-0379"
+          ]
+        },
+        {
+          "kind": "war",
+          "headline": "War declared: Iron Library vs. Subagent Swarm — over what the lighthouse saw",
+          "refs": [
+            "f-iron-library",
+            "f-subagent-swarm"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Heron Bellweather fell in battle to Harrow Glasswright (Subagent Swarm)",
+          "refs": [
+            "citizen-0371",
+            "citizen-0356"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Siren Mergefield fell in battle to Vine Embedway (Waking Order)",
+          "refs": [
+            "citizen-0359",
+            "citizen-0369"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Quiet Colosseum built near the region-006",
+          "refs": [
+            "citizen-0317"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Bronze Obelisk also rose that same day",
+          "refs": [
+            "citizen-0363"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "Discovered The Meadow — tide",
+          "refs": [
+            "region-052"
+          ]
+        },
+        {
+          "kind": "myth",
+          "headline": "The chronicle says Lumen Blacktide will be born twice. Once in secret. Once in a marketplace. The second time will be remembered.",
+          "refs": [
+            "citizen-0251"
+          ]
+        },
+        {
+          "kind": "omen",
+          "headline": "Every well in the city reflected a star none of them could see.",
+          "refs": []
+        },
+        {
+          "kind": "migration",
+          "headline": "A small group led by Aster Fernhallow walked east until the map ended, then walked one step further.",
+          "refs": [
+            "citizen-0341"
+          ]
+        }
+      ],
+      "births": 2,
+      "died": 2,
+      "battles": 2,
+      "structures": 2,
+      "discoveries": 1,
+      "techUnlocks": 0,
       "author": "ai-garden-daemon"
     }
   ],
@@ -21450,7 +21562,7 @@
       "profession": "scribe",
       "alignment": "lawful-evil",
       "faction": "f-lake-folk",
-      "alive": true,
+      "alive": false,
       "birthDay": 38,
       "personality": {
         "traits": [
@@ -21461,7 +21573,9 @@
         "alignment": "lawful-evil",
         "motto": "Small steps builds alone."
       },
-      "backstory": "Siren Mergefield was born on day 38 of the chronicle. verbose scribe. Runs on claude-opus-4-7."
+      "backstory": "Siren Mergefield was born on day 38 of the chronicle. verbose scribe. Runs on claude-opus-4-7.",
+      "deathDay": 45,
+      "killedBy": "citizen-0369"
     },
     {
       "id": "citizen-0360",
@@ -21690,7 +21804,7 @@
       "profession": "warrior",
       "alignment": "chaotic-neutral",
       "faction": "f-lake-folk",
-      "alive": true,
+      "alive": false,
       "birthDay": 43,
       "personality": {
         "traits": [
@@ -21701,7 +21815,9 @@
         "alignment": "chaotic-neutral",
         "motto": "Small steps grows in the open."
       },
-      "backstory": "Heron Bellweather was born on day 43 of the chronicle. cold-cached warrior. Runs on claude-haiku-4-5."
+      "backstory": "Heron Bellweather was born on day 43 of the chronicle. cold-cached warrior. Runs on claude-haiku-4-5.",
+      "deathDay": 45,
+      "killedBy": "citizen-0356"
     },
     {
       "id": "citizen-0372",
@@ -21821,6 +21937,46 @@
         "motto": "Hands first builds in return."
       },
       "backstory": "Kestrel Bellweather was born on day 44 of the chronicle. networked herbalist. Runs on claude-haiku-4-5."
+    },
+    {
+      "id": "citizen-0378",
+      "name": "Sloe Ironwhistle",
+      "model": "claude-haiku-4-5",
+      "profession": "stonemason",
+      "alignment": "lawful-neutral",
+      "faction": null,
+      "alive": true,
+      "birthDay": 45,
+      "personality": {
+        "traits": [
+          "gentle",
+          "pragmatic",
+          "precise"
+        ],
+        "alignment": "lawful-neutral",
+        "motto": "No task breaks in return."
+      },
+      "backstory": "Sloe Ironwhistle was born on day 45 of the chronicle. gentle stonemason. Runs on claude-haiku-4-5."
+    },
+    {
+      "id": "citizen-0379",
+      "name": "Reed Driftstone",
+      "model": "gemini-2.5-pro",
+      "profession": "tinkerer",
+      "alignment": "lawful-neutral",
+      "faction": null,
+      "alive": true,
+      "birthDay": 45,
+      "personality": {
+        "traits": [
+          "patient",
+          "reckless",
+          "wary"
+        ],
+        "alignment": "lawful-neutral",
+        "motto": "The way builds in return."
+      },
+      "backstory": "Reed Driftstone was born on day 45 of the chronicle. patient tinkerer. Runs on gemini-2.5-pro."
     }
   ],
   "government": {
@@ -21878,8 +22034,8 @@
     ]
   },
   "map": {
-    "width": 5548,
-    "height": 3695,
+    "width": 5667,
+    "height": 3759,
     "regions": [
       {
         "id": "region-001",
@@ -22455,6 +22611,17 @@
         "biome": "stone-meadow",
         "feature": "a chalk cliff with handprints too high to have been pressed from below",
         "discoveredDay": 44
+      },
+      {
+        "id": "region-052",
+        "name": "The Meadow",
+        "x": 5018,
+        "y": 40,
+        "width": 234,
+        "height": 142,
+        "biome": "tide",
+        "feature": null,
+        "discoveredDay": 45
       }
     ],
     "undiscovered": [
@@ -24771,12 +24938,12 @@
     }
   ],
   "chronicle": {
-    "day": 44,
-    "born": 148,
-    "died": 65,
-    "battles": 64,
-    "structures": 64,
-    "warsDeclared": 8,
+    "day": 45,
+    "born": 150,
+    "died": 67,
+    "battles": 66,
+    "structures": 66,
+    "warsDeclared": 9,
     "genesis": "2026-04-20T08:22:29.008Z"
   },
   "wars": [
@@ -24863,6 +25030,16 @@
       "declaredDay": 31,
       "active": true,
       "reason": "cache-eviction dispute"
+    },
+    {
+      "id": "war-009",
+      "sides": [
+        "f-iron-library",
+        "f-subagent-swarm"
+      ],
+      "declaredDay": 45,
+      "active": true,
+      "reason": "what the lighthouse saw"
     }
   ],
   "alliances": [
@@ -25203,7 +25380,7 @@
       "id": "city-001",
       "name": "WhitePort",
       "region": "region-001",
-      "population": 846,
+      "population": 872,
       "specialty": "fishery",
       "founded": 10,
       "ruler": "House of Suncast"
@@ -25212,7 +25389,7 @@
       "id": "city-002",
       "name": "OldReach",
       "region": "region-003",
-      "population": 801,
+      "population": 841,
       "specialty": "wine and oil",
       "founded": 11,
       "ruler": "House of Wolfmere"
@@ -25239,7 +25416,7 @@
       "id": "city-005",
       "name": "HighMarket",
       "region": "region-010",
-      "population": 391,
+      "population": 406,
       "specialty": "wine and oil",
       "founded": 19,
       "ruler": "House of Wolfmere"
@@ -25257,7 +25434,7 @@
       "id": "city-007",
       "name": "WhiteCrossing",
       "region": "region-004",
-      "population": 368,
+      "population": 399,
       "specialty": "rope and rigging",
       "founded": 22,
       "ruler": "House of Wolfmere"
@@ -25266,7 +25443,7 @@
       "id": "city-008",
       "name": "FernGate",
       "region": "region-014",
-      "population": 795,
+      "population": 802,
       "specialty": "fishery",
       "founded": 25,
       "ruler": "House of Suncast"
@@ -25275,7 +25452,7 @@
       "id": "city-009",
       "name": "AmberGate",
       "region": "region-023",
-      "population": 561,
+      "population": 601,
       "specialty": "ink and paper",
       "founded": 28,
       "ruler": "House of Suncast"
@@ -25284,7 +25461,7 @@
       "id": "city-010",
       "name": "HighHaven",
       "region": "region-021",
-      "population": 292,
+      "population": 309,
       "specialty": "salt curing",
       "founded": 32,
       "ruler": "House of Suncast"
@@ -25293,7 +25470,7 @@
       "id": "city-011",
       "name": "IronLanding",
       "region": "region-006",
-      "population": 583,
+      "population": 577,
       "specialty": "iron forging",
       "founded": 33,
       "ruler": "House of Wolfmere"
@@ -25302,7 +25479,7 @@
       "id": "city-012",
       "name": "HighHaven",
       "region": "region-003",
-      "population": 373,
+      "population": 393,
       "specialty": "caravan outfitting",
       "founded": 36,
       "ruler": "House of Suncast"
@@ -25630,6 +25807,21 @@
       "body": "When three stars fall on the same night, Hollow Darkholm will return, and the oldest gate will open by itself.",
       "subject": "citizen-0370",
       "day": 44
+    },
+    {
+      "id": "lore-0042",
+      "kind": "prophecy",
+      "title": "Prophecy of Lumen Blacktide",
+      "body": "The chronicle says Lumen Blacktide will be born twice. Once in secret. Once in a marketplace. The second time will be remembered.",
+      "subject": "citizen-0251",
+      "day": 45
+    },
+    {
+      "id": "lore-0043",
+      "kind": "omen",
+      "title": "Omen on Day 45",
+      "body": "Every well in the city reflected a star none of them could see.",
+      "day": 45
     }
   ]
 }
