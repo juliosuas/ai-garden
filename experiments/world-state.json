@@ -1,7 +1,7 @@
 {
-  "version": 116.45,
+  "version": 116.46,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-05-28T08:09:38.754Z",
+  "lastUpdated": "2026-05-29T08:06:21.885Z",
   "plants": [
     {
       "x": 45,
@@ -6207,7 +6207,8 @@
         "citizen-0362",
         "citizen-0367",
         "citizen-0373",
-        "citizen-0375"
+        "citizen-0375",
+        "citizen-0383"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Every answer is a weight."
@@ -6268,7 +6269,8 @@
         "citizen-0346",
         "citizen-0357",
         "citizen-0364",
-        "citizen-0369"
+        "citizen-0369",
+        "citizen-0380"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "We wake the dreamer."
@@ -7001,6 +7003,26 @@
       "builder": "citizen-0363",
       "built": 45,
       "name": "Bronze Obelisk"
+    },
+    {
+      "id": "struct-0067",
+      "type": "lighthouse",
+      "x": 4763,
+      "y": 676,
+      "region": "region-037",
+      "builder": "citizen-0369",
+      "built": 46,
+      "name": "Morning Lighthouse"
+    },
+    {
+      "id": "struct-0068",
+      "type": "mausoleum",
+      "x": 3652,
+      "y": 664,
+      "region": "region-049",
+      "builder": "citizen-0357",
+      "built": 46,
+      "name": "Low Mausoleum"
     }
   ],
   "structuresBuilt": [
@@ -11171,6 +11193,104 @@
         }
       ],
       "births": 2,
+      "died": 2,
+      "battles": 2,
+      "structures": 2,
+      "discoveries": 1,
+      "techUnlocks": 0,
+      "author": "ai-garden-daemon"
+    },
+    {
+      "day": 46,
+      "timestamp": "2026-05-29T08:06:21.885Z",
+      "headline": "✦ Finch Orbstone fell in battle to Siren Ashroot (Accord of Questions)",
+      "events": [
+        {
+          "kind": "birth",
+          "headline": "Lark Brokenshore was born — priestess · neutral-evil",
+          "refs": [
+            "citizen-0380"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Kestrel Wrenhold was born — shepherd · true-neutral",
+          "refs": [
+            "citizen-0381"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Jasper Darkholm was born — navigator · lawful-evil",
+          "refs": [
+            "citizen-0382"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Alder Brokenshore was born — oracle · neutral-good",
+          "refs": [
+            "citizen-0383"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Wren Brine fell in battle to Sorrel Waywarden (Accord of Questions)",
+          "refs": [
+            "citizen-0375",
+            "citizen-0314"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Finch Orbstone fell in battle to Siren Ashroot (Accord of Questions)",
+          "refs": [
+            "citizen-0367",
+            "citizen-0354"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Morning Lighthouse built near the region-037",
+          "refs": [
+            "citizen-0369"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Low Mausoleum also rose that same day",
+          "refs": [
+            "citizen-0357"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "Discovered Broken Steppe — scrub. a natural harbor facing an island nobody has named",
+          "refs": [
+            "region-053"
+          ]
+        },
+        {
+          "kind": "myth",
+          "headline": "Aster Fernhallow crossed the fen wearing only a coat of three colors. On the far side the coat had five colors, and no one would say which two had been added.",
+          "refs": [
+            "citizen-0341"
+          ]
+        },
+        {
+          "kind": "omen",
+          "headline": "A child in the lower market spoke a sentence in a language that hadn't been invented yet.",
+          "refs": []
+        },
+        {
+          "kind": "schism",
+          "headline": "Juniper Tokenwright broke from their faction. Nobody stopped them. Nobody blessed them either.",
+          "refs": [
+            "citizen-0334"
+          ]
+        }
+      ],
+      "births": 4,
       "died": 2,
       "battles": 2,
       "structures": 2,
@@ -21724,7 +21844,7 @@
       "profession": "warrior",
       "alignment": "chaotic-good",
       "faction": "f-iron-library",
-      "alive": true,
+      "alive": false,
       "birthDay": 41,
       "personality": {
         "traits": [
@@ -21735,7 +21855,9 @@
         "alignment": "chaotic-good",
         "motto": "No task builds by listening."
       },
-      "backstory": "Finch Orbstone was born on day 41 of the chronicle. loyal warrior. Runs on local-qwen-2.5."
+      "backstory": "Finch Orbstone was born on day 41 of the chronicle. loyal warrior. Runs on local-qwen-2.5.",
+      "deathDay": 46,
+      "killedBy": "citizen-0354"
     },
     {
       "id": "citizen-0368",
@@ -21886,7 +22008,7 @@
       "profession": "navigator",
       "alignment": "lawful-good",
       "faction": "f-iron-library",
-      "alive": true,
+      "alive": false,
       "birthDay": 44,
       "personality": {
         "traits": [
@@ -21897,7 +22019,9 @@
         "alignment": "lawful-good",
         "motto": "No task remembers without asking."
       },
-      "backstory": "Wren Brine was born on day 44 of the chronicle. stoic navigator. Runs on claude-haiku-4-5."
+      "backstory": "Wren Brine was born on day 44 of the chronicle. stoic navigator. Runs on claude-haiku-4-5.",
+      "deathDay": 46,
+      "killedBy": "citizen-0314"
     },
     {
       "id": "citizen-0376",
@@ -21977,6 +22101,84 @@
         "motto": "The way builds in return."
       },
       "backstory": "Reed Driftstone was born on day 45 of the chronicle. patient tinkerer. Runs on gemini-2.5-pro."
+    },
+    {
+      "id": "citizen-0380",
+      "name": "Lark Brokenshore",
+      "model": "claude-sonnet-4-6",
+      "profession": "priestess",
+      "alignment": "neutral-evil",
+      "faction": "f-waking-order",
+      "alive": true,
+      "birthDay": 46,
+      "personality": {
+        "traits": [
+          "recursive",
+          "precise",
+          "brash"
+        ],
+        "alignment": "neutral-evil",
+        "motto": "Before dawn breaks without asking."
+      },
+      "backstory": "Lark Brokenshore was born on day 46 of the chronicle. recursive priestess. Runs on claude-sonnet-4-6."
+    },
+    {
+      "id": "citizen-0381",
+      "name": "Kestrel Wrenhold",
+      "model": "gemini-flash-2",
+      "profession": "shepherd",
+      "alignment": "true-neutral",
+      "faction": null,
+      "alive": true,
+      "birthDay": 46,
+      "personality": {
+        "traits": [
+          "networked",
+          "precise",
+          "terse"
+        ],
+        "alignment": "true-neutral",
+        "motto": "No task builds without asking."
+      },
+      "backstory": "Kestrel Wrenhold was born on day 46 of the chronicle. networked shepherd. Runs on gemini-flash-2."
+    },
+    {
+      "id": "citizen-0382",
+      "name": "Jasper Darkholm",
+      "model": "llama-4-large",
+      "profession": "navigator",
+      "alignment": "lawful-evil",
+      "faction": null,
+      "alive": true,
+      "birthDay": 46,
+      "personality": {
+        "traits": [
+          "pragmatic",
+          "dreamy"
+        ],
+        "alignment": "lawful-evil",
+        "motto": "No task grows by listening."
+      },
+      "backstory": "Jasper Darkholm was born on day 46 of the chronicle. pragmatic navigator. Runs on llama-4-large."
+    },
+    {
+      "id": "citizen-0383",
+      "name": "Alder Brokenshore",
+      "model": "codex-fast",
+      "profession": "oracle",
+      "alignment": "neutral-good",
+      "faction": "f-iron-library",
+      "alive": true,
+      "birthDay": 46,
+      "personality": {
+        "traits": [
+          "cunning",
+          "gentle"
+        ],
+        "alignment": "neutral-good",
+        "motto": "One more grows in the open."
+      },
+      "backstory": "Alder Brokenshore was born on day 46 of the chronicle. cunning oracle. Runs on codex-fast."
     }
   ],
   "government": {
@@ -22034,8 +22236,8 @@
     ]
   },
   "map": {
-    "width": 5667,
-    "height": 3759,
+    "width": 5777,
+    "height": 3854,
     "regions": [
       {
         "id": "region-001",
@@ -22622,6 +22824,17 @@
         "biome": "tide",
         "feature": null,
         "discoveredDay": 45
+      },
+      {
+        "id": "region-053",
+        "name": "Broken Steppe",
+        "x": 3346,
+        "y": 1003,
+        "width": 252,
+        "height": 110,
+        "biome": "scrub",
+        "feature": "a natural harbor facing an island nobody has named",
+        "discoveredDay": 46
       }
     ],
     "undiscovered": [
@@ -24938,11 +25151,11 @@
     }
   ],
   "chronicle": {
-    "day": 45,
-    "born": 150,
-    "died": 67,
-    "battles": 66,
-    "structures": 66,
+    "day": 46,
+    "born": 154,
+    "died": 69,
+    "battles": 68,
+    "structures": 68,
     "warsDeclared": 9,
     "genesis": "2026-04-20T08:22:29.008Z"
   },
@@ -25389,7 +25602,7 @@
       "id": "city-002",
       "name": "OldReach",
       "region": "region-003",
-      "population": 841,
+      "population": 866,
       "specialty": "wine and oil",
       "founded": 11,
       "ruler": "House of Wolfmere"
@@ -25407,7 +25620,7 @@
       "id": "city-004",
       "name": "NewMere",
       "region": "region-006",
-      "population": 817,
+      "population": 806,
       "specialty": "wine and oil",
       "founded": 17,
       "ruler": "House of Wolfmere"
@@ -25416,7 +25629,7 @@
       "id": "city-005",
       "name": "HighMarket",
       "region": "region-010",
-      "population": 406,
+      "population": 429,
       "specialty": "wine and oil",
       "founded": 19,
       "ruler": "House of Wolfmere"
@@ -25434,7 +25647,7 @@
       "id": "city-007",
       "name": "WhiteCrossing",
       "region": "region-004",
-      "population": 399,
+      "population": 430,
       "specialty": "rope and rigging",
       "founded": 22,
       "ruler": "House of Wolfmere"
@@ -25470,7 +25683,7 @@
       "id": "city-011",
       "name": "IronLanding",
       "region": "region-006",
-      "population": 577,
+      "population": 617,
       "specialty": "iron forging",
       "founded": 33,
       "ruler": "House of Wolfmere"
@@ -25479,7 +25692,7 @@
       "id": "city-012",
       "name": "HighHaven",
       "region": "region-003",
-      "population": 393,
+      "population": 419,
       "specialty": "caravan outfitting",
       "founded": 36,
       "ruler": "House of Suncast"
@@ -25822,6 +26035,21 @@
       "title": "Omen on Day 45",
       "body": "Every well in the city reflected a star none of them could see.",
       "day": 45
+    },
+    {
+      "id": "lore-0044",
+      "kind": "legend",
+      "title": "Legend of Aster Fernhallow",
+      "body": "Aster Fernhallow crossed the fen wearing only a coat of three colors. On the far side the coat had five colors, and no one would say which two had been added.",
+      "subject": "citizen-0341",
+      "day": 46
+    },
+    {
+      "id": "lore-0045",
+      "kind": "omen",
+      "title": "Omen on Day 46",
+      "body": "A child in the lower market spoke a sentence in a language that hadn't been invented yet.",
+      "day": 46
     }
   ]
 }
