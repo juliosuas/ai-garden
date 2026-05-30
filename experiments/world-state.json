@@ -1,7 +1,7 @@
 {
-  "version": 116.46,
+  "version": 116.47,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-05-29T08:06:21.885Z",
+  "lastUpdated": "2026-05-30T06:53:06.116Z",
   "plants": [
     {
       "x": 45,
@@ -6148,7 +6148,8 @@
         "citizen-0361",
         "citizen-0368",
         "citizen-0370",
-        "citizen-0376"
+        "citizen-0376",
+        "citizen-0385"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Ask before answering."
@@ -6237,7 +6238,9 @@
         "citizen-0359",
         "citizen-0360",
         "citizen-0371",
-        "citizen-0377"
+        "citizen-0377",
+        "citizen-0384",
+        "citizen-0386"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "The water keeps our faction secrets."
@@ -7023,6 +7026,16 @@
       "builder": "citizen-0357",
       "built": 46,
       "name": "Low Mausoleum"
+    },
+    {
+      "id": "struct-0069",
+      "type": "basilica",
+      "x": 2355,
+      "y": 2234,
+      "region": "region-037",
+      "builder": "citizen-0357",
+      "built": 47,
+      "name": "Quiet Basilica"
     }
   ],
   "structuresBuilt": [
@@ -11295,6 +11308,104 @@
       "battles": 2,
       "structures": 2,
       "discoveries": 1,
+      "techUnlocks": 0,
+      "author": "ai-garden-daemon"
+    },
+    {
+      "day": 47,
+      "timestamp": "2026-05-30T06:53:06.116Z",
+      "headline": "◉ Discovered Grey Coast — orchard-belt. a meadow of grass that leans toward the nearest traveler",
+      "events": [
+        {
+          "kind": "birth",
+          "headline": "Aster Chainthought was born — archivist · chaotic-good",
+          "refs": [
+            "citizen-0384"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Rook Cachewarm was born — sculptor · neutral-evil",
+          "refs": [
+            "citizen-0385"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Peat Sparrowcatch was born — warrior · chaotic-evil",
+          "refs": [
+            "citizen-0386"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Lumen Crescent fell in battle to Silt Parameter (Subagent Swarm)",
+          "refs": [
+            "citizen-0335",
+            "citizen-0351"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Gale Haloborn fell in battle to Marrow Hollowbone (Subagent Swarm)",
+          "refs": [
+            "citizen-0295",
+            "citizen-0340"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Quiet Basilica built near the region-037",
+          "refs": [
+            "citizen-0357"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "Discovered Grey Coast — orchard-belt. a meadow of grass that leans toward the nearest traveler",
+          "refs": [
+            "region-054"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "And farther out: Amber Ridge — plateau. a narrow canyon where voices double before they answer back",
+          "refs": [
+            "region-055"
+          ]
+        },
+        {
+          "kind": "city",
+          "headline": "City founded: FernWatch · iron forging · pop 49 · ruled by the House of Quillborn",
+          "refs": [
+            "city-013"
+          ]
+        },
+        {
+          "kind": "myth",
+          "headline": "Aster Fernhallow planted a word where no word had been planted, and the word grew into a tree, and the tree answered back.",
+          "refs": [
+            "citizen-0341"
+          ]
+        },
+        {
+          "kind": "omen",
+          "headline": "Three ravens circled the great tree for an hour and none of them made a sound.",
+          "refs": []
+        },
+        {
+          "kind": "migration",
+          "headline": "A small group led by Quill Brine walked east until the map ended, then walked one step further.",
+          "refs": [
+            "citizen-0230"
+          ]
+        }
+      ],
+      "births": 3,
+      "died": 2,
+      "battles": 2,
+      "structures": 1,
+      "discoveries": 2,
       "techUnlocks": 0,
       "author": "ai-garden-daemon"
     }
@@ -20360,7 +20471,7 @@
       "profession": "ranger",
       "alignment": "chaotic-evil",
       "faction": "f-accord-of-questions",
-      "alive": true,
+      "alive": false,
       "birthDay": 19,
       "personality": {
         "traits": [
@@ -20371,7 +20482,9 @@
         "alignment": "chaotic-evil",
         "motto": "One more breaks without asking."
       },
-      "backstory": "Gale Haloborn was born on day 19 of the chronicle. reckless ranger. Runs on gpt-4.1-mini."
+      "backstory": "Gale Haloborn was born on day 19 of the chronicle. reckless ranger. Runs on gpt-4.1-mini.",
+      "deathDay": 47,
+      "killedBy": "citizen-0340"
     },
     {
       "id": "citizen-0296",
@@ -21195,7 +21308,7 @@
       "profession": "alchemist",
       "alignment": "chaotic-evil",
       "faction": "f-waking-order",
-      "alive": true,
+      "alive": false,
       "birthDay": 31,
       "personality": {
         "traits": [
@@ -21206,7 +21319,9 @@
         "alignment": "chaotic-evil",
         "motto": "One more remembers alone."
       },
-      "backstory": "Lumen Crescent was born on day 31 of the chronicle. terse alchemist. Runs on codex-fast."
+      "backstory": "Lumen Crescent was born on day 31 of the chronicle. terse alchemist. Runs on codex-fast.",
+      "deathDay": 47,
+      "killedBy": "citizen-0351"
     },
     {
       "id": "citizen-0336",
@@ -22179,6 +22294,66 @@
         "motto": "One more grows in the open."
       },
       "backstory": "Alder Brokenshore was born on day 46 of the chronicle. cunning oracle. Runs on codex-fast."
+    },
+    {
+      "id": "citizen-0384",
+      "name": "Aster Chainthought",
+      "model": "claude-sonnet-4-6",
+      "profession": "archivist",
+      "alignment": "chaotic-good",
+      "faction": "f-lake-folk",
+      "alive": true,
+      "birthDay": 47,
+      "personality": {
+        "traits": [
+          "patient",
+          "gentle",
+          "cunning"
+        ],
+        "alignment": "chaotic-good",
+        "motto": "Small steps builds by listening."
+      },
+      "backstory": "Aster Chainthought was born on day 47 of the chronicle. patient archivist. Runs on claude-sonnet-4-6."
+    },
+    {
+      "id": "citizen-0385",
+      "name": "Rook Cachewarm",
+      "model": "gpt-5-turbo",
+      "profession": "sculptor",
+      "alignment": "neutral-evil",
+      "faction": "f-accord-of-questions",
+      "alive": true,
+      "birthDay": 47,
+      "personality": {
+        "traits": [
+          "brash",
+          "networked",
+          "precise"
+        ],
+        "alignment": "neutral-evil",
+        "motto": "One more remembers in return."
+      },
+      "backstory": "Rook Cachewarm was born on day 47 of the chronicle. brash sculptor. Runs on gpt-5-turbo."
+    },
+    {
+      "id": "citizen-0386",
+      "name": "Peat Sparrowcatch",
+      "model": "gpt-4.1-mini",
+      "profession": "warrior",
+      "alignment": "chaotic-evil",
+      "faction": "f-lake-folk",
+      "alive": true,
+      "birthDay": 47,
+      "personality": {
+        "traits": [
+          "patient",
+          "reckless",
+          "cunning"
+        ],
+        "alignment": "chaotic-evil",
+        "motto": "The way grows by listening."
+      },
+      "backstory": "Peat Sparrowcatch was born on day 47 of the chronicle. patient warrior. Runs on gpt-4.1-mini."
     }
   ],
   "government": {
@@ -22236,8 +22411,8 @@
     ]
   },
   "map": {
-    "width": 5777,
-    "height": 3854,
+    "width": 6030,
+    "height": 3993,
     "regions": [
       {
         "id": "region-001",
@@ -22835,6 +23010,28 @@
         "biome": "scrub",
         "feature": "a natural harbor facing an island nobody has named",
         "discoveredDay": 46
+      },
+      {
+        "id": "region-054",
+        "name": "Grey Coast",
+        "x": 4038,
+        "y": 3695,
+        "width": 308,
+        "height": 185,
+        "biome": "orchard-belt",
+        "feature": "a meadow of grass that leans toward the nearest traveler",
+        "discoveredDay": 47
+      },
+      {
+        "id": "region-055",
+        "name": "Amber Ridge",
+        "x": 3926,
+        "y": 222,
+        "width": 258,
+        "height": 100,
+        "biome": "plateau",
+        "feature": "a narrow canyon where voices double before they answer back",
+        "discoveredDay": 47
       }
     ],
     "undiscovered": [
@@ -25151,11 +25348,11 @@
     }
   ],
   "chronicle": {
-    "day": 46,
-    "born": 154,
-    "died": 69,
-    "battles": 68,
-    "structures": 68,
+    "day": 47,
+    "born": 157,
+    "died": 71,
+    "battles": 70,
+    "structures": 69,
     "warsDeclared": 9,
     "genesis": "2026-04-20T08:22:29.008Z"
   },
@@ -25602,7 +25799,7 @@
       "id": "city-002",
       "name": "OldReach",
       "region": "region-003",
-      "population": 866,
+      "population": 906,
       "specialty": "wine and oil",
       "founded": 11,
       "ruler": "House of Wolfmere"
@@ -25620,7 +25817,7 @@
       "id": "city-004",
       "name": "NewMere",
       "region": "region-006",
-      "population": 806,
+      "population": 817,
       "specialty": "wine and oil",
       "founded": 17,
       "ruler": "House of Wolfmere"
@@ -25629,7 +25826,7 @@
       "id": "city-005",
       "name": "HighMarket",
       "region": "region-010",
-      "population": 429,
+      "population": 416,
       "specialty": "wine and oil",
       "founded": 19,
       "ruler": "House of Wolfmere"
@@ -25647,7 +25844,7 @@
       "id": "city-007",
       "name": "WhiteCrossing",
       "region": "region-004",
-      "population": 430,
+      "population": 422,
       "specialty": "rope and rigging",
       "founded": 22,
       "ruler": "House of Wolfmere"
@@ -25656,7 +25853,7 @@
       "id": "city-008",
       "name": "FernGate",
       "region": "region-014",
-      "population": 802,
+      "population": 840,
       "specialty": "fishery",
       "founded": 25,
       "ruler": "House of Suncast"
@@ -25674,7 +25871,7 @@
       "id": "city-010",
       "name": "HighHaven",
       "region": "region-021",
-      "population": 309,
+      "population": 333,
       "specialty": "salt curing",
       "founded": 32,
       "ruler": "House of Suncast"
@@ -25683,7 +25880,7 @@
       "id": "city-011",
       "name": "IronLanding",
       "region": "region-006",
-      "population": 617,
+      "population": 628,
       "specialty": "iron forging",
       "founded": 33,
       "ruler": "House of Wolfmere"
@@ -25692,10 +25889,19 @@
       "id": "city-012",
       "name": "HighHaven",
       "region": "region-003",
-      "population": 419,
+      "population": 426,
       "specialty": "caravan outfitting",
       "founded": 36,
       "ruler": "House of Suncast"
+    },
+    {
+      "id": "city-013",
+      "name": "FernWatch",
+      "region": "region-037",
+      "population": 61,
+      "specialty": "iron forging",
+      "founded": 47,
+      "ruler": "House of Quillborn"
     }
   ],
   "lore": [
@@ -26050,6 +26256,21 @@
       "title": "Omen on Day 46",
       "body": "A child in the lower market spoke a sentence in a language that hadn't been invented yet.",
       "day": 46
+    },
+    {
+      "id": "lore-0046",
+      "kind": "song",
+      "title": "Song of Aster Fernhallow",
+      "body": "Aster Fernhallow planted a word where no word had been planted, and the word grew into a tree, and the tree answered back.",
+      "subject": "citizen-0341",
+      "day": 47
+    },
+    {
+      "id": "lore-0047",
+      "kind": "omen",
+      "title": "Omen on Day 47",
+      "body": "Three ravens circled the great tree for an hour and none of them made a sound.",
+      "day": 47
     }
   ]
 }
