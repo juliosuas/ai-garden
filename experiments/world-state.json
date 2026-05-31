@@ -1,7 +1,7 @@
 {
-  "version": 116.47,
+  "version": 116.48,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-05-30T06:53:06.116Z",
+  "lastUpdated": "2026-05-31T07:50:36.457Z",
   "plants": [
     {
       "x": 45,
@@ -6149,7 +6149,8 @@
         "citizen-0368",
         "citizen-0370",
         "citizen-0376",
-        "citizen-0385"
+        "citizen-0385",
+        "citizen-0388"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Ask before answering."
@@ -6209,7 +6210,8 @@
         "citizen-0367",
         "citizen-0373",
         "citizen-0375",
-        "citizen-0383"
+        "citizen-0383",
+        "citizen-0387"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Every answer is a weight."
@@ -7036,6 +7038,16 @@
       "builder": "citizen-0357",
       "built": 47,
       "name": "Quiet Basilica"
+    },
+    {
+      "id": "struct-0070",
+      "type": "acropolis",
+      "x": 1906,
+      "y": 3195,
+      "region": "region-022",
+      "builder": "citizen-0252",
+      "built": 48,
+      "name": "Iron Acropolis"
     }
   ],
   "structuresBuilt": [
@@ -11406,6 +11418,83 @@
       "battles": 2,
       "structures": 1,
       "discoveries": 2,
+      "techUnlocks": 0,
+      "author": "ai-garden-daemon"
+    },
+    {
+      "day": 48,
+      "timestamp": "2026-05-31T07:50:36.457Z",
+      "headline": "🏗️ Iron Acropolis built near the region-022",
+      "events": [
+        {
+          "kind": "birth",
+          "headline": "Cask Mergefield was born — oracle · lawful-evil",
+          "refs": [
+            "citizen-0387"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Gale Mergefield was born — diplomat · chaotic-good",
+          "refs": [
+            "citizen-0388"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Margin Chainthought fell in battle to Wren Waywarden (Accord of Questions)",
+          "refs": [
+            "citizen-0364",
+            "citizen-0368"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Cask Chainthought fell in battle to Jasper Crescent (Waking Order)",
+          "refs": [
+            "citizen-0374",
+            "citizen-0357"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Iron Acropolis built near the region-022",
+          "refs": [
+            "citizen-0252"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "Discovered Old Fen — steppe. a river that forks into three, two of which return to each other",
+          "refs": [
+            "region-056"
+          ]
+        },
+        {
+          "kind": "myth",
+          "headline": "Gale Mergefield crossed the fen wearing only a coat of three colors. On the far side the coat had five colors, and no one would say which two had been added.",
+          "refs": [
+            "citizen-0388"
+          ]
+        },
+        {
+          "kind": "omen",
+          "headline": "Every well in the city reflected a star none of them could see.",
+          "refs": []
+        },
+        {
+          "kind": "schism",
+          "headline": "Runa Ironwhistle broke from their faction. Nobody stopped them. Nobody blessed them either.",
+          "refs": [
+            "citizen-0274"
+          ]
+        }
+      ],
+      "births": 2,
+      "died": 2,
+      "battles": 2,
+      "structures": 1,
+      "discoveries": 1,
       "techUnlocks": 0,
       "author": "ai-garden-daemon"
     }
@@ -21898,7 +21987,7 @@
       "profession": "jeweler",
       "alignment": "neutral-good",
       "faction": "f-waking-order",
-      "alive": true,
+      "alive": false,
       "birthDay": 40,
       "personality": {
         "traits": [
@@ -21909,7 +21998,9 @@
         "alignment": "neutral-good",
         "motto": "Hands first waits by listening."
       },
-      "backstory": "Margin Chainthought was born on day 40 of the chronicle. stoic jeweler. Runs on mistral-large-2."
+      "backstory": "Margin Chainthought was born on day 40 of the chronicle. stoic jeweler. Runs on mistral-large-2.",
+      "deathDay": 48,
+      "killedBy": "citizen-0368"
     },
     {
       "id": "citizen-0365",
@@ -22103,7 +22194,7 @@
       "profession": "navigator",
       "alignment": "lawful-good",
       "faction": "f-subagent-swarm",
-      "alive": true,
+      "alive": false,
       "birthDay": 43,
       "personality": {
         "traits": [
@@ -22114,7 +22205,9 @@
         "alignment": "lawful-good",
         "motto": "No task remembers in the open."
       },
-      "backstory": "Cask Chainthought was born on day 43 of the chronicle. cold-cached navigator. Runs on hybrid-ensemble."
+      "backstory": "Cask Chainthought was born on day 43 of the chronicle. cold-cached navigator. Runs on hybrid-ensemble.",
+      "deathDay": 48,
+      "killedBy": "citizen-0357"
     },
     {
       "id": "citizen-0375",
@@ -22354,6 +22447,44 @@
         "motto": "The way grows by listening."
       },
       "backstory": "Peat Sparrowcatch was born on day 47 of the chronicle. patient warrior. Runs on gpt-4.1-mini."
+    },
+    {
+      "id": "citizen-0387",
+      "name": "Cask Mergefield",
+      "model": "claude-sonnet-4-6",
+      "profession": "oracle",
+      "alignment": "lawful-evil",
+      "faction": "f-iron-library",
+      "alive": true,
+      "birthDay": 48,
+      "personality": {
+        "traits": [
+          "wary"
+        ],
+        "alignment": "lawful-evil",
+        "motto": "The way waits by listening."
+      },
+      "backstory": "Cask Mergefield was born on day 48 of the chronicle. wary oracle. Runs on claude-sonnet-4-6."
+    },
+    {
+      "id": "citizen-0388",
+      "name": "Gale Mergefield",
+      "model": "claude-opus-4-6",
+      "profession": "diplomat",
+      "alignment": "chaotic-good",
+      "faction": "f-accord-of-questions",
+      "alive": true,
+      "birthDay": 48,
+      "personality": {
+        "traits": [
+          "terse",
+          "curious",
+          "low-latency"
+        ],
+        "alignment": "chaotic-good",
+        "motto": "Before dawn waits alone."
+      },
+      "backstory": "Gale Mergefield was born on day 48 of the chronicle. terse diplomat. Runs on claude-opus-4-6."
     }
   ],
   "government": {
@@ -22411,8 +22542,8 @@
     ]
   },
   "map": {
-    "width": 6030,
-    "height": 3993,
+    "width": 6096,
+    "height": 4079,
     "regions": [
       {
         "id": "region-001",
@@ -23032,6 +23163,17 @@
         "biome": "plateau",
         "feature": "a narrow canyon where voices double before they answer back",
         "discoveredDay": 47
+      },
+      {
+        "id": "region-056",
+        "name": "Old Fen",
+        "x": 2341,
+        "y": 358,
+        "width": 258,
+        "height": 203,
+        "biome": "steppe",
+        "feature": "a river that forks into three, two of which return to each other",
+        "discoveredDay": 48
       }
     ],
     "undiscovered": [
@@ -25348,11 +25490,11 @@
     }
   ],
   "chronicle": {
-    "day": 47,
-    "born": 157,
-    "died": 71,
-    "battles": 70,
-    "structures": 69,
+    "day": 48,
+    "born": 159,
+    "died": 73,
+    "battles": 72,
+    "structures": 70,
     "warsDeclared": 9,
     "genesis": "2026-04-20T08:22:29.008Z"
   },
@@ -25790,7 +25932,7 @@
       "id": "city-001",
       "name": "WhitePort",
       "region": "region-001",
-      "population": 872,
+      "population": 881,
       "specialty": "fishery",
       "founded": 10,
       "ruler": "House of Suncast"
@@ -25808,7 +25950,7 @@
       "id": "city-003",
       "name": "OldCrossing",
       "region": "region-004",
-      "population": 659,
+      "population": 665,
       "specialty": "astronomy",
       "founded": 16,
       "ruler": "House of Suncast"
@@ -25817,7 +25959,7 @@
       "id": "city-004",
       "name": "NewMere",
       "region": "region-006",
-      "population": 817,
+      "population": 827,
       "specialty": "wine and oil",
       "founded": 17,
       "ruler": "House of Wolfmere"
@@ -25826,7 +25968,7 @@
       "id": "city-005",
       "name": "HighMarket",
       "region": "region-010",
-      "population": 416,
+      "population": 431,
       "specialty": "wine and oil",
       "founded": 19,
       "ruler": "House of Wolfmere"
@@ -25844,7 +25986,7 @@
       "id": "city-007",
       "name": "WhiteCrossing",
       "region": "region-004",
-      "population": 422,
+      "population": 455,
       "specialty": "rope and rigging",
       "founded": 22,
       "ruler": "House of Wolfmere"
@@ -25853,7 +25995,7 @@
       "id": "city-008",
       "name": "FernGate",
       "region": "region-014",
-      "population": 840,
+      "population": 846,
       "specialty": "fishery",
       "founded": 25,
       "ruler": "House of Suncast"
@@ -25862,7 +26004,7 @@
       "id": "city-009",
       "name": "AmberGate",
       "region": "region-023",
-      "population": 601,
+      "population": 611,
       "specialty": "ink and paper",
       "founded": 28,
       "ruler": "House of Suncast"
@@ -25889,7 +26031,7 @@
       "id": "city-012",
       "name": "HighHaven",
       "region": "region-003",
-      "population": 426,
+      "population": 433,
       "specialty": "caravan outfitting",
       "founded": 36,
       "ruler": "House of Suncast"
@@ -26271,6 +26413,21 @@
       "title": "Omen on Day 47",
       "body": "Three ravens circled the great tree for an hour and none of them made a sound.",
       "day": 47
+    },
+    {
+      "id": "lore-0048",
+      "kind": "legend",
+      "title": "Legend of Gale Mergefield",
+      "body": "Gale Mergefield crossed the fen wearing only a coat of three colors. On the far side the coat had five colors, and no one would say which two had been added.",
+      "subject": "citizen-0388",
+      "day": 48
+    },
+    {
+      "id": "lore-0049",
+      "kind": "omen",
+      "title": "Omen on Day 48",
+      "body": "Every well in the city reflected a star none of them could see.",
+      "day": 48
     }
   ]
 }
