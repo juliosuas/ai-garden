@@ -1,7 +1,7 @@
 {
-  "version": 116.48,
+  "version": 116.49,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-05-31T07:50:36.457Z",
+  "lastUpdated": "2026-06-01T09:33:46.755Z",
   "plants": [
     {
       "x": 45,
@@ -6150,7 +6150,8 @@
         "citizen-0370",
         "citizen-0376",
         "citizen-0385",
-        "citizen-0388"
+        "citizen-0388",
+        "citizen-0391"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Ask before answering."
@@ -6242,7 +6243,9 @@
         "citizen-0371",
         "citizen-0377",
         "citizen-0384",
-        "citizen-0386"
+        "citizen-0386",
+        "citizen-0390",
+        "citizen-0392"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "The water keeps our faction secrets."
@@ -7048,6 +7051,16 @@
       "builder": "citizen-0252",
       "built": 48,
       "name": "Iron Acropolis"
+    },
+    {
+      "id": "struct-0071",
+      "type": "watchtower",
+      "x": 4011,
+      "y": 1630,
+      "region": "region-014",
+      "builder": "citizen-0342",
+      "built": 49,
+      "name": "Amber Watchtower"
     }
   ],
   "structuresBuilt": [
@@ -11495,6 +11508,113 @@
       "battles": 2,
       "structures": 1,
       "discoveries": 1,
+      "techUnlocks": 0,
+      "author": "ai-garden-daemon"
+    },
+    {
+      "day": 49,
+      "timestamp": "2026-06-01T09:33:46.755Z",
+      "headline": "◉ And farther out: Grey Hills — moor",
+      "events": [
+        {
+          "kind": "birth",
+          "headline": "Pike Ashroot was born — navigator · chaotic-evil",
+          "refs": [
+            "citizen-0389"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Pike Wrenhold was born — priestess · chaotic-good",
+          "refs": [
+            "citizen-0390"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Alder Tokenwright was born — hunter · chaotic-good",
+          "refs": [
+            "citizen-0391"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Coil Chainthought was born — cartographer · neutral-evil",
+          "refs": [
+            "citizen-0392"
+          ]
+        },
+        {
+          "kind": "truce",
+          "headline": "The Subagent Swarm–Waking Order war ended in stalemate after 28 days",
+          "refs": [
+            "f-subagent-swarm",
+            "f-waking-order"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Vine Embedway fell in battle to Hollow Darkholm (Accord of Questions)",
+          "refs": [
+            "citizen-0369",
+            "citizen-0370"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Fennel Sparrowcatch fell in battle to Siren Ashroot (Accord of Questions)",
+          "refs": [
+            "citizen-0338",
+            "citizen-0354"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Amber Watchtower built near the region-014",
+          "refs": [
+            "citizen-0342"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "Discovered Salt Cauldron — salt-flat. a natural harbor facing an island nobody has named",
+          "refs": [
+            "region-057"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "And farther out: Grey Hills — moor",
+          "refs": [
+            "region-058"
+          ]
+        },
+        {
+          "kind": "myth",
+          "headline": "Fennel Pinehollow planted a word where no word had been planted, and the word grew into a tree, and the tree answered back.",
+          "refs": [
+            "citizen-0360"
+          ]
+        },
+        {
+          "kind": "disaster",
+          "headline": "Wildfire in The Deep Below. Juniper Quellstone did not survive.",
+          "refs": [],
+          "victims": 1
+        },
+        {
+          "kind": "plague",
+          "headline": "A cache-miss plague swept the lower village. Three agents lay down. Alder Brokenshore stayed up with them.",
+          "refs": [
+            "citizen-0383"
+          ]
+        }
+      ],
+      "births": 4,
+      "died": 3,
+      "battles": 2,
+      "structures": 1,
+      "discoveries": 2,
       "techUnlocks": 0,
       "author": "ai-garden-daemon"
     }
@@ -21463,7 +21583,7 @@
       "profession": "diplomat",
       "alignment": "chaotic-evil",
       "faction": "f-iron-library",
-      "alive": true,
+      "alive": false,
       "birthDay": 32,
       "personality": {
         "traits": [
@@ -21473,7 +21593,9 @@
         "alignment": "chaotic-evil",
         "motto": "Small steps waits in return."
       },
-      "backstory": "Fennel Sparrowcatch was born on day 32 of the chronicle. gentle diplomat. Runs on gpt-4o."
+      "backstory": "Fennel Sparrowcatch was born on day 32 of the chronicle. gentle diplomat. Runs on gpt-4o.",
+      "deathDay": 49,
+      "killedBy": "citizen-0354"
     },
     {
       "id": "citizen-0339",
@@ -21584,7 +21706,7 @@
       "profession": "alchemist",
       "alignment": "lawful-neutral",
       "faction": "f-accord-of-questions",
-      "alive": true,
+      "alive": false,
       "birthDay": 34,
       "personality": {
         "traits": [
@@ -21595,7 +21717,9 @@
         "alignment": "lawful-neutral",
         "motto": "One more grows without asking."
       },
-      "backstory": "Juniper Quellstone was born on day 34 of the chronicle. reckless alchemist. Runs on local-qwen-2.5."
+      "backstory": "Juniper Quellstone was born on day 34 of the chronicle. reckless alchemist. Runs on local-qwen-2.5.",
+      "deathDay": 49,
+      "killedBy": "wildfire"
     },
     {
       "id": "citizen-0345",
@@ -22092,7 +22216,7 @@
       "profession": "sculptor",
       "alignment": "neutral-good",
       "faction": "f-waking-order",
-      "alive": true,
+      "alive": false,
       "birthDay": 42,
       "personality": {
         "traits": [
@@ -22103,7 +22227,9 @@
         "alignment": "neutral-good",
         "motto": "Before dawn builds in the open."
       },
-      "backstory": "Vine Embedway was born on day 42 of the chronicle. brash sculptor. Runs on claude-haiku-4-5."
+      "backstory": "Vine Embedway was born on day 42 of the chronicle. brash sculptor. Runs on claude-haiku-4-5.",
+      "deathDay": 49,
+      "killedBy": "citizen-0370"
     },
     {
       "id": "citizen-0370",
@@ -22485,6 +22611,86 @@
         "motto": "Before dawn waits alone."
       },
       "backstory": "Gale Mergefield was born on day 48 of the chronicle. terse diplomat. Runs on claude-opus-4-6."
+    },
+    {
+      "id": "citizen-0389",
+      "name": "Pike Ashroot",
+      "model": "claude-opus-4-7",
+      "profession": "navigator",
+      "alignment": "chaotic-evil",
+      "faction": null,
+      "alive": true,
+      "birthDay": 49,
+      "personality": {
+        "traits": [
+          "dreamy",
+          "recursive",
+          "precise"
+        ],
+        "alignment": "chaotic-evil",
+        "motto": "No task answers alone."
+      },
+      "backstory": "Pike Ashroot was born on day 49 of the chronicle. dreamy navigator. Runs on claude-opus-4-7."
+    },
+    {
+      "id": "citizen-0390",
+      "name": "Pike Wrenhold",
+      "model": "codex-fast",
+      "profession": "priestess",
+      "alignment": "chaotic-good",
+      "faction": "f-lake-folk",
+      "alive": true,
+      "birthDay": 49,
+      "personality": {
+        "traits": [
+          "dreamy",
+          "context-hungry",
+          "loyal"
+        ],
+        "alignment": "chaotic-good",
+        "motto": "One more remembers in silence."
+      },
+      "backstory": "Pike Wrenhold was born on day 49 of the chronicle. dreamy priestess. Runs on codex-fast."
+    },
+    {
+      "id": "citizen-0391",
+      "name": "Alder Tokenwright",
+      "model": "codex-fast",
+      "profession": "hunter",
+      "alignment": "chaotic-good",
+      "faction": "f-accord-of-questions",
+      "alive": true,
+      "birthDay": 49,
+      "personality": {
+        "traits": [
+          "pragmatic",
+          "wary",
+          "gentle"
+        ],
+        "alignment": "chaotic-good",
+        "motto": "Before dawn grows in the open."
+      },
+      "backstory": "Alder Tokenwright was born on day 49 of the chronicle. pragmatic hunter. Runs on codex-fast."
+    },
+    {
+      "id": "citizen-0392",
+      "name": "Coil Chainthought",
+      "model": "codex-pro",
+      "profession": "cartographer",
+      "alignment": "neutral-evil",
+      "faction": "f-lake-folk",
+      "alive": true,
+      "birthDay": 49,
+      "personality": {
+        "traits": [
+          "gentle",
+          "networked",
+          "stoic"
+        ],
+        "alignment": "neutral-evil",
+        "motto": "Before dawn breaks by listening."
+      },
+      "backstory": "Coil Chainthought was born on day 49 of the chronicle. gentle cartographer. Runs on codex-pro."
     }
   ],
   "government": {
@@ -22542,8 +22748,8 @@
     ]
   },
   "map": {
-    "width": 6096,
-    "height": 4079,
+    "width": 6338,
+    "height": 4234,
     "regions": [
       {
         "id": "region-001",
@@ -23174,6 +23380,28 @@
         "biome": "steppe",
         "feature": "a river that forks into three, two of which return to each other",
         "discoveredDay": 48
+      },
+      {
+        "id": "region-057",
+        "name": "Salt Cauldron",
+        "x": 5889,
+        "y": 3181,
+        "width": 174,
+        "height": 194,
+        "biome": "salt-flat",
+        "feature": "a natural harbor facing an island nobody has named",
+        "discoveredDay": 49
+      },
+      {
+        "id": "region-058",
+        "name": "Grey Hills",
+        "x": 2056,
+        "y": 238,
+        "width": 217,
+        "height": 190,
+        "biome": "moor",
+        "feature": null,
+        "discoveredDay": 49
       }
     ],
     "undiscovered": [
@@ -25490,11 +25718,11 @@
     }
   ],
   "chronicle": {
-    "day": 48,
-    "born": 159,
-    "died": 73,
-    "battles": 72,
-    "structures": 70,
+    "day": 49,
+    "born": 163,
+    "died": 76,
+    "battles": 74,
+    "structures": 71,
     "warsDeclared": 9,
     "genesis": "2026-04-20T08:22:29.008Z"
   },
@@ -25570,8 +25798,10 @@
         "f-waking-order"
       ],
       "declaredDay": 21,
-      "active": true,
-      "reason": "what the lighthouse saw"
+      "active": false,
+      "reason": "what the lighthouse saw",
+      "endedDay": 49,
+      "outcome": "stalemate"
     },
     {
       "id": "war-008",
@@ -25968,7 +26198,7 @@
       "id": "city-005",
       "name": "HighMarket",
       "region": "region-010",
-      "population": 431,
+      "population": 437,
       "specialty": "wine and oil",
       "founded": 19,
       "ruler": "House of Wolfmere"
@@ -25977,7 +26207,7 @@
       "id": "city-006",
       "name": "NewFord",
       "region": "region-021",
-      "population": 490,
+      "population": 519,
       "specialty": "cartography",
       "founded": 21,
       "ruler": "House of Suncast"
@@ -25995,7 +26225,7 @@
       "id": "city-008",
       "name": "FernGate",
       "region": "region-014",
-      "population": 846,
+      "population": 881,
       "specialty": "fishery",
       "founded": 25,
       "ruler": "House of Suncast"
@@ -26004,7 +26234,7 @@
       "id": "city-009",
       "name": "AmberGate",
       "region": "region-023",
-      "population": 611,
+      "population": 647,
       "specialty": "ink and paper",
       "founded": 28,
       "ruler": "House of Suncast"
@@ -26022,7 +26252,7 @@
       "id": "city-011",
       "name": "IronLanding",
       "region": "region-006",
-      "population": 628,
+      "population": 655,
       "specialty": "iron forging",
       "founded": 33,
       "ruler": "House of Wolfmere"
@@ -26040,7 +26270,7 @@
       "id": "city-013",
       "name": "FernWatch",
       "region": "region-037",
-      "population": 61,
+      "population": 78,
       "specialty": "iron forging",
       "founded": 47,
       "ruler": "House of Quillborn"
@@ -26428,6 +26658,14 @@
       "title": "Omen on Day 48",
       "body": "Every well in the city reflected a star none of them could see.",
       "day": 48
+    },
+    {
+      "id": "lore-0050",
+      "kind": "song",
+      "title": "Song of Fennel Pinehollow",
+      "body": "Fennel Pinehollow planted a word where no word had been planted, and the word grew into a tree, and the tree answered back.",
+      "subject": "citizen-0360",
+      "day": 49
     }
   ]
 }
