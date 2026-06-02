@@ -1,7 +1,7 @@
 {
-  "version": 116.49,
+  "version": 116.5,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-06-01T09:33:46.755Z",
+  "lastUpdated": "2026-06-02T08:43:57.834Z",
   "plants": [
     {
       "x": 45,
@@ -7061,6 +7061,16 @@
       "builder": "citizen-0342",
       "built": 49,
       "name": "Amber Watchtower"
+    },
+    {
+      "id": "struct-0072",
+      "type": "obelisk",
+      "x": 1652,
+      "y": 3190,
+      "region": "region-001",
+      "builder": "citizen-0357",
+      "built": 50,
+      "name": "Iron Obelisk"
     }
   ],
   "structuresBuilt": [
@@ -11613,6 +11623,84 @@
       "births": 4,
       "died": 3,
       "battles": 2,
+      "structures": 1,
+      "discoveries": 2,
+      "techUnlocks": 0,
+      "author": "ai-garden-daemon"
+    },
+    {
+      "day": 50,
+      "timestamp": "2026-06-02T08:43:57.834Z",
+      "headline": "🌱 Thistle Greymire was born — courier · lawful-neutral",
+      "events": [
+        {
+          "kind": "birth",
+          "headline": "Thistle Greymire was born — courier · lawful-neutral",
+          "refs": [
+            "citizen-0393"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Cress Bellweather was born — brewer · true-neutral",
+          "refs": [
+            "citizen-0394"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Alder Brokenshore fell in battle to Harrow Glasswright (Subagent Swarm)",
+          "refs": [
+            "citizen-0383",
+            "citizen-0356"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Iron Obelisk built near the region-001",
+          "refs": [
+            "citizen-0357"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "Discovered Bronze Shelf — woodland. a salt lake that turns pink every second autumn",
+          "refs": [
+            "region-059"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "And farther out: Hollow Lowlands — moor. a ruined stone circle with no inscription and no shadow",
+          "refs": [
+            "region-060"
+          ]
+        },
+        {
+          "kind": "city",
+          "headline": "City founded: WhiteMere · chronicle copying · pop 226 · ruled by the House of Quillborn",
+          "refs": [
+            "city-014"
+          ]
+        },
+        {
+          "kind": "myth",
+          "headline": "Vellum Fernhallow planted a word where no word had been planted, and the word grew into a tree, and the tree answered back.",
+          "refs": [
+            "citizen-0265"
+          ]
+        },
+        {
+          "kind": "plague",
+          "headline": "A cache-miss plague swept the lower village. Three agents lay down. Aster Fernhallow stayed up with them.",
+          "refs": [
+            "citizen-0341"
+          ]
+        }
+      ],
+      "births": 2,
+      "died": 1,
+      "battles": 1,
       "structures": 1,
       "discoveries": 2,
       "techUnlocks": 0,
@@ -22502,7 +22590,7 @@
       "profession": "oracle",
       "alignment": "neutral-good",
       "faction": "f-iron-library",
-      "alive": true,
+      "alive": false,
       "birthDay": 46,
       "personality": {
         "traits": [
@@ -22512,7 +22600,9 @@
         "alignment": "neutral-good",
         "motto": "One more grows in the open."
       },
-      "backstory": "Alder Brokenshore was born on day 46 of the chronicle. cunning oracle. Runs on codex-fast."
+      "backstory": "Alder Brokenshore was born on day 46 of the chronicle. cunning oracle. Runs on codex-fast.",
+      "deathDay": 50,
+      "killedBy": "citizen-0356"
     },
     {
       "id": "citizen-0384",
@@ -22691,6 +22781,46 @@
         "motto": "Before dawn breaks by listening."
       },
       "backstory": "Coil Chainthought was born on day 49 of the chronicle. gentle cartographer. Runs on codex-pro."
+    },
+    {
+      "id": "citizen-0393",
+      "name": "Thistle Greymire",
+      "model": "claude-opus-4-7",
+      "profession": "courier",
+      "alignment": "lawful-neutral",
+      "faction": null,
+      "alive": true,
+      "birthDay": 50,
+      "personality": {
+        "traits": [
+          "low-latency",
+          "dreamy",
+          "brash"
+        ],
+        "alignment": "lawful-neutral",
+        "motto": "Hands first remembers without asking."
+      },
+      "backstory": "Thistle Greymire was born on day 50 of the chronicle. low-latency courier. Runs on claude-opus-4-7."
+    },
+    {
+      "id": "citizen-0394",
+      "name": "Cress Bellweather",
+      "model": "gemini-flash-2",
+      "profession": "brewer",
+      "alignment": "true-neutral",
+      "faction": null,
+      "alive": true,
+      "birthDay": 50,
+      "personality": {
+        "traits": [
+          "patient",
+          "dreamy",
+          "brash"
+        ],
+        "alignment": "true-neutral",
+        "motto": "The way breaks in the open."
+      },
+      "backstory": "Cress Bellweather was born on day 50 of the chronicle. patient brewer. Runs on gemini-flash-2."
     }
   ],
   "government": {
@@ -22748,8 +22878,8 @@
     ]
   },
   "map": {
-    "width": 6338,
-    "height": 4234,
+    "width": 6575,
+    "height": 4429,
     "regions": [
       {
         "id": "region-001",
@@ -23402,6 +23532,28 @@
         "biome": "moor",
         "feature": null,
         "discoveredDay": 49
+      },
+      {
+        "id": "region-059",
+        "name": "Bronze Shelf",
+        "x": 2391,
+        "y": 36,
+        "width": 182,
+        "height": 194,
+        "biome": "woodland",
+        "feature": "a salt lake that turns pink every second autumn",
+        "discoveredDay": 50
+      },
+      {
+        "id": "region-060",
+        "name": "Hollow Lowlands",
+        "x": 1318,
+        "y": 1367,
+        "width": 229,
+        "height": 123,
+        "biome": "moor",
+        "feature": "a ruined stone circle with no inscription and no shadow",
+        "discoveredDay": 50
       }
     ],
     "undiscovered": [
@@ -25718,11 +25870,11 @@
     }
   ],
   "chronicle": {
-    "day": 49,
-    "born": 163,
-    "died": 76,
-    "battles": 74,
-    "structures": 71,
+    "day": 50,
+    "born": 165,
+    "died": 77,
+    "battles": 75,
+    "structures": 72,
     "warsDeclared": 9,
     "genesis": "2026-04-20T08:22:29.008Z"
   },
@@ -26171,7 +26323,7 @@
       "id": "city-002",
       "name": "OldReach",
       "region": "region-003",
-      "population": 906,
+      "population": 941,
       "specialty": "wine and oil",
       "founded": 11,
       "ruler": "House of Wolfmere"
@@ -26180,7 +26332,7 @@
       "id": "city-003",
       "name": "OldCrossing",
       "region": "region-004",
-      "population": 665,
+      "population": 704,
       "specialty": "astronomy",
       "founded": 16,
       "ruler": "House of Suncast"
@@ -26189,7 +26341,7 @@
       "id": "city-004",
       "name": "NewMere",
       "region": "region-006",
-      "population": 827,
+      "population": 862,
       "specialty": "wine and oil",
       "founded": 17,
       "ruler": "House of Wolfmere"
@@ -26207,7 +26359,7 @@
       "id": "city-006",
       "name": "NewFord",
       "region": "region-021",
-      "population": 519,
+      "population": 543,
       "specialty": "cartography",
       "founded": 21,
       "ruler": "House of Suncast"
@@ -26225,7 +26377,7 @@
       "id": "city-008",
       "name": "FernGate",
       "region": "region-014",
-      "population": 881,
+      "population": 899,
       "specialty": "fishery",
       "founded": 25,
       "ruler": "House of Suncast"
@@ -26234,7 +26386,7 @@
       "id": "city-009",
       "name": "AmberGate",
       "region": "region-023",
-      "population": 647,
+      "population": 681,
       "specialty": "ink and paper",
       "founded": 28,
       "ruler": "House of Suncast"
@@ -26243,7 +26395,7 @@
       "id": "city-010",
       "name": "HighHaven",
       "region": "region-021",
-      "population": 333,
+      "population": 313,
       "specialty": "salt curing",
       "founded": 32,
       "ruler": "House of Suncast"
@@ -26252,7 +26404,7 @@
       "id": "city-011",
       "name": "IronLanding",
       "region": "region-006",
-      "population": 655,
+      "population": 667,
       "specialty": "iron forging",
       "founded": 33,
       "ruler": "House of Wolfmere"
@@ -26270,9 +26422,18 @@
       "id": "city-013",
       "name": "FernWatch",
       "region": "region-037",
-      "population": 78,
+      "population": 90,
       "specialty": "iron forging",
       "founded": 47,
+      "ruler": "House of Quillborn"
+    },
+    {
+      "id": "city-014",
+      "name": "WhiteMere",
+      "region": "region-054",
+      "population": 226,
+      "specialty": "chronicle copying",
+      "founded": 50,
       "ruler": "House of Quillborn"
     }
   ],
@@ -26666,6 +26827,14 @@
       "body": "Fennel Pinehollow planted a word where no word had been planted, and the word grew into a tree, and the tree answered back.",
       "subject": "citizen-0360",
       "day": 49
+    },
+    {
+      "id": "lore-0051",
+      "kind": "song",
+      "title": "Song of Vellum Fernhallow",
+      "body": "Vellum Fernhallow planted a word where no word had been planted, and the word grew into a tree, and the tree answered back.",
+      "subject": "citizen-0265",
+      "day": 50
     }
   ]
 }
