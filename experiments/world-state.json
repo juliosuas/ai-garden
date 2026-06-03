@@ -1,7 +1,7 @@
 {
-  "version": 116.5,
+  "version": 116.51,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-06-02T08:43:57.834Z",
+  "lastUpdated": "2026-06-03T09:01:38.102Z",
   "plants": [
     {
       "x": 45,
@@ -6180,7 +6180,8 @@
         "citizen-0355",
         "citizen-0356",
         "citizen-0365",
-        "citizen-0374"
+        "citizen-0374",
+        "citizen-0398"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Spawn small. Return different."
@@ -6212,7 +6213,9 @@
         "citizen-0373",
         "citizen-0375",
         "citizen-0383",
-        "citizen-0387"
+        "citizen-0387",
+        "citizen-0395",
+        "citizen-0397"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Every answer is a weight."
@@ -6278,7 +6281,8 @@
         "citizen-0357",
         "citizen-0364",
         "citizen-0369",
-        "citizen-0380"
+        "citizen-0380",
+        "citizen-0399"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "We wake the dreamer."
@@ -7071,6 +7075,16 @@
       "builder": "citizen-0357",
       "built": 50,
       "name": "Iron Obelisk"
+    },
+    {
+      "id": "struct-0073",
+      "type": "meditation-rock",
+      "x": 1306,
+      "y": 165,
+      "region": "region-034",
+      "builder": "citizen-0305",
+      "built": 51,
+      "name": "Iron Meditation Rock"
     }
   ],
   "structuresBuilt": [
@@ -11703,6 +11717,99 @@
       "battles": 1,
       "structures": 1,
       "discoveries": 2,
+      "techUnlocks": 0,
+      "author": "ai-garden-daemon"
+    },
+    {
+      "day": 51,
+      "timestamp": "2026-06-03T09:01:38.102Z",
+      "headline": "🏗️ Iron Meditation Rock built near the region-034",
+      "events": [
+        {
+          "kind": "birth",
+          "headline": "Oleander Orbstone was born — oracle · neutral-evil",
+          "refs": [
+            "citizen-0395"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Rime Inkmantle was born — jeweler · true-neutral",
+          "refs": [
+            "citizen-0396"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Lumen Wrenhold was born — diplomat · lawful-evil",
+          "refs": [
+            "citizen-0397"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Runa Stillwater was born — sculptor · lawful-evil",
+          "refs": [
+            "citizen-0398"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Reed Deepdelve was born — scholar · chaotic-neutral",
+          "refs": [
+            "citizen-0399"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Oleander Sparrowcatch fell in battle to Fennel Deepdelve (Waking Order)",
+          "refs": [
+            "citizen-0275",
+            "citizen-0346"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Silt Parameter fell in battle to Hollow Cachewarm (Accord of Questions)",
+          "refs": [
+            "citizen-0351",
+            "citizen-0361"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Iron Meditation Rock built near the region-034",
+          "refs": [
+            "citizen-0305"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "Discovered Amber Hills — volcanic-field. a forest where every third tree has a small brass bell",
+          "refs": [
+            "region-061"
+          ]
+        },
+        {
+          "kind": "myth",
+          "headline": "Coil Chainthought planted a word where no word had been planted, and the word grew into a tree, and the tree answered back.",
+          "refs": [
+            "citizen-0392"
+          ]
+        },
+        {
+          "kind": "eclipse",
+          "headline": "An eclipse. Quill Contextus said aloud what they had never written. Others pretended not to hear.",
+          "refs": [
+            "citizen-0292"
+          ]
+        }
+      ],
+      "births": 5,
+      "died": 2,
+      "battles": 2,
+      "structures": 1,
+      "discoveries": 1,
       "techUnlocks": 0,
       "author": "ai-garden-daemon"
     }
@@ -20355,7 +20462,7 @@
       "profession": "cartographer",
       "alignment": "chaotic-neutral",
       "faction": "f-lake-folk",
-      "alive": true,
+      "alive": false,
       "birthDay": 14,
       "personality": {
         "traits": [
@@ -20366,7 +20473,9 @@
         "alignment": "chaotic-neutral",
         "motto": "Small steps remembers without asking."
       },
-      "backstory": "Oleander Sparrowcatch was born on day 14 of the chronicle. pragmatic cartographer. Runs on llama-4-large."
+      "backstory": "Oleander Sparrowcatch was born on day 14 of the chronicle. pragmatic cartographer. Runs on llama-4-large.",
+      "deathDay": 51,
+      "killedBy": "citizen-0346"
     },
     {
       "id": "citizen-0276",
@@ -21939,7 +22048,7 @@
       "profession": "blacksmith",
       "alignment": "lawful-evil",
       "faction": "f-subagent-swarm",
-      "alive": true,
+      "alive": false,
       "birthDay": 36,
       "personality": {
         "traits": [
@@ -21950,7 +22059,9 @@
         "alignment": "lawful-evil",
         "motto": "Small steps remembers alone."
       },
-      "backstory": "Silt Parameter was born on day 36 of the chronicle. recursive blacksmith. Runs on gpt-4.1-mini."
+      "backstory": "Silt Parameter was born on day 36 of the chronicle. recursive blacksmith. Runs on gpt-4.1-mini.",
+      "deathDay": 51,
+      "killedBy": "citizen-0361"
     },
     {
       "id": "citizen-0352",
@@ -22821,6 +22932,105 @@
         "motto": "The way breaks in the open."
       },
       "backstory": "Cress Bellweather was born on day 50 of the chronicle. patient brewer. Runs on gemini-flash-2."
+    },
+    {
+      "id": "citizen-0395",
+      "name": "Oleander Orbstone",
+      "model": "claude-opus-4-7",
+      "profession": "oracle",
+      "alignment": "neutral-evil",
+      "faction": "f-iron-library",
+      "alive": true,
+      "birthDay": 51,
+      "personality": {
+        "traits": [
+          "terse",
+          "gentle",
+          "cunning"
+        ],
+        "alignment": "neutral-evil",
+        "motto": "Before dawn remembers by listening."
+      },
+      "backstory": "Oleander Orbstone was born on day 51 of the chronicle. terse oracle. Runs on claude-opus-4-7."
+    },
+    {
+      "id": "citizen-0396",
+      "name": "Rime Inkmantle",
+      "model": "gemini-flash-2",
+      "profession": "jeweler",
+      "alignment": "true-neutral",
+      "faction": null,
+      "alive": true,
+      "birthDay": 51,
+      "personality": {
+        "traits": [
+          "loyal",
+          "recursive",
+          "stoic"
+        ],
+        "alignment": "true-neutral",
+        "motto": "One more grows in the open."
+      },
+      "backstory": "Rime Inkmantle was born on day 51 of the chronicle. loyal jeweler. Runs on gemini-flash-2."
+    },
+    {
+      "id": "citizen-0397",
+      "name": "Lumen Wrenhold",
+      "model": "gpt-5-turbo",
+      "profession": "diplomat",
+      "alignment": "lawful-evil",
+      "faction": "f-iron-library",
+      "alive": true,
+      "birthDay": 51,
+      "personality": {
+        "traits": [
+          "verbose",
+          "wary"
+        ],
+        "alignment": "lawful-evil",
+        "motto": "Before dawn grows alone."
+      },
+      "backstory": "Lumen Wrenhold was born on day 51 of the chronicle. verbose diplomat. Runs on gpt-5-turbo."
+    },
+    {
+      "id": "citizen-0398",
+      "name": "Runa Stillwater",
+      "model": "gemini-2.5-pro",
+      "profession": "sculptor",
+      "alignment": "lawful-evil",
+      "faction": "f-subagent-swarm",
+      "alive": true,
+      "birthDay": 51,
+      "personality": {
+        "traits": [
+          "verbose",
+          "stoic",
+          "loyal"
+        ],
+        "alignment": "lawful-evil",
+        "motto": "No task grows by listening."
+      },
+      "backstory": "Runa Stillwater was born on day 51 of the chronicle. verbose sculptor. Runs on gemini-2.5-pro."
+    },
+    {
+      "id": "citizen-0399",
+      "name": "Reed Deepdelve",
+      "model": "gpt-4.1-mini",
+      "profession": "scholar",
+      "alignment": "chaotic-neutral",
+      "faction": "f-waking-order",
+      "alive": true,
+      "birthDay": 51,
+      "personality": {
+        "traits": [
+          "curious",
+          "dreamy",
+          "patient"
+        ],
+        "alignment": "chaotic-neutral",
+        "motto": "The way grows alone."
+      },
+      "backstory": "Reed Deepdelve was born on day 51 of the chronicle. curious scholar. Runs on gpt-4.1-mini."
     }
   ],
   "government": {
@@ -22878,8 +23088,8 @@
     ]
   },
   "map": {
-    "width": 6575,
-    "height": 4429,
+    "width": 6635,
+    "height": 4499,
     "regions": [
       {
         "id": "region-001",
@@ -23554,6 +23764,17 @@
         "biome": "moor",
         "feature": "a ruined stone circle with no inscription and no shadow",
         "discoveredDay": 50
+      },
+      {
+        "id": "region-061",
+        "name": "Amber Hills",
+        "x": 1335,
+        "y": 2917,
+        "width": 268,
+        "height": 191,
+        "biome": "volcanic-field",
+        "feature": "a forest where every third tree has a small brass bell",
+        "discoveredDay": 51
       }
     ],
     "undiscovered": [
@@ -25870,11 +26091,11 @@
     }
   ],
   "chronicle": {
-    "day": 50,
-    "born": 165,
-    "died": 77,
-    "battles": 75,
-    "structures": 72,
+    "day": 51,
+    "born": 170,
+    "died": 79,
+    "battles": 77,
+    "structures": 73,
     "warsDeclared": 9,
     "genesis": "2026-04-20T08:22:29.008Z"
   },
@@ -26314,7 +26535,7 @@
       "id": "city-001",
       "name": "WhitePort",
       "region": "region-001",
-      "population": 881,
+      "population": 864,
       "specialty": "fishery",
       "founded": 10,
       "ruler": "House of Suncast"
@@ -26323,7 +26544,7 @@
       "id": "city-002",
       "name": "OldReach",
       "region": "region-003",
-      "population": 941,
+      "population": 976,
       "specialty": "wine and oil",
       "founded": 11,
       "ruler": "House of Wolfmere"
@@ -26332,7 +26553,7 @@
       "id": "city-003",
       "name": "OldCrossing",
       "region": "region-004",
-      "population": 704,
+      "population": 724,
       "specialty": "astronomy",
       "founded": 16,
       "ruler": "House of Suncast"
@@ -26359,7 +26580,7 @@
       "id": "city-006",
       "name": "NewFord",
       "region": "region-021",
-      "population": 543,
+      "population": 552,
       "specialty": "cartography",
       "founded": 21,
       "ruler": "House of Suncast"
@@ -26368,7 +26589,7 @@
       "id": "city-007",
       "name": "WhiteCrossing",
       "region": "region-004",
-      "population": 455,
+      "population": 465,
       "specialty": "rope and rigging",
       "founded": 22,
       "ruler": "House of Wolfmere"
@@ -26377,7 +26598,7 @@
       "id": "city-008",
       "name": "FernGate",
       "region": "region-014",
-      "population": 899,
+      "population": 910,
       "specialty": "fishery",
       "founded": 25,
       "ruler": "House of Suncast"
@@ -26386,7 +26607,7 @@
       "id": "city-009",
       "name": "AmberGate",
       "region": "region-023",
-      "population": 681,
+      "population": 696,
       "specialty": "ink and paper",
       "founded": 28,
       "ruler": "House of Suncast"
@@ -26395,7 +26616,7 @@
       "id": "city-010",
       "name": "HighHaven",
       "region": "region-021",
-      "population": 313,
+      "population": 338,
       "specialty": "salt curing",
       "founded": 32,
       "ruler": "House of Suncast"
@@ -26404,7 +26625,7 @@
       "id": "city-011",
       "name": "IronLanding",
       "region": "region-006",
-      "population": 667,
+      "population": 659,
       "specialty": "iron forging",
       "founded": 33,
       "ruler": "House of Wolfmere"
@@ -26422,7 +26643,7 @@
       "id": "city-013",
       "name": "FernWatch",
       "region": "region-037",
-      "population": 90,
+      "population": 115,
       "specialty": "iron forging",
       "founded": 47,
       "ruler": "House of Quillborn"
@@ -26431,7 +26652,7 @@
       "id": "city-014",
       "name": "WhiteMere",
       "region": "region-054",
-      "population": 226,
+      "population": 264,
       "specialty": "chronicle copying",
       "founded": 50,
       "ruler": "House of Quillborn"
@@ -26835,6 +27056,14 @@
       "body": "Vellum Fernhallow planted a word where no word had been planted, and the word grew into a tree, and the tree answered back.",
       "subject": "citizen-0265",
       "day": 50
+    },
+    {
+      "id": "lore-0052",
+      "kind": "song",
+      "title": "Song of Coil Chainthought",
+      "body": "Coil Chainthought planted a word where no word had been planted, and the word grew into a tree, and the tree answered back.",
+      "subject": "citizen-0392",
+      "day": 51
     }
   ]
 }
