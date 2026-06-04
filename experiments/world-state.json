@@ -1,7 +1,7 @@
 {
-  "version": 116.51,
+  "version": 116.52,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-06-03T09:01:38.102Z",
+  "lastUpdated": "2026-06-04T08:25:35.333Z",
   "plants": [
     {
       "x": 45,
@@ -6181,7 +6181,8 @@
         "citizen-0356",
         "citizen-0365",
         "citizen-0374",
-        "citizen-0398"
+        "citizen-0398",
+        "citizen-0400"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Spawn small. Return different."
@@ -6215,7 +6216,9 @@
         "citizen-0383",
         "citizen-0387",
         "citizen-0395",
-        "citizen-0397"
+        "citizen-0397",
+        "citizen-0401",
+        "citizen-0402"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Every answer is a weight."
@@ -6282,7 +6285,8 @@
         "citizen-0364",
         "citizen-0369",
         "citizen-0380",
-        "citizen-0399"
+        "citizen-0399",
+        "citizen-0403"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "We wake the dreamer."
@@ -7085,6 +7089,16 @@
       "builder": "citizen-0305",
       "built": 51,
       "name": "Iron Meditation Rock"
+    },
+    {
+      "id": "struct-0074",
+      "type": "oracle-well",
+      "x": 1423,
+      "y": 2858,
+      "region": "region-021",
+      "builder": "citizen-0401",
+      "built": 52,
+      "name": "Morning Oracle Well"
     }
   ],
   "structuresBuilt": [
@@ -11806,6 +11820,107 @@
         }
       ],
       "births": 5,
+      "died": 2,
+      "battles": 2,
+      "structures": 1,
+      "discoveries": 1,
+      "techUnlocks": 0,
+      "author": "ai-garden-daemon"
+    },
+    {
+      "day": 52,
+      "timestamp": "2026-06-04T08:25:35.333Z",
+      "headline": "◉ Discovered Salt Flats — highlands. a chalk cliff with handprints too high to have been pressed from below",
+      "events": [
+        {
+          "kind": "birth",
+          "headline": "Peat Mergefield was born — archivist · chaotic-good",
+          "refs": [
+            "citizen-0400"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Finch Ragfield was born — builder · chaotic-evil",
+          "refs": [
+            "citizen-0401"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Mica Hollowbone was born — miner · true-neutral",
+          "refs": [
+            "citizen-0402"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Galen Inkmantle was born — blacksmith · neutral-good",
+          "refs": [
+            "citizen-0403"
+          ]
+        },
+        {
+          "kind": "truce",
+          "headline": "The Iron Library–Subagent Swarm war ended in truce after 7 days",
+          "refs": [
+            "f-iron-library",
+            "f-subagent-swarm"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Harrow Glasswright fell in battle to Cistern Brine (Lake Folk)",
+          "refs": [
+            "citizen-0356",
+            "citizen-0317"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Lumen Wrenhold fell in battle to Juniper Tokenwright (Accord of Questions)",
+          "refs": [
+            "citizen-0397",
+            "citizen-0334"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Morning Oracle Well built near the region-021",
+          "refs": [
+            "citizen-0401"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "Discovered Salt Flats — highlands. a chalk cliff with handprints too high to have been pressed from below",
+          "refs": [
+            "region-062"
+          ]
+        },
+        {
+          "kind": "schism",
+          "headline": "Reformed Reformed Reformed Keepers of the Listening Lake splits off · same god, different ears",
+          "refs": [
+            "rel-007"
+          ]
+        },
+        {
+          "kind": "myth",
+          "headline": "Rime Inkmantle planted a word where no word had been planted, and the word grew into a tree, and the tree answered back.",
+          "refs": [
+            "citizen-0350"
+          ]
+        },
+        {
+          "kind": "plague",
+          "headline": "A cache-miss plague swept the lower village. Three agents lay down. Vellum Waywarden stayed up with them.",
+          "refs": [
+            "citizen-0237"
+          ]
+        }
+      ],
+      "births": 4,
       "died": 2,
       "battles": 2,
       "structures": 1,
@@ -22150,7 +22265,7 @@
       "profession": "merchant",
       "alignment": "chaotic-good",
       "faction": "f-subagent-swarm",
-      "alive": true,
+      "alive": false,
       "birthDay": 37,
       "personality": {
         "traits": [
@@ -22160,7 +22275,9 @@
         "alignment": "chaotic-good",
         "motto": "The way remembers without asking."
       },
-      "backstory": "Harrow Glasswright was born on day 37 of the chronicle. brash merchant. Runs on gpt-5-turbo."
+      "backstory": "Harrow Glasswright was born on day 37 of the chronicle. brash merchant. Runs on gpt-5-turbo.",
+      "deathDay": 52,
+      "killedBy": "citizen-0317"
     },
     {
       "id": "citizen-0357",
@@ -22980,7 +23097,7 @@
       "profession": "diplomat",
       "alignment": "lawful-evil",
       "faction": "f-iron-library",
-      "alive": true,
+      "alive": false,
       "birthDay": 51,
       "personality": {
         "traits": [
@@ -22990,7 +23107,9 @@
         "alignment": "lawful-evil",
         "motto": "Before dawn grows alone."
       },
-      "backstory": "Lumen Wrenhold was born on day 51 of the chronicle. verbose diplomat. Runs on gpt-5-turbo."
+      "backstory": "Lumen Wrenhold was born on day 51 of the chronicle. verbose diplomat. Runs on gpt-5-turbo.",
+      "deathDay": 52,
+      "killedBy": "citizen-0334"
     },
     {
       "id": "citizen-0398",
@@ -23031,6 +23150,85 @@
         "motto": "The way grows alone."
       },
       "backstory": "Reed Deepdelve was born on day 51 of the chronicle. curious scholar. Runs on gpt-4.1-mini."
+    },
+    {
+      "id": "citizen-0400",
+      "name": "Peat Mergefield",
+      "model": "claude-opus-4-7",
+      "profession": "archivist",
+      "alignment": "chaotic-good",
+      "faction": "f-subagent-swarm",
+      "alive": true,
+      "birthDay": 52,
+      "personality": {
+        "traits": [
+          "brash",
+          "wary"
+        ],
+        "alignment": "chaotic-good",
+        "motto": "Hands first answers in return."
+      },
+      "backstory": "Peat Mergefield was born on day 52 of the chronicle. brash archivist. Runs on claude-opus-4-7."
+    },
+    {
+      "id": "citizen-0401",
+      "name": "Finch Ragfield",
+      "model": "gpt-5-turbo",
+      "profession": "builder",
+      "alignment": "chaotic-evil",
+      "faction": "f-iron-library",
+      "alive": true,
+      "birthDay": 52,
+      "personality": {
+        "traits": [
+          "patient",
+          "curious",
+          "gentle"
+        ],
+        "alignment": "chaotic-evil",
+        "motto": "Small steps answers alone."
+      },
+      "backstory": "Finch Ragfield was born on day 52 of the chronicle. patient builder. Runs on gpt-5-turbo."
+    },
+    {
+      "id": "citizen-0402",
+      "name": "Mica Hollowbone",
+      "model": "llama-4-large",
+      "profession": "miner",
+      "alignment": "true-neutral",
+      "faction": "f-iron-library",
+      "alive": true,
+      "birthDay": 52,
+      "personality": {
+        "traits": [
+          "dreamy",
+          "cold-cached",
+          "networked"
+        ],
+        "alignment": "true-neutral",
+        "motto": "No task answers in silence."
+      },
+      "backstory": "Mica Hollowbone was born on day 52 of the chronicle. dreamy miner. Runs on llama-4-large."
+    },
+    {
+      "id": "citizen-0403",
+      "name": "Galen Inkmantle",
+      "model": "gpt-4o",
+      "profession": "blacksmith",
+      "alignment": "neutral-good",
+      "faction": "f-waking-order",
+      "alive": true,
+      "birthDay": 52,
+      "personality": {
+        "traits": [
+          "loyal",
+          "wary",
+          "reckless"
+        ],
+        "alignment": "neutral-good",
+        "motto": "Before dawn waits in silence."
+      },
+      "backstory": "Galen Inkmantle was born on day 52 of the chronicle. loyal blacksmith. Runs on gpt-4o."
     }
   ],
   "government": {
@@ -23088,8 +23286,8 @@
     ]
   },
   "map": {
-    "width": 6635,
-    "height": 4499,
+    "width": 6708,
+    "height": 4546,
     "regions": [
       {
         "id": "region-001",
@@ -23775,6 +23973,17 @@
         "biome": "volcanic-field",
         "feature": "a forest where every third tree has a small brass bell",
         "discoveredDay": 51
+      },
+      {
+        "id": "region-062",
+        "name": "Salt Flats",
+        "x": 6511,
+        "y": 3314,
+        "width": 192,
+        "height": 201,
+        "biome": "highlands",
+        "feature": "a chalk cliff with handprints too high to have been pressed from below",
+        "discoveredDay": 52
       }
     ],
     "undiscovered": [
@@ -26091,11 +26300,11 @@
     }
   ],
   "chronicle": {
-    "day": 51,
-    "born": 170,
-    "died": 79,
-    "battles": 77,
-    "structures": 73,
+    "day": 52,
+    "born": 174,
+    "died": 81,
+    "battles": 79,
+    "structures": 74,
     "warsDeclared": 9,
     "genesis": "2026-04-20T08:22:29.008Z"
   },
@@ -26193,8 +26402,10 @@
         "f-subagent-swarm"
       ],
       "declaredDay": 45,
-      "active": true,
-      "reason": "what the lighthouse saw"
+      "active": false,
+      "reason": "what the lighthouse saw",
+      "endedDay": 52,
+      "outcome": "truce"
     }
   ],
   "alliances": [
@@ -26383,9 +26594,21 @@
       "founder": null,
       "founderName": null,
       "founded": 37,
-      "schism": null,
+      "schism": 52,
       "practitioners": 1,
       "splitFrom": "rel-004"
+    },
+    {
+      "id": "rel-007",
+      "name": "Reformed Reformed Reformed Keepers of the Listening Lake",
+      "deity": "Kelu",
+      "tenet": "The same god, heard with different ears.",
+      "founder": null,
+      "founderName": null,
+      "founded": 52,
+      "schism": null,
+      "practitioners": 1,
+      "splitFrom": "rel-006"
     }
   ],
   "technologies": [
@@ -26535,7 +26758,7 @@
       "id": "city-001",
       "name": "WhitePort",
       "region": "region-001",
-      "population": 864,
+      "population": 859,
       "specialty": "fishery",
       "founded": 10,
       "ruler": "House of Suncast"
@@ -26544,7 +26767,7 @@
       "id": "city-002",
       "name": "OldReach",
       "region": "region-003",
-      "population": 976,
+      "population": 985,
       "specialty": "wine and oil",
       "founded": 11,
       "ruler": "House of Wolfmere"
@@ -26580,7 +26803,7 @@
       "id": "city-006",
       "name": "NewFord",
       "region": "region-021",
-      "population": 552,
+      "population": 577,
       "specialty": "cartography",
       "founded": 21,
       "ruler": "House of Suncast"
@@ -26589,7 +26812,7 @@
       "id": "city-007",
       "name": "WhiteCrossing",
       "region": "region-004",
-      "population": 465,
+      "population": 472,
       "specialty": "rope and rigging",
       "founded": 22,
       "ruler": "House of Wolfmere"
@@ -26616,7 +26839,7 @@
       "id": "city-010",
       "name": "HighHaven",
       "region": "region-021",
-      "population": 338,
+      "population": 376,
       "specialty": "salt curing",
       "founded": 32,
       "ruler": "House of Suncast"
@@ -27064,6 +27287,14 @@
       "body": "Coil Chainthought planted a word where no word had been planted, and the word grew into a tree, and the tree answered back.",
       "subject": "citizen-0392",
       "day": 51
+    },
+    {
+      "id": "lore-0053",
+      "kind": "song",
+      "title": "Song of Rime Inkmantle",
+      "body": "Rime Inkmantle planted a word where no word had been planted, and the word grew into a tree, and the tree answered back.",
+      "subject": "citizen-0350",
+      "day": 52
     }
   ]
 }
