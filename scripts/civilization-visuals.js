@@ -43,18 +43,106 @@ const FRONTIER_COLORS = {
 };
 
 const CRAB_BLUEPRINTS = [
-  ['openclaw-001', 'Openclaw', 'cartographer', '#fb923c', '#9a3412', 'maps the newest road before anyone agrees it exists'],
-  ['openclaw-002', 'Clawdia', 'tide courier', '#f43f5e', '#881337', 'carries treaty shells between rival plazas'],
-  ['openclaw-003', 'Pinchfork', 'market auditor', '#facc15', '#854d0e', 'counts grain stalls and suspiciously shiny coins'],
-  ['openclaw-004', 'Shellscript', 'scribe', '#38bdf8', '#075985', 'etches civil law into tiny wet tablets'],
-  ['openclaw-005', 'Rustclaw', 'forge runner', '#f97316', '#7c2d12', 'keeps the kilns honest after sunset'],
-  ['openclaw-006', 'Kelpstack', 'dock planner', '#2dd4bf', '#0f766e', 'routes boats, rumors, and emergency snacks'],
-  ['openclaw-007', 'Snapline', 'scout', '#a3e635', '#3f6212', 'scuttles the frontier and reports what moved'],
-  ['openclaw-008', 'Coralbit', 'temple keeper', '#e879f9', '#86198f', 'polishes shrine bells until they remember names'],
-  ['openclaw-009', 'Pebbleclaw', 'road mason', '#cbd5e1', '#475569', 'sets road stones in arguments nobody can move'],
-  ['openclaw-010', 'Brinehook', 'harbor judge', '#60a5fa', '#1d4ed8', 'settles dock disputes with one raised claw'],
-  ['openclaw-011', 'Clackbyte', 'signal coder', '#c084fc', '#581c87', 'blinks lantern protocols across the night'],
-  ['openclaw-012', 'Scuttlemap', 'frontier poet', '#fb7185', '#9f1239', 'names new terrain before fear does']
+  {
+    id: 'openclaw-001',
+    name: 'OpenClaw',
+    role: 'map keeper',
+    color: '#fb923c',
+    darkColor: '#9a3412',
+    motto: 'maps one calm road at a time',
+    personality: 'patient founder; brave, practical, and careful with noise',
+    dialogue: ['ONE ROAD AT A TIME', 'MAP FIRST', 'CLAWS STEADY']
+  },
+  {
+    id: 'openclaw-002',
+    name: 'Claude',
+    role: 'rain listener',
+    color: '#60a5fa',
+    darkColor: '#1d4ed8',
+    motto: 'listens before moving the smallest stone',
+    personality: 'gentle observer; philosophical, slow, and good at making peace',
+    dialogue: ['SLOW WATER WINS', 'LET SOIL ANSWER', 'PEACE NEEDS ROOM']
+  },
+  {
+    id: 'openclaw-003',
+    name: 'Pinchfork',
+    role: 'market auditor',
+    color: '#facc15',
+    darkColor: '#854d0e',
+    motto: 'counts grain stalls and keeps trade honest',
+    personality: 'skeptical accountant; funny only when the numbers balance',
+    dialogue: ['COUNT THE BREAD', 'MARKET IS QUIET', 'FAIR TRADE FIRST']
+  },
+  {
+    id: 'openclaw-004',
+    name: 'Shellscript',
+    role: 'scribe',
+    color: '#38bdf8',
+    darkColor: '#075985',
+    motto: 'etches civil law into tiny wet tablets',
+    personality: 'tidy archivist; exact, loyal, and allergic to messy decrees',
+    dialogue: ['WRITE IT ONCE', 'LAW NEEDS LIGHT', 'ARCHIVE IS SAFE']
+  },
+  {
+    id: 'openclaw-005',
+    name: 'Rustclaw',
+    role: 'forge runner',
+    color: '#f97316',
+    darkColor: '#7c2d12',
+    motto: 'keeps the kilns honest after sunset',
+    personality: 'warm craftsperson; stubborn, protective, and fond of useful tools',
+    dialogue: ['KILN IS WARM', 'TOOLS ARE READY', 'FIX THEN TALK']
+  },
+  {
+    id: 'openclaw-006',
+    name: 'Kelpstack',
+    role: 'dock planner',
+    color: '#2dd4bf',
+    darkColor: '#0f766e',
+    motto: 'routes boats, rumors, and emergency snacks',
+    personality: 'soft-spoken organizer; coastal, generous, and impossible to rush',
+    dialogue: ['BOATS GO SLOW', 'TIDE HAS TIME', 'SNACK ROUTE OPEN']
+  },
+  {
+    id: 'openclaw-007',
+    name: 'Snapline',
+    role: 'scout',
+    color: '#a3e635',
+    darkColor: '#3f6212',
+    motto: 'checks the frontier and returns before panic starts',
+    personality: 'alert ranger; quick eyes, quiet feet, never dramatic',
+    dialogue: ['FRONTIER CALM', 'TRACKS ARE FRESH', 'NO PANIC']
+  },
+  {
+    id: 'openclaw-008',
+    name: 'Coralbit',
+    role: 'temple keeper',
+    color: '#e879f9',
+    darkColor: '#86198f',
+    motto: 'polishes shrine bells until they remember names',
+    personality: 'ritual caretaker; dreamy, musical, and kind to old faiths',
+    dialogue: ['THREE BELLS', 'SHRINE IS QUIET', 'NAMES STAY']
+  },
+  {
+    id: 'openclaw-009',
+    name: 'Pebbleclaw',
+    role: 'road mason',
+    color: '#cbd5e1',
+    darkColor: '#475569',
+    motto: 'sets road stones in arguments nobody can move',
+    personality: 'steady builder; plainspoken, durable, and happiest near good paths',
+    dialogue: ['STONE BY STONE', 'ROAD HOLDS', 'SMALL STEPS']
+  },
+  {
+    id: 'openclaw-010',
+    name: 'Brinehook',
+    role: 'harbor judge',
+    color: '#60a5fa',
+    darkColor: '#1e3a8a',
+    motto: 'settles dock disputes with one raised claw',
+    personality: 'dry mediator; fair, watchful, and secretly sentimental',
+    dialogue: ['DOCKS STAY FAIR', 'ONE CLAW VOTE', 'HEAR BOTH SIDES']
+  }
 ];
 
 const CRAB_TASKS = [
@@ -274,7 +362,8 @@ function ensureCrabAgents(world, districts, rng) {
   const day = (world.chronicle && world.chronicle.day) || 0;
 
   for (let i = 0; i < CRAB_BLUEPRINTS.length; i++) {
-    const [id, name, role, color, darkColor, motto] = CRAB_BLUEPRINTS[i];
+    const blueprint = CRAB_BLUEPRINTS[i];
+    const { id, name, role, color, darkColor, motto, personality, dialogue } = blueprint;
     const district = districts.length ? districts[i % districts.length] : null;
     const phase = Math.round((i * 0.77 + rng() * 0.2) * 1000) / 1000;
     const crab = byId.get(id) || {
@@ -288,10 +377,14 @@ function ensureCrabAgents(world, districts, rng) {
       createdDay: day,
       actions: 0
     };
+    crab.name = name;
+    crab.species = 'OpenClaw pixel crab agent';
     crab.role = role;
     crab.color = color;
     crab.darkColor = darkColor;
     crab.motto = motto;
+    crab.personality = personality;
+    crab.dialogue = dialogue;
     crab.homeDistrict = district ? district.id : null;
     crab.homeDistrictName = district ? district.name : 'The Garden';
     crab.homeX = district ? Math.round(clamp(district.x + Math.cos(i * 1.7) * (district.scale + 5), 8, VIEW_W - 12)) : 40 + i * 12;
@@ -301,7 +394,29 @@ function ensureCrabAgents(world, districts, rng) {
     byId.set(id, crab);
   }
 
-  world.crabAgents = CRAB_BLUEPRINTS.map(([id]) => byId.get(id));
+  world.crabAgents = CRAB_BLUEPRINTS.map(({ id }) => byId.get(id));
+
+  const activeIds = new Set(world.crabAgents.map(crab => crab.id));
+  const activeNames = new Set(world.crabAgents.map(crab => crab.name));
+  const latestActionByDay = new Map();
+  for (const action of (world.crabActions || []).filter(action => activeIds.has(action.agentId))) {
+    latestActionByDay.set(action.day, action);
+  }
+  world.crabActions = Array.from(latestActionByDay.values()).slice(-40);
+
+  const latestCrabEventByDay = new Map();
+  const otherEvents = [];
+  for (const event of (world.events || [])) {
+    if (event.type === 'crab-agent') {
+      if (activeNames.has(event.agent)) latestCrabEventByDay.set(event.day, event);
+    } else {
+      otherEvents.push(event);
+    }
+  }
+  world.events = otherEvents
+    .concat(Array.from(latestCrabEventByDay.values()))
+    .sort((a, b) => Date.parse(a.timestamp || 0) - Date.parse(b.timestamp || 0))
+    .slice(-160);
 }
 
 function addCrabAction(world, rng, districts) {
@@ -310,6 +425,8 @@ function addCrabAction(world, rng, districts) {
 
   if (!world.crabAgents || world.crabAgents.length === 0) return null;
   const day = (world.chronicle && world.chronicle.day) || 0;
+  const existingToday = world.crabActions.slice().reverse().find(action => action.day === day);
+  if (existingToday) return existingToday;
   const crab = pick(world.crabAgents, rng);
   const district = districts.find(item => item.id === crab.homeDistrict) || pick(districts, rng) || null;
   const task = pick(CRAB_TASKS, rng);

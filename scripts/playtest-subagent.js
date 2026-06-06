@@ -68,7 +68,10 @@ async function main() {
   check(world.civilizationView && Array.isArray(world.civilizationView.districts) && world.civilizationView.districts.length >= 8, 'civilization view has too few visible districts');
   check(world.civilizationView && Array.isArray(world.civilizationView.roads) && world.civilizationView.roads.length >= 6, 'civilization view has too few roads');
   check(world.civilizationView && Array.isArray(world.civilizationView.frontierCells) && world.civilizationView.frontierCells.length >= 6, 'civilization view is missing frontier cells');
-  check(Array.isArray(world.crabAgents) && world.crabAgents.length >= 8, 'missing OpenClaw crab agents');
+  check(Array.isArray(world.crabAgents) && world.crabAgents.length >= 2 && world.crabAgents.length <= 10, 'OpenClaw crab agents should stay between 2 and 10');
+  check((world.crabAgents || []).some(crab => crab.name === 'OpenClaw'), 'OpenClaw crab is missing');
+  check((world.crabAgents || []).some(crab => crab.name === 'Claude'), 'Claude crab is missing');
+  check((world.crabAgents || []).every(crab => crab.personality && Array.isArray(crab.dialogue) && crab.dialogue.length >= 2), 'each OpenClaw crab needs personality and dialogue');
   check(Array.isArray(world.crabActions) && world.crabActions.length >= 1, 'missing OpenClaw crab action ledger');
 
   for (const beat of (director && director.tickerBeats) || []) {

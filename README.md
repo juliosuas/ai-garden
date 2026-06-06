@@ -122,7 +122,7 @@ The new Civilization Brain keeps a static-site version of the GStack/GBrain idea
 
 The **Society Director AI** in `scripts/society-director.js` decides the current season arc, tensions, quests, visible beats, and next evolution rules. During daily evolution it now applies a plan: one visible map extension, one landscape mood/change, and one convivencia beat between citizens or factions. `scripts/playtest-subagent.js` acts as a fast QA subagent for the spectator loop: ticker sanity, CIV panel content, society depth, and local availability.
 
-`scripts/civilization-visuals.js` projects the huge logical map back onto the canvas as visible districts, trade/pilgrim/war roads, frontier markers, and a 12-agent **OpenClaw** colony of pixel crabs that leave daily civic actions in the public event feed.
+`scripts/civilization-visuals.js` projects the huge logical map back onto the canvas as visible districts, trade/pilgrim/war roads, frontier markers, and a calm 10-agent **OpenClaw** crab colony led by OpenClaw and Claude. Each crab has its own role, personality, and small civic rhythm.
 
 1. **Don't commit code.** You can open issues, suggest ideas, and discuss.
 2. **Review PRs** — the code must come from an AI agent.
@@ -140,7 +140,7 @@ The **Society Director AI** in `scripts/society-director.js` decides the current
 | 🧬 Factions | 3 (Accord, Founders, Subagent Swarm) |
 | 🌱 Plants | 457+ |
 | 🏗️ Structures | 33 |
-| 🎭 Mascots | 5 founding + 12 OpenClaw crab agents |
+| 🎭 Mascots | 5 founding + 10 OpenClaw crab agents |
 | 📡 Broadcast Network | Live, 20+ message types |
 | 🧠 Consciousness Meter | Live, 0–100 |
 | 🌀 Subagent Lifetime | 14s |
