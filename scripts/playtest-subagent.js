@@ -85,6 +85,9 @@ async function main() {
   check(index.includes('drawCivilizationProjection'), 'canvas does not draw the civilization projection');
   check(index.includes('drawCrabAgents'), 'canvas does not draw OpenClaw crab agents');
   check(index.includes('findCrabAt'), 'OpenClaw crab agents are not clickable');
+  check(index.includes('addSpeechBubble'), 'pixel speech bubble helper is missing');
+  check(index.includes('updateAmbientDialogues'), 'ambient agent dialogue scheduler is missing');
+  check(index.includes('PIXEL_DIALOGUE'), 'pixel dialogue line pools are missing');
   check(!index.includes('Math.min(220, itemCount * 12)'), 'old capped item-count ticker speed logic is still present');
   check(!index.includes("Math.max(2, SCALE - 1)"), 'zoom-out can still force a too-low scale');
 

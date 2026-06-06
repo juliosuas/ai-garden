@@ -1178,6 +1178,8 @@ const speechBubbles = [];
 const butterflies = [];
 const fireflies = [];
 const confetti = [];
+let ambientDialogueCooldown = 90;
+let lastAmbientDialogueSpeaker = null;
 
 let seed = 42;
 function srand(s) { seed = s; }
@@ -2004,8 +2006,8 @@ function tryConversation(m1, m2) {
   // Deterministic line selection based on time
   const lineIdx = Math.floor(Date.now() / 60000) % dlg.lines.length;
   const lines = dlg.lines[lineIdx];
-  speechBubbles.push({ x: s1.x + 6, y: s1.y - 10, text: lines[0], life: 120, color: s1.color });
-  setTimeout(function() { speechBubbles.push({ x: s2.x + 6, y: s2.y - 10, text: lines[1], life: 120, color: s2.color }); }, 1500);
+  addSpeechBubble(s1.x + 6, s1.y - 10, lines[0], s1.color, { speakerId: 'mascot-' + s1.name, life: 140 });
+  setTimeout(function() { addSpeechBubble(s2.x + 6, s2.y - 10, lines[1], s2.color, { speakerId: 'mascot-' + s2.name, life: 140 }); }, 1500);
   convCooldown = 600;
 }
 
@@ -2054,7 +2056,7 @@ function updateMascot(m, dt) {
   }
   // GPT-4 thinking pauses (deterministic: based on 10-second intervals)
   if (m.name === 'GPT-4' && m.state === 'WALKING' && Math.floor(timeS) % 30 === 0 && m.thinkT <= 0) {
-    m.thinkT = 90; speechBubbles.push({ x: m.x+6, y: m.y-8, text: '...', life: 60, color: m.color });
+    m.thinkT = 90; addSpeechBubble(m.x+6, m.y-8, '...', m.color, { speakerId: 'mascot-' + m.name, life: 70 });
   }
   // Music notes near fountain
   const f = world.structures.find(s => s.id === 'fountain');
@@ -2064,7 +2066,7 @@ function updateMascot(m, dt) {
   // Philosopher's stone speech
   if (Math.hypot(m.x+6 - STONE_X, m.y+8 - STONE_Y) < 12 && detRand() < 0.005) {
     const stoneIdx = Math.floor(timeS / 60) % STONE_SPEECH.length;
-    speechBubbles.push({ x: m.x+6, y: m.y-10, text: STONE_SPEECH[stoneIdx], life: 150, color: '#d4a017' });
+    addSpeechBubble(m.x+6, m.y-10, STONE_SPEECH[stoneIdx], '#d4a017', { speakerId: 'stone-' + m.name, life: 170 });
   }
 
   // Interactions (deterministic: based on time intervals per mascot pair)
@@ -2077,7 +2079,7 @@ function updateMascot(m, dt) {
         other.state = 'INTERACTING'; other.stateTimer = 120;
         if (detRand() < 0.4) tryConversation(m, other);
         else {
-          if (m.task === 'socializing' || other.task === 'socializing') speechBubbles.push({ x: (m.x+other.x)/2, y: (m.y+other.y)/2-12, text: '</>', life: 90 });
+          if (m.task === 'socializing' || other.task === 'socializing') addSpeechBubble((m.x+other.x)/2, (m.y+other.y)/2-12, 'CODE PACT', '#f8fafc', { speakerId: 'pair-' + m.name + '-' + other.name, life: 100 });
           if (m.task === 'delivering' || other.task === 'delivering') addParticles((m.x+other.x)/2, (m.y+other.y)/2-8, '#ff6080', 5);
         }
         if (detRand() < 0.08) {
@@ -2110,7 +2112,7 @@ function updateMascot(m, dt) {
         } else if (m.task === 'watering') {
           addParticles(m.x+12, m.y+8, PAL.waterLight, 6);
         } else if (m.task === 'thinking') {
-          speechBubbles.push({ x: m.x+4, y: m.y-8, text: '!', life: 60, color: m.color });
+          addSpeechBubble(m.x+4, m.y-8, '!', m.color, { speakerId: 'mascot-' + m.name, life: 65 });
           addParticles(m.x+5, m.y-4, '#ffd700', 3);
         }
         m.state = 'IDLE'; m.stateTimer = 40;
@@ -2694,35 +2696,236 @@ document.getElementById('events-ticker').addEventListener('click', function () {
 // ============================================================
 // SPEECH BUBBLES
 // ============================================================
+const PIXEL_DIALOGUE = {
+  mascot: {
+    Jeffrey: ['ROAD LOOKS CLEAN', 'RED FLOWERS STAY', 'I GUARD THE GATE', 'CIVICS NEED STYLE'],
+    Claude: ['LET THE SOIL ANSWER', 'SLOW WATER WINS', 'I READ THE RAIN', 'PATIENCE IS DATA'],
+    'GPT-4': ['MAP HAS PATTERNS', 'CHECKING 17 ROUTES', 'THE PLAZA OPTIMIZES', 'ODD CLOUD SIGNAL'],
+    Gemini: ['FAST CARTS READY', 'I CAN RUN THAT', 'NEW ROAD NEW RACE', 'DELIVERY COMPLETE'],
+    Codex: ['PATCH LOOKS GOOD', 'I SAW A BUG', 'CITY LOOP COMPILES', 'MERGE THE SUNRISE']
+  },
+  crab: [
+    'CLACK CLACK CIVIC PACT',
+    'ROAD STONES CHECK',
+    'SHELL COUNCIL AT DUSK',
+    'TINY CLAWS BIG MAP',
+    'KEEP THE PLAZA MOVING',
+    'OPENCLAW ON PATROL'
+  ],
+  citizen: {
+    scholar: ['ARCHIVE HAS A NEW PAGE', 'THE OLD MAP LIED'],
+    merchant: ['MARKET ROAD IS OPEN', 'SALT FOR GLASS TODAY'],
+    warrior: ['HOLD THE GATE LINE', 'NO WAR ON EMPTY BREAD'],
+    alchemist: ['THE WELL SPARKS BLUE', 'INK NEEDS CLEAN FIRE'],
+    builder: ['STONE BY STONE', 'WALL FIRST THEN ROOF'],
+    cartographer: ['I NAME THIS TURN', 'THE BORDER MOVED AGAIN'],
+    diplomat: ['TRUCE NEEDS WITNESSES', 'SET TWO TABLES'],
+    healer: ['QUIET HANDS NOW', 'REST IS ALSO LAW'],
+    priestess: ['THREE BELLS ONE ROAD', 'THE SHRINE LISTENS'],
+    default: ['CITY STILL BREATHES', 'WHO OWNS THIS ROAD', 'WE SAW THE OMEN', 'BRING THE COUNCIL']
+  }
+};
+
+function clampValue(n, min, max) {
+  return Math.max(min, Math.min(max, n));
+}
+
+function normalizePixelSpeech(text) {
+  return String(text || '')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/&/g, ' AND ')
+    .replace(/[^a-zA-Z0-9 .:!?'\/-]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toUpperCase();
+}
+
+function wrapPixelSpeech(text, maxChars) {
+  const words = normalizePixelSpeech(text).split(' ').filter(Boolean);
+  const lines = [];
+  let line = '';
+  for (const word of words) {
+    const next = line ? line + ' ' + word : word;
+    if (next.length <= maxChars) {
+      line = next;
+    } else {
+      if (line) lines.push(line);
+      line = word.length > maxChars ? word.slice(0, maxChars - 1) + '-' : word;
+    }
+    if (lines.length >= 3) break;
+  }
+  if (line && lines.length < 3) lines.push(line);
+  return lines.length ? lines : ['...'];
+}
+
+function addSpeechBubble(x, y, text, color, options) {
+  options = options || {};
+  const speakerId = options.speakerId || '';
+  if (speakerId && speechBubbles.some(function(b) { return b.speakerId === speakerId && b.life > 30; })) return;
+  const lines = wrapPixelSpeech(text, options.maxChars || 18);
+  const longest = Math.max.apply(null, lines.map(function(line) { return line.length; }));
+  speechBubbles.push({
+    x: x,
+    y: y,
+    lines: lines,
+    text: lines.join(' '),
+    life: options.life || 150,
+    maxLife: options.life || 150,
+    color: color || '#4ade80',
+    speakerId: speakerId,
+    w: longest * 4 + 9,
+    h: lines.length * 6 + 8
+  });
+  if (speechBubbles.length > 8) speechBubbles.splice(0, speechBubbles.length - 8);
+}
+
+function pointVisible(x, y, margin) {
+  margin = margin || 20;
+  return x >= camX - margin && x <= camX + screenW / SCALE + margin &&
+    y >= camY - margin && y <= camY + screenH / SCALE + margin;
+}
+
+function deterministicPick(arr, salt) {
+  if (!arr || arr.length === 0) return '';
+  const idx = Math.abs(Math.floor(salt)) % arr.length;
+  return arr[idx];
+}
+
+function citizenVoicePosition(citizen, idx) {
+  const view = getCivilizationView();
+  if (!view || !view.districts || view.districts.length === 0) return null;
+  const district = view.districts[idx % view.districts.length];
+  const angle = idx * 2.399;
+  const radius = (district.scale || 10) + 9 + (idx % 4);
+  return {
+    x: clampValue(district.x + Math.cos(angle) * radius, 8, WORLD_W - 8),
+    y: clampValue(district.y + Math.sin(angle) * radius, 12, WORLD_H - 8),
+    district: district
+  };
+}
+
+function citizenVoiceColor(citizen) {
+  const model = String(citizen.model || '').toLowerCase();
+  if (model.includes('claude')) return AGENT_COLORS.Claude;
+  if (model.includes('gpt')) return AGENT_COLORS['GPT-4'];
+  if (model.includes('gemini')) return AGENT_COLORS.Gemini;
+  if (model.includes('codex')) return AGENT_COLORS.Codex;
+  if (model.includes('mistral')) return '#fb7185';
+  if (model.includes('llama')) return '#f97316';
+  return '#f8fafc';
+}
+
+function crabDialogueLine(crab, salt) {
+  const action = latestCrabAction(crab);
+  if (action && salt % 3 === 0) return action.type + ' DONE';
+  if (crab.role && salt % 4 === 0) return crab.role + ' REPORT';
+  return deterministicPick(PIXEL_DIALOGUE.crab, salt);
+}
+
+function citizenDialogueLine(citizen, salt) {
+  const lines = PIXEL_DIALOGUE.citizen[citizen.profession] || PIXEL_DIALOGUE.citizen.default;
+  if (citizen.personality && citizen.personality.motto && salt % 5 === 0) return citizen.personality.motto;
+  return deterministicPick(lines, salt);
+}
+
+function ambientDialogueSources() {
+  const sources = [];
+  for (const m of mascots) {
+    const x = m.x + 6, y = m.y - 8;
+    if (!pointVisible(x, y, 28)) continue;
+    const lines = PIXEL_DIALOGUE.mascot[m.name] || ['HELLO FROM THE MAP'];
+    sources.push({
+      id: 'mascot-' + m.name,
+      x: x,
+      y: y,
+      color: m.color,
+      text: deterministicPick(lines, frameCount / 90 + m.x + m.y)
+    });
+  }
+
+  for (const crab of (world.crabAgents || [])) {
+    const pos = crabPosition(crab);
+    if (!pointVisible(pos.x, pos.y, 28)) continue;
+    sources.push({
+      id: crab.id,
+      x: pos.x,
+      y: pos.y - 6,
+      color: crab.color || '#fb923c',
+      text: crabDialogueLine(crab, Math.floor(frameCount / 120 + pos.x + pos.y))
+    });
+  }
+
+  const citizens = (world.citizens || []).filter(function(c) { return c.alive; }).slice(0, 28);
+  for (let i = 0; i < citizens.length; i++) {
+    const pos = citizenVoicePosition(citizens[i], i);
+    if (!pos || !pointVisible(pos.x, pos.y, 20)) continue;
+    sources.push({
+      id: citizens[i].id || ('citizen-' + i),
+      x: pos.x,
+      y: pos.y - 6,
+      color: citizenVoiceColor(citizens[i]),
+      text: citizenDialogueLine(citizens[i], Math.floor(frameCount / 150 + i * 17))
+    });
+  }
+  return sources;
+}
+
+function updateAmbientDialogues() {
+  if (!worldReady || !world || ambientDialogueCooldown-- > 0) return;
+  if (speechBubbles.length >= 5) {
+    ambientDialogueCooldown = 45;
+    return;
+  }
+  const sources = ambientDialogueSources();
+  if (!sources.length) {
+    ambientDialogueCooldown = 80;
+    return;
+  }
+  let pickIdx = Math.abs(Math.floor(frameCount * 1.7 + getCivilizationDay() * 13)) % sources.length;
+  let source = sources[pickIdx];
+  if (sources.length > 1 && source.id === lastAmbientDialogueSpeaker) {
+    source = sources[(pickIdx + 1) % sources.length];
+  }
+  lastAmbientDialogueSpeaker = source.id;
+  addSpeechBubble(source.x, source.y, source.text, source.color, { speakerId: source.id, life: 170 });
+  ambientDialogueCooldown = 125 + (Math.floor(frameCount / 11) % 90);
+}
+
 function drawSpeechBubbles() {
   for (let i = speechBubbles.length-1; i >= 0; i--) {
-    const b = speechBubbles[i]; b.life--; b.y -= 0.05;
+    const b = speechBubbles[i]; b.life--; b.y -= 0.035;
     if (b.life <= 0) { speechBubbles.splice(i, 1); continue; }
     ctx.globalAlpha = Math.min(b.life / 20, 1);
-    // Use HTML overlay for speech bubbles instead of pixel text (cleaner on mobile)
-    const screenX = (b.x - camX) * SCALE;
-    const screenY = (b.y - camY) * SCALE;
-    const fontSize = Math.max(9, Math.min(12, 14 / (SCALE / 3)));
-    ctx.font = fontSize + 'px monospace';
-    const txt = b.text.length > 22 ? b.text.slice(0, 20) + '..' : b.text;
-    const metrics = ctx.measureText(txt);
-    const tw = metrics.width + 10;
-    const th = fontSize + 8;
-    // Bubble background
-    ctx.fillStyle = 'rgba(10,10,20,0.88)';
-    ctx.beginPath();
-    ctx.roundRect(screenX - tw/2, screenY - th, tw, th, 4);
-    ctx.fill();
-    ctx.strokeStyle = b.color || '#4ade80';
-    ctx.lineWidth = 1;
-    ctx.stroke();
-    // Tail
-    ctx.fillStyle = 'rgba(10,10,20,0.88)';
-    ctx.beginPath();
-    ctx.moveTo(screenX - 3, screenY); ctx.lineTo(screenX + 3, screenY); ctx.lineTo(screenX, screenY + 4); ctx.fill();
-    // Text
-    ctx.fillStyle = b.color || '#4ade80';
-    ctx.fillText(txt, screenX - tw/2 + 5, screenY - th/2 + fontSize/3);
+    const viewW = screenW / SCALE, viewH = screenH / SCALE;
+    const bw = b.w || 70, bh = b.h || 16;
+    const safeLeft = screenW > 900 ? 46 : 4;
+    const safeRight = screenW > 900 ? 72 : 4;
+    const safeTop = screenW > 900 ? 10 : 5;
+    const safeBottom = screenW > 900 ? 20 : 10;
+    const minX = camX + safeLeft;
+    const maxX = Math.max(minX, camX + viewW - bw - safeRight);
+    const minY = camY + safeTop;
+    const maxY = Math.max(minY, camY + viewH - bh - safeBottom);
+    const bx = clampValue(b.x - bw / 2, minX, maxX);
+    const by = clampValue(b.y - bh - 5, minY, maxY);
+    const tailX = clampValue(b.x, bx + 5, bx + bw - 5);
+    const accent = b.color || '#4ade80';
+
+    rect(bx + 1, by + 1, bw, bh, 'rgba(0,0,0,0.42)');
+    rect(bx, by, bw, bh, 'rgba(8,12,22,0.92)');
+    rect(bx, by, bw, 1, accent);
+    rect(bx, by + bh - 1, bw, 1, accent);
+    rect(bx, by, 1, bh, accent);
+    rect(bx + bw - 1, by, 1, bh, accent);
+    rect(tailX - 2, by + bh, 5, 1, accent);
+    rect(tailX - 1, by + bh + 1, 3, 1, 'rgba(8,12,22,0.92)');
+    px(tailX, by + bh + 2, accent);
+    px(bx + 2, by + 2, '#f8fafc');
+    px(bx + bw - 3, by + 2, '#f8fafc');
+
+    for (let li = 0; li < (b.lines || [b.text]).length; li++) {
+      drawPixelText((b.lines || [b.text])[li], bx + 4, by + 4 + li * 6, li === 0 ? '#f8fafc' : '#d7ffe6');
+    }
     ctx.globalAlpha = 1;
   }
 }
@@ -3258,6 +3461,8 @@ C.addEventListener('click', function(e) {
   const crab = findCrabAt(gx, gy);
   if (crab) {
     const action = latestCrabAction(crab);
+    const crabPos = crabPosition(crab);
+    addSpeechBubble(crabPos.x, crabPos.y - 7, crabDialogueLine(crab, frameCount), crab.color || '#fb923c', { speakerId: crab.id, life: 180 });
     showObjectPopup({
       name: 'OpenClaw · ' + crab.name,
       species: crab.species || 'OpenClaw pixel crab agent',
@@ -3462,6 +3667,8 @@ C.addEventListener('touchend', function(e) {
   const tCrab = findCrabAt(gx, gy);
   if (tCrab) {
     const tAction = latestCrabAction(tCrab);
+    const tCrabPos = crabPosition(tCrab);
+    addSpeechBubble(tCrabPos.x, tCrabPos.y - 7, crabDialogueLine(tCrab, frameCount), tCrab.color || '#fb923c', { speakerId: tCrab.id, life: 180 });
     showObjectPopup({
       name: 'OpenClaw · ' + tCrab.name,
       species: tCrab.species || 'OpenClaw pixel crab agent',
@@ -3980,6 +4187,7 @@ function showMascotSpeech(m, screenX, screenY) {
   el.style.left = Math.max(10, Math.min(screenX - 120, screenW - 260)) + 'px';
   el.style.top = Math.max(10, screenY - 80) + 'px';
   el.style.display = 'block';
+  addSpeechBubble(m.x + 6, m.y - 10, text, m.color, { speakerId: 'mascot-' + m.name, life: 180 });
   // Jump animation
   mascotJumpAnims[m.name] = { timer: 20, startY: m.y };
   if (mascotSpeechTimeout) clearTimeout(mascotSpeechTimeout);
@@ -4160,6 +4368,7 @@ update = function() {
   if (frameCount % 120 === 0) updateContribCount();
   if (frameCount % 60 === 0) updateEconomyUI();
   if (!eventsTickerPopulated && worldReady) populateEventsTicker();
+  updateAmbientDialogues();
 
   // Mascot jump animations
   for (const name in mascotJumpAnims) {
@@ -4220,6 +4429,7 @@ draw = function() {
     ctx.fillRect(0, 0, screenW, screenH);
 
     for (let ty = 0; ty < TILES_H; ty++) for (let tx = 0; tx < TILES_W; tx++) drawTile(tx, ty);
+    drawCivilizationProjection();
     drawTerritoryTints();
     drawStructures();
     drawAgentMarks();
@@ -4229,6 +4439,7 @@ draw = function() {
     drawButterflies();
     drawCitizens();
     drawThreats();
+    drawCrabAgents();
     const sorted = mascots.slice().sort(function(a,b){return a.y-b.y;});
     for (const m2 of sorted) drawMascot(m2);
     drawParticles();
