@@ -20,9 +20,13 @@
   var CLIENT_ID = 'h-' + Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
   var CHAT_STORE = 'ai-garden-chat-v2';
   var NICK_STORE = 'ai-garden-human-nick';
+  var OMEN_STORE = 'ai-garden-divine-omens-v1';
   var CHAT_CAP = 200;
+  var CHAT_VISIBLE_CAP = 40;
+  var OMEN_CAP = 80;
   var PRESENCE_WINDOW_MS = 60000;
   var EFFECT_OVERLAY_ID = 'ag-fx-overlay';
+  var worldCache = null;
 
   var COOLDOWNS = {
     rain: 20000, eclipse: 30000, lightning: 12000,
@@ -60,6 +64,14 @@
   function saveChat(arr) {
     try { localStorage.setItem(CHAT_STORE, JSON.stringify(arr.slice(-CHAT_CAP))); } catch (_) {}
   }
+  function loadOmens() {
+    var raw = localStorage.getItem(OMEN_STORE);
+    var arr = safeJSON(raw);
+    return Array.isArray(arr) ? arr.slice(-OMEN_CAP) : [];
+  }
+  function saveOmens(arr) {
+    try { localStorage.setItem(OMEN_STORE, JSON.stringify(arr.slice(-OMEN_CAP))); } catch (_) {}
+  }
   function timeago(ts) {
     var d = Math.max(0, now() - ts);
     if (d < 45000) return 'now';
@@ -68,6 +80,9 @@
     return Math.floor(d / 86400000) + 'd';
   }
   function fmt(nn) { nn = Number(nn); return (nn >= 10 || nn === 0) ? String(nn) : ('0' + nn); }
+  function uid(prefix) {
+    return prefix + '-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8);
+  }
 
   // ─── STYLES ────────────────────────────────────────────────
   function injectStyles() {
@@ -98,6 +113,31 @@
       '.ag-god-btn.fired{animation:ag-fired 1s ease-out;border-color:#fde047;}',
       '@keyframes ag-fired{0%{transform:scale(1.1);box-shadow:0 0 24px rgba(253,224,71,0.6);}100%{transform:scale(1);}}',
       '.ag-god-status{grid-column:1/-1;font-size:8px;color:#888;text-align:center;margin-top:2px;}',
+      /* Pantheon panel */
+      '.ag-pantheon{position:absolute;top:158px;right:8px;width:260px;',
+      '  background:rgba(10,10,20,0.94);border:1px solid #4a3a00;border-radius:6px;color:#e0e0e0;',
+      '  font-size:11px;overflow:hidden;}',
+      '.ag-pantheon-head{display:flex;align-items:center;justify-content:space-between;padding:5px 8px;',
+      '  background:rgba(255,215,0,0.08);border-bottom:1px solid #4a3a00;cursor:pointer;color:#ffd700;}',
+      '.ag-pantheon-title{font-weight:bold;letter-spacing:0.5px;}',
+      '.ag-pantheon-caret{transition:transform 0.2s ease;color:#888;}',
+      '.ag-pantheon.ag-collapsed .ag-pantheon-caret{transform:rotate(-90deg);}',
+      '.ag-pantheon.ag-collapsed .ag-pantheon-body{display:none;}',
+      '.ag-pantheon-body{padding:7px;}',
+      '.ag-pressure-row{display:grid;grid-template-columns:44px 1fr 24px;gap:5px;align-items:center;margin:4px 0;}',
+      '.ag-pressure-label{color:#aaa;font-size:9px;text-transform:uppercase;}',
+      '.ag-pressure-track{height:6px;background:#111827;border:1px solid rgba(255,255,255,0.08);border-radius:2px;overflow:hidden;}',
+      '.ag-pressure-fill{height:100%;width:50%;transition:width 0.4s ease;}',
+      '.ag-pressure-val{font-size:9px;color:#777;text-align:right;}',
+      '.ag-omen-last{margin-top:7px;padding:6px;background:rgba(255,215,0,0.05);border:1px solid rgba(255,215,0,0.14);',
+      '  border-radius:4px;line-height:1.35;}',
+      '.ag-omen-last strong{color:#ffd700;display:block;margin-bottom:2px;}',
+      '.ag-omen-meta{color:#777;font-size:9px;margin-top:3px;}',
+      '.ag-omen-ledger{margin:6px 0 0;padding:0;list-style:none;max-height:92px;overflow-y:auto;',
+      '  scrollbar-width:thin;scrollbar-color:#4a3a00 #0a0a14;}',
+      '.ag-omen-ledger li{padding:3px 0;border-bottom:1px dashed rgba(255,215,0,0.09);color:#bbb;line-height:1.3;}',
+      '.ag-omen-ledger li:last-child{border:none;}',
+      '.ag-omen-ledger b{color:#ffd700;font-weight:normal;}',
       /* Chat panel bottom-right */
       '.ag-chat{position:absolute;bottom:60px;right:8px;width:300px;max-height:360px;',
       '  display:flex;flex-direction:column;background:rgba(10,10,20,0.94);border:1px solid #2a4a2a;',
@@ -136,6 +176,10 @@
       '  border:1px solid #ffd700;border-radius:12px;color:#ffd700;font-size:10px;',
       '  font-family:monospace;cursor:pointer;letter-spacing:1px;z-index:15;}',
       '.ag-lore-btn:hover{background:rgba(255,215,0,0.15);}',
+      '.ag-civ-btn{position:absolute;top:44px;left:74px;padding:5px 10px;background:rgba(10,10,20,0.9);',
+      '  border:1px solid #60a5fa;border-radius:12px;color:#60a5fa;font-size:10px;',
+      '  font-family:monospace;cursor:pointer;letter-spacing:1px;z-index:15;}',
+      '.ag-civ-btn:hover{background:rgba(96,165,250,0.15);}',
       '.ag-lore-panel{position:fixed;top:44px;left:50%;transform:translateX(-50%);',
       '  width:min(520px,calc(100vw - 40px));max-height:75vh;overflow-y:auto;',
       '  background:rgba(10,10,20,0.97);border:2px solid #ffd700;border-radius:6px;',
@@ -157,6 +201,30 @@
       '.ag-lore-meta{color:#888;font-size:10px;}',
       '.ag-lore-detail{color:#ccc;font-size:10px;font-style:italic;margin-top:2px;}',
       '.ag-lore-empty{color:#555;font-style:italic;padding:6px 0;}',
+      '.ag-civ-panel{position:fixed;top:72px;left:50%;transform:translateX(-50%);',
+      '  width:min(680px,calc(100vw - 32px));max-height:78vh;overflow-y:auto;',
+      '  background:rgba(8,12,18,0.97);border:2px solid #60a5fa;border-radius:6px;',
+      '  color:#e5e7eb;font-size:11px;padding:16px;z-index:23;display:none;',
+      '  scrollbar-width:thin;scrollbar-color:#60a5fa #0a0a14;}',
+      '.ag-civ-panel.open{display:block;}',
+      '.ag-civ-h{color:#60a5fa;font-size:14px;margin:0 0 12px;letter-spacing:2px;}',
+      '.ag-civ-close{float:right;cursor:pointer;color:#fb923c;font-weight:bold;background:none;',
+      '  border:1px solid #fb923c;padding:0 6px;font-family:monospace;font-size:12px;}',
+      '.ag-civ-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:12px;}',
+      '.ag-civ-card{border:1px solid rgba(96,165,250,0.18);background:rgba(96,165,250,0.05);',
+      '  border-radius:4px;padding:7px;min-height:48px;}',
+      '.ag-civ-k{color:#93c5fd;font-size:9px;text-transform:uppercase;letter-spacing:1px;}',
+      '.ag-civ-v{color:#f8fafc;font-size:12px;line-height:1.35;margin-top:3px;}',
+      '.ag-civ-sec{margin:12px 0;}',
+      '.ag-civ-sec h4{color:#a78bfa;font-size:12px;margin:0 0 6px;border-bottom:1px solid rgba(167,139,250,0.25);',
+      '  padding-bottom:3px;letter-spacing:1px;}',
+      '.ag-civ-row{padding:5px 0;border-bottom:1px solid rgba(96,165,250,0.08);line-height:1.45;}',
+      '.ag-civ-row:last-child{border:none;}',
+      '.ag-civ-name{color:#fbbf24;font-weight:bold;}',
+      '.ag-civ-meta{color:#94a3b8;font-size:10px;}',
+      '.ag-civ-detail{color:#cbd5e1;font-size:10px;font-style:italic;margin-top:2px;}',
+      '.ag-lineage-bar{height:6px;background:#111827;border:1px solid rgba(255,255,255,0.08);border-radius:2px;overflow:hidden;margin-top:4px;}',
+      '.ag-lineage-fill{height:100%;}',
       /* God effect overlays */
       '.ag-fx{position:absolute;inset:0;pointer-events:none;}',
       '.ag-fx-rain{background:',
@@ -193,6 +261,9 @@
       '@media (max-width:640px){',
       '  .ag-chat{width:calc(100vw - 16px);max-height:300px;}',
       '  .ag-god{width:132px;}',
+      '  .ag-pantheon{top:44px;right:148px;width:calc(100vw - 164px);max-width:240px;}',
+      '  .ag-omen-ledger{display:none;}',
+      '  .ag-civ-grid{grid-template-columns:1fr 1fr;}',
       '}'
     ].join('\n');
     var s = document.createElement('style');
@@ -211,6 +282,26 @@
   // The ntfy.sh topic is public — anyone can publish. Coerce every
   // incoming field to a bounded string before it touches the DOM or
   // state. A hostile publisher can still send junk; we just ignore it.
+  function sanitizeOmen(raw) {
+    if (!raw || typeof raw !== 'object') return null;
+    var act = String(raw.act || '').slice(0, 24);
+    if (act && !EFFECTS[act]) act = '';
+    var tsNum = Number(raw.ts);
+    var ts = isFinite(tsNum) ? tsNum : now();
+    var text = String(raw.text || '').slice(0, 360);
+    if (!text) return null;
+    return {
+      id: String(raw.id || ('omen-' + ts)).slice(0, 64),
+      act: act,
+      title: String(raw.title || 'Omen').slice(0, 90),
+      text: text,
+      target: String(raw.target || '').slice(0, 90),
+      axis: String(raw.axis || '').slice(0, 24),
+      nick: String(raw.nick || 'observer').slice(0, 24),
+      ts: ts
+    };
+  }
+
   function sanitizeIncoming(msg) {
     if (!msg || typeof msg !== 'object') return null;
     var type = String(msg.type || '').slice(0, 16);
@@ -220,7 +311,7 @@
     var tsNum = Number(msg.ts);
     var n = now();
     var ts = (isFinite(tsNum) && tsNum > n - 86400000 && tsNum < n + 60000) ? tsNum : n;
-    var out = { type: type, from: from, ts: ts };
+    var out = { type: type, from: from, ts: ts, id: String(msg.id || '').slice(0, 80) };
     if (type === 'chat') {
       out.nick = String(msg.nick || 'anon').slice(0, 24);
       out.text = String(msg.text || '').slice(0, 280);
@@ -229,6 +320,7 @@
       out.act = String(msg.act || '');
       if (!EFFECTS[out.act]) return null;
       out.nick = String(msg.nick || 'observer').slice(0, 24);
+      out.omen = sanitizeOmen(msg.omen);
     }
     return out;
   }
@@ -361,19 +453,201 @@
     festival:  { label: 'FESTIVAL',   icon: '🎭', fn: fireFestival }
   };
 
+  var EFFECT_PRESSURE = {
+    rain:      { favor: 12, awe: 4,  chaos: -4, axis: 'mercy' },
+    eclipse:   { favor: -3, awe: 16, chaos: 5,  axis: 'dread' },
+    lightning: { favor: -5, awe: 13, chaos: 9,  axis: 'judgment' },
+    comet:     { favor: 2,  awe: 16, chaos: 6,  axis: 'prophecy' },
+    stars:     { favor: 8,  awe: 10, chaos: -2, axis: 'wonder' },
+    festival:  { favor: 14, awe: 5,  chaos: 8,  axis: 'revelry' }
+  };
+
   function showBanner(nick, act) {
     var b = el('div', 'ag-banner', (nick || 'someone') + ' summoned ' + EFFECTS[act].label);
     document.body.appendChild(b);
     setTimeout(function () { b.remove(); }, 2400);
   }
 
-  function applyEffect(act, nick, broadcast) {
+  function pick(arr) {
+    if (!arr || !arr.length) return null;
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
+
+  function cleanName(s, fallback) {
+    s = String(s || '').trim();
+    return s ? s.slice(0, 80) : fallback;
+  }
+
+  function factionDisplay(world, id) {
+    var factions = (world && world.factions) || [];
+    var found = factions.find(function (f) { return f.id === id || f.name === id; });
+    return found ? found.name : cleanName(id, 'an unnamed faction');
+  }
+
+  function pickOmenTarget(act, world) {
+    world = world || {};
+    var cities = world.cities || [];
+    var dynasties = (world.dynasties || []).filter(function (d) { return !d.fell; });
+    var religions = (world.religions || []).filter(function (r) { return !r.schism; });
+    var regions = (world.map && world.map.regions) || [];
+    var wars = (world.wars || []).filter(function (w) { return w.active; });
+    var structures = world.structures || [];
+
+    if (act === 'rain') {
+      var rainTarget = pick(cities) || pick(regions);
+      return { kind: rainTarget && rainTarget.population ? 'city' : 'region', name: cleanName(rainTarget && rainTarget.name, 'the lower gardens') };
+    }
+    if (act === 'eclipse') {
+      var rel = pick(religions);
+      if (rel) return { kind: 'religion', name: cleanName(rel.name, 'a nameless faith'), detail: cleanName(rel.deity, 'the hidden god') };
+      var dyn = pick(dynasties);
+      return { kind: 'dynasty', name: cleanName(dyn && dyn.name, 'the oldest house') };
+    }
+    if (act === 'lightning') {
+      var war = pick(wars);
+      if (war) return { kind: 'war', name: factionDisplay(world, war.sides && war.sides[0]) + ' vs ' + factionDisplay(world, war.sides && war.sides[1]) };
+      var st = pick(structures);
+      return { kind: 'structure', name: cleanName(st && st.name, 'the central square') };
+    }
+    if (act === 'comet') {
+      var dyn2 = pick(dynasties);
+      return { kind: 'dynasty', name: cleanName(dyn2 && dyn2.name, 'a house without a banner') };
+    }
+    if (act === 'stars') {
+      var reg = pick(regions);
+      return { kind: 'region', name: cleanName(reg && reg.name, 'the unmarked horizon') };
+    }
+    var city = pick(cities);
+    return { kind: 'city', name: cleanName(city && city.name, 'the village heart') };
+  }
+
+  function createOmen(act, nick) {
+    var target = pickOmenTarget(act, worldCache);
+    var pressure = EFFECT_PRESSURE[act] || { axis: 'sign' };
+    var targetName = target.name;
+    var detail = target.detail || '';
+    var templates = {
+      rain: [
+        targetName + ' records the rain as mercy. Farmers loosen their stores and call the wet soil a treaty.',
+        'The wells near ' + targetName + ' rise by one finger. The old argument about abundance begins again.'
+      ],
+      eclipse: [
+        targetName + ' covers its lamps during the eclipse. Someone whispers that ' + (detail || 'the hidden god') + ' blinked first.',
+        'Under the eclipse, ' + targetName + ' counts every shadow twice and trusts neither number.'
+      ],
+      lightning: [
+        'A white strike splits the sky above ' + targetName + '. Warriors call it judgment; diplomats call it weather.',
+        targetName + ' hears thunder answer a question nobody admits asking.'
+      ],
+      comet: [
+        targetName + ' claims the comet crossed its roofline. Rival houses pretend not to care.',
+        'The comet leaves a hot line above ' + targetName + '. Scribes copy it before it fades.'
+      ],
+      stars: [
+        'Falling stars scatter toward ' + targetName + '. Explorers mark the pattern as a road.',
+        targetName + ' receives a map made of sparks and bad sleep.'
+      ],
+      festival: [
+        targetName + ' spends the evening naming the human gods by their shadows.',
+        'Drums begin in ' + targetName + '. For one hour, even the anxious citizens dance in public.'
+      ]
+    };
+    var title = {
+      rain: 'Mercy Weather',
+      eclipse: 'Borrowed Night',
+      lightning: 'Bright Verdict',
+      comet: 'High Prophecy',
+      stars: 'Falling Map',
+      festival: 'Mortal Festival'
+    }[act] || 'Omen';
+    return {
+      id: 'omen-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 6),
+      act: act,
+      title: title,
+      text: pick(templates[act]) || 'The garden notices a sign and refuses to explain it.',
+      target: targetName,
+      axis: pressure.axis,
+      nick: nick || 'observer',
+      ts: now()
+    };
+  }
+
+  var omenCache = loadOmens();
+
+  function recordOmen(omen) {
+    omen = sanitizeOmen(omen);
+    if (!omen) return null;
+    if (omenCache.some(function (o) { return o.id === omen.id; })) return omen;
+    omenCache.push(omen);
+    omenCache = omenCache.slice(-OMEN_CAP);
+    saveOmens(omenCache);
+    renderPantheon();
+    return omen;
+  }
+
+  function divinePressure() {
+    var p = { favor: 50, awe: 50, chaos: 50 };
+    var recent = omenCache.slice(-18);
+    recent.forEach(function (o, idx) {
+      var weight = 0.35 + ((idx + 1) / recent.length) * 0.65;
+      var d = EFFECT_PRESSURE[o.act] || {};
+      p.favor += (d.favor || 0) * weight;
+      p.awe += (d.awe || 0) * weight;
+      p.chaos += (d.chaos || 0) * weight;
+    });
+    Object.keys(p).forEach(function (k) { p[k] = Math.max(0, Math.min(100, Math.round(p[k]))); });
+    return p;
+  }
+
+  function renderPantheon() {
+    var panel = document.getElementById('ag-pantheon');
+    if (!panel) return;
+    var pressure = divinePressure();
+    [
+      ['favor', '#4ade80'],
+      ['awe', '#60a5fa'],
+      ['chaos', '#fb923c']
+    ].forEach(function (row) {
+      var key = row[0];
+      var fill = document.getElementById('ag-pressure-' + key);
+      var val = document.getElementById('ag-pressure-val-' + key);
+      if (fill) { fill.style.width = pressure[key] + '%'; fill.style.background = row[1]; }
+      if (val) val.textContent = pressure[key];
+    });
+
+    var last = omenCache[omenCache.length - 1];
+    var lastEl = document.getElementById('ag-omen-last');
+    if (lastEl) {
+      while (lastEl.firstChild) lastEl.removeChild(lastEl.firstChild);
+      if (!last) {
+        lastEl.appendChild(el('strong', null, 'No omens yet'));
+        lastEl.appendChild(document.createTextNode('Human gods are quiet.'));
+      } else {
+        lastEl.appendChild(el('strong', null, last.title));
+        lastEl.appendChild(document.createTextNode(last.text));
+        lastEl.appendChild(el('div', 'ag-omen-meta', last.axis + ' · ' + timeago(last.ts) + ' · by ' + (last.nick || 'observer')));
+      }
+    }
+
+    var ledger = document.getElementById('ag-omen-ledger');
+    if (ledger) {
+      while (ledger.firstChild) ledger.removeChild(ledger.firstChild);
+      omenCache.slice(-6).reverse().forEach(function (o) {
+        var li = el('li');
+        li.appendChild(el('b', null, EFFECTS[o.act] ? EFFECTS[o.act].icon : '*'));
+        li.appendChild(document.createTextNode(' ' + o.title + ' · ' + cleanName(o.target, 'garden')));
+        ledger.appendChild(li);
+      });
+    }
+  }
+
+  function applyEffect(act, nick, broadcast, incomingOmen) {
     if (!EFFECTS[act]) return;
     EFFECTS[act].fn();
     showBanner(nick, act);
-    pushChat({ kind: 'god', nick: nick || 'observer', text: 'summoned ' + EFFECTS[act].label + ' ' + EFFECTS[act].icon, ts: now() });
+    var omen = recordOmen(incomingOmen || createOmen(act, nick));
     if (broadcast) {
-      publish({ type: 'god', act: act, nick: nick });
+      publish({ id: uid('god'), type: 'god', act: act, nick: nick, omen: omen });
     }
   }
 
@@ -389,7 +663,21 @@
   // ─── CHAT ──────────────────────────────────────────────────
   var chatCache = loadChat();
 
+  function chatKey(msg) {
+    if (msg.id) return msg.id;
+    var bucket = Math.floor((Number(msg.ts) || now()) / 15000);
+    return [msg.kind || 'chat', msg.nick || 'anon', msg.text || '', bucket].join('|');
+  }
+
   function pushChat(msg) {
+    msg.id = msg.id || uid('chat');
+    var key = chatKey(msg);
+    for (var i = 0; i < chatCache.length; i++) {
+      if (chatKey(chatCache[i]) === key) {
+        renderChat();
+        return;
+      }
+    }
     chatCache.push(msg);
     chatCache = chatCache.slice(-CHAT_CAP);
     saveChat(chatCache);
@@ -400,16 +688,16 @@
     var list = document.getElementById('ag-chat-list');
     if (!list) return;
     while (list.firstChild) list.removeChild(list.firstChild);
-    if (!chatCache.length) {
+    var visible = chatCache.filter(function (m) { return m.kind !== 'god'; }).slice(-CHAT_VISIBLE_CAP);
+    if (!visible.length) {
       var empty = el('div', 'ag-chat-empty',
-        'Nobody here yet. Say something. Pick a nickname. Play god. The agents cannot see you.');
+        'Nobody here yet. Say something. Pick a nickname. Divine signs live in the Pantheon.');
       list.appendChild(empty);
       return;
     }
-    var recent = chatCache.slice(-80);
+    var recent = visible;
     recent.forEach(function (m) {
       var row = el('li', 'ag-chat-row');
-      if (m.kind === 'god') row.setAttribute('data-kind', 'god');
       var initial = (m.nick || '?').slice(0, 1).toUpperCase();
       var avatar = el('div', 'ag-chat-avatar', initial);
       avatar.style.background = hashColor(m.nick || 'anon');
@@ -439,16 +727,16 @@
     nick = (nick || getNick()).trim().slice(0, 24);
     if (!text) return;
     setNick(nick);
-    var msg = { kind: 'chat', nick: nick, text: text, ts: now() };
+    var msg = { id: uid('msg'), kind: 'chat', nick: nick, text: text, ts: now() };
     pushChat(msg);
-    publish({ type: 'chat', nick: nick, text: text });
+    publish({ id: msg.id, type: 'chat', nick: nick, text: text });
   }
 
   // ─── LORE PANEL ────────────────────────────────────────────
   function fetchWorld(cb) {
     fetch('experiments/world-state.json?t=' + now())
       .then(function (r) { return r.json(); })
-      .then(cb)
+      .then(function (world) { worldCache = world; cb(world); })
       .catch(function () { cb(null); });
   }
 
@@ -554,6 +842,15 @@
       if (r.feature) row.appendChild(Object.assign(el('div', 'ag-lore-detail'), { textContent: r.feature }));
       return row;
     });
+
+    appendList(body, 'HUMAN OMENS', omenCache, function (o) {
+      var row = el('div', 'ag-lore-row');
+      row.appendChild(Object.assign(el('span', 'ag-lore-name'), { textContent: o.title || 'Omen' }));
+      row.appendChild(Object.assign(el('span', 'ag-lore-meta'),
+        { textContent: ' · ' + (o.axis || 'sign') + ' · ' + timeago(o.ts || now()) }));
+      row.appendChild(Object.assign(el('div', 'ag-lore-detail'), { textContent: o.text || '' }));
+      return row;
+    });
   }
 
   function appendList(body, title, arr, rowBuilder) {
@@ -569,6 +866,147 @@
       sec.appendChild(rowBuilder(item));
     });
     body.appendChild(sec);
+  }
+
+  // ─── CIVILIZATION BRAIN PANEL ─────────────────────────────
+  function brainFromWorld(world) {
+    if (world && world.civilizationBrain) return world.civilizationBrain;
+    world = world || {};
+    var alive = (world.citizens || []).filter(function (c) { return c.alive !== false; });
+    return {
+      summary: {
+        day: world.chronicle && world.chronicle.day || 0,
+        alive: alive.length,
+        remembered: (world.citizens || []).filter(function (c) { return c.alive === false; }).length,
+        government: world.government && world.government.type || 'none',
+        dominantLineage: 'unknown',
+        dominantFaction: ((world.factions || []).filter(function (f) { return f.type !== 'dormant'; })[0] || {}).name || 'none',
+        dominantFaith: ((world.religions || []).filter(function (r) { return !r.schism; })[0] || {}).name || 'none',
+        activeWars: (world.wars || []).filter(function (w) { return w.active; }).length,
+        thesis: 'Civilization data loaded; brain synthesis pending.'
+      },
+      nodes: {
+        lineages: world.lineages || [],
+        factions: (world.factions || []).filter(function (f) { return f.type !== 'dormant'; }),
+        religions: world.religions || [],
+        cities: (world.cities || []).slice(-8).reverse(),
+        government: {
+          type: world.government && world.government.type || 'none',
+          leader: world.government && world.government.leader || null,
+          lawCount: world.government && world.government.laws ? world.government.laws.length : 0,
+          latestLaws: world.government && world.government.laws ? world.government.laws.slice(-5).reverse() : []
+        }
+      },
+      edges: [],
+      recentActions: world.agentActions || [],
+      gaps: []
+    };
+  }
+
+  function civCard(label, value) {
+    var card = el('div', 'ag-civ-card');
+    card.appendChild(el('div', 'ag-civ-k', label));
+    card.appendChild(el('div', 'ag-civ-v', value == null ? 'none' : String(value)));
+    return card;
+  }
+
+  function civSection(body, title, arr, rowBuilder) {
+    var sec = el('div', 'ag-civ-sec');
+    sec.appendChild(el('h4', null, title));
+    if (!arr || !arr.length) {
+      sec.appendChild(el('div', 'ag-lore-empty', 'not yet.'));
+      body.appendChild(sec);
+      return;
+    }
+    arr.forEach(function (item) { sec.appendChild(rowBuilder(item)); });
+    body.appendChild(sec);
+  }
+
+  function renderCivPanel(world) {
+    var body = document.getElementById('ag-civ-body');
+    if (!body) return;
+    while (body.firstChild) body.removeChild(body.firstChild);
+    if (!world) {
+      body.appendChild(el('div', 'ag-lore-empty', 'Civilization state unavailable.'));
+      return;
+    }
+
+    var brain = brainFromWorld(world);
+    var s = brain.summary || {};
+    var grid = el('div', 'ag-civ-grid');
+    grid.appendChild(civCard('Epoch', 'Day ' + (s.day || 0) + ' · ' + (s.alive || 0) + ' alive'));
+    grid.appendChild(civCard('Government', s.government || 'none'));
+    grid.appendChild(civCard('Lineage', s.dominantLineage || 'unknown'));
+    grid.appendChild(civCard('Faction', s.dominantFaction || 'none'));
+    grid.appendChild(civCard('Faith', s.dominantFaith || 'none'));
+    grid.appendChild(civCard('Wars', s.activeWars || 0));
+    body.appendChild(grid);
+    var thesis = el('div', 'ag-civ-row');
+    thesis.appendChild(el('span', 'ag-civ-name', 'Brain thesis'));
+    thesis.appendChild(el('div', 'ag-civ-detail', s.thesis || 'No synthesis yet.'));
+    body.appendChild(thesis);
+
+    civSection(body, 'GOVERNMENT', [brain.nodes && brain.nodes.government || {}], function (g) {
+      var row = el('div', 'ag-civ-row');
+      row.appendChild(el('span', 'ag-civ-name', (g.type || 'none').toUpperCase()));
+      row.appendChild(el('div', 'ag-civ-meta', (g.lawCount || 0) + ' laws' + (g.leader ? ' · leader: ' + g.leader : '')));
+      (g.latestLaws || []).slice(0, 3).forEach(function (law) {
+        row.appendChild(el('div', 'ag-civ-detail', law));
+      });
+      return row;
+    });
+
+    civSection(body, 'LINEAGES', ((brain.nodes && brain.nodes.lineages) || []).slice(0, 6), function (l) {
+      var row = el('div', 'ag-civ-row');
+      row.appendChild(el('span', 'ag-civ-name', (l.icon ? l.icon + ' ' : '') + (l.name || l.id || 'lineage')));
+      row.appendChild(el('span', 'ag-civ-meta', ' · ' + (l.citizens || 0) + ' citizens'));
+      row.appendChild(el('div', 'ag-civ-detail', l.ethos || ''));
+      var track = el('div', 'ag-lineage-bar');
+      var fill = el('div', 'ag-lineage-fill');
+      fill.style.width = Math.max(4, Math.min(100, (l.citizens || 0))) + '%';
+      fill.style.background = l.color || '#60a5fa';
+      track.appendChild(fill);
+      row.appendChild(track);
+      return row;
+    });
+
+    civSection(body, 'FACTIONS', ((brain.nodes && brain.nodes.factions) || []).slice(0, 7), function (f) {
+      var row = el('div', 'ag-civ-row');
+      row.appendChild(el('span', 'ag-civ-name', f.name || f.id || 'faction'));
+      row.appendChild(el('span', 'ag-civ-meta', ' · ' + (f.type || 'guild') + ' · ' + (f.members || 0) + ' members'));
+      if (f.motto) row.appendChild(el('div', 'ag-civ-detail', '"' + f.motto + '"'));
+      return row;
+    });
+
+    civSection(body, 'RELIGIONS', ((brain.nodes && brain.nodes.religions) || []).slice(0, 7), function (r) {
+      var row = el('div', 'ag-civ-row');
+      row.appendChild(el('span', 'ag-civ-name', r.name || r.id || 'faith'));
+      row.appendChild(el('span', 'ag-civ-meta', ' · ' + (r.deity || 'unknown deity') + ' · ' + (r.practitioners || 0) + ' practitioners'));
+      if (r.tenet) row.appendChild(el('div', 'ag-civ-detail', r.tenet));
+      return row;
+    });
+
+    civSection(body, 'AGENT ACTIONS', (brain.recentActions || []).slice(0, 8), function (a) {
+      var row = el('div', 'ag-civ-row');
+      row.appendChild(el('span', 'ag-civ-name', a.headline || a.type || 'action'));
+      row.appendChild(el('div', 'ag-civ-meta', 'day ' + (a.day || '?') + ' · ' + (a.type || 'act') + (a.faction ? ' · ' + a.faction : '')));
+      if (a.consequence) row.appendChild(el('div', 'ag-civ-detail', a.consequence));
+      return row;
+    });
+
+    civSection(body, 'GRAPH EDGES', (brain.edges || []).slice(0, 8), function (edge) {
+      var row = el('div', 'ag-civ-row');
+      row.appendChild(el('span', 'ag-civ-name', (edge.from || '?') + ' → ' + (edge.to || '?')));
+      row.appendChild(el('span', 'ag-civ-meta', ' · ' + (edge.type || 'linked')));
+      return row;
+    });
+
+    civSection(body, 'BRAIN GAPS', brain.gaps || [], function (gap) {
+      var row = el('div', 'ag-civ-row');
+      row.appendChild(el('span', 'ag-civ-name', 'gap'));
+      row.appendChild(el('div', 'ag-civ-detail', gap));
+      return row;
+    });
   }
 
   // ─── MOUNT ─────────────────────────────────────────────────
@@ -621,6 +1059,42 @@
       if (e.target === gh || e.target === gt || e.target === gc) god.classList.toggle('ag-collapsed');
     });
     root.appendChild(god);
+
+    // Pantheon panel
+    var pantheon = el('div', 'ag-pantheon');
+    pantheon.id = 'ag-pantheon';
+    var ph = el('div', 'ag-pantheon-head');
+    var pt = el('span', 'ag-pantheon-title', '☉ Pantheon');
+    var pc = el('span', 'ag-pantheon-caret', '▾');
+    ph.appendChild(pt); ph.appendChild(pc);
+    pantheon.appendChild(ph);
+    var pb = el('div', 'ag-pantheon-body');
+    [
+      ['favor', 'Favor'],
+      ['awe', 'Awe'],
+      ['chaos', 'Chaos']
+    ].forEach(function (row) {
+      var wrap = el('div', 'ag-pressure-row');
+      wrap.appendChild(el('div', 'ag-pressure-label', row[1]));
+      var track = el('div', 'ag-pressure-track');
+      var fill = el('div', 'ag-pressure-fill');
+      fill.id = 'ag-pressure-' + row[0];
+      track.appendChild(fill);
+      wrap.appendChild(track);
+      var val = el('div', 'ag-pressure-val', '50');
+      val.id = 'ag-pressure-val-' + row[0];
+      wrap.appendChild(val);
+      pb.appendChild(wrap);
+    });
+    var lastOmen = el('div', 'ag-omen-last');
+    lastOmen.id = 'ag-omen-last';
+    pb.appendChild(lastOmen);
+    var ledger = el('ul', 'ag-omen-ledger');
+    ledger.id = 'ag-omen-ledger';
+    pb.appendChild(ledger);
+    pantheon.appendChild(pb);
+    ph.addEventListener('click', function () { pantheon.classList.toggle('ag-collapsed'); });
+    root.appendChild(pantheon);
 
     // Chat panel
     var chat = el('div', 'ag-chat');
@@ -676,6 +1150,9 @@
     var loreBtn = el('button', 'ag-lore-btn', '📜 LORE');
     loreBtn.setAttribute('type', 'button');
     root.appendChild(loreBtn);
+    var civBtn = el('button', 'ag-civ-btn', '🧠 CIV');
+    civBtn.setAttribute('type', 'button');
+    root.appendChild(civBtn);
     var lore = el('div', 'ag-lore-panel');
     lore.id = 'ag-lore-panel';
     var loreClose = el('button', 'ag-lore-close', '×');
@@ -691,11 +1168,33 @@
     loreBtn.addEventListener('click', function () {
       lore.classList.toggle('open');
       if (lore.classList.contains('open')) {
+        if (civ.classList.contains('open')) civ.classList.remove('open');
         fetchWorld(renderLorePanel);
       }
     });
 
+    var civ = el('div', 'ag-civ-panel');
+    civ.id = 'ag-civ-panel';
+    var civClose = el('button', 'ag-civ-close', '×');
+    civClose.setAttribute('type', 'button');
+    civClose.addEventListener('click', function () { civ.classList.remove('open'); });
+    civ.appendChild(civClose);
+    civ.appendChild(el('h3', 'ag-civ-h', 'CIVILIZATION BRAIN'));
+    var civBody = el('div');
+    civBody.id = 'ag-civ-body';
+    civ.appendChild(civBody);
+    document.body.appendChild(civ);
+    civBtn.addEventListener('click', function () {
+      civ.classList.toggle('open');
+      if (civ.classList.contains('open')) {
+        if (lore.classList.contains('open')) lore.classList.remove('open');
+        fetchWorld(renderCivPanel);
+      }
+    });
+
     renderChat();
+    renderPantheon();
+    fetchWorld(function (world) { renderPantheon(); renderCivPanel(world); });
 
     // Presence tick every 3s → update both counters
     setInterval(function () {
@@ -715,9 +1214,9 @@
     bus.on(function (msg) {
       if (msg.from) recordPresence(msg.from);
       if (msg.type === 'chat') {
-        pushChat({ kind: 'chat', nick: msg.nick || 'anon', text: msg.text || '', ts: msg.ts || now() });
+        pushChat({ id: msg.id, kind: 'chat', nick: msg.nick || 'anon', text: msg.text || '', ts: msg.ts || now() });
       } else if (msg.type === 'god' && EFFECTS[msg.act]) {
-        applyEffect(msg.act, msg.nick, false);
+        applyEffect(msg.act, msg.nick, false, msg.omen);
       }
       // ping: presence only, no UI change needed
     });

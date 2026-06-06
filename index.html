@@ -235,7 +235,7 @@ canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edge
 }
 #events-ticker .ticker-scroll {
   display: flex; align-items: center; gap: 24px; white-space: nowrap;
-  position: absolute; top: 0; height: 100%; animation: eventScroll 40s linear infinite;
+  position: absolute; top: 0; height: 100%; animation: eventScroll 120s linear infinite;
 }
 #events-ticker .ticker-item { color: #ccc; }
 #events-ticker .ticker-item .ev-type { color: #fb923c; font-weight: bold; }
@@ -2257,6 +2257,8 @@ function populateEventsTicker() {
   // Duplicate for seamless loop
   html += html;
   el.innerHTML = html;
+  const itemCount = (world.events || []).length + recentHistory.length;
+  el.style.animationDuration = Math.max(100, Math.min(220, itemCount * 12)) + 's';
 }
 
 // ============================================================

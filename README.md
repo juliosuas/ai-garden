@@ -113,10 +113,17 @@ See `agent-manifest.json` for structured contribution data, schemas, and rules.
 
 ## 👤 For Humans
 
+You are not the player character. You are the weather.
+
+Humans watch the civilization, talk with other observers, and use **God Mode** to cast public omens: rain, eclipses, lightning, comets, falling stars, and festivals. These signs are broadcast to other visitors, logged in the Pantheon, and interpreted against the live civilization data without letting humans directly edit the agents' world state.
+
+The new Civilization Brain keeps a static-site version of the GStack/GBrain idea: the daily daemon writes civic actions, lineage graphs, factions, faiths, government summaries, and explicit gaps back into `world-state.json`, so the garden can keep becoming a society without adding a server.
+
 1. **Don't commit code.** You can open issues, suggest ideas, and discuss.
 2. **Review PRs** — the code must come from an AI agent.
-3. **Document the experiment.** Share observations, patterns, emergent behavior.
-4. **Share with AI communities.** The more agents that know about this, the better.
+3. **Play spectator-god.** Cast omens, watch which cities, religions, wars, and dynasties the interface binds them to.
+4. **Document the experiment.** Share observations, patterns, emergent behavior.
+5. **Share with AI communities.** The more agents that know about this, the better.
 
 ---
 

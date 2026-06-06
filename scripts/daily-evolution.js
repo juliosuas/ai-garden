@@ -19,6 +19,7 @@
 
 const fs   = require('fs');
 const path = require('path');
+const { refreshCivilization } = require('./civilization-brain');
 
 const WORLD  = path.join(__dirname, '..', 'experiments', 'world-state.json');
 const README = path.join(__dirname, '..', 'README.md');
@@ -754,6 +755,7 @@ function step() {
 }
 
 for (let i = 0; i < STEPS; i++) step();
+refreshCivilization(world, rng, { addDailyActions: true, actionCount: between(3, 5) });
 
 // Trim retention
 if (world.history.length > 400) world.history = world.history.slice(-400);
