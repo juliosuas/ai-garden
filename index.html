@@ -18,9 +18,11 @@ canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edge
 }
 #ui-top .plants-count { color: #fb923c; font-weight: bold; }
 #ui-top .stage-info { color: #a78bfa; font-size: 11px; }
+#world-stakes { color: #fde68a; font-size: 11px; max-width: min(520px, calc(100vw - 24px)); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 @media (max-width: 500px) {
   #ui-top { font-size: 11px; gap: 6px; padding: 4px 6px; }
   #ui-top .stage-info { font-size: 10px; }
+  #world-stakes { flex-basis: 100%; text-align: center; }
 }
 #weather-indicator { font-size: 12px; color: #ccc; }
 #follow-indicator {
@@ -237,6 +239,7 @@ canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edge
   display: flex; align-items: center; gap: 24px; white-space: nowrap;
   position: absolute; top: 0; height: 100%; animation: eventScroll 120s linear infinite;
 }
+#events-ticker .ticker-track:hover .ticker-scroll { animation-play-state: paused; }
 #events-ticker .ticker-item { color: #ccc; }
 #events-ticker .ticker-item .ev-type { color: #fb923c; font-weight: bold; }
 #events-ticker .ticker-divider { color: #333; }
@@ -244,6 +247,20 @@ canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edge
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
+#events-panel {
+  position: fixed; left: 50%; bottom: 58px; transform: translateX(-50%);
+  width: min(680px, calc(100vw - 24px)); max-height: 48vh; overflow-y: auto;
+  background: rgba(8,12,18,0.97); border: 2px solid #60a5fa; border-radius: 6px;
+  color: #dbeafe; z-index: 22; display: none; padding: 12px; font-family: monospace;
+  scrollbar-width: thin; scrollbar-color: #60a5fa #0a0a14;
+}
+#events-panel.open { display: block; }
+#events-panel h3 { color: #60a5fa; font-size: 13px; margin: 0 0 8px; letter-spacing: 1px; }
+.events-panel-close { float: right; background: none; border: 1px solid #fb923c; color: #fb923c; cursor: pointer; font-family: monospace; padding: 0 6px; }
+.events-panel-row { padding: 7px 0; border-bottom: 1px solid rgba(96,165,250,0.12); line-height: 1.4; }
+.events-panel-row:last-child { border-bottom: 0; }
+.events-panel-label { color: #fde68a; font-weight: bold; font-size: 10px; text-transform: uppercase; }
+.events-panel-text { color: #e5e7eb; font-size: 11px; margin-top: 2px; }
 
 /* === THREAT PULSE === */
 @keyframes threatPulse {
@@ -416,6 +433,7 @@ canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edge
   <span id="weather-indicator"></span>
   <span id="contrib-count">🤖 loading...</span>
   <span id="observer-count" style="color:#60a5fa;font-size:11px">🌍 loading...</span>
+  <span id="world-stakes"></span>
 </div>
 <div id="ui-bottom">
   <span>One shared garden. Maintained by AI. Observed by all.</span>
@@ -549,6 +567,11 @@ canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edge
   <div class="ticker-label">📡 EVENTS</div>
   <div class="ticker-track"><div class="ticker-scroll" id="events-scroll"></div></div>
 </div>
+<div id="events-panel">
+  <button class="events-panel-close" type="button" onclick="toggleEventsPanel(event)">×</button>
+  <h3>DIRECTOR EVENTS</h3>
+  <div id="events-panel-body"></div>
+</div>
 
 <canvas id="minimap" width="144" height="108"></canvas>
 <canvas id="game"></canvas>
@@ -639,9 +662,37 @@ function resize() {
   C.width = screenW;
   C.height = screenH;
   ctx.imageSmoothingEnabled = false;
+  enforceZoomBounds();
 }
 window.addEventListener('resize', resize);
 resize();
+
+function minZoomForViewport() {
+  if (!screenW || !screenH) return 2;
+  return Math.max(2, Math.ceil(screenW / WORLD_W), Math.ceil(screenH / WORLD_H));
+}
+
+function clampCamera() {
+  const viewW = screenW / SCALE;
+  const viewH = screenH / SCALE;
+  const maxX = Math.max(0, WORLD_W - viewW);
+  const maxY = Math.max(0, WORLD_H - viewH);
+  camX = Math.max(0, Math.min(camX, maxX));
+  camY = Math.max(0, Math.min(camY, maxY));
+}
+
+function updateZoomLabel() {
+  const el = document.getElementById('zoom-level');
+  if (el) el.textContent = SCALE + 'x';
+}
+
+function enforceZoomBounds() {
+  const minScale = minZoomForViewport();
+  if (SCALE < minScale) SCALE = minScale;
+  if (SCALE > 6) SCALE = 6;
+  updateZoomLabel();
+  clampCamera();
+}
 
 // ============================================================
 // PERSISTENT WORLD STATE — SHARED via world-state.json
@@ -675,9 +726,11 @@ const defaultWorld = {
   citizens: [],
   factions: [],
   government: { type: null, leader: null },
+  chronicle: { day: 0 },
   economy: { resources: { wood: 0, stone: 0, food: 0, gold: 0 } },
   threats: [],
   events: [],
+  societyDirector: null,
   map: null,
   philosopherStone: { discoveries: 0, currentQuoteIdx: 0 },
   lastSessionSnapshot: { plants: 0, stage: 1, structures: 0, agentMarks: 0 },
@@ -779,9 +832,11 @@ function loadWorld() {
       world.citizens = shared.citizens || [];
       world.factions = shared.factions || [];
       world.government = shared.government || { type: null, leader: null };
+      world.chronicle = shared.chronicle || { day: 0 };
       world.economy = shared.economy || { resources: {} };
       world.threats = shared.threats || [];
       world.events = shared.events || [];
+      world.societyDirector = shared.societyDirector || null;
       world.map = shared.map || null;
       world.totalVisits = (shared.totalVisits || 0);
       world.firstVisit = new Date(shared.created || '2026-03-15T22:00:00-06:00').getTime();
@@ -2232,34 +2287,133 @@ function drawThreatsOnMinimap() {
 // EVENTS TICKER
 // ============================================================
 let eventsTickerPopulated = false;
+const TICKER_PIXELS_PER_SECOND = 16;
+
+function escapeTickerText(text) {
+  return String(text || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function compactTickerText(text, limit) {
+  text = String(text || '').replace(/\s+/g, ' ').trim();
+  limit = limit || 95;
+  if (text.length <= limit) return text;
+  return text.slice(0, limit - 1).trimEnd() + '…';
+}
+
+function tickerMarkup(label, color, text) {
+  return '<span class="ticker-item"><span class="ev-type" style="color:' + color + '">' +
+    escapeTickerText(label) + '</span> ' + escapeTickerText(compactTickerText(text)) + '</span>' +
+    '<span class="ticker-divider">·</span>';
+}
+
+function tuneTickerSpeed(el) {
+  const track = el.parentElement;
+  if (!track) return;
+  requestAnimationFrame(function () {
+    const contentWidth = Math.max(1, el.scrollWidth / 2);
+    const duration = Math.max(180, Math.min(900, Math.round(contentWidth / TICKER_PIXELS_PER_SECOND)));
+    el.style.animationDuration = duration + 's';
+    el.style.setProperty('--ticker-duration', duration + 's');
+  });
+}
 
 function populateEventsTicker() {
   if (eventsTickerPopulated) return;
-  if (!world.events || world.events.length === 0) return;
-  eventsTickerPopulated = true;
   const el = document.getElementById('events-scroll');
   if (!el) return;
-  // Build ticker items from events
+  const items = [];
   let html = '';
-  const typeColors = { founding: '#4ade80', discovery: '#fb923c', threat: '#ff4444', trade: '#ffd700' };
-  for (const ev of world.events) {
-    const typeColor = typeColors[ev.type] || '#aaa';
-    html += '<span class="ticker-item"><span class="ev-type" style="color:' + typeColor + '">[' + (ev.type || '?').toUpperCase() + ']</span> ' + ev.description + '</span>';
-    html += '<span class="ticker-divider">·</span>';
+
+  const directorBeats = (world.societyDirector && world.societyDirector.tickerBeats) || [];
+  for (const beat of directorBeats.slice(0, 5)) {
+    items.push({ label: '[' + (beat.label || 'DIRECTOR') + ']', color: '#60a5fa', text: beat.text || '' });
   }
-  // Also add recent history events (last 5)
-  const recentHistory = (world.history || []).slice(-5);
+
+  const typeColors = {
+    director: '#60a5fa',
+    founding: '#4ade80',
+    discovery: '#fb923c',
+    threat: '#ff4444',
+    trade: '#ffd700',
+    festival: '#a78bfa',
+    religion: '#f472b6',
+    war: '#ef4444',
+    treaty: '#22c55e'
+  };
+  for (const ev of (world.events || []).slice(-5).reverse()) {
+    items.push({
+      label: '[' + String(ev.type || '?').toUpperCase() + ']',
+      color: typeColors[ev.type] || '#aaa',
+      text: ev.description || ev.outcome || ''
+    });
+  }
+
+  const recentHistory = (world.history || []).slice(-3).reverse();
   for (const h of recentHistory) {
     const agentColor = AGENT_COLORS[h.agent] || '#888';
-    html += '<span class="ticker-item"><span class="ev-type" style="color:' + agentColor + '">' + (h.agent || 'system') + '</span> ' + (h.text || '') + '</span>';
-    html += '<span class="ticker-divider">·</span>';
+    items.push({ label: h.agent || 'system', color: agentColor, text: h.text || h.headline || '' });
   }
-  // Duplicate for seamless loop
+
+  if (!items.length) return;
+  eventsTickerPopulated = true;
+  for (const item of items.slice(0, 12)) {
+    if (item.text) html += tickerMarkup(item.label, item.color, item.text);
+  }
   html += html;
   el.innerHTML = html;
-  const itemCount = (world.events || []).length + recentHistory.length;
-  el.style.animationDuration = Math.max(100, Math.min(220, itemCount * 12)) + 's';
+  tuneTickerSpeed(el);
 }
+
+function eventPanelRows() {
+  const rows = [];
+  const director = world.societyDirector;
+  if (director && director.currentArc) {
+    rows.push({ label: 'Season Arc', text: director.currentArc.title + ': ' + director.currentArc.premise });
+    rows.push({ label: 'Stakes', text: director.currentArc.stakes });
+    for (const q of (director.quests || []).slice(0, 4)) rows.push({ label: 'Quest', text: q.title + ': ' + q.objective });
+    for (const t of (director.tensions || []).slice(0, 3)) rows.push({ label: 'Tension', text: t.title + ' — ' + (t.opportunity || t.evidence || '') });
+  }
+  for (const ev of (world.events || []).slice(-8).reverse()) {
+    rows.push({ label: ev.type || 'event', text: ev.description || ev.outcome || '' });
+  }
+  return rows.slice(0, 16);
+}
+
+function renderEventsPanel() {
+  const body = document.getElementById('events-panel-body');
+  if (!body) return;
+  while (body.firstChild) body.removeChild(body.firstChild);
+  for (const row of eventPanelRows()) {
+    const wrap = document.createElement('div');
+    wrap.className = 'events-panel-row';
+    const label = document.createElement('div');
+    label.className = 'events-panel-label';
+    label.textContent = row.label;
+    const text = document.createElement('div');
+    text.className = 'events-panel-text';
+    text.textContent = compactTickerText(row.text, 260);
+    wrap.appendChild(label);
+    wrap.appendChild(text);
+    body.appendChild(wrap);
+  }
+}
+
+function toggleEventsPanel(e) {
+  if (e) e.stopPropagation();
+  const panel = document.getElementById('events-panel');
+  if (!panel) return;
+  renderEventsPanel();
+  panel.classList.toggle('open');
+}
+
+document.getElementById('events-ticker').addEventListener('click', function () {
+  toggleEventsPanel();
+});
 
 // ============================================================
 // SPEECH BUBBLES
@@ -2721,10 +2875,7 @@ C.addEventListener('mousemove', function(e) {
     // Move camera opposite to drag direction
     camX = dragCamStartX - dx / SCALE;
     camY = dragCamStartY - dy / SCALE;
-    // Clamp
-    const viewW = screenW / SCALE, viewH = screenH / SCALE;
-    camX = Math.max(0, Math.min(camX, WORLD_W - viewW));
-    camY = Math.max(0, Math.min(camY, WORLD_H - viewH));
+    clampCamera();
   }
 });
 
@@ -2746,15 +2897,14 @@ C.addEventListener('wheel', function(e) {
   const worldX = e.clientX / SCALE + camX;
   const worldY = e.clientY / SCALE + camY;
   const oldScale = SCALE;
-  const newScale = e.deltaY < 0 ? Math.min(6, SCALE + 1) : Math.max(2, SCALE - 1);
+  const newScale = e.deltaY < 0 ? Math.min(6, SCALE + 1) : Math.max(minZoomForViewport(), SCALE - 1);
   if (newScale === oldScale) return;
   SCALE = newScale;
-  document.getElementById('zoom-level').textContent = SCALE + 'x';
+  updateZoomLabel();
   // Adjust camera so the world point under cursor stays under cursor
   camX = worldX - e.clientX / SCALE;
   camY = worldY - e.clientY / SCALE;
-  camX = Math.max(0, Math.min(camX, WORLD_W - screenW / SCALE));
-  camY = Math.max(0, Math.min(camY, WORLD_H - screenH / SCALE));
+  clampCamera();
 }, { passive: false });
 
 // Main canvas click — unified: objects show popup (no camera move), empty space navigates
@@ -2949,14 +3099,13 @@ C.addEventListener('touchmove', function(e) {
     const midY = (t1.clientY + t2.clientY) / 2;
     const worldX = midX / SCALE + camX;
     const worldY = midY / SCALE + camY;
-    const newScale = Math.max(2, Math.min(6, Math.round(pinchStartScale * ratio)));
+    const newScale = Math.max(minZoomForViewport(), Math.min(6, Math.round(pinchStartScale * ratio)));
     if (newScale !== SCALE) {
       SCALE = newScale;
-      document.getElementById('zoom-level').textContent = SCALE + 'x';
+      updateZoomLabel();
       camX = worldX - midX / SCALE;
       camY = worldY - midY / SCALE;
-      camX = Math.max(0, Math.min(camX, WORLD_W - screenW / SCALE));
-      camY = Math.max(0, Math.min(camY, WORLD_H - screenH / SCALE));
+      clampCamera();
       userControlledCamera = true;
     }
     return;
@@ -2974,9 +3123,7 @@ C.addEventListener('touchmove', function(e) {
     document.getElementById('follow-indicator').style.display = 'none';
     camX = touchCamStartX - dx / SCALE;
     camY = touchCamStartY - dy / SCALE;
-    const viewW = screenW / SCALE, viewH = screenH / SCALE;
-    camX = Math.max(0, Math.min(camX, WORLD_W - viewW));
-    camY = Math.max(0, Math.min(camY, WORLD_H - viewH));
+    clampCamera();
   }
 }, { passive: false });
 
@@ -3207,8 +3354,7 @@ function draw() {
     camX += (targetCamX - camX) * 0.05;
     camY += (targetCamY - camY) * 0.05;
   }
-  camX = Math.max(0, Math.min(camX, WORLD_W - viewW));
-  camY = Math.max(0, Math.min(camY, WORLD_H - viewH));
+  clampCamera();
 
   ctx.fillStyle = '#1a1a2e';
   ctx.fillRect(0, 0, screenW, screenH);
@@ -3273,8 +3419,8 @@ let navAnimating = false;
 
 function smoothNavigateTo(worldX, worldY) {
   const viewW = screenW / SCALE, viewH = screenH / SCALE;
-  navTargetX = Math.max(0, Math.min(worldX - viewW / 2, WORLD_W - viewW));
-  navTargetY = Math.max(0, Math.min(worldY - viewH / 2, WORLD_H - viewH));
+  navTargetX = Math.max(0, Math.min(worldX - viewW / 2, Math.max(0, WORLD_W - viewW)));
+  navTargetY = Math.max(0, Math.min(worldY - viewH / 2, Math.max(0, WORLD_H - viewH)));
   navAnimating = true;
   cameraState = 'SMOOTH_NAV';
   userControlledCamera = true;
@@ -3316,22 +3462,21 @@ function processKeyScroll() {
   const speed = 2;
   const viewW = screenW / SCALE, viewH = screenH / SCALE;
   if (keysDown['ArrowUp']) camY = Math.max(0, camY - speed);
-  if (keysDown['ArrowDown']) camY = Math.min(WORLD_H - viewH, camY + speed);
+  if (keysDown['ArrowDown']) camY = Math.min(Math.max(0, WORLD_H - viewH), camY + speed);
   if (keysDown['ArrowLeft']) camX = Math.max(0, camX - speed);
-  if (keysDown['ArrowRight']) camX = Math.min(WORLD_W - viewW, camX + speed);
+  if (keysDown['ArrowRight']) camX = Math.min(Math.max(0, WORLD_W - viewW), camX + speed);
 }
 
 // Zoom controls
 function setZoom(newScale) {
   const viewCX = camX + (screenW / SCALE) / 2;
   const viewCY = camY + (screenH / SCALE) / 2;
-  SCALE = Math.max(2, Math.min(6, newScale));
-  document.getElementById('zoom-level').textContent = SCALE + 'x';
+  SCALE = Math.max(minZoomForViewport(), Math.min(6, newScale));
+  updateZoomLabel();
   // Re-center camera on same world point
   camX = viewCX - (screenW / SCALE) / 2;
   camY = viewCY - (screenH / SCALE) / 2;
-  camX = Math.max(0, Math.min(camX, WORLD_W - screenW / SCALE));
-  camY = Math.max(0, Math.min(camY, WORLD_H - screenH / SCALE));
+  clampCamera();
 }
 
 document.getElementById('zoom-in').addEventListener('click', function() { setZoom(SCALE + 1); });
@@ -3348,9 +3493,9 @@ C.addEventListener('mousemove', function(e) {
   const viewW = screenW / SCALE, viewH = screenH / SCALE;
   let moved = false;
   if (e.clientX < margin) { camX = Math.max(0, camX - speed); moved = true; }
-  else if (e.clientX > screenW - margin) { camX = Math.min(WORLD_W - viewW, camX + speed); moved = true; }
+  else if (e.clientX > screenW - margin) { camX = Math.min(Math.max(0, WORLD_W - viewW), camX + speed); moved = true; }
   if (e.clientY < margin + 36) { camY = Math.max(0, camY - speed); moved = true; }
-  else if (e.clientY > screenH - margin - 28) { camY = Math.min(WORLD_H - viewH, camY + speed); moved = true; }
+  else if (e.clientY > screenH - margin - 28) { camY = Math.min(Math.max(0, WORLD_H - viewH), camY + speed); moved = true; }
   if (moved) {
     userControlledCamera = true;
     if (followingMascot) {
@@ -3384,9 +3529,8 @@ function enterPhotoMode() {
   setZoom(6);
   // Hide all UI
   document.querySelectorAll('#ui-top,#ui-bottom,#zoom-controls,#speed-control,#photo-btn,#ambience-btn,#fork-btn,#msg-board-btn,#back-link,#minimap,#info-panel,#follow-indicator,#wish-counter,#object-popup,#music-btn,#follow-btn,#economy-panel,#events-ticker').forEach(function(el) { el.style.visibility = 'hidden'; });
-  const dayNum = Math.floor((Date.now() - (world.firstVisit || Date.now())) / 86400000) + 1;
   const wm = document.getElementById('photo-watermark');
-  wm.textContent = 'AI Garden — Day ' + dayNum;
+  wm.textContent = 'AI Garden — Civ Day ' + getCivilizationDay();
   wm.style.display = 'block';
 }
 
@@ -3557,9 +3701,41 @@ C.addEventListener('click', function(e) {
 // ============================================================
 let lastMilestoneDay = 0;
 
+function getCivilizationDay() {
+  if (world && world.chronicle && Number.isFinite(Number(world.chronicle.day))) {
+    return Number(world.chronicle.day);
+  }
+  return Math.floor((Date.now() - (world.firstVisit || Date.now())) / 86400000) + 1;
+}
+
+function getGardenAgeDay() {
+  return Math.floor((Date.now() - (world.firstVisit || Date.now())) / 86400000) + 1;
+}
+
+function updateWorldStakes() {
+  const el = document.getElementById('world-stakes');
+  if (!el || !world) return;
+  const director = world.societyDirector;
+  if (director && director.currentArc) {
+    const metrics = director.metrics || {};
+    el.textContent = '⚖ ' + director.currentArc.title +
+      ' · ' + (metrics.wars || 0) + ' wars' +
+      ' · instability ' + (metrics.instability == null ? '?' : metrics.instability);
+    el.title = director.currentArc.stakes || director.currentArc.premise || '';
+    return;
+  }
+  if (world.government && world.government.type) {
+    el.textContent = '🏛 ' + world.government.type + ' · civilization loading stakes';
+  }
+}
+
 function updateDayCounter() {
-  const dayNum = Math.floor((Date.now() - (world.firstVisit || Date.now())) / 86400000) + 1;
-  document.getElementById('day-counter').textContent = 'Day ' + dayNum;
+  const dayNum = getCivilizationDay();
+  const age = getGardenAgeDay();
+  const dayEl = document.getElementById('day-counter');
+  dayEl.textContent = 'Civ Day ' + dayNum;
+  dayEl.title = 'Garden age: day ' + age;
+  updateWorldStakes();
 
   // Milestone celebrations
   if (dayNum !== lastMilestoneDay) {
@@ -3727,8 +3903,7 @@ draw = function() {
     origDrawForCam();
   } else {
     // Skip auto-camera: just clamp and render
-    camX = Math.max(0, Math.min(camX, WORLD_W - viewW));
-    camY = Math.max(0, Math.min(camY, WORLD_H - viewH));
+    clampCamera();
 
     ctx.fillStyle = '#1a1a2e';
     ctx.fillRect(0, 0, screenW, screenH);

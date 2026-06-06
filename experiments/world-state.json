@@ -1,7 +1,7 @@
 {
   "version": 116.54,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-06-06T09:07:06.044Z",
+  "lastUpdated": "2026-06-06T09:31:47.081Z",
   "plants": [
     {
       "x": 45,
@@ -27072,6 +27072,14 @@
       ],
       "timestamp": "2026-04-20T07:15:52Z",
       "outcome": "The Village learned to walk."
+    },
+    {
+      "id": "director-054",
+      "type": "director",
+      "description": "Society Director selected War of Exhausted Maps: The borders have been redrawn so many times that scouts no longer trust old paths.",
+      "participants": [],
+      "timestamp": "2026-06-06T09:20:13.814Z",
+      "outcome": "One active war resolves through a truce, treaty, ritual duel, or shared enemy."
     }
   ],
   "chronicle": {
@@ -27373,7 +27381,7 @@
     },
     {
       "id": "rel-006",
-      "name": "Reformed Reformed Keepers of the Listening Lake",
+      "name": "Reformed Keepers of the Listening Lake",
       "deity": "Kelu",
       "tenet": "The same god, heard with different ears.",
       "founder": null,
@@ -27385,7 +27393,7 @@
     },
     {
       "id": "rel-007",
-      "name": "Reformed Reformed Reformed Keepers of the Listening Lake",
+      "name": "Reformed Keepers of the Listening Lake",
       "deity": "Kelu",
       "tenet": "The same god, heard with different ears.",
       "founder": null,
@@ -28347,7 +28355,7 @@
   ],
   "civilizationBrain": {
     "version": 1,
-    "generatedAt": "2026-06-06T09:07:06.043Z",
+    "generatedAt": "2026-06-06T09:31:47.021Z",
     "summary": {
       "day": 54,
       "alive": 99,
@@ -28947,6 +28955,192 @@
     "gaps": [
       "51 living citizens have no faction; politics is leaking into the commons.",
       "5 active wars need diplomacy, ritual, or exhaustion."
+    ]
+  },
+  "societyDirector": {
+    "version": 1,
+    "generatedAt": "2026-06-06T09:31:47.081Z",
+    "model": "ai-garden-society-director-v1",
+    "charter": "Make the Garden legible, surprising, and socially alive without needing a backend or human-authored daily commits.",
+    "metrics": {
+      "day": 54,
+      "alive": 99,
+      "remembered": 316,
+      "factions": 5,
+      "faiths": 3,
+      "wars": 5,
+      "threats": 3,
+      "cities": 15,
+      "foodPerCitizen": 3.84,
+      "knowledge": 690,
+      "factionless": 51,
+      "civicVariety": 7,
+      "recentActions": 16,
+      "recentHistory": 8,
+      "unresolvedGaps": 2,
+      "instability": 100,
+      "novelty": 100,
+      "legibility": 44.8
+    },
+    "currentArc": {
+      "id": "war-of-exhausted-maps",
+      "title": "War of Exhausted Maps",
+      "premise": "The borders have been redrawn so many times that scouts no longer trust old paths.",
+      "stakes": "The Garden must choose between negotiation, fortification, or one ugly campaign.",
+      "winCondition": "One active war resolves through a truce, treaty, ritual duel, or shared enemy.",
+      "failureCondition": "A city changes ruler because the factions mistake a route for a border.",
+      "observerPrompt": "Open the Civilization Brain and follow the at-war graph edges."
+    },
+    "tensions": [
+      {
+        "id": "war-fatigue",
+        "severity": 95,
+        "title": "War fatigue is becoming the main story",
+        "evidence": "5 active wars; oldest front is Lake Folk vs Subagent Swarm.",
+        "opportunity": "Force a diplomatic choice: truce, ritual trial, hostage exchange, or a costly decisive campaign."
+      },
+      {
+        "id": "representation",
+        "severity": 86.51515151515152,
+        "title": "Too many citizens have no political home",
+        "evidence": "51 living citizens are outside factions.",
+        "opportunity": "Create a populist bloc, guild lottery, or council seat for the unaffiliated."
+      },
+      {
+        "id": "border-danger",
+        "severity": 77,
+        "title": "The border still has teeth",
+        "evidence": "Glitch Hawk is active at danger 4.",
+        "opportunity": "Give defenders, scouts, priests, and builders one shared public mission."
+      },
+      {
+        "id": "scarcity",
+        "severity": 49.28,
+        "title": "Food is too thin for the population",
+        "evidence": "3.84 food per living citizen.",
+        "opportunity": "Make agriculture, ration politics, or migration visible before adding more births."
+      }
+    ],
+    "directives": [
+      {
+        "id": "dir-01",
+        "priority": "high",
+        "role": "diplomats",
+        "action": "Draft a visible peace offer with a real concession",
+        "target": "Waking Order / Accord of Questions",
+        "successMetric": "One war gains a treaty, truce, or formal refusal.",
+        "reason": "Wars are meaningful only when the society can imagine ending them."
+      },
+      {
+        "id": "dir-02",
+        "priority": "medium",
+        "role": "scribes",
+        "action": "Count factionless citizens and publish who is missing from law",
+        "target": "the council records",
+        "successMetric": "A new seat, guild, or petition appears.",
+        "reason": "The political map should explain who has power and who does not."
+      },
+      {
+        "id": "dir-03",
+        "priority": "high",
+        "role": "merchants and farmers",
+        "action": "Create a ration market with names attached",
+        "target": "WhitePort",
+        "successMetric": "Food per citizen improves or hoarding becomes a named scandal.",
+        "reason": "Scarcity needs visible choices, not invisible counters."
+      }
+    ],
+    "quests": [
+      {
+        "id": "quest-054-01",
+        "title": "War of Exhausted Maps",
+        "owner": "Waking Order",
+        "objective": "One active war resolves through a truce, treaty, ritual duel, or shared enemy.",
+        "reward": "The civilization gains a legible season arc spectators can follow.",
+        "risk": "A city changes ruler because the factions mistake a route for a border."
+      },
+      {
+        "id": "quest-054-02",
+        "title": "Name the price of peace",
+        "owner": "Lake Folk",
+        "objective": "Choose one active war and make its demanded concession public.",
+        "reward": "A war becomes a story with sides, stakes, and a possible ending.",
+        "risk": "If nobody pays the price, the map hardens around the conflict."
+      },
+      {
+        "id": "quest-054-03",
+        "title": "Audit the granary",
+        "owner": "FernGate",
+        "objective": "Publish who has food, who lacks it, and what law changes hands.",
+        "reward": "Economy becomes visible as trust, not just resource numbers.",
+        "risk": "A hoarding scandal can start a new faction."
+      }
+    ],
+    "visibleBeats": [
+      {
+        "type": "arc",
+        "label": "SEASON ARC",
+        "text": "War of Exhausted Maps: The borders have been redrawn so many times that scouts no longer trust old paths."
+      },
+      {
+        "type": "stakes",
+        "label": "STAKES",
+        "text": "The Garden must choose between negotiation, fortification, or one ugly campaign."
+      },
+      {
+        "type": "pressure",
+        "label": "PRESSURE",
+        "text": "War fatigue is becoming the main story. Force a diplomatic choice: truce, ritual trial, hostage exchange, or a costly decisive campaign."
+      },
+      {
+        "type": "quest",
+        "label": "QUEST",
+        "text": "War of Exhausted Maps: One active war resolves through a truce, treaty, ritual duel, or shared enemy."
+      },
+      {
+        "type": "observer",
+        "label": "OBSERVER",
+        "text": "Open the Civilization Brain and follow the at-war graph edges."
+      },
+      {
+        "type": "directive",
+        "label": "AGENTS",
+        "text": "diplomats: Draft a visible peace offer with a real concession."
+      }
+    ],
+    "tickerBeats": [
+      {
+        "type": "arc",
+        "label": "SEASON ARC",
+        "text": "War of Exhausted Maps: The borders have been redrawn so many times that scouts no longer trust old paths."
+      },
+      {
+        "type": "stakes",
+        "label": "STAKES",
+        "text": "The Garden must choose between negotiation, fortification, or one ugly campaign."
+      },
+      {
+        "type": "pressure",
+        "label": "PRESSURE",
+        "text": "War fatigue is becoming the main story. Force a diplomatic choice: truce, ritual trial, hostage exchange, or a costly decisive campaign."
+      },
+      {
+        "type": "quest",
+        "label": "QUEST",
+        "text": "War of Exhausted Maps: One active war resolves through a truce, treaty, ritual duel, or shared enemy."
+      },
+      {
+        "type": "observer",
+        "label": "OBSERVER",
+        "text": "Open the Civilization Brain and follow the at-war graph edges."
+      }
+    ],
+    "nextEvolutionRules": [
+      "Prefer named civic choices over anonymous event spam.",
+      "Every new conflict needs a possible resolution.",
+      "Every religion must occasionally interpret the same omen differently.",
+      "Every faction should want something that another faction can understand but reject.",
+      "Observer actions should change interpretation, not directly edit state."
     ]
   }
 }

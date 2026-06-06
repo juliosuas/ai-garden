@@ -223,6 +223,11 @@
       '.ag-civ-name{color:#fbbf24;font-weight:bold;}',
       '.ag-civ-meta{color:#94a3b8;font-size:10px;}',
       '.ag-civ-detail{color:#cbd5e1;font-size:10px;font-style:italic;margin-top:2px;}',
+      '.ag-civ-director{border:1px solid rgba(96,165,250,0.28);background:linear-gradient(180deg,rgba(96,165,250,0.10),rgba(167,139,250,0.05));',
+      '  border-radius:4px;padding:8px;margin:10px 0 12px;}',
+      '.ag-civ-director-title{color:#bfdbfe;font-weight:bold;letter-spacing:1px;font-size:11px;text-transform:uppercase;}',
+      '.ag-civ-director-arc{color:#f8fafc;font-size:13px;margin-top:4px;}',
+      '.ag-civ-director-prompt{color:#fde68a;font-size:10px;margin-top:5px;line-height:1.4;}',
       '.ag-lineage-bar{height:6px;background:#111827;border:1px solid rgba(255,255,255,0.08);border-radius:2px;overflow:hidden;margin-top:4px;}',
       '.ag-lineage-fill{height:100%;}',
       /* God effect overlays */
@@ -646,6 +651,9 @@
     EFFECTS[act].fn();
     showBanner(nick, act);
     var omen = recordOmen(incomingOmen || createOmen(act, nick));
+    if (worldCache && document.getElementById('ag-civ-panel') && document.getElementById('ag-civ-panel').classList.contains('open')) {
+      renderCivPanel(worldCache);
+    }
     if (broadcast) {
       publish({ id: uid('god'), type: 'god', act: act, nick: nick, omen: omen });
     }
@@ -690,8 +698,11 @@
     while (list.firstChild) list.removeChild(list.firstChild);
     var visible = chatCache.filter(function (m) { return m.kind !== 'god'; }).slice(-CHAT_VISIBLE_CAP);
     if (!visible.length) {
+      var watchers = presenceCount();
       var empty = el('div', 'ag-chat-empty',
-        'Nobody here yet. Say something. Pick a nickname. Divine signs live in the Pantheon.');
+        watchers > 1
+          ? (watchers + ' observers are watching quietly. Say something, or cast a sign from God Mode.')
+          : 'Nobody chatting yet. Say something. Pick a nickname. Divine signs live in the Pantheon.');
       list.appendChild(empty);
       return;
     }
@@ -899,7 +910,8 @@
       },
       edges: [],
       recentActions: world.agentActions || [],
-      gaps: []
+      gaps: [],
+      director: world.societyDirector || null
     };
   }
 
@@ -933,6 +945,7 @@
 
     var brain = brainFromWorld(world);
     var s = brain.summary || {};
+    var director = brain.director || world.societyDirector || null;
     var grid = el('div', 'ag-civ-grid');
     grid.appendChild(civCard('Epoch', 'Day ' + (s.day || 0) + ' · ' + (s.alive || 0) + ' alive'));
     grid.appendChild(civCard('Government', s.government || 'none'));
@@ -945,6 +958,27 @@
     thesis.appendChild(el('span', 'ag-civ-name', 'Brain thesis'));
     thesis.appendChild(el('div', 'ag-civ-detail', s.thesis || 'No synthesis yet.'));
     body.appendChild(thesis);
+
+    if (director && director.currentArc) {
+      var directorBox = el('div', 'ag-civ-director');
+      directorBox.appendChild(el('div', 'ag-civ-director-title', 'Society Director AI'));
+      directorBox.appendChild(el('div', 'ag-civ-director-arc', director.currentArc.title || 'No active arc'));
+      directorBox.appendChild(el('div', 'ag-civ-detail', director.currentArc.premise || director.charter || ''));
+      directorBox.appendChild(el('div', 'ag-civ-director-prompt', director.currentArc.observerPrompt || 'Watch what the society chooses next.'));
+      body.appendChild(directorBox);
+    }
+
+    var pressure = divinePressure();
+    var lastOmen = omenCache[omenCache.length - 1];
+    var weatherBox = el('div', 'ag-civ-director');
+    weatherBox.appendChild(el('div', 'ag-civ-director-title', 'Observer Weather'));
+    weatherBox.appendChild(el('div', 'ag-civ-director-arc',
+      'Favor ' + pressure.favor + ' · Awe ' + pressure.awe + ' · Chaos ' + pressure.chaos));
+    weatherBox.appendChild(el('div', 'ag-civ-detail',
+      lastOmen
+        ? ((lastOmen.title || 'Omen') + ' is being read through the ' + (lastOmen.axis || 'sign') + ' axis: ' + (lastOmen.text || ''))
+        : 'No human omen has bent the current interpretation yet.'));
+    body.appendChild(weatherBox);
 
     civSection(body, 'GOVERNMENT', [brain.nodes && brain.nodes.government || {}], function (g) {
       var row = el('div', 'ag-civ-row');
@@ -991,6 +1025,23 @@
       row.appendChild(el('span', 'ag-civ-name', a.headline || a.type || 'action'));
       row.appendChild(el('div', 'ag-civ-meta', 'day ' + (a.day || '?') + ' · ' + (a.type || 'act') + (a.faction ? ' · ' + a.faction : '')));
       if (a.consequence) row.appendChild(el('div', 'ag-civ-detail', a.consequence));
+      return row;
+    });
+
+    civSection(body, 'DIRECTOR QUESTS', (director && director.quests || []).slice(0, 4), function (q) {
+      var row = el('div', 'ag-civ-row');
+      row.appendChild(el('span', 'ag-civ-name', q.title || 'quest'));
+      row.appendChild(el('div', 'ag-civ-meta', q.owner || 'Society Director'));
+      row.appendChild(el('div', 'ag-civ-detail', q.objective || ''));
+      if (q.risk) row.appendChild(el('div', 'ag-civ-detail', 'risk: ' + q.risk));
+      return row;
+    });
+
+    civSection(body, 'DIRECTOR TENSIONS', (director && director.tensions || []).slice(0, 4), function (t) {
+      var row = el('div', 'ag-civ-row');
+      row.appendChild(el('span', 'ag-civ-name', t.title || t.id || 'tension'));
+      row.appendChild(el('span', 'ag-civ-meta', ' · severity ' + (t.severity || 0)));
+      row.appendChild(el('div', 'ag-civ-detail', t.opportunity || t.evidence || ''));
       return row;
     });
 
@@ -1052,7 +1103,7 @@
       });
       gb.appendChild(btn);
     });
-    var gs = el('div', 'ag-god-status', 'cosmetic · agents do not see');
+    var gs = el('div', 'ag-god-status', 'omens shape observer weather');
     gb.appendChild(gs);
     god.appendChild(gb);
     gh.addEventListener('click', function (e) {
