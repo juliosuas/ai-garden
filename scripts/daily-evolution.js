@@ -19,6 +19,8 @@
 
 const fs   = require('fs');
 const path = require('path');
+const { refreshCivilization } = require('./civilization-brain');
+const { applySocietyDirectorPlan, normalizeWorldLanguage, refreshSocietyDirector } = require('./society-director');
 
 const WORLD  = path.join(__dirname, '..', 'experiments', 'world-state.json');
 const README = path.join(__dirname, '..', 'README.md');
@@ -754,6 +756,11 @@ function step() {
 }
 
 for (let i = 0; i < STEPS; i++) step();
+normalizeWorldLanguage(world);
+refreshCivilization(world, rng, { addDailyActions: true, actionCount: between(3, 5) });
+refreshSocietyDirector(world, rng, { addDirectorEvent: true });
+applySocietyDirectorPlan(world, rng, { extendMap: true, addPublicEvents: true });
+refreshCivilization(world, rng);
 
 // Trim retention
 if (world.history.length > 400) world.history = world.history.slice(-400);
