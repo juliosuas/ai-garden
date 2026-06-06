@@ -13,9 +13,9 @@ const fs = require('fs');
 const path = require('path');
 
 const WORLD = path.join(__dirname, '..', 'experiments', 'world-state.json');
-const VIEW_W = 384;
-const VIEW_H = 288;
-const MARGIN = 18;
+const VIEW_W = 1536;
+const VIEW_H = 1152;
+const MARGIN = 48;
 
 const DISTRICT_COLORS = [
   '#d6b36a', '#60a5fa', '#f97316', '#4ade80', '#e879f9', '#f43f5e',
@@ -261,7 +261,7 @@ function buildDistricts(world, rng, project) {
   const seenByRegion = new Map();
   const largest = Math.max(1, ...cities.map(city => Number(city.population) || 1));
 
-  return cities.map((city, idx) => {
+  const cityDistricts = cities.map((city, idx) => {
     const region = regions.get(city.region) || regions.get('region-001') || null;
     const bounds = regionBounds(region);
     const count = seenByRegion.get(city.region) || 0;
@@ -290,6 +290,36 @@ function buildDistricts(world, rng, project) {
       capital: pop === largest
     };
   });
+
+  const cityRegionIds = new Set(cities.map(city => city.region).filter(Boolean));
+  const frontierRegions = ((world.map && world.map.regions) || [])
+    .slice(-18)
+    .filter(region => region && region.id && !cityRegionIds.has(region.id));
+  const outposts = [];
+  for (let i = 0; i < frontierRegions.length && outposts.length < 10; i++) {
+    const region = frontierRegions[i];
+    const bounds = regionBounds(region);
+    const center = project.point(bounds.x + bounds.w / 2, bounds.y + bounds.h / 2);
+    outposts.push({
+      id: 'outpost-' + region.id,
+      name: region.name || 'Frontier',
+      region: region.name || 'Frontier',
+      regionId: region.id,
+      x: Math.round(clamp(center.x + Math.cos(i * 1.9) * 10, 14, VIEW_W - 18)),
+      y: Math.round(clamp(center.y + Math.sin(i * 1.9) * 10, 18, VIEW_H - 14)),
+      population: 48 + Math.round(rng() * 90),
+      specialty: region.biome || 'frontier watch',
+      ruler: region.plannedBy ? 'Society Director camp' : 'frontier council',
+      founded: region.discoveredDay || ((world.chronicle && world.chronicle.day) || 0),
+      scale: 9 + Math.round(rng() * 3),
+      color: FRONTIER_COLORS[region.biome] || DISTRICT_COLORS[(cityDistricts.length + i) % DISTRICT_COLORS.length],
+      walls: false,
+      capital: false,
+      outpost: true
+    });
+  }
+
+  return cityDistricts.concat(outposts);
 }
 
 function buildRoads(districts, world) {
@@ -364,7 +394,7 @@ function ensureCrabAgents(world, districts, rng) {
   for (let i = 0; i < CRAB_BLUEPRINTS.length; i++) {
     const blueprint = CRAB_BLUEPRINTS[i];
     const { id, name, role, color, darkColor, motto, personality, dialogue } = blueprint;
-    const district = districts.length ? districts[i % districts.length] : null;
+    const district = districts.length ? districts[(i * 3) % districts.length] : null;
     const phase = Math.round((i * 0.77 + rng() * 0.2) * 1000) / 1000;
     const crab = byId.get(id) || {
       id,

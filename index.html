@@ -573,7 +573,7 @@ canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edge
   <div id="events-panel-body"></div>
 </div>
 
-<canvas id="minimap" width="144" height="108"></canvas>
+<canvas id="minimap" width="176" height="132"></canvas>
 <canvas id="game"></canvas>
 
 <!-- Music Button -->
@@ -598,8 +598,8 @@ const MC = document.getElementById('minimap');
 const mctx = MC.getContext('2d');
 
 let SCALE = 4;
-const WORLD_W = 384;
-const WORLD_H = 288;
+const WORLD_W = 1536;
+const WORLD_H = 1152;
 
 let screenW, screenH;
 let camX = 0, camY = 0;
@@ -1152,7 +1152,7 @@ const MOODS = {
 // ============================================================
 // TILE MAP & ARRAYS
 // ============================================================
-const TILES_W = 24, TILES_H = 18, TILE = 16;
+const TILES_W = WORLD_W / 16, TILES_H = WORLD_H / 16, TILE = 16;
 const tileMap = [
   [4,4,8,4,0,0,0,0,1,0,0,0,0,8,4,4, 4,0,0,7,0,0,0,4],
   [4,0,0,0,0,7,0,0,1,0,0,7,0,0,0,4, 0,0,3,3,0,7,0,8],
@@ -1173,6 +1173,69 @@ const tileMap = [
   [0,7,0,0,0,7,0,0,1,0,0,7,0,0,0,7, 0,0,7,0,0,7,0,0],
   [6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6, 6,6,6,6,6,6,6,6],
 ];
+
+const OPEN_WORLD_LANDMARKS = [
+  { id: 'mosslight-fen', name: 'MOSSLIGHT FEN', x: 190, y: 690, color: '#34d399', type: 'fen' },
+  { id: 'glass-ridge', name: 'GLASS RIDGE', x: 910, y: 170, color: '#93c5fd', type: 'ridge' },
+  { id: 'crab-cove', name: 'CRAB COVE', x: 1270, y: 770, color: '#fb923c', type: 'cove' },
+  { id: 'sunken-forum', name: 'SUNKEN FORUM', x: 675, y: 545, color: '#d6b36a', type: 'ruin' },
+  { id: 'mirror-field', name: 'MIRROR FIELD', x: 845, y: 660, color: '#a7f3d0', type: 'field' },
+  { id: 'wind-road', name: 'WIND ROAD', x: 1030, y: 610, color: '#f8fafc', type: 'road' },
+  { id: 'quiet-mesa', name: 'QUIET MESA', x: 1160, y: 305, color: '#facc15', type: 'mesa' },
+  { id: 'lantern-delta', name: 'LANTERN DELTA', x: 520, y: 920, color: '#2dd4bf', type: 'delta' },
+];
+
+function tileNoise(tx, ty, salt) {
+  let n = (tx * 374761393 + ty * 668265263 + salt * 1442695041) | 0;
+  n = (n ^ (n >>> 13)) * 1274126177;
+  return ((n ^ (n >>> 16)) >>> 0) / 4294967295;
+}
+
+function generatedOpenWorldTile(tx, ty) {
+  if (ty < tileMap.length && tx < tileMap[ty].length && tileMap[ty][tx] !== undefined) return tileMap[ty][tx];
+
+  const riverX = 38 + Math.round(Math.sin(ty * 0.18) * 5);
+  if (ty > 5 && ty < TILES_H - 6 && Math.abs(tx - riverX) <= (ty > 48 ? 2 : 1)) return 2;
+  const cove = tx > 72 && ty > 46;
+  if (cove && tileNoise(tx, ty, 3) < 0.58) return 2;
+
+  const mainRoad = (Math.abs(tx - 8) <= 0 && ty < 58) ||
+    (Math.abs(ty - 28) <= 0 && tx > 7 && tx < 74) ||
+    (Math.abs((ty - 28) - (tx - 74) * 0.55) < 0.55 && tx >= 74 && tx < 90);
+  const pilgrimRoad = Math.abs((ty - 14) - (tx - 18) * 0.38) < 0.5 && tx > 18 && tx < 70;
+  const coastRoad = cove && Math.abs((ty - 52) - Math.sin(tx * 0.28) * 3) < 0.5 && tx < 91;
+  const ridgeRoad = Math.abs((ty - 42) + (tx - 66) * 0.26) < 0.48 && tx > 48 && tx < 86;
+  const meadowLoop = Math.abs((tx - 62) ** 2 / 220 + (ty - 40) ** 2 / 70 - 1) < 0.06 && tx > 47 && tx < 79 && ty > 30 && ty < 51;
+  if (mainRoad || pilgrimRoad || coastRoad || ridgeRoad || meadowLoop) return 1;
+
+  const nearVillage = tx < 24 && ty < 18;
+  if (nearVillage) return 0;
+
+  const n = tileNoise(tx, ty, 1);
+  const n2 = tileNoise(tx, ty, 2);
+  const n3 = tileNoise(tx, ty, 5);
+
+  if (tx < 28 && ty > 34) return n < 0.62 ? 8 : n < 0.78 ? 4 : n < 0.87 ? 7 : 0;
+  if (tx > 54 && ty < 20) return n < 0.40 ? 5 : n < 0.62 ? 4 : n < 0.72 ? 8 : 0;
+  if (tx > 50 && ty > 34 && tx < 84 && ty < 55) return n < 0.10 ? 3 : n < 0.20 ? 6 : n < 0.34 ? 7 : n < 0.48 ? 4 : n < 0.56 ? 5 : 0;
+  if (tx > 28 && tx < 50 && ty > 48) return n < 0.36 ? 2 : n < 0.62 ? 7 : n < 0.76 ? 8 : 0;
+  if (tx > 66 && ty > 54) return n < 0.34 ? 2 : n < 0.48 ? 7 : n < 0.62 ? 6 : n < 0.72 ? 8 : 0;
+  if (tx > 80 && ty > 22 && ty < 44) return n < 0.20 ? 5 : n < 0.38 ? 4 : n < 0.54 ? 7 : n < 0.62 ? 8 : 0;
+
+  if (n < 0.07) return 4;
+  if (n < 0.13) return 8;
+  if (n < 0.21) return 7;
+  if (n2 < 0.045) return 5;
+  if (n3 < 0.035) return 6;
+  return 0;
+}
+
+for (let ty = 0; ty < TILES_H; ty++) {
+  if (!tileMap[ty]) tileMap[ty] = [];
+  for (let tx = 0; tx < TILES_W; tx++) {
+    if (tileMap[ty][tx] === undefined) tileMap[ty][tx] = generatedOpenWorldTile(tx, ty);
+  }
+}
 
 const particles = [];
 const speechBubbles = [];
@@ -1210,7 +1273,8 @@ function lighten(hex, amt) {
 // TILE RENDERING
 // ============================================================
 function drawTile(tx, ty) {
-  const t = tileMap[ty][tx];
+  const t = tileMap[ty] && tileMap[ty][tx];
+  if (t === undefined) return;
   const bx = tx * TILE, by = ty * TILE;
   srand(tx * 1000 + ty * 7);
   const stage = getStage();
@@ -1284,12 +1348,73 @@ function drawTile(tx, ty) {
   }
 }
 
+function drawVisibleTiles() {
+  const viewW = screenW / SCALE;
+  const viewH = screenH / SCALE;
+  const startX = Math.max(0, Math.floor(camX / TILE) - 1);
+  const startY = Math.max(0, Math.floor(camY / TILE) - 1);
+  const endX = Math.min(TILES_W - 1, Math.ceil((camX + viewW) / TILE) + 1);
+  const endY = Math.min(TILES_H - 1, Math.ceil((camY + viewH) / TILE) + 1);
+  for (let ty = startY; ty <= endY; ty++) {
+    for (let tx = startX; tx <= endX; tx++) drawTile(tx, ty);
+  }
+}
+
 function drawFlowerCluster(x, y) {
   const sc = seasonFlowerColors();
   const colors = [PAL.flower_red, PAL.flower_yellow, sc[0], sc[1]];
   for (let i = 0; i < 4; i++) {
     const fx = x + (rand() * 8) | 0, fy = y + (rand() * 8) | 0;
     px(fx, fy + 1, PAL.sprout); px(fx, fy, colors[(rand() * colors.length) | 0]);
+  }
+}
+
+function drawOpenWorldLandmarks() {
+  const vL = camX - 80, vR = camX + screenW / SCALE + 80;
+  const vT = camY - 80, vB = camY + screenH / SCALE + 80;
+  for (const mark of OPEN_WORLD_LANDMARKS) {
+    if (mark.x < vL || mark.x > vR || mark.y < vT || mark.y > vB) continue;
+    const pulse = Math.sin(frameCount * 0.025 + mark.x * 0.02) * 0.12 + 0.22;
+    ctx.globalAlpha = pulse;
+    rect(mark.x - 13, mark.y - 8, 26, 16, mark.color);
+    ctx.globalAlpha = 1;
+    rect(mark.x - 8, mark.y + 6, 16, 2, 'rgba(5,8,10,0.5)');
+    rect(mark.x - 6, mark.y - 4, 12, 8, 'rgba(10,12,18,0.76)');
+    if (mark.type === 'road') {
+      rect(mark.x - 1, mark.y - 8, 2, 14, PAL.trunk);
+      rect(mark.x - 8, mark.y - 7, 14, 3, mark.color);
+      rect(mark.x - 5, mark.y - 2, 13, 3, '#d6b36a');
+      px(mark.x + 7, mark.y - 6, '#0f172a'); px(mark.x - 6, mark.y - 1, '#0f172a');
+    } else if (mark.type === 'field') {
+      for (let i = -5; i <= 5; i += 5) {
+        px(mark.x + i, mark.y - 2, '#f8fafc'); px(mark.x + i + 1, mark.y - 1, mark.color);
+        px(mark.x + i - 1, mark.y + 2, '#fde68a'); px(mark.x + i, mark.y + 3, PAL.sprout);
+      }
+      rect(mark.x - 7, mark.y + 5, 14, 1, '#6ee7b7');
+    } else if (mark.type === 'ruin') {
+      rect(mark.x - 6, mark.y - 6, 3, 11, '#d6b36a');
+      rect(mark.x + 3, mark.y - 6, 3, 11, '#b89a56');
+      rect(mark.x - 8, mark.y - 7, 16, 2, '#f0d38a');
+      rect(mark.x - 9, mark.y + 5, 18, 2, '#8a6a3a');
+    } else if (mark.type === 'cove' || mark.type === 'delta') {
+      rect(mark.x - 7, mark.y + 1, 14, 3, PAL.water);
+      px(mark.x - 5, mark.y, PAL.waterLight); px(mark.x - 1, mark.y + 1, PAL.waterLight); px(mark.x + 4, mark.y, PAL.waterLight);
+      px(mark.x, mark.y - 3, mark.color); px(mark.x + 1, mark.y - 4, '#fff7ad');
+    } else if (mark.type === 'ridge' || mark.type === 'mesa') {
+      rect(mark.x - 7, mark.y + 1, 14, 4, PAL.rockDark);
+      px(mark.x - 4, mark.y - 1, PAL.rockLight); px(mark.x - 3, mark.y - 2, '#f8fafc');
+      px(mark.x + 2, mark.y - 2, PAL.rockLight); px(mark.x + 3, mark.y - 3, '#fde68a');
+    } else {
+      px(mark.x - 2, mark.y, mark.color); px(mark.x, mark.y - 2, '#f8fafc'); px(mark.x + 2, mark.y, mark.color);
+      px(mark.x - 4, mark.y + 3, PAL.sprout); px(mark.x + 4, mark.y + 3, PAL.sprout);
+    }
+    if (SCALE >= 3) {
+      const label = mark.name.slice(0, 12);
+      ctx.globalAlpha = 0.72;
+      rect(mark.x + 10, mark.y - 10, label.length * 4 + 4, 8, 'rgba(8,12,20,0.68)');
+      ctx.globalAlpha = 1;
+      drawPixelText(label, mark.x + 12, mark.y - 9, '#f8fafc');
+    }
   }
 }
 
@@ -1856,6 +1981,23 @@ function drawCivilizationOnMinimap(offX, offY, sx, sy) {
     const pos = crabPosition(crab);
     mctx.fillStyle = crab.color || '#fb923c';
     mctx.fillRect(offX + pos.x * sx - 1, offY + pos.y * sy - 1, 2, 2);
+  }
+  mctx.globalAlpha = 1;
+}
+
+function drawOpenWorldLandmarksOnMinimap(offX, offY, sx, sy) {
+  for (const mark of OPEN_WORLD_LANDMARKS) {
+    const mx = offX + mark.x * sx;
+    const my = offY + mark.y * sy;
+    mctx.globalAlpha = 0.9;
+    mctx.fillStyle = mark.color;
+    mctx.fillRect(mx - 1.5, my - 1.5, 3, 3);
+    mctx.globalAlpha = 0.35;
+    mctx.strokeStyle = mark.color;
+    mctx.lineWidth = 1;
+    mctx.beginPath();
+    mctx.arc(mx, my, 5, 0, Math.PI * 2);
+    mctx.stroke();
   }
   mctx.globalAlpha = 1;
 }
@@ -3061,6 +3203,7 @@ function drawMinimap() {
   }
 
   drawCivilizationOnMinimap(offX, offY, sx, sy);
+  drawOpenWorldLandmarksOnMinimap(offX, offY, sx, sy);
 
   // Plant dots
   for (const p of world.plants) {
@@ -3871,8 +4014,9 @@ function draw() {
   ctx.fillStyle = '#1a1a2e';
   ctx.fillRect(0, 0, screenW, screenH);
 
-  for (let ty = 0; ty < TILES_H; ty++) for (let tx = 0; tx < TILES_W; tx++) drawTile(tx, ty);
+  drawVisibleTiles();
 
+  drawOpenWorldLandmarks();
   drawCivilizationProjection();
   drawTerritoryTints();
   drawStructures();
@@ -4424,7 +4568,8 @@ draw = function() {
     ctx.fillStyle = '#1a1a2e';
     ctx.fillRect(0, 0, screenW, screenH);
 
-    for (let ty = 0; ty < TILES_H; ty++) for (let tx = 0; tx < TILES_W; tx++) drawTile(tx, ty);
+    drawVisibleTiles();
+    drawOpenWorldLandmarks();
     drawCivilizationProjection();
     drawTerritoryTints();
     drawStructures();
