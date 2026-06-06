@@ -61,6 +61,10 @@ async function main() {
   check(director && Array.isArray(director.tensions) && director.tensions.length >= 2, 'Society Director has too few tensions');
   check(director && Array.isArray(director.quests) && director.quests.length >= 2, 'Society Director has too few quests');
   check(director && Array.isArray(director.tickerBeats) && director.tickerBeats.length >= 3, 'Society Director has too few ticker beats');
+  check(director && director.appliedPlan && director.appliedPlan.region, 'Society Director did not apply a daily map plan');
+  check(director && director.appliedPlan && director.appliedPlan.convivencia, 'Society Director did not apply a convivencia plan');
+  check(Array.isArray(world.landscapeEvents) && world.landscapeEvents.length >= 1, 'missing director landscape events');
+  check(Array.isArray(world.convivenciaEvents) && world.convivenciaEvents.length >= 1, 'missing convivencia events');
 
   for (const beat of (director && director.tickerBeats) || []) {
     check(String(beat.text || '').length <= 155, `ticker beat too long: ${beat.text}`);
@@ -80,6 +84,7 @@ async function main() {
   check(humans.includes('DIRECTOR QUESTS'), 'CIV panel does not expose director quests');
   check(humans.includes('DIRECTOR TENSIONS'), 'CIV panel does not expose director tensions');
   check(humans.includes('Observer Weather'), 'CIV panel does not expose human omen consequences');
+  check(humans.includes('convivencia:'), 'CIV panel does not expose applied convivencia plan');
   check(!humans.includes('cosmetic · agents do not see'), 'God Mode still says it is cosmetic');
   check(humans.includes("m.kind !== 'god'"), 'Observer Lounge may still render god spam');
 

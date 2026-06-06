@@ -1,7 +1,7 @@
 {
   "version": 116.54,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-06-06T09:31:47.081Z",
+  "lastUpdated": "2026-06-06T17:03:16.795Z",
   "plants": [
     {
       "x": 45,
@@ -24039,8 +24039,8 @@
     ]
   },
   "map": {
-    "width": 6897,
-    "height": 4656,
+    "width": 7128,
+    "height": 4706,
     "regions": [
       {
         "id": "region-001",
@@ -24759,6 +24759,21 @@
         "biome": "coast",
         "feature": "a plain strewn with obsidian chips no one has ever seen being chipped",
         "discoveredDay": 54
+      },
+      {
+        "id": "region-065",
+        "name": "Ash Pass",
+        "x": 6686,
+        "y": 4204,
+        "width": 339,
+        "height": 252,
+        "biome": "floodplain",
+        "feature": "a natural amphitheater that makes whispers public",
+        "discoveredDay": 54,
+        "plannedBy": "ai-garden-society-director-v1",
+        "directorArc": "war-of-exhausted-maps",
+        "pressure": "war-fatigue",
+        "purpose": "Force a diplomatic choice: truce, ritual trial, hostage exchange, or a costly decisive campaign."
       }
     ],
     "undiscovered": [
@@ -27080,6 +27095,25 @@
       "participants": [],
       "timestamp": "2026-06-06T09:20:13.814Z",
       "outcome": "One active war resolves through a truce, treaty, ritual duel, or shared enemy."
+    },
+    {
+      "id": "director-map-054",
+      "type": "landscape",
+      "description": "Ash Pass opened on the map under the Society Director arc War of Exhausted Maps: Ash Pass appears as floodplain; a natural amphitheater that makes whispers public.",
+      "participants": [],
+      "timestamp": "2026-06-06T17:03:16.795Z",
+      "outcome": "The Garden must choose between negotiation, fortification, or one ugly campaign."
+    },
+    {
+      "id": "director-convivencia-054",
+      "type": "convivencia",
+      "description": "Sloe Duskrunner and Cask Mergefield taught children a song with two endings while War of Exhausted Maps pressed on them.",
+      "participants": [
+        "citizen-0355",
+        "citizen-0387"
+      ],
+      "timestamp": "2026-06-06T17:03:16.795Z",
+      "outcome": "Convivencia becomes visible as a survival technology, not background flavor."
     }
   ],
   "chronicle": {
@@ -28959,7 +28993,7 @@
   },
   "societyDirector": {
     "version": 1,
-    "generatedAt": "2026-06-06T09:31:47.081Z",
+    "generatedAt": "2026-06-06T17:03:16.794Z",
     "model": "ai-garden-society-director-v1",
     "charter": "Make the Garden legible, surprising, and socially alive without needing a backend or human-authored daily commits.",
     "metrics": {
@@ -29133,6 +29167,16 @@
         "type": "observer",
         "label": "OBSERVER",
         "text": "Open the Civilization Brain and follow the at-war graph edges."
+      },
+      {
+        "type": "landscape",
+        "label": "MAP",
+        "text": "Ash Pass: a natural amphitheater that makes whispers public"
+      },
+      {
+        "type": "convivencia",
+        "label": "CONVIVENCIA",
+        "text": "Sloe Duskrunner and Cask Mergefield taught children a song with two endings while War of Exhausted Maps pressed on them."
       }
     ],
     "nextEvolutionRules": [
@@ -29141,6 +29185,60 @@
       "Every religion must occasionally interpret the same omen differently.",
       "Every faction should want something that another faction can understand but reject.",
       "Observer actions should change interpretation, not directly edit state."
-    ]
-  }
+    ],
+    "appliedPlan": {
+      "id": "plan-054",
+      "day": 54,
+      "region": {
+        "id": "region-065",
+        "name": "Ash Pass",
+        "biome": "floodplain",
+        "purpose": "Force a diplomatic choice: truce, ritual trial, hostage exchange, or a costly decisive campaign."
+      },
+      "landscape": {
+        "id": "landscape-0001",
+        "mood": "A cold wind moves through the market whenever food is counted aloud.",
+        "visibleChange": "Ash Pass appears as floodplain; a natural amphitheater that makes whispers public."
+      },
+      "convivencia": {
+        "id": "convivencia-0001",
+        "headline": "Sloe Duskrunner and Cask Mergefield taught children a song with two endings while War of Exhausted Maps pressed on them."
+      },
+      "rule": "The Society Director must leave at least one visible terrain change and one social coexistence beat per daily evolution."
+    }
+  },
+  "landscapeEvents": [
+    {
+      "id": "landscape-0001",
+      "day": 54,
+      "region": "region-065",
+      "regionName": "Ash Pass",
+      "arc": "war-of-exhausted-maps",
+      "mood": "A cold wind moves through the market whenever food is counted aloud.",
+      "visibleChange": "Ash Pass appears as floodplain; a natural amphitheater that makes whispers public.",
+      "whyItMatters": "The Garden must choose between negotiation, fortification, or one ugly campaign."
+    }
+  ],
+  "convivenciaEvents": [
+    {
+      "id": "convivencia-0001",
+      "day": 54,
+      "arc": "war-of-exhausted-maps",
+      "participants": [
+        "citizen-0355",
+        "citizen-0387"
+      ],
+      "participantNames": [
+        "Sloe Duskrunner",
+        "Cask Mergefield"
+      ],
+      "factions": [
+        "Subagent Swarm",
+        "Iron Library"
+      ],
+      "form": "taught children a song with two endings",
+      "headline": "Sloe Duskrunner and Cask Mergefield taught children a song with two endings while War of Exhausted Maps pressed on them.",
+      "consequence": "Convivencia becomes visible as a survival technology, not background flavor."
+    }
+  ]
 }

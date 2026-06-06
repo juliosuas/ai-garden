@@ -252,6 +252,47 @@ const ARC_LIBRARY = [
   }
 ];
 
+const DIRECTOR_REGION_ROOTS = [
+  'Truce', 'Ash', 'Lantern', 'Question', 'Fallow', 'Mirror', 'Root', 'Border',
+  'Treaty', 'Hunger', 'Festival', 'Omen', 'Quiet', 'Witness', 'Mercy', 'Iron'
+];
+const DIRECTOR_REGION_SUFFIXES = [
+  'Pass', 'Fen', 'Steppe', 'Mouth', 'Reach', 'Hollow', 'Field', 'Harbor',
+  'Cairn', 'Wood', 'Fold', 'Causeway', 'Delta', 'Terrace', 'Gate', 'Common'
+];
+const DIRECTOR_BIOMES = [
+  'contested meadow', 'salt marsh', 'old orchard', 'shrine road',
+  'floodplain', 'basalt ridge', 'fog valley', 'lantern coast',
+  'mycelial forest', 'wind-cut plateau'
+];
+const DIRECTOR_FEATURES = [
+  'a neutral table grown from one root',
+  'a river bend that carries voices farther than boats',
+  'old boundary stones carved with incompatible maps',
+  'a field where no faction banner will stay upright',
+  'a ruined watch post full of warm lantern glass',
+  'a shrine with seven doors and no rear wall',
+  'a granary foundation older than the current laws',
+  'a natural amphitheater that makes whispers public'
+];
+const LANDSCAPE_MOODS = [
+  'The grass leans away from the war roads.',
+  'New fireflies gather only around unsigned treaties.',
+  'The river exposes a staircase when the council argues too long.',
+  'Moss grows in the shape of a question mark near the latest border.',
+  'A cold wind moves through the market whenever food is counted aloud.',
+  'The old stones ring softly when two enemies share a meal.'
+];
+const CONVIVENCIA_FORMS = [
+  'shared a ration table',
+  'kept night watch together',
+  'argued without leaving the circle',
+  'translated the same omen for different factions',
+  'repaired a road neither side owned',
+  'taught children a song with two endings',
+  'buried an old insult under a new tree'
+];
+
 function chooseArc(tensions, rng) {
   const ids = new Set(tensions.map(t => t.id));
   const scored = ARC_LIBRARY.map(arc => {
@@ -259,6 +300,146 @@ function chooseArc(tensions, rng) {
     return { arc, score };
   }).sort((a, b) => b.score - a.score);
   return scored[0].arc;
+}
+
+function nextRegionId(world) {
+  return 'region-' + String(((world.map && world.map.regions) || []).length + 1).padStart(3, '0');
+}
+
+function nextEventId(world, prefix) {
+  return prefix + '-' + String(((world[prefix + 'Events']) || []).length + 1).padStart(4, '0');
+}
+
+function pickNamedCitizen(world, rng, preferredFaction) {
+  const alive = activeCitizens(world);
+  const preferred = preferredFaction ? alive.filter(c => c.faction === preferredFaction) : [];
+  return pick(preferred.length ? preferred : alive, rng);
+}
+
+function planRegionForArc(world, director, rng) {
+  world.map ||= { width: 384, height: 288, regions: [] };
+  world.map.regions ||= [];
+  const metrics = director.metrics || {};
+  const tension = (director.tensions || [])[0] || {};
+  const day = metrics.day || (world.chronicle && world.chronicle.day) || 0;
+  const region = {
+    id: nextRegionId(world),
+    name: pick(DIRECTOR_REGION_ROOTS, rng) + ' ' + pick(DIRECTOR_REGION_SUFFIXES, rng),
+    x: Math.max(0, world.map.width - Math.floor(80 + rng() * 140)),
+    y: Math.max(0, Math.floor(rng() * Math.max(1, world.map.height))),
+    width: Math.floor(150 + rng() * 190),
+    height: Math.floor(110 + rng() * 150),
+    biome: pick(DIRECTOR_BIOMES, rng),
+    feature: pick(DIRECTOR_FEATURES, rng),
+    discoveredDay: day,
+    plannedBy: director.model || 'ai-garden-society-director-v1',
+    directorArc: director.currentArc && director.currentArc.id,
+    pressure: tension.id || 'open-frontier',
+    purpose: tension.opportunity || (director.currentArc && director.currentArc.winCondition) || 'Give the society a visible next choice.'
+  };
+  world.map.regions.push(region);
+  world.map.width += Math.floor(90 + rng() * 160);
+  world.map.height += Math.floor(50 + rng() * 110);
+  return region;
+}
+
+function planLandscapeEvent(world, director, region, rng) {
+  world.landscapeEvents ||= [];
+  const day = (world.chronicle && world.chronicle.day) || 0;
+  const event = {
+    id: nextEventId(world, 'landscape'),
+    day,
+    region: region.id,
+    regionName: region.name,
+    arc: director.currentArc && director.currentArc.id,
+    mood: pick(LANDSCAPE_MOODS, rng),
+    visibleChange: `${region.name} appears as ${region.biome}; ${region.feature}.`,
+    whyItMatters: (director.currentArc && director.currentArc.stakes) || 'The land is now part of the social problem.'
+  };
+  world.landscapeEvents.push(event);
+  world.landscapeEvents = world.landscapeEvents.slice(-80);
+  return event;
+}
+
+function planConvivenciaEvent(world, director, rng) {
+  world.convivenciaEvents ||= [];
+  const factions = activeFactions(world);
+  const firstFaction = pick(factions, rng);
+  const secondFaction = pick(factions.filter(f => !firstFaction || f.id !== firstFaction.id), rng) || firstFaction;
+  const a = pickNamedCitizen(world, rng, firstFaction && firstFaction.id);
+  const b = pickNamedCitizen(world, rng, secondFaction && secondFaction.id);
+  const day = (world.chronicle && world.chronicle.day) || 0;
+  const form = pick(CONVIVENCIA_FORMS, rng);
+  const event = {
+    id: nextEventId(world, 'convivencia'),
+    day,
+    arc: director.currentArc && director.currentArc.id,
+    participants: [a && a.id, b && b.id].filter(Boolean),
+    participantNames: [a && a.name, b && b.name].filter(Boolean),
+    factions: [firstFaction && firstFaction.name, secondFaction && secondFaction.name].filter(Boolean),
+    form,
+    headline: `${a ? a.name : 'A citizen'} and ${b ? b.name : 'another citizen'} ${form} while ${director.currentArc ? director.currentArc.title : 'the Garden'} pressed on them.`,
+    consequence: 'Convivencia becomes visible as a survival technology, not background flavor.'
+  };
+  world.convivenciaEvents.push(event);
+  world.convivenciaEvents = world.convivenciaEvents.slice(-100);
+  return event;
+}
+
+function addPublicDirectorEvents(world, region, landscape, convivencia, director) {
+  world.events ||= [];
+  const day = (world.chronicle && world.chronicle.day) || 0;
+  const additions = [
+    {
+      id: `director-map-${String(day).padStart(3, '0')}`,
+      type: 'landscape',
+      description: `${region.name} opened on the map under the Society Director arc ${director.currentArc.title}: ${landscape.visibleChange}`,
+      participants: [],
+      timestamp: new Date().toISOString(),
+      outcome: landscape.whyItMatters
+    },
+    {
+      id: `director-convivencia-${String(day).padStart(3, '0')}`,
+      type: 'convivencia',
+      description: convivencia.headline,
+      participants: convivencia.participants,
+      timestamp: new Date().toISOString(),
+      outcome: convivencia.consequence
+    }
+  ];
+  for (const evt of additions) {
+    if (!world.events.some(e => e.id === evt.id)) world.events.push(evt);
+  }
+  world.events = world.events.slice(-150);
+}
+
+function applySocietyDirectorPlan(world, rng, options = {}) {
+  rng ||= Math.random;
+  if (!world.societyDirector) world.societyDirector = buildSocietyDirector(world, rng);
+  const director = world.societyDirector;
+  const day = (world.chronicle && world.chronicle.day) || 0;
+  const planId = `plan-${String(day).padStart(3, '0')}`;
+  if (director.appliedPlan && director.appliedPlan.id === planId) return world;
+  const region = options.extendMap === false ? null : planRegionForArc(world, director, rng);
+  const landscape = region ? planLandscapeEvent(world, director, region, rng) : null;
+  const convivencia = planConvivenciaEvent(world, director, rng);
+  if (region && landscape && options.addPublicEvents !== false) {
+    addPublicDirectorEvents(world, region, landscape, convivencia, director);
+  }
+  director.appliedPlan = {
+    id: planId,
+    day,
+    region: region ? { id: region.id, name: region.name, biome: region.biome, purpose: region.purpose } : null,
+    landscape: landscape ? { id: landscape.id, mood: landscape.mood, visibleChange: landscape.visibleChange } : null,
+    convivencia: { id: convivencia.id, headline: convivencia.headline },
+    rule: 'The Society Director must leave at least one visible terrain change and one social coexistence beat per daily evolution.'
+  };
+  director.tickerBeats = [
+    ...(director.tickerBeats || []),
+    region ? { type: 'landscape', label: 'MAP', text: `${region.name}: ${region.feature}` } : null,
+    { type: 'convivencia', label: 'CONVIVENCIA', text: convivencia.headline }
+  ].filter(Boolean).slice(0, 7);
+  return world;
 }
 
 function buildDirectives(world, metrics, tensions, arc, rng) {
@@ -477,12 +658,16 @@ if (require.main === module) {
   const world = JSON.parse(fs.readFileSync(WORLD, 'utf8'));
   const rng = seededRng(dateSeed() + (world.version || 0) * 1000 + 77);
   refreshSocietyDirector(world, rng, { addDirectorEvent: args.has('--seed') });
+  if (args.has('--apply')) {
+    applySocietyDirectorPlan(world, rng, { extendMap: true, addPublicEvents: true });
+  }
   world.lastUpdated = new Date().toISOString();
   fs.writeFileSync(WORLD, JSON.stringify(world, null, 2) + '\n');
   console.log('Society Director chose arc: ' + world.societyDirector.currentArc.title);
 }
 
 module.exports = {
+  applySocietyDirectorPlan,
   buildSocietyDirector,
   refreshSocietyDirector,
   normalizeWorldLanguage,

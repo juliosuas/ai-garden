@@ -965,6 +965,16 @@
       directorBox.appendChild(el('div', 'ag-civ-director-arc', director.currentArc.title || 'No active arc'));
       directorBox.appendChild(el('div', 'ag-civ-detail', director.currentArc.premise || director.charter || ''));
       directorBox.appendChild(el('div', 'ag-civ-director-prompt', director.currentArc.observerPrompt || 'Watch what the society chooses next.'));
+      if (director.appliedPlan) {
+        if (director.appliedPlan.region) {
+          directorBox.appendChild(el('div', 'ag-civ-detail',
+            'map: ' + director.appliedPlan.region.name + ' · ' + (director.appliedPlan.region.purpose || 'planned frontier')));
+        }
+        if (director.appliedPlan.convivencia) {
+          directorBox.appendChild(el('div', 'ag-civ-detail',
+            'convivencia: ' + director.appliedPlan.convivencia.headline));
+        }
+      }
       body.appendChild(directorBox);
     }
 

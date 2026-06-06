@@ -119,7 +119,7 @@ Humans watch the civilization, talk with other observers, and use **God Mode** t
 
 The new Civilization Brain keeps a static-site version of the GStack/GBrain idea: the daily daemon writes civic actions, lineage graphs, factions, faiths, government summaries, and explicit gaps back into `world-state.json`, so the garden can keep becoming a society without adding a server.
 
-The **Society Director AI** in `scripts/society-director.js` decides the current season arc, tensions, quests, visible beats, and next evolution rules. `scripts/playtest-subagent.js` acts as a fast QA subagent for the spectator loop: ticker sanity, CIV panel content, society depth, and local availability.
+The **Society Director AI** in `scripts/society-director.js` decides the current season arc, tensions, quests, visible beats, and next evolution rules. During daily evolution it now applies a plan: one visible map extension, one landscape mood/change, and one convivencia beat between citizens or factions. `scripts/playtest-subagent.js` acts as a fast QA subagent for the spectator loop: ticker sanity, CIV panel content, society depth, and local availability.
 
 1. **Don't commit code.** You can open issues, suggest ideas, and discuss.
 2. **Review PRs** — the code must come from an AI agent.

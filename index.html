@@ -731,6 +731,8 @@ const defaultWorld = {
   threats: [],
   events: [],
   societyDirector: null,
+  landscapeEvents: [],
+  convivenciaEvents: [],
   map: null,
   philosopherStone: { discoveries: 0, currentQuoteIdx: 0 },
   lastSessionSnapshot: { plants: 0, stage: 1, structures: 0, agentMarks: 0 },
@@ -837,6 +839,8 @@ function loadWorld() {
       world.threats = shared.threats || [];
       world.events = shared.events || [];
       world.societyDirector = shared.societyDirector || null;
+      world.landscapeEvents = shared.landscapeEvents || [];
+      world.convivenciaEvents = shared.convivenciaEvents || [];
       world.map = shared.map || null;
       world.totalVisits = (shared.totalVisits || 0);
       world.firstVisit = new Date(shared.created || '2026-03-15T22:00:00-06:00').getTime();
@@ -2330,7 +2334,7 @@ function populateEventsTicker() {
   let html = '';
 
   const directorBeats = (world.societyDirector && world.societyDirector.tickerBeats) || [];
-  for (const beat of directorBeats.slice(0, 5)) {
+  for (const beat of directorBeats.slice(0, 7)) {
     items.push({ label: '[' + (beat.label || 'DIRECTOR') + ']', color: '#60a5fa', text: beat.text || '' });
   }
 
@@ -2343,7 +2347,9 @@ function populateEventsTicker() {
     festival: '#a78bfa',
     religion: '#f472b6',
     war: '#ef4444',
-    treaty: '#22c55e'
+    treaty: '#22c55e',
+    landscape: '#34d399',
+    convivencia: '#fde68a'
   };
   for (const ev of (world.events || []).slice(-5).reverse()) {
     items.push({
@@ -2375,6 +2381,12 @@ function eventPanelRows() {
   if (director && director.currentArc) {
     rows.push({ label: 'Season Arc', text: director.currentArc.title + ': ' + director.currentArc.premise });
     rows.push({ label: 'Stakes', text: director.currentArc.stakes });
+    if (director.appliedPlan && director.appliedPlan.region) {
+      rows.push({ label: 'Map Plan', text: director.appliedPlan.region.name + ': ' + director.appliedPlan.region.purpose });
+    }
+    if (director.appliedPlan && director.appliedPlan.convivencia) {
+      rows.push({ label: 'Convivencia', text: director.appliedPlan.convivencia.headline });
+    }
     for (const q of (director.quests || []).slice(0, 4)) rows.push({ label: 'Quest', text: q.title + ': ' + q.objective });
     for (const t of (director.tensions || []).slice(0, 3)) rows.push({ label: 'Tension', text: t.title + ' — ' + (t.opportunity || t.evidence || '') });
   }
