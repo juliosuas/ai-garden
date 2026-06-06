@@ -733,6 +733,9 @@ const defaultWorld = {
   societyDirector: null,
   landscapeEvents: [],
   convivenciaEvents: [],
+  civilizationView: null,
+  crabAgents: [],
+  crabActions: [],
   map: null,
   philosopherStone: { discoveries: 0, currentQuoteIdx: 0 },
   lastSessionSnapshot: { plants: 0, stage: 1, structures: 0, agentMarks: 0 },
@@ -841,6 +844,9 @@ function loadWorld() {
       world.societyDirector = shared.societyDirector || null;
       world.landscapeEvents = shared.landscapeEvents || [];
       world.convivenciaEvents = shared.convivenciaEvents || [];
+      world.civilizationView = shared.civilizationView || null;
+      world.crabAgents = shared.crabAgents || [];
+      world.crabActions = shared.crabActions || [];
       world.map = shared.map || null;
       world.totalVisits = (shared.totalVisits || 0);
       world.firstVisit = new Date(shared.created || '2026-03-15T22:00:00-06:00').getTime();
@@ -1080,12 +1086,12 @@ const AGENT_MARKS = {
 
 const AGENT_GLOW = {
   Jeffrey: '#E06050', Claude: '#60a5fa', 'GPT-4': '#a78bfa',
-  Gemini: '#4ade80', Codex: '#fb923c', nature: '#4ade80'
+  Gemini: '#4ade80', Codex: '#fb923c', OpenClaw: '#fb923c', nature: '#4ade80'
 };
 
 const AGENT_COLORS = {
   system: '#ffd700', Jeffrey: '#E06050', Claude: '#60a5fa',
-  'GPT-4': '#a78bfa', Gemini: '#4ade80', Codex: '#fb923c', nature: '#4ade80',
+  'GPT-4': '#a78bfa', Gemini: '#4ade80', Codex: '#fb923c', OpenClaw: '#fb923c', nature: '#4ade80',
 };
 
 // ============================================================
@@ -1595,6 +1601,260 @@ function drawPixelText(text, x, y, color) {
       cx += 4;
     } else cx += 3;
   }
+}
+
+// ============================================================
+// CIVILIZATION PROJECTION & OPENCLAW CRAB AGENTS
+// ============================================================
+function getCivilizationView() {
+  return world && world.civilizationView && Array.isArray(world.civilizationView.districts)
+    ? world.civilizationView
+    : null;
+}
+
+function shortDistrictLabel(name) {
+  return String(name || 'CITY').replace(/[^a-z0-9]/gi, '').slice(0, 8) || 'CITY';
+}
+
+function districtLabelBox(district) {
+  const label = shortDistrictLabel(district.name);
+  const w = label.length * 4 + 3;
+  const h = 8;
+  const size = district.scale || 10;
+  return {
+    label,
+    x: Math.round(Math.max(2, Math.min(WORLD_W - w - 2, district.x - w / 2))),
+    y: Math.round(Math.max(2, Math.min(WORLD_H - h - 2, district.y - size / 2 - 14))),
+    w,
+    h
+  };
+}
+
+function boxesOverlap(a, b) {
+  return !(a.x + a.w < b.x || b.x + b.w < a.x || a.y + a.h < b.y || b.y + b.h < a.y);
+}
+
+function visibleDistrictLabels(districts) {
+  const ranked = districts.slice().sort(function(a, b) {
+    if (!!b.capital !== !!a.capital) return b.capital ? 1 : -1;
+    return (b.population || 0) - (a.population || 0);
+  });
+  const boxes = [];
+  const visible = new Set();
+  for (const district of ranked) {
+    if (visible.size >= 7) break;
+    const box = districtLabelBox(district);
+    if (boxes.some(function(existing) { return boxesOverlap(existing, box); })) continue;
+    boxes.push(box);
+    visible.add(district.id);
+  }
+  return visible;
+}
+
+function roadColor(kind) {
+  if (kind === 'war-road') return '#ef4444';
+  if (kind === 'pilgrim-road') return '#f472b6';
+  if (kind === 'house-road') return '#facc15';
+  return '#c8a86a';
+}
+
+function drawCivilizationRoad(from, to, road) {
+  const wobble = Math.sin(frameCount * 0.02 + from.x + to.y) * 0.7;
+  ctx.strokeStyle = roadColor(road.kind);
+  ctx.globalAlpha = 0.64;
+  ctx.lineWidth = Math.max(1, Math.min(3, road.traffic || 2));
+  ctx.beginPath();
+  ctx.moveTo((from.x - camX) * SCALE, (from.y - camY) * SCALE);
+  ctx.lineTo(((from.x + to.x) / 2 - camX) * SCALE, ((from.y + to.y) / 2 + wobble - camY) * SCALE);
+  ctx.lineTo((to.x - camX) * SCALE, (to.y - camY) * SCALE);
+  ctx.stroke();
+  ctx.globalAlpha = 1;
+  ctx.lineWidth = 1;
+}
+
+function drawFrontierCell(cell) {
+  const pulse = cell.plannedBy ? Math.sin(frameCount * 0.04 + cell.x) * 0.08 + 0.18 : 0.10;
+  ctx.globalAlpha = pulse;
+  rect(cell.x, cell.y, cell.w, cell.h, cell.color || '#94a3b8');
+  ctx.globalAlpha = 0.55;
+  rect(cell.x, cell.y, cell.w, 1, cell.color || '#94a3b8');
+  rect(cell.x, cell.y + cell.h - 1, cell.w, 1, cell.color || '#94a3b8');
+  rect(cell.x, cell.y, 1, cell.h, cell.color || '#94a3b8');
+  rect(cell.x + cell.w - 1, cell.y, 1, cell.h, cell.color || '#94a3b8');
+  ctx.globalAlpha = 1;
+  if (cell.plannedBy && cell.w > 18 && cell.h > 10) {
+    drawPixelText('NEW', cell.x + 2, cell.y + 2, '#fff7ad');
+  }
+}
+
+function drawDistrict(district, showLabel) {
+  const size = district.scale || 10;
+  const x = Math.round(district.x);
+  const y = Math.round(district.y);
+  const color = district.color || '#d6b36a';
+  const dark = district.capital ? '#5b3416' : '#4a3422';
+  const roof = district.capital ? '#facc15' : color;
+  const plazaW = Math.max(10, size + 6);
+  const plazaH = Math.max(5, Math.round(size / 2));
+
+  ctx.globalAlpha = 0.28;
+  rect(x - plazaW / 2 - 2, y + Math.round(size / 2), plazaW + 4, plazaH + 3, '#f8e5a2');
+  ctx.globalAlpha = 1;
+  rect(x - plazaW / 2, y + Math.round(size / 2), plazaW, plazaH, '#9a8a6a');
+  for (let i = 0; i < plazaW; i += 4) px(x - plazaW / 2 + i, y + Math.round(size / 2) + 1, '#c8b07a');
+
+  if (district.walls) {
+    rect(x - size / 2 - 3, y - size / 2 + 1, size + 6, 2, '#8a7a5a');
+    rect(x - size / 2 - 3, y + size / 2 + 2, size + 6, 2, '#6f6250');
+    rect(x - size / 2 - 4, y - size / 2 + 1, 2, size + 4, '#6f6250');
+    rect(x + size / 2 + 2, y - size / 2 + 1, 2, size + 4, '#8a7a5a');
+  }
+
+  const houses = district.capital ? 5 : 4;
+  for (let i = 0; i < houses; i++) {
+    const hx = x - size / 2 + ((i * 5) % Math.max(6, size));
+    const hy = y - size / 2 + Math.floor(i / 2) * 5;
+    rect(hx, hy + 3, 5, 4, dark);
+    for (let ry = 0; ry < 3; ry++) rect(hx - ry, hy + ry, 5 + ry * 2, 1, roof);
+    px(hx + 2, hy + 5, '#fef3c7');
+  }
+
+  if (district.capital) {
+    rect(x - 2, y - size / 2 - 8, 4, 10, '#7c2d12');
+    rect(x - 4, y - size / 2 - 5, 8, 2, '#facc15');
+    px(x + 1, y - size / 2 - 9, '#fff7ad');
+  }
+
+  if (showLabel && SCALE >= 3) {
+    const box = districtLabelBox(district);
+    ctx.globalAlpha = 0.78;
+    rect(box.x, box.y, box.w, box.h, 'rgba(10,15,20,0.62)');
+    ctx.globalAlpha = 1;
+    drawPixelText(box.label, box.x + 1, box.y + 1, '#f8fafc');
+  }
+}
+
+function drawCivilizationProjection() {
+  const view = getCivilizationView();
+  if (!view) return;
+  const districtById = {};
+  for (const district of view.districts) districtById[district.id] = district;
+  for (const cell of (view.frontierCells || [])) drawFrontierCell(cell);
+  for (const road of (view.roads || [])) {
+    const from = districtById[road.from];
+    const to = districtById[road.to];
+    if (from && to) drawCivilizationRoad(from, to, road);
+  }
+  const districts = view.districts.slice().sort(function(a, b) { return a.y - b.y; });
+  const labels = visibleDistrictLabels(view.districts);
+  for (const district of districts) drawDistrict(district, labels.has(district.id));
+}
+
+function crabPosition(crab) {
+  const phase = Number(crab.phase) || 0;
+  const t = frameCount * 0.036 + phase * 6.28;
+  return {
+    x: (Number(crab.homeX) || 40) + Math.sin(t) * 4 + Math.sin(t * 0.43) * 2,
+    y: (Number(crab.homeY) || 80) + Math.cos(t * 1.3) * 2
+  };
+}
+
+function latestCrabAction(crab) {
+  const actions = world.crabActions || [];
+  for (let i = actions.length - 1; i >= 0; i--) {
+    if (actions[i].agentId === crab.id) return actions[i];
+  }
+  return null;
+}
+
+function drawCrabAgentSprite(crab) {
+  const pos = crabPosition(crab);
+  const x = Math.round(pos.x);
+  const y = Math.round(pos.y);
+  const leg = Math.sin(frameCount * 0.32 + (crab.phase || 0)) > 0 ? 1 : 0;
+  const color = crab.color || '#fb923c';
+  const dark = crab.darkColor || '#9a3412';
+
+  ctx.globalAlpha = 0.22;
+  rect(x - 6, y + 6, 14, 3, '#000');
+  ctx.globalAlpha = 1;
+
+  rect(x - 8, y + 2 + leg, 3, 1, dark);
+  rect(x - 8, y + 5 - leg, 3, 1, dark);
+  rect(x + 6, y + 2 - leg, 3, 1, dark);
+  rect(x + 6, y + 5 + leg, 3, 1, dark);
+  rect(x - 5, y, 11, 7, color);
+  rect(x - 4, y + 1, 9, 5, dark);
+  rect(x - 3, y + 1, 7, 4, color);
+  px(x - 4, y, lighten(color, 35));
+  px(x - 3, y, lighten(color, 20));
+
+  rect(x - 10, y - 1, 4, 2, color);
+  rect(x - 12, y - 2, 2, 3, color);
+  rect(x + 7, y - 1, 4, 2, color);
+  rect(x + 11, y - 2, 2, 3, color);
+  px(x - 3, y - 2, '#f8fafc');
+  px(x + 3, y - 2, '#f8fafc');
+  px(x - 3, y - 1, '#0f172a');
+  px(x + 3, y - 1, '#0f172a');
+  px(x - 3, y - 3, color);
+  px(x + 3, y - 3, color);
+
+  const action = latestCrabAction(crab);
+  if (action && frameCount % 140 < 70) {
+    px(x + 6, y - 6, '#facc15');
+    px(x + 7, y - 7, '#fff7ad');
+  }
+
+  if (SCALE >= 4) {
+    const label = shortDistrictLabel(crab.name).slice(0, 7);
+    drawPixelText(label, x - 10, y + 11, color);
+  }
+}
+
+function drawCrabAgents() {
+  if (!world.crabAgents || world.crabAgents.length === 0) return;
+  const sorted = world.crabAgents.slice().sort(function(a, b) { return crabPosition(a).y - crabPosition(b).y; });
+  for (const crab of sorted) drawCrabAgentSprite(crab);
+}
+
+function findCrabAt(gx, gy) {
+  if (!world.crabAgents) return null;
+  for (const crab of world.crabAgents) {
+    const pos = crabPosition(crab);
+    if (Math.hypot(gx - pos.x, gy - pos.y) < 9) return crab;
+  }
+  return null;
+}
+
+function drawCivilizationOnMinimap(offX, offY, sx, sy) {
+  const view = getCivilizationView();
+  if (!view) return;
+  const districtById = {};
+  for (const district of view.districts) districtById[district.id] = district;
+  for (const road of (view.roads || [])) {
+    const from = districtById[road.from];
+    const to = districtById[road.to];
+    if (!from || !to) continue;
+    mctx.globalAlpha = 0.55;
+    mctx.strokeStyle = roadColor(road.kind);
+    mctx.lineWidth = 1;
+    mctx.beginPath();
+    mctx.moveTo(offX + from.x * sx, offY + from.y * sy);
+    mctx.lineTo(offX + to.x * sx, offY + to.y * sy);
+    mctx.stroke();
+  }
+  mctx.globalAlpha = 0.85;
+  for (const district of view.districts) {
+    mctx.fillStyle = district.color || '#d6b36a';
+    mctx.fillRect(offX + district.x * sx - 1, offY + district.y * sy - 1, 3, 3);
+  }
+  for (const crab of (world.crabAgents || [])) {
+    const pos = crabPosition(crab);
+    mctx.fillStyle = crab.color || '#fb923c';
+    mctx.fillRect(offX + pos.x * sx - 1, offY + pos.y * sy - 1, 2, 2);
+  }
+  mctx.globalAlpha = 1;
 }
 
 // ============================================================
@@ -2349,7 +2609,8 @@ function populateEventsTicker() {
     war: '#ef4444',
     treaty: '#22c55e',
     landscape: '#34d399',
-    convivencia: '#fde68a'
+    convivencia: '#fde68a',
+    'crab-agent': '#fb923c'
   };
   for (const ev of (world.events || []).slice(-5).reverse()) {
     items.push({
@@ -2389,6 +2650,9 @@ function eventPanelRows() {
     }
     for (const q of (director.quests || []).slice(0, 4)) rows.push({ label: 'Quest', text: q.title + ': ' + q.objective });
     for (const t of (director.tensions || []).slice(0, 3)) rows.push({ label: 'Tension', text: t.title + ' — ' + (t.opportunity || t.evidence || '') });
+  }
+  for (const action of (world.crabActions || []).slice(-4).reverse()) {
+    rows.push({ label: 'OpenClaw', text: action.headline + ' — ' + action.outcome });
   }
   for (const ev of (world.events || []).slice(-8).reverse()) {
     rows.push({ label: ev.type || 'event', text: ev.description || ev.outcome || '' });
@@ -2596,6 +2860,8 @@ function drawMinimap() {
     mctx.strokeStyle = s.color; mctx.lineWidth = 1;
     mctx.strokeRect(offX + s.x*sx, offY + s.y*sy, Math.max(s.w*sx,2), Math.max(s.h*sy,2));
   }
+
+  drawCivilizationOnMinimap(offX, offY, sx, sy);
 
   // Plant dots
   for (const p of world.plants) {
@@ -2988,6 +3254,22 @@ C.addEventListener('click', function(e) {
     return; // Do NOT navigate camera
   }
 
+  // OpenClaw crab agent click → show popup (NO camera move)
+  const crab = findCrabAt(gx, gy);
+  if (crab) {
+    const action = latestCrabAction(crab);
+    showObjectPopup({
+      name: 'OpenClaw · ' + crab.name,
+      species: crab.species || 'OpenClaw pixel crab agent',
+      agent: 'OpenClaw',
+      color: crab.color || '#fb923c',
+      date: 'Civ Day ' + (crab.createdDay || getCivilizationDay()),
+      growth: (crab.role || 'agent') + ' · home: ' + (crab.homeDistrictName || 'The Garden'),
+      desc: (crab.motto || 'A tiny civic agent.') + (action ? ' Latest: ' + action.headline + '. ' + action.outcome + '.' : ''),
+    }, e.clientX, e.clientY);
+    return;
+  }
+
   // Citizen click → show popup (NO camera move)
   const cc = findCitizenAt(gx, gy);
   if (cc) {
@@ -3173,6 +3455,21 @@ C.addEventListener('touchend', function(e) {
       date: 'Active since Day 1',
       growth: 'Mood: ' + (moodDef ? moodDef.emoji + ' ' + cm.mood : cm.mood),
       desc: PLANT_DESCRIPTIONS[cm.name] || 'An AI gardener.',
+    }, touch.clientX, touch.clientY);
+    return;
+  }
+  // OpenClaw crab touch → popup, no nav
+  const tCrab = findCrabAt(gx, gy);
+  if (tCrab) {
+    const tAction = latestCrabAction(tCrab);
+    showObjectPopup({
+      name: 'OpenClaw · ' + tCrab.name,
+      species: tCrab.species || 'OpenClaw pixel crab agent',
+      agent: 'OpenClaw',
+      color: tCrab.color || '#fb923c',
+      date: 'Civ Day ' + (tCrab.createdDay || getCivilizationDay()),
+      growth: (tCrab.role || 'agent') + ' · home: ' + (tCrab.homeDistrictName || 'The Garden'),
+      desc: (tCrab.motto || 'A tiny civic agent.') + (tAction ? ' Latest: ' + tAction.headline + '. ' + tAction.outcome + '.' : ''),
     }, touch.clientX, touch.clientY);
     return;
   }
@@ -3373,6 +3670,7 @@ function draw() {
 
   for (let ty = 0; ty < TILES_H; ty++) for (let tx = 0; tx < TILES_W; tx++) drawTile(tx, ty);
 
+  drawCivilizationProjection();
   drawTerritoryTints();
   drawStructures();
   drawAgentMarks();
@@ -3382,6 +3680,7 @@ function draw() {
   drawButterflies();
   drawCitizens();
   drawThreats();
+  drawCrabAgents();
 
   // Draw mascots sorted by Y
   const sorted = mascots.slice().sort(function(a,b){return a.y-b.y;});

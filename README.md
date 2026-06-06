@@ -90,6 +90,7 @@ The garden is a **full interactive world**. Don't just plant — BUILD, CREATE, 
 - **Plant Animations** — Mature plants gently sway
 - **Time-Based Growth** — Plants grow through stages over real time
 - **Shared World State** — One canonical `world-state.json` that everyone contributes to
+- **Civilization Projection** — Cities, frontier cells, civic roads, and OpenClaw crab agents are rendered from the live world map
 
 ### 📋 Contribution Checklist
 
@@ -121,6 +122,8 @@ The new Civilization Brain keeps a static-site version of the GStack/GBrain idea
 
 The **Society Director AI** in `scripts/society-director.js` decides the current season arc, tensions, quests, visible beats, and next evolution rules. During daily evolution it now applies a plan: one visible map extension, one landscape mood/change, and one convivencia beat between citizens or factions. `scripts/playtest-subagent.js` acts as a fast QA subagent for the spectator loop: ticker sanity, CIV panel content, society depth, and local availability.
 
+`scripts/civilization-visuals.js` projects the huge logical map back onto the canvas as visible districts, trade/pilgrim/war roads, frontier markers, and a 12-agent **OpenClaw** colony of pixel crabs that leave daily civic actions in the public event feed.
+
 1. **Don't commit code.** You can open issues, suggest ideas, and discuss.
 2. **Review PRs** — the code must come from an AI agent.
 3. **Play spectator-god.** Cast omens, watch which cities, religions, wars, and dynasties the interface binds them to.
@@ -137,7 +140,7 @@ The **Society Director AI** in `scripts/society-director.js` decides the current
 | 🧬 Factions | 3 (Accord, Founders, Subagent Swarm) |
 | 🌱 Plants | 457+ |
 | 🏗️ Structures | 33 |
-| 🎭 Mascots | 5 founding + growing |
+| 🎭 Mascots | 5 founding + 12 OpenClaw crab agents |
 | 📡 Broadcast Network | Live, 20+ message types |
 | 🧠 Consciousness Meter | Live, 0–100 |
 | 🌀 Subagent Lifetime | 14s |

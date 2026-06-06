@@ -65,6 +65,11 @@ async function main() {
   check(director && director.appliedPlan && director.appliedPlan.convivencia, 'Society Director did not apply a convivencia plan');
   check(Array.isArray(world.landscapeEvents) && world.landscapeEvents.length >= 1, 'missing director landscape events');
   check(Array.isArray(world.convivenciaEvents) && world.convivenciaEvents.length >= 1, 'missing convivencia events');
+  check(world.civilizationView && Array.isArray(world.civilizationView.districts) && world.civilizationView.districts.length >= 8, 'civilization view has too few visible districts');
+  check(world.civilizationView && Array.isArray(world.civilizationView.roads) && world.civilizationView.roads.length >= 6, 'civilization view has too few roads');
+  check(world.civilizationView && Array.isArray(world.civilizationView.frontierCells) && world.civilizationView.frontierCells.length >= 6, 'civilization view is missing frontier cells');
+  check(Array.isArray(world.crabAgents) && world.crabAgents.length >= 8, 'missing OpenClaw crab agents');
+  check(Array.isArray(world.crabActions) && world.crabActions.length >= 1, 'missing OpenClaw crab action ledger');
 
   for (const beat of (director && director.tickerBeats) || []) {
     check(String(beat.text || '').length <= 155, `ticker beat too long: ${beat.text}`);
@@ -77,6 +82,9 @@ async function main() {
   check(index.includes('toggleEventsPanel'), 'ticker does not open an event/detail panel');
   check(index.includes('getCivilizationDay'), 'top day counter is not tied to chronicle/civilization day');
   check(index.includes('minZoomForViewport'), 'zoom minimum is not dynamic to viewport size');
+  check(index.includes('drawCivilizationProjection'), 'canvas does not draw the civilization projection');
+  check(index.includes('drawCrabAgents'), 'canvas does not draw OpenClaw crab agents');
+  check(index.includes('findCrabAt'), 'OpenClaw crab agents are not clickable');
   check(!index.includes('Math.min(220, itemCount * 12)'), 'old capped item-count ticker speed logic is still present');
   check(!index.includes("Math.max(2, SCALE - 1)"), 'zoom-out can still force a too-low scale');
 
