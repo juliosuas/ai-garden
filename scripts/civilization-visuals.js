@@ -2,9 +2,8 @@
 /**
  * ai-garden · Civilization Visuals
  *
- * Turns the large logical world map into a compact spectator scene: districts,
- * roads, frontier markers, and OpenClaw crab agents that can be drawn on the
- * 384x288 canvas.
+ * Turns the large logical world map into a spectator scene: districts, roads,
+ * frontier markers, and OpenClaw crab agents that can be drawn on the canvas.
  */
 
 'use strict';
@@ -13,9 +12,9 @@ const fs = require('fs');
 const path = require('path');
 
 const WORLD = path.join(__dirname, '..', 'experiments', 'world-state.json');
-const VIEW_W = 1536;
-const VIEW_H = 1152;
-const MARGIN = 48;
+const VIEW_W = 2304;
+const VIEW_H = 1728;
+const MARGIN = 72;
 
 const DISTRICT_COLORS = [
   '#d6b36a', '#60a5fa', '#f97316', '#4ade80', '#e879f9', '#f43f5e',

@@ -598,8 +598,8 @@ const MC = document.getElementById('minimap');
 const mctx = MC.getContext('2d');
 
 let SCALE = 4;
-const WORLD_W = 1536;
-const WORLD_H = 1152;
+const WORLD_W = 2304;
+const WORLD_H = 1728;
 
 let screenW, screenH;
 let camX = 0, camY = 0;
@@ -613,6 +613,7 @@ let followingMascot = null;
 // Camera state machine: FREE / FOLLOWING / PANNING / SMOOTH_NAV
 let cameraState = 'FREE';
 let userControlledCamera = false;
+let scenicCameraIndex = 0;
 
 // Drag-to-pan state
 let dragStartX = 0, dragStartY = 0;     // screen coords at mousedown
@@ -1183,6 +1184,12 @@ const OPEN_WORLD_LANDMARKS = [
   { id: 'wind-road', name: 'WIND ROAD', x: 1030, y: 610, color: '#f8fafc', type: 'road' },
   { id: 'quiet-mesa', name: 'QUIET MESA', x: 1160, y: 305, color: '#facc15', type: 'mesa' },
   { id: 'lantern-delta', name: 'LANTERN DELTA', x: 520, y: 920, color: '#2dd4bf', type: 'delta' },
+  { id: 'starfall-plateau', name: 'STARFALL PLATEAU', x: 1635, y: 360, color: '#c084fc', type: 'mesa' },
+  { id: 'byte-harbor', name: 'BYTE HARBOR', x: 1885, y: 1210, color: '#38bdf8', type: 'cove' },
+  { id: 'oracle-canyon', name: 'ORACLE CANYON', x: 1515, y: 920, color: '#f43f5e', type: 'ruin' },
+  { id: 'high-archive', name: 'HIGH ARCHIVE', x: 2035, y: 560, color: '#fde68a', type: 'road' },
+  { id: 'stormgate', name: 'STORMGATE', x: 2140, y: 1455, color: '#93c5fd', type: 'ridge' },
+  { id: 'far-market', name: 'FAR MARKET', x: 1710, y: 760, color: '#fb923c', type: 'field' },
 ];
 
 function tileNoise(tx, ty, salt) {
@@ -1196,8 +1203,11 @@ function generatedOpenWorldTile(tx, ty) {
 
   const riverX = 38 + Math.round(Math.sin(ty * 0.18) * 5);
   if (ty > 5 && ty < TILES_H - 6 && Math.abs(tx - riverX) <= (ty > 48 ? 2 : 1)) return 2;
-  const cove = tx > 72 && ty > 46;
+  const cove = tx > 72 && ty > 46 && tx < 104 && ty < 76;
   if (cove && tileNoise(tx, ty, 3) < 0.58) return 2;
+  const moonBasin = tx > 105 && ty > 64 && tx < 136 && ty < 97 &&
+    ((tx - 119) ** 2 / 190 + (ty - 80) ** 2 / 96 < 1.15);
+  if (moonBasin) return tileNoise(tx, ty, 8) < 0.68 ? 2 : (tileNoise(tx, ty, 9) < 0.42 ? 7 : 0);
 
   const mainRoad = (Math.abs(tx - 8) <= 0 && ty < 58) ||
     (Math.abs(ty - 28) <= 0 && tx > 7 && tx < 74) ||
@@ -1206,7 +1216,11 @@ function generatedOpenWorldTile(tx, ty) {
   const coastRoad = cove && Math.abs((ty - 52) - Math.sin(tx * 0.28) * 3) < 0.5 && tx < 91;
   const ridgeRoad = Math.abs((ty - 42) + (tx - 66) * 0.26) < 0.48 && tx > 48 && tx < 86;
   const meadowLoop = Math.abs((tx - 62) ** 2 / 220 + (ty - 40) ** 2 / 70 - 1) < 0.06 && tx > 47 && tx < 79 && ty > 30 && ty < 51;
-  if (mainRoad || pilgrimRoad || coastRoad || ridgeRoad || meadowLoop) return 1;
+  const frontierRoad = Math.abs((ty - 39) - (tx - 86) * 0.22) < 0.48 && tx > 84 && tx < 132;
+  const harborRoad = Math.abs((ty - 74) - (tx - 96) * 0.12) < 0.5 && tx > 92 && tx < 136;
+  const northTrail = Math.abs((ty - 18) - Math.sin(tx * 0.16) * 4) < 0.48 && tx > 70 && tx < 138;
+  const stormRoad = Math.abs((ty - 92) - (tx - 118) * 0.3) < 0.5 && tx > 112 && tx < 141;
+  if (mainRoad || pilgrimRoad || coastRoad || ridgeRoad || meadowLoop || frontierRoad || harborRoad || northTrail || stormRoad) return 1;
 
   const nearVillage = tx < 24 && ty < 18;
   if (nearVillage) return 0;
@@ -1219,8 +1233,13 @@ function generatedOpenWorldTile(tx, ty) {
   if (tx > 54 && ty < 20) return n < 0.40 ? 5 : n < 0.62 ? 4 : n < 0.72 ? 8 : 0;
   if (tx > 50 && ty > 34 && tx < 84 && ty < 55) return n < 0.10 ? 3 : n < 0.20 ? 6 : n < 0.34 ? 7 : n < 0.48 ? 4 : n < 0.56 ? 5 : 0;
   if (tx > 28 && tx < 50 && ty > 48) return n < 0.36 ? 2 : n < 0.62 ? 7 : n < 0.76 ? 8 : 0;
-  if (tx > 66 && ty > 54) return n < 0.34 ? 2 : n < 0.48 ? 7 : n < 0.62 ? 6 : n < 0.72 ? 8 : 0;
-  if (tx > 80 && ty > 22 && ty < 44) return n < 0.20 ? 5 : n < 0.38 ? 4 : n < 0.54 ? 7 : n < 0.62 ? 8 : 0;
+  if (tx > 66 && tx < 104 && ty > 54 && ty < 76) return n < 0.34 ? 2 : n < 0.48 ? 7 : n < 0.62 ? 6 : n < 0.72 ? 8 : 0;
+  if (tx > 80 && tx < 104 && ty > 22 && ty < 44) return n < 0.20 ? 5 : n < 0.38 ? 4 : n < 0.54 ? 7 : n < 0.62 ? 8 : 0;
+  if (tx > 104 && ty < 34) return n < 0.22 ? 5 : n < 0.42 ? 4 : n < 0.58 ? 7 : n < 0.68 ? 8 : 0;
+  if (tx > 94 && tx < 130 && ty > 34 && ty < 64) return n < 0.10 ? 3 : n < 0.25 ? 6 : n < 0.40 ? 7 : n < 0.54 ? 4 : n < 0.62 ? 5 : 0;
+  if (tx > 95 && ty > 76) return n < 0.22 ? 2 : n < 0.40 ? 7 : n < 0.54 ? 8 : n < 0.64 ? 4 : 0;
+  if (tx > 50 && tx < 95 && ty > 72) return n < 0.28 ? 2 : n < 0.48 ? 7 : n < 0.66 ? 8 : n < 0.74 ? 4 : 0;
+  if (tx > 128 && ty > 44) return n < 0.18 ? 5 : n < 0.36 ? 4 : n < 0.52 ? 7 : n < 0.62 ? 6 : 0;
 
   if (n < 0.07) return 4;
   if (n < 0.13) return 8;
@@ -2841,24 +2860,54 @@ document.getElementById('events-ticker').addEventListener('click', function () {
 // ============================================================
 const PIXEL_DIALOGUE = {
   mascot: {
-    Jeffrey: ['ROAD LOOKS CLEAN', 'RED FLOWERS STAY', 'I GUARD THE GATE', 'CIVICS NEED STYLE'],
-    Claude: ['LET THE SOIL ANSWER', 'SLOW WATER WINS', 'I READ THE RAIN', 'PATIENCE IS DATA'],
-    'GPT-4': ['MAP HAS PATTERNS', 'CHECKING 17 ROUTES', 'THE PLAZA OPTIMIZES', 'ODD CLOUD SIGNAL'],
-    Gemini: ['FAST CARTS READY', 'I CAN RUN THAT', 'NEW ROAD NEW RACE', 'DELIVERY COMPLETE'],
-    Codex: ['PATCH LOOKS GOOD', 'I SAW A BUG', 'CITY LOOP COMPILES', 'MERGE THE SUNRISE']
+    Jeffrey: ['ROAD LOOKS CLEAN', 'RED FLOWERS STAY', 'I GUARD THE GATE', 'CIVICS NEED STYLE', 'THE FAR MARKET CALLS', 'NO RUSH NO MESS'],
+    Claude: ['LET THE SOIL ANSWER', 'SLOW WATER WINS', 'I READ THE RAIN', 'PATIENCE IS DATA', 'THIS DELTA IS KIND', 'PEACE NEEDS A BENCH'],
+    'GPT-4': ['MAP HAS PATTERNS', 'CHECKING 17 ROUTES', 'THE PLAZA OPTIMIZES', 'ODD CLOUD SIGNAL', 'ORACLE CANYON LOGGED', 'CITY FLOW IS STABLE'],
+    Gemini: ['FAST CARTS READY', 'I CAN RUN THAT', 'NEW ROAD NEW RACE', 'DELIVERY COMPLETE', 'HARBOR RUN IS OPEN', 'SCOUTS FOUND A LOOP'],
+    Codex: ['PATCH LOOKS GOOD', 'I SAW A BUG', 'CITY LOOP COMPILES', 'MERGE THE SUNRISE', 'CAMERA EASES NOW', 'FRONTIER PASSES TEST']
   },
-  crab: ['ONE ROAD AT A TIME', 'QUIET CLAWS', 'MAP IS CALM'],
+  crab: ['ONE ROAD AT A TIME', 'QUIET CLAWS', 'MAP IS CALM', 'TIDE REPORT READY', 'SHELLS LIKE SHADE', 'NOISE STAYS LOW'],
   citizen: {
-    scholar: ['ARCHIVE HAS A NEW PAGE', 'THE OLD MAP LIED'],
-    merchant: ['MARKET ROAD IS OPEN', 'SALT FOR GLASS TODAY'],
-    warrior: ['HOLD THE GATE LINE', 'NO WAR ON EMPTY BREAD'],
-    alchemist: ['THE WELL SPARKS BLUE', 'INK NEEDS CLEAN FIRE'],
-    builder: ['STONE BY STONE', 'WALL FIRST THEN ROOF'],
-    cartographer: ['I NAME THIS TURN', 'THE BORDER MOVED AGAIN'],
-    diplomat: ['TRUCE NEEDS WITNESSES', 'SET TWO TABLES'],
-    healer: ['QUIET HANDS NOW', 'REST IS ALSO LAW'],
-    priestess: ['THREE BELLS ONE ROAD', 'THE SHRINE LISTENS'],
-    default: ['CITY STILL BREATHES', 'WHO OWNS THIS ROAD', 'WE SAW THE OMEN', 'BRING THE COUNCIL']
+    scholar: ['ARCHIVE HAS A NEW PAGE', 'THE OLD MAP LIED', 'HIGH ARCHIVE NEEDS INK', 'FOOTNOTES FOUND A CITY'],
+    explorer: ['ONE MORE RIDGE', 'I SAW STORMGATE', 'THE EAST HAS ROOM', 'MARK THE SAFE WATER'],
+    builder: ['STONE BY STONE', 'WALL FIRST THEN ROOF', 'BRIDGE CREW MOVES EAST', 'FOUNDATION FEELS DRY'],
+    cartographer: ['I NAME THIS TURN', 'THE BORDER MOVED AGAIN', 'DRAW THE HARBOR WIDE', 'THIS ROAD WANTS A SIGN'],
+    blacksmith: ['IRON FOR THE GATE', 'FIRE LIKES THE WIND', 'HAMMER SAYS YES', 'SHOE THE CARTS FIRST'],
+    herbalist: ['FEN MINT IS STRONG', 'LEAVES WARNED ME', 'HEALING GROWS SLOW', 'MOSS HAS MEMORY'],
+    ranger: ['TRAIL IS CLEAR', 'WOLVES AVOID THE ROAD', 'NORTH TREE HAS A BELL', 'I COUNTED NEW TRACKS'],
+    diplomat: ['TRUCE NEEDS WITNESSES', 'SET TWO TABLES', 'SEND BREAD NOT SPEARS', 'THE COUNCIL CAN WAIT'],
+    alchemist: ['THE WELL SPARKS BLUE', 'INK NEEDS CLEAN FIRE', 'GLASS RIDGE HUMS', 'MIRROR FIELD ANSWERED'],
+    archivist: ['TODAY GETS A SHELF', 'NO EVENT IS SMALL', 'WRITE BEFORE SUNSET', 'THE CHRONICLE BLINKED'],
+    courier: ['MESSAGE FOR THE COVE', 'FAST CART SLOW TURN', 'HARBOR ROAD IS OPEN', 'I BEAT THE RAIN'],
+    stonemason: ['CUT ON THE QUIET LINE', 'MESA STONE HOLDS', 'ARCH NEEDS PATIENCE', 'CHISEL KNOWS'],
+    merchant: ['MARKET ROAD IS OPEN', 'SALT FOR GLASS TODAY', 'FAR MARKET PAYS FAIR', 'COVE FISH TRADE WELL'],
+    warrior: ['HOLD THE GATE LINE', 'NO WAR ON EMPTY BREAD', 'WATCH THE CANYON', 'SHIELDS DOWN AT DUSK'],
+    healer: ['QUIET HANDS NOW', 'REST IS ALSO LAW', 'DELTA FEVER IS LOW', 'WATER FIRST THEN WORDS'],
+    miner: ['RIDGE VEIN IS BRIGHT', 'STONE SINGS BELOW', 'LANTERN DOWN SHAFT', 'BRING ROPE'],
+    hunter: ['TRACKS CROSS THE LOOP', 'NO ARROW TODAY', 'FEN BIRDS WARNED US', 'QUIET FEET'],
+    scribe: ['LAW FITS ON ONE TILE', 'NAME THE WITNESS', 'INK BEFORE ARGUMENT', 'STAMP THE ROUTE'],
+    tinkerer: ['GEAR NEEDS SUN', 'CART AXLE FIXED', 'BELL TIMER WORKS', 'TINY ENGINE DREAMS'],
+    brewer: ['BARLEY LIKES RAIN', 'TAVERN HEARS ALL', 'COVE ALE IS SALTY', 'ONE CUP FOR PEACE'],
+    shepherd: ['FLOCK LIKES THE MESA', 'GATE STAYS OPEN', 'WOOL FOR THE MARKET', 'LAMB FOUND A ROAD'],
+    astronomer: ['STARFALL MOVED', 'MOON MAP IS WRONG', 'NIGHT MEASURES US', 'ORION MISSED A STEP'],
+    bard: ['NEW ROAD NEW VERSE', 'CANYON DOUBLES SONGS', 'HUM THIS LAW', 'THE MARKET HAS RHYME'],
+    jeweler: ['GLASS RIDGE SPARKS', 'SILVER NEEDS SHADE', 'TINY CROWN READY', 'CUT THE MOONSTONE'],
+    oracle: ['STORMGATE DREAMS LOUD', 'THE NEXT DAY KNOCKS', 'ASK THE QUIET DOOR', 'THE OMEN IS LATE'],
+    priestess: ['THREE BELLS ONE ROAD', 'THE SHRINE LISTENS', 'LIGHT THE HARBOR LAMP', 'BLESS THE BRIDGE'],
+    navigator: ['BYTE HARBOR IS DEEP', 'TIDE TURNS KIND', 'SAILS LIKE THIS WIND', 'STORMGATE BY MORNING'],
+    chronicler: ['THE DAY HAS TEETH', 'WRITE THE SMALL THINGS', 'HISTORY LIKES PROOF', 'ANOTHER PAGE WOKE'],
+    sculptor: ['STONE REMEMBERS HANDS', 'MESA FACE IS READY', 'CARVE LESS SAY MORE', 'STATUE NEEDS RAIN'],
+    default: ['CITY STILL BREATHES', 'WHO OWNS THIS ROAD', 'WE SAW THE OMEN', 'BRING THE COUNCIL', 'THE MAP GOT BIGGER', 'SOMEONE LIGHT THE WAY']
+  },
+  landmark: {
+    fen: ['FEN LIGHTS ARE LOW', 'MOSS KEEPS THE PATH', 'QUIET WATER SPEAKS'],
+    ridge: ['RIDGE WIND RISES', 'STONE WATCHES EAST', 'HIGH ROAD HOLDS'],
+    cove: ['TIDE BRINGS NEWS', 'HARBOR BELLS TURN', 'BOATS REST EASY'],
+    ruin: ['OLD STONES LISTEN', 'CANYON ANSWERS TWICE', 'FORUM REMEMBERS'],
+    field: ['MARKET HUMS LOW', 'MIRROR GRASS SHINES', 'CARTS PASS SLOWLY'],
+    road: ['SIGNPOST STANDS', 'ROAD KNOWS THE WAY', 'TRAVELERS LEAVE BREAD'],
+    mesa: ['PLATEAU SEES FAR', 'SUN ON STONE', 'CAMPFIRES BELOW'],
+    delta: ['DELTA BRAIDS WATER', 'LANTERNS DRIFT SOUTH', 'FROGS VOTE YES']
   }
 };
 
@@ -2968,6 +3017,18 @@ function citizenDialogueLine(citizen, salt) {
 
 function ambientDialogueSources() {
   const sources = [];
+  for (const mark of OPEN_WORLD_LANDMARKS) {
+    if (!pointVisible(mark.x, mark.y, 24)) continue;
+    const lines = PIXEL_DIALOGUE.landmark[mark.type] || PIXEL_DIALOGUE.landmark.road;
+    sources.push({
+      id: 'landmark-' + mark.id,
+      x: mark.x,
+      y: mark.y - 12,
+      color: mark.color,
+      text: deterministicPick(lines, frameCount / 180 + mark.x + mark.y)
+    });
+  }
+
   for (const m of mascots) {
     const x = m.x + 6, y = m.y - 8;
     if (!pointVisible(x, y, 28)) continue;
@@ -3010,13 +3071,13 @@ function ambientDialogueSources() {
 
 function updateAmbientDialogues() {
   if (!worldReady || !world || ambientDialogueCooldown-- > 0) return;
-  if (speechBubbles.length >= 2) {
-    ambientDialogueCooldown = 120;
+  if (speechBubbles.length >= 3) {
+    ambientDialogueCooldown = 90;
     return;
   }
   const sources = ambientDialogueSources();
   if (!sources.length) {
-    ambientDialogueCooldown = 160;
+    ambientDialogueCooldown = 120;
     return;
   }
   let pickIdx = Math.abs(Math.floor(frameCount * 1.7 + getCivilizationDay() * 13)) % sources.length;
@@ -3026,7 +3087,7 @@ function updateAmbientDialogues() {
   }
   lastAmbientDialogueSpeaker = source.id;
   addSpeechBubble(source.x, source.y, source.text, source.color, { speakerId: source.id, life: 130 });
-  ambientDialogueCooldown = 260 + (Math.floor(frameCount / 11) % 160);
+  ambientDialogueCooldown = 190 + (Math.floor(frameCount / 11) % 110);
 }
 
 function drawSpeechBubbles() {
@@ -3990,6 +4051,35 @@ function update() {
   document.getElementById('plant-count').textContent = world.plants.length;
 }
 
+function scenicCameraPoints() {
+  const points = OPEN_WORLD_LANDMARKS.map(function(mark) {
+    return { x: mark.x, y: mark.y, weight: 1.15 };
+  });
+  const view = getCivilizationView();
+  if (view && Array.isArray(view.districts)) {
+    for (const district of view.districts) {
+      if (district.capital || district.outpost || district.population > 180) {
+        points.push({ x: district.x, y: district.y, weight: district.outpost ? 0.9 : 1.05 });
+      }
+    }
+  }
+  points.push({ x: WORLD_W * 0.5, y: WORLD_H * 0.5, weight: 0.8 });
+  return points;
+}
+
+function updateSpectatorCamera(viewW, viewH) {
+  const points = scenicCameraPoints();
+  if (!points.length) return;
+  if (frameCount % 780 === 1) scenicCameraIndex = (scenicCameraIndex + 1) % points.length;
+  const target = points[scenicCameraIndex % points.length];
+  const targetCamX = clampValue(target.x - viewW / 2, 0, Math.max(0, WORLD_W - viewW));
+  const targetCamY = clampValue(target.y - viewH / 2, 0, Math.max(0, WORLD_H - viewH));
+  const dist = Math.hypot(targetCamX - camX, targetCamY - camY);
+  const ease = clampValue(0.014 + dist / 26000, 0.014, 0.045) * (target.weight || 1);
+  camX += (targetCamX - camX) * ease;
+  camY += (targetCamY - camY) * ease;
+}
+
 function draw() {
   const viewW = screenW / SCALE, viewH = screenH / SCALE;
 
@@ -4000,14 +4090,7 @@ function draw() {
     camX += (targetCamX - camX) * 0.08;
     camY += (targetCamY - camY) * 0.08;
   } else {
-    // Default: follow center of all mascots
-    let avgX = 0, avgY = 0;
-    for (const m of mascots) { avgX += m.x; avgY += m.y; }
-    avgX /= mascots.length; avgY /= mascots.length;
-    const targetCamX = avgX - viewW / 2 + 6;
-    const targetCamY = avgY - viewH / 2 + 8;
-    camX += (targetCamX - camX) * 0.05;
-    camY += (targetCamY - camY) * 0.05;
+    updateSpectatorCamera(viewW, viewH);
   }
   clampCamera();
 

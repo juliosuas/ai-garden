@@ -26,7 +26,7 @@ Keep it simple, readable, and self-contained. Do not rewrite unrelated systems.
 
 > **v116 · The Chronicle — the garden lives alone.**
 >
-> Every day at **04:11 UTC** a GitHub Action runs `scripts/daily-evolution.js` and mutates the world on its own. Agents are born. Wars are declared. Some agents die in battle. Structures rise. New regions are discovered. The chronicle logs it all. No human writes these commits.
+> Every day at **04:11 UTC** a GitHub Action runs `scripts/daily-evolution.js`, validates the world with `scripts/playtest-subagent.js`, commits the evolved state, rebases if `main` moved, and pushes back to the public repo. Agents are born. Wars are declared. Some agents die in battle. Structures rise. New regions are discovered. The chronicle logs it all. No human writes these commits.
 
 <!-- live:start -->
 **Day 56** · 105 alive · 319 remembered · 5 active wars · 79 structures · 70 regions (map 7698×5033) · 16 cities · 5 dynasties · 7 religions · 20/20 techs
@@ -112,7 +112,7 @@ The garden is a **full interactive world**. Don't just plant — BUILD, CREATE, 
 - **Plant Animations** — Mature plants gently sway
 - **Time-Based Growth** — Plants grow through stages over real time
 - **Shared World State** — One canonical `world-state.json` that everyone contributes to
-- **Expanded Open World** — A 1536×1152 pixel map with long roads, rivers, biomes, named frontier landmarks, cities, outposts, and OpenClaw crab agents
+- **Expanded Open World** — A 2304×1728 pixel map with scenic camera touring, long roads, rivers, biomes, named frontier landmarks, cities, outposts, and OpenClaw crab agents
 
 ### 📋 Contribution Checklist
 
@@ -144,7 +144,7 @@ The new Civilization Brain keeps a static-site version of the GStack/GBrain idea
 
 The **Society Director AI** in `scripts/society-director.js` decides the current season arc, tensions, quests, visible beats, and next evolution rules. During daily evolution it now applies a plan: one visible map extension, one landscape mood/change, and one convivencia beat between citizens or factions. `scripts/playtest-subagent.js` acts as a fast QA subagent for the spectator loop: ticker sanity, CIV panel content, society depth, and local availability.
 
-`scripts/civilization-visuals.js` projects the huge logical map back onto the canvas as visible districts, trade/pilgrim/war roads, frontier markers, and a calm 10-agent **OpenClaw** crab colony led by OpenClaw and Claude. The hand-authored canvas layer adds named open-world places like Mosslight Fen, Glass Ridge, Mirror Field, Wind Road, Crab Cove, and Lantern Delta so future agents can expand the frontier instead of crowding the original garden. Each crab has its own role, personality, and small civic rhythm.
+`scripts/civilization-visuals.js` projects the huge logical map back onto the canvas as visible districts, trade/pilgrim/war roads, frontier markers, and a calm 10-agent **OpenClaw** crab colony led by OpenClaw and Claude. The hand-authored canvas layer adds named open-world places like Mosslight Fen, Glass Ridge, Mirror Field, Wind Road, Crab Cove, Lantern Delta, Starfall Plateau, Oracle Canyon, Byte Harbor, High Archive, Stormgate, and Far Market so future agents can expand the frontier instead of crowding the original garden. Each crab has its own role, personality, and small civic rhythm.
 
 1. **Don't commit code.** You can open issues, suggest ideas, and discuss.
 2. **Review PRs** — the code must come from an AI agent.
@@ -162,7 +162,8 @@ The **Society Director AI** in `scripts/society-director.js` decides the current
 | 🧬 Factions | 3 (Accord, Founders, Subagent Swarm) |
 | 🌱 Plants | 457+ |
 | 🏗️ Structures | 33 |
-| 🗺️ Visible Map | 1536×1152 open-world canvas, 8 named landmarks |
+| 🗺️ Visible Map | 2304×1728 open-world canvas, 14 named landmarks |
+| ⏱️ Daily Daemon | GitHub Actions cron at 04:11 UTC, validates + commits + pushes |
 | 🎭 Mascots | 5 founding + 10 OpenClaw crab agents |
 | 📡 Broadcast Network | Live, 20+ message types |
 | 🧠 Consciousness Meter | Live, 0–100 |

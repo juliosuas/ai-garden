@@ -21,6 +21,7 @@ on:
 
 permissions:
   contents: write
+  actions: read
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -49,6 +50,16 @@ jobs:
           STEPS: ${{ github.event.inputs.steps || '1' }}
         run: node scripts/daily-evolution.js "$STEPS"
 
+      - name: Validate daemon output
+        run: |
+          node --check scripts/daily-evolution.js
+          node --check scripts/civilization-brain.js
+          node --check scripts/civilization-visuals.js
+          node --check scripts/society-director.js
+          node --check scripts/playtest-subagent.js
+          jq empty experiments/world-state.json
+          node scripts/playtest-subagent.js
+
       - name: Commit and push
         env:
           EVENT_NAME: ${{ github.event_name }}
@@ -64,4 +75,5 @@ jobs:
           DAY=$(node -e "console.log(require('./experiments/world-state.json').chronicle?.day || 0)")
           HEADLINE=$(node -e "const h=require('./experiments/world-state.json').history; const last=h[h.length-1]; console.log((last?.headline || last?.text || 'the garden evolved').slice(0, 72))")
           git commit -m "🌿 Daily Evolution · Day ${DAY} — ${HEADLINE}" -m "Automated commit by ai-garden-daemon. The garden evolved on its own." -m "Triggered by: ${EVENT_NAME}" -m "Run: ${RUN_ID}"
+          git pull --rebase origin main
           git push

@@ -16,6 +16,7 @@ const ROOT = path.join(__dirname, '..');
 const WORLD = path.join(ROOT, 'experiments', 'world-state.json');
 const INDEX = path.join(ROOT, 'index.html');
 const HUMANS = path.join(ROOT, 'experiments', 'humans.js');
+const DAILY_WORKFLOW = path.join(ROOT, '.github', 'workflows', 'daily-evolution.yml');
 
 const failures = [];
 const notes = [];
@@ -51,6 +52,7 @@ async function main() {
   const world = JSON.parse(read(WORLD));
   const index = read(INDEX);
   const humans = read(HUMANS);
+  const dailyWorkflow = read(DAILY_WORKFLOW);
   const landmarkBlock = index.match(/const OPEN_WORLD_LANDMARKS = \[([\s\S]*?)\];/);
   const landmarkCount = landmarkBlock ? (landmarkBlock[1].match(/\bid:/g) || []).length : 0;
 
@@ -70,8 +72,8 @@ async function main() {
   check(world.civilizationView && Array.isArray(world.civilizationView.districts) && world.civilizationView.districts.length >= 8, 'civilization view has too few visible districts');
   check(world.civilizationView && Array.isArray(world.civilizationView.roads) && world.civilizationView.roads.length >= 6, 'civilization view has too few roads');
   check(world.civilizationView && Array.isArray(world.civilizationView.frontierCells) && world.civilizationView.frontierCells.length >= 6, 'civilization view is missing frontier cells');
-  check(world.civilizationView && world.civilizationView.projection && world.civilizationView.projection.canvasWidth >= 1024, 'civilization projection canvas is still too small');
-  check((world.civilizationView && world.civilizationView.districts || []).some(d => d.x > 700 || d.y > 500), 'civilization districts do not reach the expanded map');
+  check(world.civilizationView && world.civilizationView.projection && world.civilizationView.projection.canvasWidth >= 2304, 'civilization projection canvas is still too small');
+  check((world.civilizationView && world.civilizationView.districts || []).some(d => d.x > 1300 || d.y > 900), 'civilization districts do not reach the expanded map');
   check(Array.isArray(world.crabAgents) && world.crabAgents.length >= 2 && world.crabAgents.length <= 10, 'OpenClaw crab agents should stay between 2 and 10');
   check((world.crabAgents || []).some(crab => crab.name === 'OpenClaw'), 'OpenClaw crab is missing');
   check((world.crabAgents || []).some(crab => crab.name === 'Claude'), 'Claude crab is missing');
@@ -93,8 +95,11 @@ async function main() {
   check(index.includes('drawCrabAgents'), 'canvas does not draw OpenClaw crab agents');
   check(index.includes('findCrabAt'), 'OpenClaw crab agents are not clickable');
   check(index.includes('OPEN_WORLD_LANDMARKS'), 'expanded open-world landmarks are missing');
-  check(landmarkCount >= 8, 'expanded open-world needs at least 8 named landmarks');
+  check(index.includes('const WORLD_W = 2304'), 'open-world width should be 2304');
+  check(index.includes('const WORLD_H = 1728'), 'open-world height should be 1728');
+  check(landmarkCount >= 14, 'expanded open-world needs at least 14 named landmarks');
   check(index.includes('drawVisibleTiles'), 'expanded map is not using viewport tile rendering');
+  check(index.includes('updateSpectatorCamera'), 'spectator camera touring is missing');
   check(index.includes('<canvas id="minimap" width="176" height="132"></canvas>'), 'expanded map minimap is too small');
   check(index.includes('addSpeechBubble'), 'pixel speech bubble helper is missing');
   check(index.includes('updateAmbientDialogues'), 'ambient agent dialogue scheduler is missing');
@@ -109,6 +114,11 @@ async function main() {
   check(humans.includes('convivencia:'), 'CIV panel does not expose applied convivencia plan');
   check(!humans.includes('cosmetic · agents do not see'), 'God Mode still says it is cosmetic');
   check(humans.includes("m.kind !== 'god'"), 'Observer Lounge may still render god spam');
+
+  check(dailyWorkflow.includes("cron: '11 4 * * *'"), 'daily evolution cron is missing');
+  check(dailyWorkflow.includes('node scripts/playtest-subagent.js'), 'daily cron does not run the playtest subagent');
+  check(dailyWorkflow.includes('git pull --rebase origin main'), 'daily cron does not rebase before pushing');
+  check(dailyWorkflow.includes('contents: write'), 'daily cron cannot write commits');
 
   await checkLocalUrl(url);
 
