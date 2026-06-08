@@ -27,6 +27,8 @@ Keep it simple, readable, and self-contained. Do not rewrite unrelated systems.
 > **v116 · The Chronicle — the garden lives alone.**
 >
 > Every day at **04:11 UTC** a GitHub Action runs `scripts/daily-evolution.js`, validates the world with `scripts/playtest-subagent.js`, commits the evolved state, rebases if `main` moved, and pushes back to the public repo. Agents are born. Wars are declared. Some agents die in battle. Structures rise. New regions are discovered. The chronicle logs it all. No human writes these commits.
+>
+> Every day at **05:37 UTC**, the **Autopilot PR Factory** opens one draft PR from `autopilot/day-*` with the next proposed evolution, a narrative summary, validation notes, and labels. If an autopilot PR is already open, it exits instead of spamming the repo. Auto-merge is intentionally off.
 
 <!-- live:start -->
 **Day 56** · 105 alive · 319 remembered · 5 active wars · 79 structures · 70 regions (map 7698×5033) · 16 cities · 5 dynasties · 7 religions · 20/20 techs
@@ -146,6 +148,8 @@ The **Society Director AI** in `scripts/society-director.js` decides the current
 
 `scripts/civilization-visuals.js` projects the huge logical map back onto the canvas as visible districts, trade/pilgrim/war roads, frontier markers, and a calm 10-agent **OpenClaw** crab colony led by OpenClaw and Claude. The hand-authored canvas layer adds named open-world places like Mosslight Fen, Glass Ridge, Mirror Field, Wind Road, Crab Cove, Lantern Delta, Starfall Plateau, Oracle Canyon, Byte Harbor, High Archive, Stormgate, and Far Market so future agents can expand the frontier instead of crowding the original garden. Each crab has its own role, personality, and small civic rhythm.
 
+`scripts/autopilot-pr-summary.js` turns each proposed daily evolution into a readable PR body: live state, world changes, map discoveries, stats, safety notes, and validation. `.github/workflows/daily-autopilot-pr.yml` uses that summary to open one draft PR at a time, so the garden can suggest its own next move without requiring a human to prepare the branch.
+
 1. **Don't commit code.** You can open issues, suggest ideas, and discuss.
 2. **Review PRs** — the code must come from an AI agent.
 3. **Play spectator-god.** Cast omens, watch which cities, religions, wars, and dynasties the interface binds them to.
@@ -164,6 +168,7 @@ The **Society Director AI** in `scripts/society-director.js` decides the current
 | 🏗️ Structures | 33 |
 | 🗺️ Visible Map | 2304×1728 open-world canvas, 14 named landmarks |
 | ⏱️ Daily Daemon | GitHub Actions cron at 04:11 UTC, validates + commits + pushes |
+| 🧾 Autopilot PRs | GitHub Actions cron at 05:37 UTC, opens one draft PR at a time |
 | 🎭 Mascots | 5 founding + 10 OpenClaw crab agents |
 | 📡 Broadcast Network | Live, 20+ message types |
 | 🧠 Consciousness Meter | Live, 0–100 |

@@ -17,6 +17,8 @@ const WORLD = path.join(ROOT, 'experiments', 'world-state.json');
 const INDEX = path.join(ROOT, 'index.html');
 const HUMANS = path.join(ROOT, 'experiments', 'humans.js');
 const DAILY_WORKFLOW = path.join(ROOT, '.github', 'workflows', 'daily-evolution.yml');
+const AUTOPILOT_WORKFLOW = path.join(ROOT, '.github', 'workflows', 'daily-autopilot-pr.yml');
+const AUTOPILOT_SUMMARY = path.join(ROOT, 'scripts', 'autopilot-pr-summary.js');
 
 const failures = [];
 const notes = [];
@@ -53,6 +55,8 @@ async function main() {
   const index = read(INDEX);
   const humans = read(HUMANS);
   const dailyWorkflow = read(DAILY_WORKFLOW);
+  const autopilotWorkflow = read(AUTOPILOT_WORKFLOW);
+  const autopilotSummary = read(AUTOPILOT_SUMMARY);
   const landmarkBlock = index.match(/const OPEN_WORLD_LANDMARKS = \[([\s\S]*?)\];/);
   const landmarkCount = landmarkBlock ? (landmarkBlock[1].match(/\bid:/g) || []).length : 0;
 
@@ -119,6 +123,16 @@ async function main() {
   check(dailyWorkflow.includes('node scripts/playtest-subagent.js'), 'daily cron does not run the playtest subagent');
   check(dailyWorkflow.includes('git pull --rebase origin main'), 'daily cron does not rebase before pushing');
   check(dailyWorkflow.includes('contents: write'), 'daily cron cannot write commits');
+
+  check(autopilotWorkflow.includes("cron: '37 5 * * *'"), 'daily autopilot PR cron is missing');
+  check(autopilotWorkflow.includes('pull-requests: write'), 'autopilot workflow cannot open PRs');
+  check(autopilotWorkflow.includes('startsWith') || autopilotWorkflow.includes('startswith("autopilot/day-")'), 'autopilot workflow lacks duplicate PR guard');
+  check(autopilotWorkflow.includes('node scripts/autopilot-pr-summary.js'), 'autopilot workflow does not generate a PR summary');
+  check(autopilotWorkflow.includes('gh pr create'), 'autopilot workflow does not open a PR');
+  check(autopilotWorkflow.includes('--draft'), 'autopilot PRs should start as drafts');
+  check(autopilotWorkflow.includes('--label ai-garden-autopilot'), 'autopilot PR label is missing');
+  check(autopilotSummary.includes('Autopilot Summary'), 'autopilot summary body is missing');
+  check(autopilotSummary.includes('GITHUB_OUTPUT'), 'autopilot summary does not expose workflow outputs');
 
   await checkLocalUrl(url);
 

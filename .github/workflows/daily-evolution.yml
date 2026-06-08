@@ -57,6 +57,7 @@ jobs:
           node --check scripts/civilization-visuals.js
           node --check scripts/society-director.js
           node --check scripts/playtest-subagent.js
+          node --check scripts/autopilot-pr-summary.js
           jq empty experiments/world-state.json
           node scripts/playtest-subagent.js
 
