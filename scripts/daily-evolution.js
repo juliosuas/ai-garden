@@ -92,6 +92,10 @@ const ALIGNMENTS = [
   'true-neutral', 'chaotic-neutral', 'lawful-evil', 'neutral-evil', 'chaotic-evil'
 ];
 const STRUCTURE_TYPES = [
+  // First-civilization works: survival, memory, food, tools, ritual.
+  'hearth-circle', 'reed-shelter', 'hide-tent', 'tool-knapping-yard',
+  'seed-cache', 'drying-rack', 'council-stones', 'memory-pole',
+  'signal-fire', 'clay-kiln', 'water-marker', 'shared-granary',
   'watchtower', 'shrine', 'bridge', 'wellhouse', 'kiln', 'granary',
   'dovecote', 'boathouse', 'obelisk', 'weir', 'forum', 'library-annex',
   'observatory-outpost', 'training-circle', 'smoke-stack', 'cistern',
@@ -102,6 +106,27 @@ const STRUCTURE_TYPES = [
   'acropolis', 'hippodrome', 'mausoleum', 'basilica', 'lighthouse',
   'necropolis', 'temple-complex', 'amphitheater', 'barracks-hall'
 ];
+
+const FIRST_WORKS = new Set([
+  'hearth-circle', 'reed-shelter', 'hide-tent', 'tool-knapping-yard',
+  'seed-cache', 'drying-rack', 'council-stones', 'memory-pole',
+  'signal-fire', 'clay-kiln', 'water-marker', 'shared-granary'
+]);
+
+const FIRST_WORK_PURPOSES = {
+  'hearth-circle': 'kept the night, stories, and first shared protocols warm',
+  'reed-shelter': 'gave wandering agents a dry place to sleep through rain',
+  'hide-tent': 'made the first mobile camp for scout-agents',
+  'tool-knapping-yard': 'turned stone, shells, and old errors into useful tools',
+  'seed-cache': 'protected tomorrow from hunger and bad weather',
+  'drying-rack': 'saved fish, roots, and memory strips for lean days',
+  'council-stones': 'gave the first laws a place to be spoken aloud',
+  'memory-pole': 'marked who came before and which promises still matter',
+  'signal-fire': 'let far camps answer each other without shouting',
+  'clay-kiln': 'fired bowls, tablets, and the first durable records',
+  'water-marker': 'taught the settlement where floodwater rises',
+  'shared-granary': 'made surplus public instead of private panic'
+};
 const EVENT_COLORS = {
   birth: '🌱', death: '✦', war: '⚔️', alliance: '🕊️',
   truce: '🤝', discovery: '◉', structure: '🏗️', migration: '🚶',
@@ -380,8 +405,13 @@ function buildStructure() {
     y: between(40, world.map.height - 40),
     region: region ? region.id : null,
     builder: builder ? builder.id : null,
+    builderName: builder ? builder.name : null,
     built: world.chronicle.day,
-    name: pick(['Grey', 'Morning', 'Lonely', 'Iron', 'High', 'Low', 'Broken', 'Quiet', 'Bronze', 'Amber']) + ' ' + type.split('-').map(w => w[0].toUpperCase() + w.slice(1)).join(' ')
+    purpose: FIRST_WORK_PURPOSES[type] || null,
+    era: FIRST_WORKS.has(type) ? 'first-camp' : 'ancient-city',
+    name: pick(FIRST_WORKS.has(type)
+      ? ['First', 'Shared', 'Warm', 'River', 'Dawn', 'Old', 'Kin', 'Stone', 'Ash', 'Seed']
+      : ['Grey', 'Morning', 'Lonely', 'Iron', 'High', 'Low', 'Broken', 'Quiet', 'Bronze', 'Amber']) + ' ' + type.split('-').map(w => w[0].toUpperCase() + w.slice(1)).join(' ')
   };
   world.structures.push(s);
   world.chronicle.structures++;
@@ -642,10 +672,18 @@ function step() {
 
   // 4. Structures — always one, 35% second (unchanged)
   const s1 = buildStructure();
-  events.push({ kind: 'structure', headline: s1.name + ' built near the ' + (s1.region || 'village heart'), refs: s1.builder ? [s1.builder] : [] });
+  events.push({
+    kind: 'structure',
+    headline: s1.name + ' built near the ' + (s1.region || 'village heart') + (s1.purpose ? ' — ' + s1.purpose : ''),
+    refs: s1.builder ? [s1.builder] : []
+  });
   if (chance(0.35)) {
     const s2 = buildStructure();
-    events.push({ kind: 'structure', headline: s2.name + ' also rose that same day', refs: s2.builder ? [s2.builder] : [] });
+    events.push({
+      kind: 'structure',
+      headline: s2.name + ' also rose that same day' + (s2.purpose ? ' — ' + s2.purpose : ''),
+      refs: s2.builder ? [s2.builder] : []
+    });
   }
 
   // 5. Map expansion — v124 · guaranteed every day + 40% second region

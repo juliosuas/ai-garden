@@ -177,6 +177,36 @@ const CRAB_TASKS = [
   }
 ];
 
+const EARLY_WORK_TYPES = [
+  'hearth-circle',
+  'reed-shelter',
+  'tool-yard',
+  'seed-cache',
+  'signal-fire',
+  'council-stones',
+  'drying-rack',
+  'clay-kiln',
+  'memory-pole',
+  'water-marker',
+  'scribe-mat',
+  'shared-granary'
+];
+
+const EARLY_WORK_NAMES = {
+  'hearth-circle': 'shared fire',
+  'reed-shelter': 'first shelter',
+  'tool-yard': 'tool yard',
+  'seed-cache': 'seed cache',
+  'signal-fire': 'signal fire',
+  'council-stones': 'council stones',
+  'drying-rack': 'drying rack',
+  'clay-kiln': 'clay kiln',
+  'memory-pole': 'memory pole',
+  'water-marker': 'water marker',
+  'scribe-mat': 'scribe mat',
+  'shared-granary': 'shared granary'
+};
+
 function seededRng(seed) {
   let s = (seed | 0) || 1;
   return function () {
@@ -385,6 +415,49 @@ function buildFrontierCells(world, project) {
   });
 }
 
+function workTypeForDistrict(district, slot, world) {
+  const specialty = String(district.specialty || '').toLowerCase();
+  const region = String(district.region || '').toLowerCase();
+  if (slot === 0) return 'hearth-circle';
+  if (district.outpost && slot === 1) return 'signal-fire';
+  if (specialty.includes('grain') || specialty.includes('harvest') || specialty.includes('orchard')) return slot % 2 ? 'seed-cache' : 'shared-granary';
+  if (specialty.includes('stone') || specialty.includes('masonry') || specialty.includes('forge') || specialty.includes('iron')) return slot % 2 ? 'tool-yard' : 'clay-kiln';
+  if (specialty.includes('ink') || specialty.includes('chronicle') || specialty.includes('paper')) return slot % 2 ? 'scribe-mat' : 'memory-pole';
+  if (specialty.includes('sail') || specialty.includes('fish') || region.includes('coast') || region.includes('delta')) return slot % 2 ? 'drying-rack' : 'water-marker';
+  if ((world.religions || []).length > 2 && slot === 2) return 'council-stones';
+  return EARLY_WORK_TYPES[(slot + district.name.length) % EARLY_WORK_TYPES.length];
+}
+
+function buildSettlementSites(world, districts, rng) {
+  const day = (world.chronicle && world.chronicle.day) || 0;
+  const sites = [];
+  for (let i = 0; i < districts.length; i++) {
+    const district = districts[i];
+    const baseCount = district.capital ? 6 : district.outpost ? 3 : 4;
+    const count = Math.min(7, baseCount + Math.floor((district.population || 0) / 380));
+    for (let slot = 0; slot < count; slot++) {
+      const ring = (district.scale || 10) + 10 + Math.floor(slot / 3) * 7;
+      const angle = i * 0.83 + slot * 2.16 + (district.outpost ? 0.4 : 0);
+      const type = workTypeForDistrict(district, slot, world);
+      const builtDay = Math.max(1, (district.founded || day) + slot);
+      sites.push({
+        id: 'work-' + district.id + '-' + slot,
+        type,
+        name: EARLY_WORK_NAMES[type] || type,
+        districtId: district.id,
+        district: district.name,
+        x: Math.round(clamp(district.x + Math.cos(angle) * ring, 8, VIEW_W - 8)),
+        y: Math.round(clamp(district.y + Math.sin(angle) * ring * 0.62, 14, VIEW_H - 10)),
+        color: district.color || '#d6b36a',
+        builtDay,
+        phase: slot < 2 ? 'survival' : slot < 4 ? 'settlement' : 'memory',
+        builders: district.outpost ? 'frontier agents' : 'AI kin group'
+      });
+    }
+  }
+  return sites.slice(0, 140);
+}
+
 function ensureCrabAgents(world, districts, rng) {
   world.crabAgents = Array.isArray(world.crabAgents) ? world.crabAgents : [];
   const byId = new Map(world.crabAgents.map(crab => [crab.id, crab]));
@@ -510,6 +583,7 @@ function refreshCivilizationVisuals(world, rng, options = {}) {
   const districts = buildDistricts(world, rng, project);
   const roads = buildRoads(districts, world);
   const frontierCells = buildFrontierCells(world, project);
+  const settlementSites = buildSettlementSites(world, districts, rng);
 
   ensureCrabAgents(world, districts, rng);
   const latestAction = options.addDailyCrabAction ? addCrabAction(world, rng, districts) : null;
@@ -527,11 +601,13 @@ function refreshCivilizationVisuals(world, rng, options = {}) {
     districts,
     roads,
     frontierCells,
+    settlementSites,
     latestAction,
     stats: {
       districts: districts.length,
       roads: roads.length,
       frontierCells: frontierCells.length,
+      settlementSites: settlementSites.length,
       crabAgents: world.crabAgents.length
     }
   };
@@ -550,6 +626,7 @@ if (require.main === module) {
     'Civilization view refreshed: ' +
     world.civilizationView.districts.length + ' districts, ' +
     world.civilizationView.roads.length + ' roads, ' +
+    world.civilizationView.settlementSites.length + ' first-camp sites, ' +
     world.crabAgents.length + ' OpenClaw crab agents.'
   );
 }

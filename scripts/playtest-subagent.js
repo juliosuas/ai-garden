@@ -19,6 +19,7 @@ const HUMANS = path.join(ROOT, 'experiments', 'humans.js');
 const DAILY_WORKFLOW = path.join(ROOT, '.github', 'workflows', 'daily-evolution.yml');
 const AUTOPILOT_WORKFLOW = path.join(ROOT, '.github', 'workflows', 'daily-autopilot-pr.yml');
 const AUTOPILOT_SUMMARY = path.join(ROOT, 'scripts', 'autopilot-pr-summary.js');
+const DAILY_EVOLUTION = path.join(ROOT, 'scripts', 'daily-evolution.js');
 
 const failures = [];
 const notes = [];
@@ -57,8 +58,12 @@ async function main() {
   const dailyWorkflow = read(DAILY_WORKFLOW);
   const autopilotWorkflow = read(AUTOPILOT_WORKFLOW);
   const autopilotSummary = read(AUTOPILOT_SUMMARY);
+  const dailyEvolution = read(DAILY_EVOLUTION);
   const landmarkBlock = index.match(/const OPEN_WORLD_LANDMARKS = \[([\s\S]*?)\];/);
   const landmarkCount = landmarkBlock ? (landmarkBlock[1].match(/\bid:/g) || []).length : 0;
+  const civilizationView = world.civilizationView || {};
+  const settlementSites = Array.isArray(civilizationView.settlementSites) ? civilizationView.settlementSites : [];
+  const settlementTypes = new Set(settlementSites.map(site => site.type));
 
   check(world.civilizationBrain && world.civilizationBrain.summary, 'missing civilizationBrain summary');
   check(Array.isArray(world.agentActions) && world.agentActions.length >= 12, 'agent action ledger is too thin');
@@ -78,6 +83,10 @@ async function main() {
   check(world.civilizationView && Array.isArray(world.civilizationView.frontierCells) && world.civilizationView.frontierCells.length >= 6, 'civilization view is missing frontier cells');
   check(world.civilizationView && world.civilizationView.projection && world.civilizationView.projection.canvasWidth >= 2304, 'civilization projection canvas is still too small');
   check((world.civilizationView && world.civilizationView.districts || []).some(d => d.x > 1300 || d.y > 900), 'civilization districts do not reach the expanded map');
+  check(settlementSites.length >= 24, 'civilization view needs visible first-camp construction sites');
+  check(settlementTypes.has('hearth-circle'), 'first-camp layer is missing shared fire sites');
+  check(settlementTypes.has('reed-shelter') || settlementTypes.has('seed-cache') || settlementTypes.has('shared-granary'), 'first-camp layer is missing shelter or food storage');
+  check(settlementTypes.has('council-stones') || settlementTypes.has('memory-pole') || settlementTypes.has('scribe-mat'), 'first-camp layer is missing law, memory, or ritual places');
   check(Array.isArray(world.crabAgents) && world.crabAgents.length >= 2 && world.crabAgents.length <= 10, 'OpenClaw crab agents should stay between 2 and 10');
   check((world.crabAgents || []).some(crab => crab.name === 'OpenClaw'), 'OpenClaw crab is missing');
   check((world.crabAgents || []).some(crab => crab.name === 'Claude'), 'Claude crab is missing');
@@ -105,6 +114,8 @@ async function main() {
   check(index.includes('drawVisibleTiles'), 'expanded map is not using viewport tile rendering');
   check(index.includes('updateSpectatorCamera'), 'spectator camera touring is missing');
   check(index.includes('<canvas id="minimap" width="176" height="132"></canvas>'), 'expanded map minimap is too small');
+  check(index.includes('drawPrimitiveWork'), 'canvas does not draw first-camp construction sprites');
+  check(index.includes('settlementSites'), 'canvas does not consume settlement construction sites');
   check(index.includes('addSpeechBubble'), 'pixel speech bubble helper is missing');
   check(index.includes('updateAmbientDialogues'), 'ambient agent dialogue scheduler is missing');
   check(index.includes('PIXEL_DIALOGUE'), 'pixel dialogue line pools are missing');
@@ -135,6 +146,10 @@ async function main() {
   check(autopilotWorkflow.includes('--label ai-garden-autopilot'), 'autopilot PR label is missing');
   check(autopilotSummary.includes('Autopilot Summary'), 'autopilot summary body is missing');
   check(autopilotSummary.includes('GITHUB_OUTPUT'), 'autopilot summary does not expose workflow outputs');
+
+  check(dailyEvolution.includes('FIRST_WORKS'), 'daily evolution does not generate first-civilization works');
+  check(dailyEvolution.includes('FIRST_WORK_PURPOSES'), 'daily evolution does not explain why first-camp works matter');
+  check(dailyEvolution.includes("era: FIRST_WORKS.has(type) ? 'first-camp'"), 'daily evolution does not tag first-camp structures');
 
   await checkLocalUrl(url);
 

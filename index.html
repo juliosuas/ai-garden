@@ -1881,6 +1881,78 @@ function drawDistrict(district, showLabel) {
   }
 }
 
+function drawPrimitiveWork(site) {
+  const x = Math.round(site.x);
+  const y = Math.round(site.y);
+  const color = site.color || '#d6b36a';
+  const warm = '#fb923c';
+  const ember = '#facc15';
+
+  ctx.globalAlpha = 0.18;
+  rect(x - 7, y + 4, 15, 3, '#000');
+  ctx.globalAlpha = 1;
+
+  if (site.type === 'hearth-circle') {
+    for (let i = 0; i < 8; i++) {
+      const a = i * Math.PI / 4;
+      px(x + Math.round(Math.cos(a) * 5), y + Math.round(Math.sin(a) * 3), PAL.rockLight);
+    }
+    rect(x - 1, y - 1, 3, 4, warm);
+    px(x, y - 2, ember);
+    if (frameCount % 20 < 10) px(x + 1, y - 3, '#fff7ad');
+  } else if (site.type === 'reed-shelter') {
+    rect(x - 5, y + 1, 10, 6, '#6b4e10');
+    for (let i = 0; i < 5; i++) rect(x - 6 + i * 3, y - 1 + i % 2, 2, 4, '#a08050');
+    rect(x - 1, y + 4, 2, 3, '#2a1a0a');
+  } else if (site.type === 'tool-yard') {
+    rect(x - 6, y + 4, 12, 2, '#8a6a3a');
+    px(x - 4, y + 2, PAL.rockLight); px(x - 3, y + 1, PAL.rock);
+    rect(x + 2, y, 1, 6, '#a08050'); px(x + 3, y, '#cbd5e1');
+    px(x + 5, y + 3, '#f8fafc');
+  } else if (site.type === 'seed-cache' || site.type === 'shared-granary') {
+    rect(x - 5, y + 1, 10, 7, '#8a6a3a');
+    rect(x - 4, y, 8, 1, '#c0a060');
+    rect(x - 3, y + 3, 2, 2, '#facc15');
+    rect(x + 1, y + 3, 2, 2, '#d6b36a');
+    if (site.type === 'shared-granary') rect(x - 6, y - 1, 12, 2, '#a16207');
+  } else if (site.type === 'signal-fire') {
+    rect(x - 1, y - 6, 2, 12, PAL.trunk);
+    rect(x - 5, y - 8, 10, 2, '#8a6a3a');
+    rect(x - 2, y - 10, 4, 3, warm);
+    if (frameCount % 28 < 14) { px(x, y - 12, ember); px(x + 1, y - 13, '#fff7ad'); }
+  } else if (site.type === 'council-stones') {
+    for (let i = 0; i < 6; i++) {
+      const a = i * Math.PI / 3;
+      rect(x + Math.round(Math.cos(a) * 5) - 1, y + Math.round(Math.sin(a) * 3) - 1, 2, 3, i % 2 ? PAL.rock : PAL.rockLight);
+    }
+    px(x, y, ember);
+  } else if (site.type === 'drying-rack') {
+    rect(x - 6, y, 1, 7, '#8a6a3a'); rect(x + 6, y, 1, 7, '#8a6a3a');
+    rect(x - 6, y + 2, 13, 1, '#a08050');
+    for (let i = 0; i < 4; i++) rect(x - 4 + i * 3, y + 3, 1, 4, i % 2 ? '#38bdf8' : '#d6b36a');
+  } else if (site.type === 'clay-kiln') {
+    rect(x - 4, y, 8, 7, '#9a3412');
+    rect(x - 3, y - 1, 6, 2, '#c2410c');
+    rect(x - 1, y + 3, 3, 3, '#1a1a2e');
+    if (frameCount % 18 < 9) px(x, y + 4, warm);
+  } else if (site.type === 'memory-pole' || site.type === 'scribe-mat') {
+    if (site.type === 'memory-pole') {
+      rect(x, y - 7, 1, 13, PAL.trunk);
+      px(x - 1, y - 5, color); px(x + 1, y - 3, '#f8fafc'); px(x - 1, y - 1, ember);
+    } else {
+      rect(x - 6, y + 2, 12, 4, '#8a6a3a');
+      px(x - 3, y + 3, '#f8fafc'); px(x, y + 3, '#93c5fd'); px(x + 3, y + 3, '#facc15');
+    }
+  } else if (site.type === 'water-marker') {
+    rect(x - 1, y - 5, 2, 11, '#cbd5e1');
+    rect(x - 4, y - 2, 8, 2, PAL.waterLight);
+    px(x - 3, y + 3, PAL.water); px(x + 3, y + 3, PAL.water);
+  } else {
+    rect(x - 4, y, 8, 6, color);
+    px(x, y - 1, '#f8fafc');
+  }
+}
+
 function drawCivilizationProjection() {
   const view = getCivilizationView();
   if (!view) return;
@@ -1891,6 +1963,11 @@ function drawCivilizationProjection() {
     const from = districtById[road.from];
     const to = districtById[road.to];
     if (from && to) drawCivilizationRoad(from, to, road);
+  }
+  const sites = (view.settlementSites || []).slice().sort(function(a, b) { return a.y - b.y; });
+  for (const site of sites) {
+    if (!pointVisible(site.x, site.y, 24)) continue;
+    drawPrimitiveWork(site);
   }
   const districts = view.districts.slice().sort(function(a, b) { return a.y - b.y; });
   const labels = visibleDistrictLabels(view.districts);
