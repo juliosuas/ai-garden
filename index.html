@@ -2613,7 +2613,9 @@ const PROFESSION_EMOJI = {
   cook: '🍳', weaver: '🧵', cartographer: '🗺️', ranger: '🏹',
 };
 
-const CITIZEN_VISUAL_LIMIT = 72;
+const CITIZEN_VISUAL_LIMIT = 28;
+const CITIZEN_PER_DISTRICT_LIMIT = 3;
+const CITIZEN_WORLD_GAP = 15;
 const ACTION_VISUALS = {
   council: { color: '#f8fafc', accent: '#93c5fd', label: 'LAW', mood: 'focused' },
   ritual: { color: '#facc15', accent: '#fb923c', label: 'RITE', mood: 'awe' },
@@ -2679,6 +2681,7 @@ function districtForCitizen(citizen, idx, action) {
   const view = getCivilizationView();
   const districts = view && Array.isArray(view.districts) ? view.districts : [];
   if (!districts.length) return null;
+  const seed = hashText(citizen.id || citizen.name || idx);
   const target = String(action && action.target || '').toLowerCase();
   if (target) {
     const direct = districts.find(function(d) {
@@ -2689,11 +2692,26 @@ function districtForCitizen(citizen, idx, action) {
     });
     if (direct) return direct;
   }
-  if (citizen.faction === 'f-pantheon-covenant') return districts[1 % districts.length];
-  if (citizen.faction === 'f-code-cantons') return districts[Math.floor(districts.length / 2) % districts.length];
-  if (citizen.faction === 'f-waking-order') return districts[2 % districts.length];
-  if (citizen.faction === 'f-iron-library') return districts[Math.floor(districts.length * 0.62) % districts.length];
-  return districts[(hashText(citizen.id || citizen.name) + idx) % districts.length];
+  function fromIndexes(indexes, salt) {
+    const pool = indexes.map(function(i) {
+      return districts[((i % districts.length) + districts.length) % districts.length];
+    }).filter(Boolean);
+    return pool.length ? pool[(seed + salt) % pool.length] : districts[(seed + idx) % districts.length];
+  }
+  if (citizen.faction === 'f-pantheon-covenant') return fromIndexes([1, 0, 3, 4, 2], idx);
+  if (citizen.faction === 'f-code-cantons') return fromIndexes([
+    Math.floor(districts.length / 2),
+    Math.floor(districts.length / 2) + 1,
+    Math.floor(districts.length / 2) - 1,
+    Math.floor(districts.length * 0.66)
+  ], idx);
+  if (citizen.faction === 'f-waking-order') return fromIndexes([2, 5, 8, 11], idx);
+  if (citizen.faction === 'f-iron-library') return fromIndexes([
+    Math.floor(districts.length * 0.62),
+    Math.floor(districts.length * 0.72),
+    Math.floor(districts.length * 0.52)
+  ], idx);
+  return districts[(seed + idx) % districts.length];
 }
 
 function citizenVisualPosition(citizen, idx) {
@@ -2702,14 +2720,14 @@ function citizenVisualPosition(citizen, idx) {
   if (!district) return citizen.position || null;
   const seed = hashText(citizen.id || citizen.name || idx);
   const mood = CITIZEN_MOODS[citizenEmotionMood(citizen, action)] || CITIZEN_MOODS.relaxed;
-  const lane = seed % 6;
-  const radius = (district.scale || 10) + 10 + lane * 3.2;
-  const t = frameCount * 0.012 * mood.speed + seed * 0.001;
+  const lane = seed % 8;
+  const radius = (district.scale || 10) + 18 + lane * 5.5;
+  const t = frameCount * 0.008 * mood.speed + seed * 0.001;
   const angle = seed * 0.017 + t;
-  const actionPull = action ? Math.sin(frameCount * 0.035 + seed) * 1.8 : 0;
+  const actionPull = action ? Math.sin(frameCount * 0.032 + seed) * 1.2 : 0;
   return {
     x: clampValue(district.x + Math.cos(angle) * (radius + actionPull), 8, WORLD_W - 8),
-    y: clampValue(district.y + Math.sin(angle * 0.91) * radius * 0.54 + Math.sin(frameCount * 0.07 + seed) * mood.bob, 12, WORLD_H - 8),
+    y: clampValue(district.y + Math.sin(angle * 0.91) * radius * 0.62 + Math.sin(frameCount * 0.07 + seed) * mood.bob, 12, WORLD_H - 8),
     district,
     action,
     seed,
@@ -2797,7 +2815,39 @@ function drawCitizenActionEffect(pos, action, palette) {
   }
 }
 
+function drawCitizenMiniSprite(citizen, pos, idx) {
+  const palette = citizenPalette(citizen);
+  const action = pos.action;
+  const moodName = citizenEmotionMood(citizen, action);
+  const mood = CITIZEN_MOODS[moodName] || CITIZEN_MOODS.relaxed;
+  const x = Math.round(pos.x);
+  const y = Math.round(pos.y);
+  const bob = Math.sin(frameCount * 0.12 + pos.seed) > 0.25 ? 1 : 0;
+  ctx.globalAlpha = 0.18;
+  rect(x - 3, y + 5, 7, 1, '#000');
+  ctx.globalAlpha = 1;
+  rect(x - 1, y - 6 + bob, 3, 3, palette.skin);
+  px(x, y - 5 + bob, '#111827');
+  rect(x - 2, y - 3 + bob, 5, 5, palette.body);
+  px(x - 2, y + 2 + bob, palette.trim);
+  px(x + 2, y + 2 + bob, palette.trim);
+  px(x - 1, y + 3 + bob, '#111827');
+  px(x + 1, y + 3 + bob, '#111827');
+  if (action) {
+    const visual = actionVisual(action);
+    px(x - 4, y - 4, visual.color);
+    px(x + 4, y - 4, visual.accent);
+    if (idx % 2 === 0) px(x, y - 9, visual.color);
+  } else if (idx % 4 === 0) {
+    px(x, y - 8, mood.color);
+  }
+}
+
 function drawCitizenSprite(citizen, pos, idx) {
+  if (SCALE < 5) {
+    drawCitizenMiniSprite(citizen, pos, idx);
+    return;
+  }
   const palette = citizenPalette(citizen);
   const action = pos.action;
   const moodName = citizenEmotionMood(citizen, action);
@@ -2830,7 +2880,7 @@ function drawCitizenSprite(citizen, pos, idx) {
     px(x + 4, y - 11 + bob, actionVisual(action).accent);
   }
 
-  if (SCALE >= 4 && idx % 3 === 0) {
+  if (SCALE >= 5 && idx % 6 === 0) {
     const label = String(citizen.name || '').split(' ')[0].toUpperCase().slice(0, 7);
     ctx.globalAlpha = 0.75;
     rect(x - label.length * 2 - 3, y + 13, label.length * 4 + 6, 7, 'rgba(8,12,22,0.68)');
@@ -2923,20 +2973,58 @@ function drawGameWonderHighlight() {
   drawPixelText(focus.label, x - focus.label.length * 2, y - ring * 0.58 - 11, visual.color);
 }
 
+function citizenDrawPriority(citizen, pos, order) {
+  let score = 0;
+  if (pos.action) score += 70;
+  if (citizen.faction === 'f-pantheon-covenant' || citizen.faction === 'f-code-cantons') score += 18;
+  const focus = gameWonderFocus();
+  if (focus && Math.hypot(pos.x - focus.x, pos.y - focus.y) < focus.radius + 28) score += 18;
+  if (['diplomat', 'priestess', 'oracle', 'warrior', 'builder', 'merchant', 'scholar'].includes(citizen.profession)) score += 8;
+  score += (hashText(citizen.id || citizen.name || order) % 100) / 100;
+  return score;
+}
+
+function citizenDistrictKey(pos) {
+  return pos && pos.district && (pos.district.id || pos.district.name) || 'wild';
+}
+
+function citizenTooCloseToDrawn(pos, drawnPositions) {
+  for (const other of drawnPositions) {
+    if (Math.hypot(pos.x - other.x, pos.y - other.y) < CITIZEN_WORLD_GAP) return true;
+  }
+  return false;
+}
+
 function drawCitizens() {
   if (!world.citizens || world.citizens.length === 0) return;
   const vL = camX - 20, vR = camX + screenW / SCALE + 20;
   const vT = camY - 20, vB = camY + screenH / SCALE + 20;
-  let drawn = 0;
   const citizens = world.citizens.filter(function(c) { return c && c.alive !== false; });
+  const candidates = [];
   for (let i = 0; i < citizens.length; i++) {
     const c = citizens[i];
     const pos = citizenVisualPosition(c, i);
     if (!pos) continue;
     const cx = pos.x, cy = pos.y;
     if (cx < vL || cx > vR || cy < vT || cy > vB) continue;
-    drawCitizenSprite(c, pos, drawn);
+    candidates.push({ citizen: c, pos, order: i, priority: citizenDrawPriority(c, pos, i) });
+  }
+  candidates.sort(function(a, b) {
+    return b.priority - a.priority || hashText(a.citizen.id || a.citizen.name) - hashText(b.citizen.id || b.citizen.name);
+  });
+
+  let drawn = 0;
+  const districtCounts = {};
+  const drawnPositions = [];
+  for (const item of candidates) {
+    const key = citizenDistrictKey(item.pos);
+    const limit = item.priority >= 85 ? CITIZEN_PER_DISTRICT_LIMIT + 1 : CITIZEN_PER_DISTRICT_LIMIT;
+    if ((districtCounts[key] || 0) >= limit) continue;
+    if (item.priority < 85 && citizenTooCloseToDrawn(item.pos, drawnPositions)) continue;
+    drawCitizenSprite(item.citizen, item.pos, drawn);
     drawn++;
+    districtCounts[key] = (districtCounts[key] || 0) + 1;
+    drawnPositions.push({ x: item.pos.x, y: item.pos.y });
     if (drawn >= CITIZEN_VISUAL_LIMIT) break;
   }
 }
@@ -3471,17 +3559,28 @@ function ambientDialogueSources() {
     });
   }
 
-  const citizens = (world.citizens || []).filter(function(c) { return c.alive; }).slice(0, 12);
+  const citizenCandidates = [];
+  const citizens = (world.citizens || []).filter(function(c) { return c.alive; });
   for (let i = 0; i < citizens.length; i++) {
     const pos = citizenVisualPosition(citizens[i], i) || citizenVoicePosition(citizens[i], i);
     if (!pos || !pointVisible(pos.x, pos.y, 20)) continue;
+    citizenCandidates.push({ citizen: citizens[i], pos, order: i, priority: citizenDrawPriority(citizens[i], pos, i) });
+  }
+  citizenCandidates.sort(function(a, b) { return b.priority - a.priority; });
+  const speakingPositions = [];
+  let citizenSpeakers = 0;
+  for (const item of citizenCandidates) {
+    if (citizenTooCloseToDrawn(item.pos, speakingPositions)) continue;
     sources.push({
-      id: citizens[i].id || ('citizen-' + i),
-      x: pos.x,
-      y: pos.y - 6,
-      color: citizenVoiceColor(citizens[i]),
-      text: citizenDialogueLine(citizens[i], Math.floor(frameCount / 150 + i * 17))
+      id: item.citizen.id || ('citizen-' + item.order),
+      x: item.pos.x,
+      y: item.pos.y - 6,
+      color: citizenVoiceColor(item.citizen),
+      text: citizenDialogueLine(item.citizen, Math.floor(frameCount / 150 + item.order * 17))
     });
+    speakingPositions.push({ x: item.pos.x, y: item.pos.y });
+    citizenSpeakers++;
+    if (citizenSpeakers >= 5) break;
   }
   return sources;
 }

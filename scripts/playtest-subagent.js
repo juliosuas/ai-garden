@@ -133,6 +133,10 @@ async function main() {
   check(index.includes('settlementSites'), 'canvas does not consume settlement construction sites');
   check(index.includes('drawCitizenSprite'), 'citizens do not render as animated pixel sprites');
   check(index.includes('citizenVisualPosition'), 'citizens are not projected into visible animated positions');
+  check(index.includes('const CITIZEN_VISUAL_LIMIT = 28'), 'too many citizens can render at once');
+  check(index.includes('CITIZEN_PER_DISTRICT_LIMIT'), 'citizens lack a per-district crowd limit');
+  check(index.includes('citizenTooCloseToDrawn'), 'citizens lack spacing to prevent crowd clumps');
+  check(index.includes('drawCitizenMiniSprite'), 'zoomed-out citizens should render as compact mini sprites');
   check(index.includes('drawAgentActionBeacons'), 'agent action animations are missing');
   check(index.includes('citizenEmotionMood'), 'citizen emotion animation state is missing');
   check(index.includes('world.agentActions = shared.agentActions || []'), 'client does not load shared agent action ledger');
