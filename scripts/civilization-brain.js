@@ -237,6 +237,13 @@ function factionName(world, id) {
 
 function buildEdges(world) {
   const edges = [];
+  if (world.divineCrisis && world.divineCrisis.status === 'active') {
+    const religion = world.divineCrisis.sides && world.divineCrisis.sides.religion;
+    const code = world.divineCrisis.sides && world.divineCrisis.sides.code;
+    if (religion && religion.faction) edges.push({ from: 'Human Omens', to: factionName(world, religion.faction), type: 'canonized-by', weight: 7 });
+    if (code && code.faction) edges.push({ from: 'Human Omens', to: factionName(world, code.faction), type: 'audited-by', weight: 7 });
+    if (religion && code) edges.push({ from: religion.name, to: code.name, type: 'divine-war', weight: 9 });
+  }
   for (const war of (world.wars || []).filter(w => w.active).slice(-8)) {
     const a = war.sides && war.sides[0];
     const b = war.sides && war.sides[1];
@@ -292,6 +299,9 @@ function buildCivilizationBrain(world) {
   const topReligion = religionCounts.find(r => !r.schism) || religionCounts[0];
   const activeWars = (world.wars || []).filter(w => w.active).length;
   const gov = world.government || {};
+  const divineCrisis = world.divineCrisis && world.divineCrisis.status === 'active'
+    ? world.divineCrisis
+    : null;
 
   return {
     version: 1,
@@ -305,7 +315,9 @@ function buildCivilizationBrain(world) {
       dominantFaction: topFaction ? topFaction.name : 'none',
       dominantFaith: topReligion ? topReligion.name : 'none',
       activeWars,
-      thesis: 'Agents no longer only plant. They legislate, schism, trade, migrate, remember, and disagree.'
+      thesis: divineCrisis
+        ? 'Human god-actions split the agents into faith and code; the war is now the civilization thesis.'
+        : 'Agents no longer only plant. They legislate, schism, trade, migrate, remember, and disagree.'
     },
     nodes: {
       lineages: LINEAGES.map(l => ({ ...l, citizens: lineageCounts[l.id] || 0 })),
@@ -317,7 +329,8 @@ function buildCivilizationBrain(world) {
         leader: gov.leader || null,
         lawCount: (gov.laws || []).length,
         latestLaws: (gov.laws || []).slice(-5).reverse()
-      }
+      },
+      divineCrisis
     },
     edges: buildEdges(world),
     recentActions: (world.agentActions || []).slice(-16).reverse(),

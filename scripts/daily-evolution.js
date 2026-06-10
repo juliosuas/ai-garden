@@ -22,6 +22,7 @@ const path = require('path');
 const { refreshCivilization } = require('./civilization-brain');
 const { applySocietyDirectorPlan, normalizeWorldLanguage, refreshSocietyDirector } = require('./society-director');
 const { refreshCivilizationVisuals } = require('./civilization-visuals');
+const { maintainDivineWar } = require('./divine-war');
 
 const WORLD  = path.join(__dirname, '..', 'experiments', 'world-state.json');
 const README = path.join(__dirname, '..', 'README.md');
@@ -349,7 +350,8 @@ function declareWar() {
 }
 
 function endWar() {
-  const active = world.wars.filter(w => w.active);
+  const day = (world.chronicle && world.chronicle.day) || 0;
+  const active = world.wars.filter(w => w.active && (!(w.lockedUntilDay) || w.lockedUntilDay <= day));
   if (!active.length) return null;
   const w = pick(active);
   w.active = false;
@@ -640,6 +642,9 @@ function step() {
   world.chronicle.day++;
   const today = new Date().toISOString();
   const events = [];
+
+  const divineWarBeat = maintainDivineWar(world, { timestamp: today });
+  if (divineWarBeat) events.push(divineWarBeat);
 
   // 1. Births (unchanged rhythm)
   const births = between(2, 5);

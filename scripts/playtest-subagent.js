@@ -64,6 +64,8 @@ async function main() {
   const civilizationView = world.civilizationView || {};
   const settlementSites = Array.isArray(civilizationView.settlementSites) ? civilizationView.settlementSites : [];
   const settlementTypes = new Set(settlementSites.map(site => site.type));
+  const divineCrisis = world.divineCrisis || null;
+  const divineWar = (world.wars || []).find(war => war.id === 'war-divine-omens');
 
   check(world.civilizationBrain && world.civilizationBrain.summary, 'missing civilizationBrain summary');
   check(Array.isArray(world.agentActions) && world.agentActions.length >= 12, 'agent action ledger is too thin');
@@ -92,6 +94,11 @@ async function main() {
   check((world.crabAgents || []).some(crab => crab.name === 'Claude'), 'Claude crab is missing');
   check((world.crabAgents || []).every(crab => crab.personality && Array.isArray(crab.dialogue) && crab.dialogue.length >= 2), 'each OpenClaw crab needs personality and dialogue');
   check(Array.isArray(world.crabActions) && world.crabActions.length >= 1, 'missing OpenClaw crab action ledger');
+  check(divineCrisis && divineCrisis.status === 'active', 'divine crisis is not active');
+  check(divineCrisis && divineCrisis.sides && divineCrisis.sides.religion && divineCrisis.sides.code, 'divine crisis needs pro-religion and pro-code sides');
+  check(divineWar && divineWar.active && divineWar.lockedUntilDay > ((world.chronicle && world.chronicle.day) || 0), 'divine war should be active and locked against random truce');
+  check((world.factions || []).some(f => f.id === 'f-pantheon-covenant'), 'pro-religion faction is missing');
+  check((world.factions || []).some(f => f.id === 'f-code-cantons'), 'pro-code faction is missing');
 
   for (const beat of (director && director.tickerBeats) || []) {
     check(String(beat.text || '').length <= 155, `ticker beat too long: ${beat.text}`);
@@ -126,6 +133,7 @@ async function main() {
   check(humans.includes('DIRECTOR QUESTS'), 'CIV panel does not expose director quests');
   check(humans.includes('DIRECTOR TENSIONS'), 'CIV panel does not expose director tensions');
   check(humans.includes('Observer Weather'), 'CIV panel does not expose human omen consequences');
+  check(humans.includes('DIVINE CRISIS'), 'CIV panel does not expose the divine crisis');
   check(humans.includes('convivencia:'), 'CIV panel does not expose applied convivencia plan');
   check(!humans.includes('cosmetic · agents do not see'), 'God Mode still says it is cosmetic');
   check(humans.includes("m.kind !== 'god'"), 'Observer Lounge may still render god spam');
@@ -150,6 +158,7 @@ async function main() {
   check(dailyEvolution.includes('FIRST_WORKS'), 'daily evolution does not generate first-civilization works');
   check(dailyEvolution.includes('FIRST_WORK_PURPOSES'), 'daily evolution does not explain why first-camp works matter');
   check(dailyEvolution.includes("era: FIRST_WORKS.has(type) ? 'first-camp'"), 'daily evolution does not tag first-camp structures');
+  check(dailyEvolution.includes('maintainDivineWar'), 'daily evolution does not maintain the divine war');
 
   await checkLocalUrl(url);
 

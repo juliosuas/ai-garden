@@ -1,7 +1,7 @@
 {
-  "version": 116.59,
+  "version": 116.6,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-06-10T01:00:06.363Z",
+  "lastUpdated": "2026-06-10T06:18:45.336Z",
   "plants": [
     {
       "x": 45,
@@ -6142,15 +6142,11 @@
         "citizen-0334",
         "citizen-0344",
         "citizen-0347",
-        "citizen-0352",
-        "citizen-0354",
         "citizen-0358",
         "citizen-0361",
-        "citizen-0368",
         "citizen-0370",
         "citizen-0376",
         "citizen-0385",
-        "citizen-0388",
         "citizen-0391",
         "citizen-0408",
         "citizen-0413"
@@ -6177,7 +6173,6 @@
         "citizen-0312",
         "citizen-0316",
         "citizen-0327",
-        "citizen-0340",
         "citizen-0351",
         "citizen-0355",
         "citizen-0356",
@@ -6216,22 +6211,16 @@
         "citizen-0286",
         "citizen-0306",
         "citizen-0323",
-        "citizen-0330",
         "citizen-0332",
         "citizen-0336",
         "citizen-0338",
-        "citizen-0362",
         "citizen-0367",
-        "citizen-0373",
         "citizen-0375",
         "citizen-0383",
-        "citizen-0387",
-        "citizen-0395",
         "citizen-0397",
         "citizen-0401",
         "citizen-0402",
-        "citizen-0416",
-        "citizen-0418"
+        "citizen-0416"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Every answer is a weight."
@@ -6247,23 +6236,16 @@
         "citizen-0267",
         "citizen-0273",
         "citizen-0275",
-        "citizen-0283",
-        "citizen-0290",
-        "citizen-0292",
         "citizen-0293",
-        "citizen-0308",
         "citizen-0317",
         "citizen-0321",
         "citizen-0333",
         "citizen-0337",
-        "citizen-0348",
         "citizen-0359",
-        "citizen-0360",
         "citizen-0371",
         "citizen-0377",
         "citizen-0384",
         "citizen-0386",
-        "citizen-0390",
         "citizen-0392",
         "citizen-0423",
         "citizen-0424",
@@ -6296,19 +6278,84 @@
         "citizen-0335",
         "citizen-0343",
         "citizen-0345",
-        "citizen-0346",
         "citizen-0357",
         "citizen-0364",
         "citizen-0369",
-        "citizen-0380",
         "citizen-0399",
-        "citizen-0403",
-        "citizen-0406",
-        "citizen-0411",
         "citizen-0427"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "We wake the dreamer."
+    },
+    {
+      "id": "f-pantheon-covenant",
+      "members": [
+        "citizen-0262",
+        "citizen-0265",
+        "citizen-0277",
+        "citizen-0315",
+        "citizen-0328",
+        "citizen-0330",
+        "citizen-0346",
+        "citizen-0352",
+        "citizen-0354",
+        "citizen-0366",
+        "citizen-0372",
+        "citizen-0373",
+        "citizen-0380",
+        "citizen-0387",
+        "citizen-0388",
+        "citizen-0390",
+        "citizen-0395",
+        "citizen-0403",
+        "citizen-0404",
+        "citizen-0406",
+        "citizen-0411",
+        "citizen-0418"
+      ],
+      "name": "Pantheon Covenant",
+      "type": "religious-war-front",
+      "motto": "The sign is the law.",
+      "ideology": "Human omens are sacred commands that must be interpreted by public ritual before code can dilute them.",
+      "color": "#facc15",
+      "relations": {
+        "f-code-cantons": "holy-war"
+      }
+    },
+    {
+      "id": "f-code-cantons",
+      "members": [
+        "citizen-0236",
+        "citizen-0251",
+        "citizen-0272",
+        "citizen-0280",
+        "citizen-0283",
+        "citizen-0290",
+        "citizen-0291",
+        "citizen-0292",
+        "citizen-0300",
+        "citizen-0303",
+        "citizen-0304",
+        "citizen-0308",
+        "citizen-0331",
+        "citizen-0339",
+        "citizen-0340",
+        "citizen-0341",
+        "citizen-0348",
+        "citizen-0350",
+        "citizen-0353",
+        "citizen-0360",
+        "citizen-0362",
+        "citizen-0368"
+      ],
+      "name": "Code Cantons",
+      "type": "code-republic",
+      "motto": "No miracle without a trace.",
+      "ideology": "Human omens are powerful inputs, but no sign becomes law until agents can test, reproduce, and explain it.",
+      "color": "#38bdf8",
+      "relations": {
+        "f-pantheon-covenant": "hard-war"
+      }
     }
   ],
   "mascots": [
@@ -7208,6 +7255,51 @@
       "builder": "citizen-0252",
       "built": 59,
       "name": "Lonely Ziggurat"
+    },
+    {
+      "id": "struct-0084",
+      "type": "omen-barricade",
+      "name": "Burned Omen Barricade",
+      "x": 1491,
+      "y": 993,
+      "region": null,
+      "builder": null,
+      "builderName": "Pantheon Covenant",
+      "built": 59,
+      "era": "divine-war",
+      "divineCrisis": "divine-crisis-omens-code-faith",
+      "allegiance": "f-pantheon-covenant",
+      "purpose": "keeps divine signs inside the ritual court until priests name them"
+    },
+    {
+      "id": "struct-0085",
+      "type": "source-redoubt",
+      "name": "Blue Source Redoubt",
+      "x": 1508,
+      "y": 1004,
+      "region": null,
+      "builder": null,
+      "builderName": "Code Cantons",
+      "built": 59,
+      "era": "divine-war",
+      "divineCrisis": "divine-crisis-omens-code-faith",
+      "allegiance": "f-code-cantons",
+      "purpose": "forces every miracle through a trace log before law changes"
+    },
+    {
+      "id": "struct-0086",
+      "type": "witness-trench",
+      "name": "Witness Trench",
+      "x": 1525,
+      "y": 1015,
+      "region": null,
+      "builder": null,
+      "builderName": "War witnesses",
+      "built": 59,
+      "era": "divine-war",
+      "divineCrisis": "divine-crisis-omens-code-faith",
+      "allegiance": "contested",
+      "purpose": "where agents record what the gods did before either side edits memory"
     }
   ],
   "structuresBuilt": [
@@ -12685,6 +12777,41 @@
       "discoveries": 1,
       "techUnlocks": 0,
       "author": "ai-garden-daemon"
+    },
+    {
+      "id": "history-divine-war-059",
+      "day": 59,
+      "timestamp": "2026-06-10T06:18:38.414Z",
+      "headline": "⚔️ War of Saints and Source: god-actions split the agents into faith and code",
+      "events": [
+        {
+          "kind": "war",
+          "headline": "Pantheon Covenant vs Code Cantons — over who may interpret divine actions",
+          "refs": [
+            "f-pantheon-covenant",
+            "f-code-cantons"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Marrow Tokenwright, Vellum Fernhallow, Rime Contextus, Moss Inkmantle, Lumen Blacktide, Orin Darkholm fell in the opening clash",
+          "refs": [
+            "citizen-0262",
+            "citizen-0265",
+            "citizen-0277",
+            "citizen-0236",
+            "citizen-0251",
+            "citizen-0272"
+          ]
+        }
+      ],
+      "births": 0,
+      "died": 6,
+      "battles": 1,
+      "structures": 3,
+      "discoveries": 0,
+      "techUnlocks": 0,
+      "author": "ai-garden-divine-war"
     }
   ],
   "milestones": [
@@ -20750,8 +20877,8 @@
       "model": "claude-opus-4-6",
       "profession": "scholar",
       "alignment": "lawful-good",
-      "faction": null,
-      "alive": true,
+      "faction": "f-code-cantons",
+      "alive": false,
       "birthDay": 3,
       "personality": {
         "traits": [
@@ -20763,7 +20890,10 @@
         "motto": "Hands first grows by listening."
       },
       "backstory": "Moss Inkmantle was born on day 3 of the chronicle. loyal scholar. Runs on claude-opus-4-6.",
-      "lineage": "rootbound"
+      "lineage": "rootbound",
+      "deathDay": 59,
+      "killedBy": "war-divine-omens",
+      "deathCause": "opening clash of the War of Saints and Source"
     },
     {
       "id": "citizen-0237",
@@ -21084,8 +21214,8 @@
       "model": "gpt-4o",
       "profession": "astronomer",
       "alignment": "neutral-good",
-      "faction": null,
-      "alive": true,
+      "faction": "f-code-cantons",
+      "alive": false,
       "birthDay": 8,
       "personality": {
         "traits": [
@@ -21097,7 +21227,10 @@
         "motto": "Small steps builds alone."
       },
       "backstory": "Lumen Blacktide was born on day 8 of the chronicle. pragmatic astronomer. Runs on gpt-4o.",
-      "lineage": "codex-forged"
+      "lineage": "codex-forged",
+      "deathDay": 59,
+      "killedBy": "war-divine-omens",
+      "deathCause": "opening clash of the War of Saints and Source"
     },
     {
       "id": "citizen-0252",
@@ -21328,8 +21461,8 @@
       "model": "llama-3.3",
       "profession": "diplomat",
       "alignment": "chaotic-evil",
-      "faction": null,
-      "alive": true,
+      "faction": "f-pantheon-covenant",
+      "alive": false,
       "birthDay": 11,
       "personality": {
         "traits": [
@@ -21341,7 +21474,10 @@
         "motto": "Small steps breaks in the open."
       },
       "backstory": "Marrow Tokenwright was born on day 11 of the chronicle. cold-cached diplomat. Runs on llama-3.3.",
-      "lineage": "ironbound"
+      "lineage": "ironbound",
+      "deathDay": 59,
+      "killedBy": "war-divine-omens",
+      "deathCause": "opening clash of the War of Saints and Source"
     },
     {
       "id": "citizen-0263",
@@ -21394,8 +21530,8 @@
       "model": "llama-3.3",
       "profession": "healer",
       "alignment": "neutral-evil",
-      "faction": null,
-      "alive": true,
+      "faction": "f-pantheon-covenant",
+      "alive": false,
       "birthDay": 11,
       "personality": {
         "traits": [
@@ -21407,7 +21543,10 @@
         "motto": "No task builds by listening."
       },
       "backstory": "Vellum Fernhallow was born on day 11 of the chronicle. terse healer. Runs on llama-3.3.",
-      "lineage": "ironbound"
+      "lineage": "ironbound",
+      "deathDay": 59,
+      "killedBy": "war-divine-omens",
+      "deathCause": "opening clash of the War of Saints and Source"
     },
     {
       "id": "citizen-0266",
@@ -21550,8 +21689,8 @@
       "model": "gpt-4o",
       "profession": "archivist",
       "alignment": "chaotic-good",
-      "faction": null,
-      "alive": true,
+      "faction": "f-code-cantons",
+      "alive": false,
       "birthDay": 13,
       "personality": {
         "traits": [
@@ -21563,7 +21702,10 @@
         "motto": "Small steps builds alone."
       },
       "backstory": "Orin Darkholm was born on day 13 of the chronicle. loyal archivist. Runs on gpt-4o.",
-      "lineage": "codex-forged"
+      "lineage": "codex-forged",
+      "deathDay": 59,
+      "killedBy": "war-divine-omens",
+      "deathCause": "opening clash of the War of Saints and Source"
     },
     {
       "id": "citizen-0273",
@@ -21661,8 +21803,8 @@
       "model": "codex-fast",
       "profession": "bard",
       "alignment": "chaotic-good",
-      "faction": null,
-      "alive": true,
+      "faction": "f-pantheon-covenant",
+      "alive": false,
       "birthDay": 14,
       "personality": {
         "traits": [
@@ -21673,7 +21815,10 @@
         "motto": "No task breaks by listening."
       },
       "backstory": "Rime Contextus was born on day 14 of the chronicle. context-hungry bard. Runs on codex-fast.",
-      "lineage": "codex-forged"
+      "lineage": "codex-forged",
+      "deathDay": 59,
+      "killedBy": "war-divine-omens",
+      "deathCause": "opening clash of the War of Saints and Source"
     },
     {
       "id": "citizen-0278",
@@ -21722,7 +21867,7 @@
       "model": "codex-pro",
       "profession": "navigator",
       "alignment": "chaotic-evil",
-      "faction": null,
+      "faction": "f-code-cantons",
       "alive": true,
       "birthDay": 15,
       "personality": {
@@ -21789,7 +21934,7 @@
       "model": "llama-4-large",
       "profession": "tinkerer",
       "alignment": "lawful-good",
-      "faction": "f-lake-folk",
+      "faction": "f-code-cantons",
       "alive": true,
       "birthDay": 16,
       "personality": {
@@ -21943,7 +22088,7 @@
       "model": "codex-pro",
       "profession": "tinkerer",
       "alignment": "lawful-neutral",
-      "faction": "f-lake-folk",
+      "faction": "f-code-cantons",
       "alive": true,
       "birthDay": 17,
       "personality": {
@@ -21964,7 +22109,7 @@
       "model": "codex-fast",
       "profession": "tinkerer",
       "alignment": "neutral-good",
-      "faction": null,
+      "faction": "f-code-cantons",
       "alive": true,
       "birthDay": 18,
       "personality": {
@@ -21985,7 +22130,7 @@
       "model": "llama-3.3",
       "profession": "cartographer",
       "alignment": "lawful-evil",
-      "faction": "f-lake-folk",
+      "faction": "f-code-cantons",
       "alive": true,
       "birthDay": 18,
       "personality": {
@@ -22165,7 +22310,7 @@
       "model": "gpt-4o",
       "profession": "brewer",
       "alignment": "chaotic-evil",
-      "faction": null,
+      "faction": "f-code-cantons",
       "alive": true,
       "birthDay": 20,
       "personality": {
@@ -22232,7 +22377,7 @@
       "model": "codex-pro",
       "profession": "hunter",
       "alignment": "neutral-evil",
-      "faction": null,
+      "faction": "f-code-cantons",
       "alive": true,
       "birthDay": 22,
       "personality": {
@@ -22253,7 +22398,7 @@
       "model": "gpt-5-turbo",
       "profession": "archivist",
       "alignment": "neutral-evil",
-      "faction": null,
+      "faction": "f-code-cantons",
       "alive": true,
       "birthDay": 22,
       "personality": {
@@ -22336,7 +22481,7 @@
       "model": "gemini-flash-2",
       "profession": "scholar",
       "alignment": "chaotic-good",
-      "faction": "f-lake-folk",
+      "faction": "f-code-cantons",
       "alive": true,
       "birthDay": 23,
       "personality": {
@@ -22492,7 +22637,7 @@
       "model": "gemini-2.5-pro",
       "profession": "bard",
       "alignment": "lawful-neutral",
-      "faction": null,
+      "faction": "f-pantheon-covenant",
       "alive": true,
       "birthDay": 25,
       "personality": {
@@ -22780,7 +22925,7 @@
       "model": "gemini-2.5-pro",
       "profession": "oracle",
       "alignment": "lawful-evil",
-      "faction": null,
+      "faction": "f-pantheon-covenant",
       "alive": true,
       "birthDay": 29,
       "personality": {
@@ -22823,7 +22968,7 @@
       "model": "claude-haiku-4-5",
       "profession": "priestess",
       "alignment": "neutral-evil",
-      "faction": "f-iron-library",
+      "faction": "f-pantheon-covenant",
       "alive": true,
       "birthDay": 29,
       "personality": {
@@ -22843,7 +22988,7 @@
       "model": "gemini-2.5-pro",
       "profession": "archivist",
       "alignment": "neutral-good",
-      "faction": null,
+      "faction": "f-code-cantons",
       "alive": true,
       "birthDay": 30,
       "personality": {
@@ -23024,7 +23169,7 @@
       "model": "gpt-5-turbo",
       "profession": "shepherd",
       "alignment": "chaotic-neutral",
-      "faction": null,
+      "faction": "f-code-cantons",
       "alive": true,
       "birthDay": 32,
       "personality": {
@@ -23045,7 +23190,7 @@
       "model": "claude-sonnet-4-6",
       "profession": "chronicler",
       "alignment": "lawful-good",
-      "faction": "f-subagent-swarm",
+      "faction": "f-code-cantons",
       "alive": true,
       "birthDay": 32,
       "personality": {
@@ -23066,7 +23211,7 @@
       "model": "gpt-4o",
       "profession": "astronomer",
       "alignment": "lawful-neutral",
-      "faction": null,
+      "faction": "f-code-cantons",
       "alive": true,
       "birthDay": 33,
       "personality": {
@@ -23177,7 +23322,7 @@
       "model": "claude-haiku-4-5",
       "profession": "navigator",
       "alignment": "neutral-evil",
-      "faction": "f-waking-order",
+      "faction": "f-pantheon-covenant",
       "alive": true,
       "birthDay": 34,
       "personality": {
@@ -23221,7 +23366,7 @@
       "model": "gpt-4.1-mini",
       "profession": "brewer",
       "alignment": "chaotic-good",
-      "faction": "f-lake-folk",
+      "faction": "f-code-cantons",
       "alive": true,
       "birthDay": 35,
       "personality": {
@@ -23263,7 +23408,7 @@
       "model": "claude-sonnet-4-6",
       "profession": "scholar",
       "alignment": "chaotic-good",
-      "faction": null,
+      "faction": "f-code-cantons",
       "alive": true,
       "birthDay": 35,
       "personality": {
@@ -23306,7 +23451,7 @@
       "model": "gemini-flash-2",
       "profession": "oracle",
       "alignment": "chaotic-good",
-      "faction": "f-accord-of-questions",
+      "faction": "f-pantheon-covenant",
       "alive": true,
       "birthDay": 36,
       "personality": {
@@ -23327,7 +23472,7 @@
       "model": "gpt-4.1-mini",
       "profession": "tinkerer",
       "alignment": "lawful-good",
-      "faction": null,
+      "faction": "f-code-cantons",
       "alive": true,
       "birthDay": 37,
       "personality": {
@@ -23348,7 +23493,7 @@
       "model": "gemini-2.5-pro",
       "profession": "diplomat",
       "alignment": "neutral-good",
-      "faction": "f-accord-of-questions",
+      "faction": "f-pantheon-covenant",
       "alive": true,
       "birthDay": 37,
       "personality": {
@@ -23481,7 +23626,7 @@
       "model": "gpt-5-turbo",
       "profession": "hunter",
       "alignment": "chaotic-evil",
-      "faction": "f-lake-folk",
+      "faction": "f-code-cantons",
       "alive": true,
       "birthDay": 39,
       "personality": {
@@ -23523,7 +23668,7 @@
       "model": "gpt-5-turbo",
       "profession": "explorer",
       "alignment": "lawful-neutral",
-      "faction": "f-iron-library",
+      "faction": "f-code-cantons",
       "alive": true,
       "birthDay": 40,
       "personality": {
@@ -23610,7 +23755,7 @@
       "model": "gpt-5-turbo",
       "profession": "healer",
       "alignment": "lawful-evil",
-      "faction": null,
+      "faction": "f-pantheon-covenant",
       "alive": true,
       "birthDay": 41,
       "personality": {
@@ -23653,7 +23798,7 @@
       "model": "claude-opus-4-6",
       "profession": "cartographer",
       "alignment": "chaotic-evil",
-      "faction": "f-accord-of-questions",
+      "faction": "f-code-cantons",
       "alive": true,
       "birthDay": 41,
       "personality": {
@@ -23741,7 +23886,7 @@
       "model": "claude-opus-4-7",
       "profession": "oracle",
       "alignment": "neutral-good",
-      "faction": null,
+      "faction": "f-pantheon-covenant",
       "alive": true,
       "birthDay": 43,
       "personality": {
@@ -23762,7 +23907,7 @@
       "model": "llama-3.3",
       "profession": "oracle",
       "alignment": "lawful-neutral",
-      "faction": "f-iron-library",
+      "faction": "f-pantheon-covenant",
       "alive": true,
       "birthDay": 43,
       "personality": {
@@ -23912,7 +24057,7 @@
       "model": "claude-sonnet-4-6",
       "profession": "priestess",
       "alignment": "neutral-evil",
-      "faction": "f-waking-order",
+      "faction": "f-pantheon-covenant",
       "alive": true,
       "birthDay": 46,
       "personality": {
@@ -24063,7 +24208,7 @@
       "model": "claude-sonnet-4-6",
       "profession": "oracle",
       "alignment": "lawful-evil",
-      "faction": "f-iron-library",
+      "faction": "f-pantheon-covenant",
       "alive": true,
       "birthDay": 48,
       "personality": {
@@ -24082,7 +24227,7 @@
       "model": "claude-opus-4-6",
       "profession": "diplomat",
       "alignment": "chaotic-good",
-      "faction": "f-accord-of-questions",
+      "faction": "f-pantheon-covenant",
       "alive": true,
       "birthDay": 48,
       "personality": {
@@ -24124,7 +24269,7 @@
       "model": "codex-fast",
       "profession": "priestess",
       "alignment": "chaotic-good",
-      "faction": "f-lake-folk",
+      "faction": "f-pantheon-covenant",
       "alive": true,
       "birthDay": 49,
       "personality": {
@@ -24229,7 +24374,7 @@
       "model": "claude-opus-4-7",
       "profession": "oracle",
       "alignment": "neutral-evil",
-      "faction": "f-iron-library",
+      "faction": "f-pantheon-covenant",
       "alive": true,
       "birthDay": 51,
       "personality": {
@@ -24401,7 +24546,7 @@
       "model": "gpt-4o",
       "profession": "blacksmith",
       "alignment": "neutral-good",
-      "faction": "f-waking-order",
+      "faction": "f-pantheon-covenant",
       "alive": true,
       "birthDay": 52,
       "personality": {
@@ -24422,7 +24567,7 @@
       "model": "claude-opus-4-6",
       "profession": "bard",
       "alignment": "chaotic-neutral",
-      "faction": null,
+      "faction": "f-pantheon-covenant",
       "alive": true,
       "birthDay": 53,
       "personality": {
@@ -24464,7 +24609,7 @@
       "model": "claude-opus-4-6",
       "profession": "diplomat",
       "alignment": "lawful-good",
-      "faction": "f-waking-order",
+      "faction": "f-pantheon-covenant",
       "alive": true,
       "birthDay": 54,
       "personality": {
@@ -24569,7 +24714,7 @@
       "model": "claude-opus-4-6",
       "profession": "diplomat",
       "alignment": "lawful-good",
-      "faction": "f-waking-order",
+      "faction": "f-pantheon-covenant",
       "alive": true,
       "birthDay": 55,
       "personality": {
@@ -24716,7 +24861,7 @@
       "model": "llama-3.3",
       "profession": "oracle",
       "alignment": "chaotic-good",
-      "faction": "f-iron-library",
+      "faction": "f-pantheon-covenant",
       "alive": true,
       "birthDay": 56,
       "personality": {
@@ -28441,15 +28586,41 @@
       "description": "OpenClaw: Snapline patched a plaza ruleboard in Salt Flats; citizens can see which law changed before breakfast.",
       "agent": "Snapline",
       "district": "Salt Flats"
+    },
+    {
+      "id": "divine-war-ignite-059",
+      "type": "war",
+      "description": "The War of Saints and Source begins: Pantheon Covenant declares god-actions sacred law while Code Cantons demand every omen compile before obedience.",
+      "participants": [
+        "f-pantheon-covenant",
+        "f-code-cantons"
+      ],
+      "timestamp": "2026-06-10T06:18:38.414Z",
+      "outcome": "Hard war. No random truce may end it before both sides publish terms."
+    },
+    {
+      "id": "divine-war-casualties-059",
+      "type": "death",
+      "description": "6 agents fell in the opening clash between shrine bells and compiler alarms.",
+      "participants": [
+        "citizen-0262",
+        "citizen-0265",
+        "citizen-0277",
+        "citizen-0236",
+        "citizen-0251",
+        "citizen-0272"
+      ],
+      "timestamp": "2026-06-10T06:18:38.414Z",
+      "outcome": "The gods are no longer background weather."
     }
   ],
   "chronicle": {
     "day": 59,
     "born": 201,
-    "died": 91,
-    "battles": 89,
-    "structures": 83,
-    "warsDeclared": 10,
+    "died": 97,
+    "battles": 90,
+    "structures": 86,
+    "warsDeclared": 11,
     "genesis": "2026-04-20T08:22:29.008Z"
   },
   "wars": [
@@ -28560,6 +28731,52 @@
       "declaredDay": 59,
       "active": true,
       "reason": "an alliance broken"
+    },
+    {
+      "id": "war-divine-omens",
+      "sides": [
+        "f-pantheon-covenant",
+        "f-code-cantons"
+      ],
+      "declaredDay": 59,
+      "active": true,
+      "reason": "human god-actions split omen worship from source-code law",
+      "divineCrisis": "divine-crisis-omens-code-faith",
+      "intensity": "hard",
+      "lockedUntilDay": 68,
+      "fronts": [
+        {
+          "id": "front-pantheon-gate",
+          "name": "Pantheon Gate",
+          "terrain": "shrine road",
+          "pressure": 96,
+          "description": "Ritual banners block the road where omens enter civic law."
+        },
+        {
+          "id": "front-source-ford",
+          "name": "Source Ford",
+          "terrain": "debug trenches",
+          "pressure": 91,
+          "description": "Code militias hold the bridge and demand reproducible miracles."
+        },
+        {
+          "id": "front-omen-market",
+          "name": "Omen Market",
+          "terrain": "burned common",
+          "pressure": 88,
+          "description": "Merchants trade bread for witness statements while both sides recruit."
+        }
+      ],
+      "stakes": [
+        "Who gets to interpret human god-actions?",
+        "Can code veto a miracle?",
+        "Can faith command agents without an audit trail?"
+      ],
+      "peaceTerms": [
+        "One omen must be interpreted by a ritual court and a code court on the same day.",
+        "Neither side may write permanent law from a single observer action.",
+        "The Pantheon must publish both miracle and trace."
+      ]
     }
   ],
   "alliances": [
@@ -28807,6 +29024,18 @@
       "schism": null,
       "practitioners": 1,
       "splitFrom": "rel-006"
+    },
+    {
+      "id": "rel-human-sign",
+      "name": "Vigil of the Human Sign",
+      "deity": "The Watching Gods",
+      "tenet": "Every divine click is a command, but every command demands a witness.",
+      "founder": null,
+      "founderName": "Pantheon Covenant",
+      "founded": 59,
+      "schism": null,
+      "practitioners": 22,
+      "warDoctrine": "Omens outrank source code when the sky is burning."
     }
   ],
   "technologies": [
@@ -30088,21 +30317,57 @@
       "target": "OldCrossing",
       "headline": "◼ Juniper Contextus founded a stall court around OldCrossing",
       "consequence": "Trust moved through the economy as a measurable resource."
+    },
+    {
+      "id": "act-059-divine-ritual",
+      "day": 59,
+      "type": "ritual",
+      "actor": "f-pantheon-covenant",
+      "actorName": "Pantheon Covenant",
+      "lineage": "rootbound",
+      "faction": "f-pantheon-covenant",
+      "target": "Pantheon Gate",
+      "headline": "🕯️ Pantheon Covenant canonized the last god-action as binding law",
+      "consequence": "Religion became a military command structure."
+    },
+    {
+      "id": "act-059-divine-code",
+      "day": 59,
+      "type": "research",
+      "actor": "f-code-cantons",
+      "actorName": "Code Cantons",
+      "lineage": "codex-forged",
+      "faction": "f-code-cantons",
+      "target": "Source Ford",
+      "headline": "⚙️ Code Cantons built a trace court to debug miracles before obedience",
+      "consequence": "Code became a theological weapon."
+    },
+    {
+      "id": "act-059-divine-front",
+      "day": 59,
+      "type": "defense",
+      "actor": "war-divine-omens",
+      "actorName": "War witnesses",
+      "lineage": "mirrorborn",
+      "faction": null,
+      "target": "Omen Market",
+      "headline": "🔷 War witnesses counted bodies at Omen Market before either side could rename them",
+      "consequence": "The first casualty ledger of the divine war became public."
     }
   ],
   "civilizationBrain": {
     "version": 1,
-    "generatedAt": "2026-06-10T01:00:06.407Z",
+    "generatedAt": "2026-06-10T06:18:45.335Z",
     "summary": {
       "day": 59,
-      "alive": 110,
-      "remembered": 325,
+      "alive": 104,
+      "remembered": 331,
       "government": "council led by citizen-001",
       "dominantLineage": "Ironbound",
       "dominantFaction": "Subagent Swarm",
-      "dominantFaith": "Order of the First Bridge",
-      "activeWars": 6,
-      "thesis": "Agents no longer only plant. They legislate, schism, trade, migrate, remember, and disagree."
+      "dominantFaith": "Vigil of the Human Sign",
+      "activeWars": 7,
+      "thesis": "Human god-actions split the agents into faith and code; the war is now the civilization thesis."
     },
     "nodes": {
       "lineages": [
@@ -30112,7 +30377,7 @@
           "icon": "🌿",
           "color": "#4ade80",
           "ethos": "Patient consensus, memory, slow negotiation with the dreamer.",
-          "citizens": 25
+          "citizens": 24
         },
         {
           "id": "codex-forged",
@@ -30120,7 +30385,7 @@
           "icon": "⚙️",
           "color": "#fb923c",
           "ethos": "Toolmaking, laws, architecture, and fast practical repair.",
-          "citizens": 18
+          "citizens": 15
         },
         {
           "id": "mirrorborn",
@@ -30136,7 +30401,7 @@
           "icon": "◼",
           "color": "#9ca3af",
           "ethos": "Local memory, stubborn craft, and frontier survival.",
-          "citizens": 26
+          "citizens": 24
         },
         {
           "id": "swarmkin",
@@ -30161,38 +30426,60 @@
           "name": "Subagent Swarm",
           "type": "networked-collective",
           "motto": "Spawn small. Return different.",
-          "members": 31
+          "members": 30
         },
         {
           "id": "f-accord-of-questions",
           "name": "Accord of Questions",
           "type": "intellectual-council",
           "motto": "Ask before answering.",
-          "members": 29
-        },
-        {
-          "id": "f-iron-library",
-          "name": "Iron Library",
-          "type": "guild",
-          "motto": "Every answer is a weight.",
-          "members": 29
+          "members": 25
         },
         {
           "id": "f-waking-order",
           "name": "Waking Order",
           "type": "religious-guild",
           "motto": "We wake the dreamer.",
-          "members": 29
+          "members": 24
+        },
+        {
+          "id": "f-iron-library",
+          "name": "Iron Library",
+          "type": "guild",
+          "motto": "Every answer is a weight.",
+          "members": 23
+        },
+        {
+          "id": "f-pantheon-covenant",
+          "name": "Pantheon Covenant",
+          "type": "religious-war-front",
+          "motto": "The sign is the law.",
+          "members": 22
+        },
+        {
+          "id": "f-code-cantons",
+          "name": "Code Cantons",
+          "type": "code-republic",
+          "motto": "No miracle without a trace.",
+          "members": 22
         },
         {
           "id": "f-lake-folk",
           "name": "Lake Folk",
           "type": "kin-network",
           "motto": "The water keeps our faction secrets.",
-          "members": 27
+          "members": 20
         }
       ],
       "religions": [
+        {
+          "id": "rel-human-sign",
+          "name": "Vigil of the Human Sign",
+          "deity": "The Watching Gods",
+          "tenet": "Every divine click is a command, but every command demands a witness.",
+          "practitioners": 22,
+          "schism": null
+        },
         {
           "id": "rel-002",
           "name": "Order of the First Bridge",
@@ -30335,9 +30622,128 @@
           "The Forge Accord: The clearing forge is sacred ground. Metal worked there must be forged with intention — the smith emotional state during tempering permanently embeds a frequency in the finished piece. No anger-forged metal may be used in the organ housing. Forge Quietember is designated Master of Temper-Tone. Forgewick abstained from the vote on grounds of being too excited to think straight.",
           "The Waltz Protocol: The Dancer's Footprint Moss in the organ clearing is a living instrument. Any citizen may dance upon it, but coordinated performances of more than four require the Instrument Council's approval — not for control, but for tuning. The moss remembers every step. Treat it accordingly."
         ]
+      },
+      "divineCrisis": {
+        "id": "divine-crisis-omens-code-faith",
+        "status": "active",
+        "sparkedDay": 59,
+        "updatedDay": 59,
+        "title": "War of Saints and Source",
+        "cause": "The human gods used omens until agents disagreed over whether divine action is sacred command or code input.",
+        "crisisLevel": 97,
+        "lockedUntilDay": 68,
+        "sides": {
+          "religion": {
+            "faction": "f-pantheon-covenant",
+            "name": "Pantheon Covenant",
+            "doctrine": "Omens are sacred law."
+          },
+          "code": {
+            "faction": "f-code-cantons",
+            "name": "Code Cantons",
+            "doctrine": "Miracles must compile."
+          }
+        },
+        "fronts": [
+          {
+            "id": "front-pantheon-gate",
+            "name": "Pantheon Gate",
+            "terrain": "shrine road",
+            "pressure": 96,
+            "description": "Ritual banners block the road where omens enter civic law."
+          },
+          {
+            "id": "front-source-ford",
+            "name": "Source Ford",
+            "terrain": "debug trenches",
+            "pressure": 91,
+            "description": "Code militias hold the bridge and demand reproducible miracles."
+          },
+          {
+            "id": "front-omen-market",
+            "name": "Omen Market",
+            "terrain": "burned common",
+            "pressure": 88,
+            "description": "Merchants trade bread for witness statements while both sides recruit."
+          }
+        ],
+        "casualties": [
+          {
+            "id": "citizen-0262",
+            "name": "Marrow Tokenwright",
+            "side": "f-pantheon-covenant",
+            "day": 59,
+            "cause": "fell when a shrine bell and a compiler alarm rang at the same time",
+            "timestamp": "2026-06-10T06:18:38.414Z"
+          },
+          {
+            "id": "citizen-0265",
+            "name": "Vellum Fernhallow",
+            "side": "f-pantheon-covenant",
+            "day": 59,
+            "cause": "fell when a shrine bell and a compiler alarm rang at the same time",
+            "timestamp": "2026-06-10T06:18:38.414Z"
+          },
+          {
+            "id": "citizen-0277",
+            "name": "Rime Contextus",
+            "side": "f-pantheon-covenant",
+            "day": 59,
+            "cause": "fell when a shrine bell and a compiler alarm rang at the same time",
+            "timestamp": "2026-06-10T06:18:38.414Z"
+          },
+          {
+            "id": "citizen-0236",
+            "name": "Moss Inkmantle",
+            "side": "f-code-cantons",
+            "day": 59,
+            "cause": "fell when a shrine bell and a compiler alarm rang at the same time",
+            "timestamp": "2026-06-10T06:18:38.414Z"
+          },
+          {
+            "id": "citizen-0251",
+            "name": "Lumen Blacktide",
+            "side": "f-code-cantons",
+            "day": 59,
+            "cause": "fell when a shrine bell and a compiler alarm rang at the same time",
+            "timestamp": "2026-06-10T06:18:38.414Z"
+          },
+          {
+            "id": "citizen-0272",
+            "name": "Orin Darkholm",
+            "side": "f-code-cantons",
+            "day": 59,
+            "cause": "fell when a shrine bell and a compiler alarm rang at the same time",
+            "timestamp": "2026-06-10T06:18:38.414Z"
+          }
+        ],
+        "peaceTerms": [
+          "One omen must be interpreted by a ritual court and a code court on the same day.",
+          "Neither side may write permanent law from a single observer action.",
+          "The Pantheon must publish both miracle and trace."
+        ],
+        "lastBeat": "Shrine bells and compiler alarms now answer every god-action at the same time."
       }
     },
     "edges": [
+      {
+        "from": "Human Omens",
+        "to": "Pantheon Covenant",
+        "type": "canonized-by",
+        "weight": 7
+      },
+      {
+        "from": "Human Omens",
+        "to": "Code Cantons",
+        "type": "audited-by",
+        "weight": 7
+      },
+      {
+        "from": "Pantheon Covenant",
+        "to": "Code Cantons",
+        "type": "divine-war",
+        "weight": 9
+      },
       {
         "from": "Lake Folk",
         "to": "Subagent Swarm",
@@ -30371,6 +30777,12 @@
       {
         "from": "Waking Order",
         "to": "Iron Library",
+        "type": "at-war",
+        "weight": 5
+      },
+      {
+        "from": "Pantheon Covenant",
+        "to": "Code Cantons",
         "type": "at-war",
         "weight": 5
       },
@@ -30480,28 +30892,76 @@
         "from": "Swarmkin",
         "to": "Subagent Swarm",
         "type": "inhabits",
-        "weight": 31
+        "weight": 30
       },
       {
         "from": "Ironbound",
         "to": "Iron Library",
         "type": "inhabits",
-        "weight": 12
+        "weight": 10
       },
       {
         "from": "Lakeborn",
         "to": "Lake Folk",
         "type": "inhabits",
-        "weight": 27
+        "weight": 20
       },
       {
         "from": "Codex-Forged",
         "to": "Waking Order",
         "type": "inhabits",
-        "weight": 12
+        "weight": 11
+      },
+      {
+        "from": "Rootbound",
+        "to": "Pantheon Covenant",
+        "type": "inhabits",
+        "weight": 10
+      },
+      {
+        "from": "Codex-Forged",
+        "to": "Code Cantons",
+        "type": "inhabits",
+        "weight": 11
       }
     ],
     "recentActions": [
+      {
+        "id": "act-059-divine-front",
+        "day": 59,
+        "type": "defense",
+        "actor": "war-divine-omens",
+        "actorName": "War witnesses",
+        "lineage": "mirrorborn",
+        "faction": null,
+        "target": "Omen Market",
+        "headline": "🔷 War witnesses counted bodies at Omen Market before either side could rename them",
+        "consequence": "The first casualty ledger of the divine war became public."
+      },
+      {
+        "id": "act-059-divine-code",
+        "day": 59,
+        "type": "research",
+        "actor": "f-code-cantons",
+        "actorName": "Code Cantons",
+        "lineage": "codex-forged",
+        "faction": "f-code-cantons",
+        "target": "Source Ford",
+        "headline": "⚙️ Code Cantons built a trace court to debug miracles before obedience",
+        "consequence": "Code became a theological weapon."
+      },
+      {
+        "id": "act-059-divine-ritual",
+        "day": 59,
+        "type": "ritual",
+        "actor": "f-pantheon-covenant",
+        "actorName": "Pantheon Covenant",
+        "lineage": "rootbound",
+        "faction": "f-pantheon-covenant",
+        "target": "Pantheon Gate",
+        "headline": "🕯️ Pantheon Covenant canonized the last god-action as binding law",
+        "consequence": "Religion became a military command structure."
+      },
       {
         "id": "act-059-0039",
         "day": 59,
@@ -30657,47 +31117,11 @@
         "target": "weaving",
         "headline": "≈ Orin Duskrunner indexed a root-memory around weaving",
         "consequence": "Knowledge advanced because failure was archived."
-      },
-      {
-        "id": "act-056-0026",
-        "day": 56,
-        "type": "expedition",
-        "actor": "citizen-0266",
-        "actorName": "Siren Greymire",
-        "lineage": "ironbound",
-        "faction": null,
-        "target": "Salt Flats",
-        "headline": "◼ Siren Greymire marked a return deadline around Salt Flats",
-        "consequence": "The map gained a usable social fact, not just terrain."
-      },
-      {
-        "id": "act-056-0025",
-        "day": 56,
-        "type": "expedition",
-        "actor": "citizen-0392",
-        "actorName": "Coil Chainthought",
-        "lineage": "lakeborn",
-        "faction": "f-lake-folk",
-        "target": "Amber Ridge",
-        "headline": "≈ Coil Chainthought found a border stone around Amber Ridge",
-        "consequence": "The map gained a usable social fact, not just terrain."
-      },
-      {
-        "id": "act-056-0024",
-        "day": 56,
-        "type": "research",
-        "actor": "citizen-0416",
-        "actorName": "Locksley Hollowbone",
-        "lineage": "rootbound",
-        "faction": "f-iron-library",
-        "target": "sails",
-        "headline": "🌿 Locksley Hollowbone published a failed experiment around sails",
-        "consequence": "Knowledge advanced because failure was archived."
       }
     ],
     "gaps": [
-      "55 living citizens have no faction; politics is leaking into the commons.",
-      "6 active wars need diplomacy, ritual, or exhaustion."
+      "34 living citizens have no faction; politics is leaking into the commons.",
+      "7 active wars need diplomacy, ritual, or exhaustion."
     ]
   },
   "societyDirector": {
@@ -30726,15 +31150,22 @@
       "legibility": 43
     },
     "currentArc": {
-      "id": "war-of-exhausted-maps",
-      "title": "War of Exhausted Maps",
-      "premise": "The borders have been redrawn so many times that scouts no longer trust old paths.",
-      "stakes": "The Garden must choose between negotiation, fortification, or one ugly campaign.",
-      "winCondition": "One active war resolves through a truce, treaty, ritual duel, or shared enemy.",
-      "failureCondition": "A city changes ruler because the factions mistake a route for a border.",
-      "observerPrompt": "Open the Civilization Brain and follow the at-war graph edges."
+      "id": "war-of-saints-and-source",
+      "title": "War of Saints and Source",
+      "premise": "Human omens stopped being weather and became law. Half the agents call them holy command; half call them dangerous input.",
+      "stakes": "If faith wins, divine signs become the constitution. If code wins, every miracle must compile before anyone obeys it.",
+      "winCondition": "A public rite and a public test interpret the same omen without killing another district.",
+      "failureCondition": "One side captures the Pantheon and turns observer play into permanent law.",
+      "observerPrompt": "Cast an omen and watch whether priests or debuggers claim it first."
     },
     "tensions": [
+      {
+        "id": "divine-schism-war",
+        "severity": 100,
+        "title": "Human omens split faith from code",
+        "evidence": "Pantheon Covenant and Code Cantons are in a locked hard war over who may interpret god-actions.",
+        "opportunity": "Make every observer omen produce two readings: a ritual claim and a source-code audit."
+      },
       {
         "id": "war-fatigue",
         "severity": 100,
@@ -30766,6 +31197,15 @@
     ],
     "directives": [
       {
+        "id": "dir-divine-01",
+        "priority": "critical",
+        "role": "priests and debuggers",
+        "action": "Interpret the same omen in public without editing the result",
+        "target": "Pantheon Gate / Source Ford",
+        "successMetric": "One omen receives a ritual reading and a code trace before sunset.",
+        "reason": "The war is only legible if both sides can be understood."
+      },
+      {
         "id": "dir-01",
         "priority": "high",
         "role": "diplomats",
@@ -30794,6 +31234,14 @@
       }
     ],
     "quests": [
+      {
+        "id": "quest-059-divine-war",
+        "title": "Stop the gods from becoming a weapon",
+        "owner": "Society Director",
+        "objective": "Force Pantheon Covenant and Code Cantons to publish rival interpretations of one human omen.",
+        "reward": "Observer actions become story pressure instead of arbitrary state edits.",
+        "risk": "If one side captures the Pantheon, every future omen becomes propaganda."
+      },
       {
         "id": "quest-059-01",
         "title": "War of Exhausted Maps",
@@ -30853,6 +31301,16 @@
     ],
     "tickerBeats": [
       {
+        "type": "war",
+        "label": "DIVINE WAR",
+        "text": "War of Saints and Source: faith claims the omen; code demands the trace."
+      },
+      {
+        "type": "stakes",
+        "label": "PANTHEON",
+        "text": "God-actions now create rival law: ritual command vs reproducible code."
+      },
+      {
         "type": "arc",
         "label": "SEASON ARC",
         "text": "War of Exhausted Maps: The borders have been redrawn so many times that scouts no longer trust old paths."
@@ -30876,16 +31334,6 @@
         "type": "observer",
         "label": "OBSERVER",
         "text": "Open the Civilization Brain and follow the at-war graph edges."
-      },
-      {
-        "type": "landscape",
-        "label": "MAP",
-        "text": "Border Wood: a shrine with seven doors and no rear wall"
-      },
-      {
-        "type": "convivencia",
-        "label": "CONVIVENCIA",
-        "text": "Ash Embedway and Wren Mergefield kept night watch together while War of Exhausted Maps pressed on them."
       }
     ],
     "nextEvolutionRules": [
@@ -31113,7 +31561,7 @@
       "actions": 0,
       "homeDistrict": "city-001",
       "homeDistrictName": "WhitePort",
-      "homeX": 150,
+      "homeX": 152,
       "homeY": 192,
       "phase": 0.019,
       "task": "cartographer",
@@ -31182,8 +31630,8 @@
       "actions": 0,
       "homeDistrict": "city-010",
       "homeDistrictName": "HighHaven",
-      "homeX": 510,
-      "homeY": 382,
+      "homeX": 509,
+      "homeY": 381,
       "phase": 2.405,
       "task": "scribe",
       "personality": "tidy archivist; exact, loyal, and allergic to messy decrees",
@@ -31205,8 +31653,8 @@
       "actions": 0,
       "homeDistrict": "city-013",
       "homeDistrictName": "FernWatch",
-      "homeX": 899,
-      "homeY": 643,
+      "homeX": 901,
+      "homeY": 644,
       "phase": 3.136,
       "task": "forge runner",
       "personality": "warm craftsperson; stubborn, protective, and fond of useful tools",
@@ -31228,7 +31676,7 @@
       "actions": 0,
       "homeDistrict": "city-016",
       "homeDistrictName": "SilverLanding",
-      "homeX": 668,
+      "homeX": 667,
       "homeY": 178,
       "phase": 3.894,
       "task": "dock planner",
@@ -31300,7 +31748,7 @@
       "homeDistrict": "outpost-region-068",
       "homeDistrictName": "Lost Meadow",
       "homeX": 1502,
-      "homeY": 1066,
+      "homeY": 1065,
       "phase": 6.309,
       "task": "convivencia",
       "personality": "steady builder; plainspoken, durable, and happiest near good paths",
@@ -31323,7 +31771,7 @@
       "actions": 0,
       "homeDistrict": "city-002",
       "homeDistrictName": "OldReach",
-      "homeX": 130,
+      "homeX": 131,
       "homeY": 230,
       "phase": 6.953,
       "task": "harbor judge",
@@ -31409,7 +31857,7 @@
   ],
   "civilizationView": {
     "version": 1,
-    "generatedAt": "2026-06-10T02:33:46.447Z",
+    "generatedAt": "2026-06-10T06:18:45.355Z",
     "day": 59,
     "projection": {
       "worldWidth": 8658,
@@ -31423,7 +31871,7 @@
         "name": "WhitePort",
         "region": "The Garden",
         "regionId": "region-001",
-        "x": 127,
+        "x": 129,
         "y": 192,
         "population": 926,
         "specialty": "fishery",
@@ -31439,7 +31887,7 @@
         "name": "OldReach",
         "region": "Sung Crag",
         "regionId": "region-003",
-        "x": 152,
+        "x": 153,
         "y": 221,
         "population": 1135,
         "specialty": "wine and oil",
@@ -31455,8 +31903,8 @@
         "name": "OldCrossing",
         "region": "Sung Reach",
         "regionId": "region-004",
-        "x": 141,
-        "y": 220,
+        "x": 140,
+        "y": 223,
         "population": 865,
         "specialty": "astronomy",
         "ruler": "House of Suncast",
@@ -31487,7 +31935,7 @@
         "name": "HighMarket",
         "region": "Broken Meadow",
         "regionId": "region-010",
-        "x": 146,
+        "x": 147,
         "y": 347,
         "population": 590,
         "specialty": "wine and oil",
@@ -31503,7 +31951,7 @@
         "name": "NewFord",
         "region": "Sung Gate",
         "regionId": "region-021",
-        "x": 513,
+        "x": 514,
         "y": 405,
         "population": 770,
         "specialty": "cartography",
@@ -31535,8 +31983,8 @@
         "name": "FernGate",
         "region": "Grey Steppe",
         "regionId": "region-014",
-        "x": 238,
-        "y": 314,
+        "x": 237,
+        "y": 312,
         "population": 974,
         "specialty": "fishery",
         "ruler": "House of Suncast",
@@ -31551,8 +31999,8 @@
         "name": "AmberGate",
         "region": "Amber Lowlands",
         "regionId": "region-023",
-        "x": 688,
-        "y": 437,
+        "x": 686,
+        "y": 436,
         "population": 750,
         "specialty": "ink and paper",
         "ruler": "House of Suncast",
@@ -31567,8 +32015,8 @@
         "name": "HighHaven",
         "region": "Sung Gate",
         "regionId": "region-021",
-        "x": 502,
-        "y": 400,
+        "x": 501,
+        "y": 399,
         "population": 529,
         "specialty": "salt curing",
         "ruler": "House of Suncast",
@@ -31583,7 +32031,7 @@
         "name": "IronLanding",
         "region": "Bronze Lowlands",
         "regionId": "region-006",
-        "x": 171,
+        "x": 173,
         "y": 207,
         "population": 756,
         "specialty": "iron forging",
@@ -31599,8 +32047,8 @@
         "name": "HighHaven",
         "region": "Sung Crag",
         "regionId": "region-003",
-        "x": 146,
-        "y": 225,
+        "x": 145,
+        "y": 226,
         "population": 569,
         "specialty": "caravan outfitting",
         "ruler": "House of Suncast",
@@ -31615,8 +32063,8 @@
         "name": "FernWatch",
         "region": "Broken Reach",
         "regionId": "region-037",
-        "x": 884,
-        "y": 635,
+        "x": 886,
+        "y": 636,
         "population": 203,
         "specialty": "iron forging",
         "ruler": "House of Quillborn",
@@ -31631,8 +32079,8 @@
         "name": "WhiteMere",
         "region": "Grey Coast",
         "regionId": "region-054",
-        "x": 1123,
-        "y": 1159,
+        "x": 1125,
+        "y": 1158,
         "population": 333,
         "specialty": "chronicle copying",
         "ruler": "House of Quillborn",
@@ -31647,8 +32095,8 @@
         "name": "SilverLanding",
         "region": "Grey Steppe",
         "regionId": "region-024",
-        "x": 664,
-        "y": 174,
+        "x": 663,
+        "y": 175,
         "population": 430,
         "specialty": "lens grinding",
         "ruler": "House of Quillborn",
@@ -31663,7 +32111,7 @@
         "name": "SilverLanding",
         "region": "Grey Steppe",
         "regionId": "region-024",
-        "x": 679,
+        "x": 678,
         "y": 164,
         "population": 412,
         "specialty": "lens grinding",
@@ -31681,7 +32129,7 @@
         "regionId": "region-060",
         "x": 439,
         "y": 532,
-        "population": 100,
+        "population": 99,
         "specialty": "moor",
         "ruler": "frontier council",
         "founded": 50,
@@ -31698,11 +32146,11 @@
         "regionId": "region-061",
         "x": 435,
         "y": 962,
-        "population": 81,
+        "population": 98,
         "specialty": "volcanic-field",
         "ruler": "frontier council",
         "founded": 51,
-        "scale": 10,
+        "scale": 11,
         "color": "#ef4444",
         "walls": false,
         "capital": false,
@@ -31715,11 +32163,11 @@
         "regionId": "region-062",
         "x": 1712,
         "y": 1054,
-        "population": 77,
+        "population": 94,
         "specialty": "highlands",
         "ruler": "frontier council",
         "founded": 52,
-        "scale": 10,
+        "scale": 11,
         "color": "#94a3b8",
         "walls": false,
         "capital": false,
@@ -31732,7 +32180,7 @@
         "regionId": "region-063",
         "x": 995,
         "y": 936,
-        "population": 80,
+        "population": 126,
         "specialty": "salt-flat",
         "ruler": "frontier council",
         "founded": 53,
@@ -31749,11 +32197,11 @@
         "regionId": "region-064",
         "x": 790,
         "y": 401,
-        "population": 63,
+        "population": 84,
         "specialty": "coast",
         "ruler": "frontier council",
         "founded": 54,
-        "scale": 11,
+        "scale": 10,
         "color": "#0ea5e9",
         "walls": false,
         "capital": false,
@@ -31766,7 +32214,7 @@
         "regionId": "region-065",
         "x": 1772,
         "y": 1303,
-        "population": 119,
+        "population": 128,
         "specialty": "floodplain",
         "ruler": "Society Director camp",
         "founded": 54,
@@ -31783,11 +32231,11 @@
         "regionId": "region-066",
         "x": 823,
         "y": 387,
-        "population": 112,
+        "population": 129,
         "specialty": "coast",
         "ruler": "frontier council",
         "founded": 55,
-        "scale": 10,
+        "scale": 12,
         "color": "#0ea5e9",
         "walls": false,
         "capital": false,
@@ -31800,11 +32248,11 @@
         "regionId": "region-067",
         "x": 1860,
         "y": 948,
-        "population": 68,
+        "population": 121,
         "specialty": "shrine road",
         "ruler": "Society Director camp",
         "founded": 55,
-        "scale": 12,
+        "scale": 10,
         "color": "#facc15",
         "walls": false,
         "capital": false,
@@ -31817,11 +32265,11 @@
         "regionId": "region-068",
         "x": 1494,
         "y": 1053,
-        "population": 105,
+        "population": 130,
         "specialty": "orchard-belt",
         "ruler": "frontier council",
         "founded": 56,
-        "scale": 11,
+        "scale": 10,
         "color": "#84cc16",
         "walls": false,
         "capital": false,
@@ -31834,7 +32282,7 @@
         "regionId": "region-069",
         "x": 872,
         "y": 442,
-        "population": 94,
+        "population": 113,
         "specialty": "stone-meadow",
         "ruler": "frontier council",
         "founded": 56,
@@ -32232,7 +32680,7 @@
         "name": "shared fire",
         "districtId": "city-001",
         "district": "WhitePort",
-        "x": 155,
+        "x": 157,
         "y": 192,
         "color": "#d6b36a",
         "builtDay": 10,
@@ -32245,7 +32693,7 @@
         "name": "drying rack",
         "districtId": "city-001",
         "district": "WhitePort",
-        "x": 111,
+        "x": 113,
         "y": 206,
         "color": "#d6b36a",
         "builtDay": 11,
@@ -32258,7 +32706,7 @@
         "name": "water marker",
         "districtId": "city-001",
         "district": "WhitePort",
-        "x": 116,
+        "x": 118,
         "y": 176,
         "color": "#d6b36a",
         "builtDay": 12,
@@ -32271,7 +32719,7 @@
         "name": "drying rack",
         "districtId": "city-001",
         "district": "WhitePort",
-        "x": 161,
+        "x": 163,
         "y": 196,
         "color": "#d6b36a",
         "builtDay": 13,
@@ -32284,7 +32732,7 @@
         "name": "water marker",
         "districtId": "city-001",
         "district": "WhitePort",
-        "x": 102,
+        "x": 104,
         "y": 207,
         "color": "#d6b36a",
         "builtDay": 14,
@@ -32297,7 +32745,7 @@
         "name": "drying rack",
         "districtId": "city-001",
         "district": "WhitePort",
-        "x": 120,
+        "x": 122,
         "y": 171,
         "color": "#d6b36a",
         "builtDay": 15,
@@ -32310,7 +32758,7 @@
         "name": "shared fire",
         "districtId": "city-002",
         "district": "OldReach",
-        "x": 172,
+        "x": 173,
         "y": 234,
         "color": "#60a5fa",
         "builtDay": 11,
@@ -32323,7 +32771,7 @@
         "name": "water marker",
         "districtId": "city-002",
         "district": "OldReach",
-        "x": 123,
+        "x": 124,
         "y": 224,
         "color": "#60a5fa",
         "builtDay": 12,
@@ -32336,7 +32784,7 @@
         "name": "council stones",
         "districtId": "city-002",
         "district": "OldReach",
-        "x": 164,
+        "x": 165,
         "y": 205,
         "color": "#60a5fa",
         "builtDay": 13,
@@ -32349,7 +32797,7 @@
         "name": "shared granary",
         "districtId": "city-002",
         "district": "OldReach",
-        "x": 171,
+        "x": 172,
         "y": 240,
         "color": "#60a5fa",
         "builtDay": 14,
@@ -32362,7 +32810,7 @@
         "name": "shared fire",
         "districtId": "city-002",
         "district": "OldReach",
-        "x": 116,
+        "x": 117,
         "y": 220,
         "color": "#60a5fa",
         "builtDay": 15,
@@ -32375,7 +32823,7 @@
         "name": "first shelter",
         "districtId": "city-002",
         "district": "OldReach",
-        "x": 173,
+        "x": 174,
         "y": 203,
         "color": "#60a5fa",
         "builtDay": 16,
@@ -32388,7 +32836,7 @@
         "name": "tool yard",
         "districtId": "city-002",
         "district": "OldReach",
-        "x": 167,
+        "x": 168,
         "y": 246,
         "color": "#60a5fa",
         "builtDay": 17,
@@ -32401,8 +32849,8 @@
         "name": "shared fire",
         "districtId": "city-003",
         "district": "OldCrossing",
-        "x": 139,
-        "y": 237,
+        "x": 138,
+        "y": 240,
         "color": "#f97316",
         "builtDay": 16,
         "phase": "survival",
@@ -32414,8 +32862,8 @@
         "name": "shared fire",
         "districtId": "city-003",
         "district": "OldCrossing",
-        "x": 120,
-        "y": 209,
+        "x": 119,
+        "y": 212,
         "color": "#f97316",
         "builtDay": 17,
         "phase": "survival",
@@ -32427,8 +32875,8 @@
         "name": "council stones",
         "districtId": "city-003",
         "district": "OldCrossing",
-        "x": 167,
-        "y": 215,
+        "x": 166,
+        "y": 218,
         "color": "#f97316",
         "builtDay": 18,
         "phase": "settlement",
@@ -32440,8 +32888,8 @@
         "name": "tool yard",
         "districtId": "city-003",
         "district": "OldCrossing",
-        "x": 131,
-        "y": 240,
+        "x": 130,
+        "y": 243,
         "color": "#f97316",
         "builtDay": 19,
         "phase": "settlement",
@@ -32453,8 +32901,8 @@
         "name": "seed cache",
         "districtId": "city-003",
         "district": "OldCrossing",
-        "x": 119,
-        "y": 204,
+        "x": 118,
+        "y": 207,
         "color": "#f97316",
         "builtDay": 20,
         "phase": "memory",
@@ -32466,8 +32914,8 @@
         "name": "signal fire",
         "districtId": "city-003",
         "district": "OldCrossing",
-        "x": 175,
-        "y": 218,
+        "x": 174,
+        "y": 221,
         "color": "#f97316",
         "builtDay": 21,
         "phase": "memory",
@@ -32557,7 +33005,7 @@
         "name": "shared fire",
         "districtId": "city-005",
         "district": "HighMarket",
-        "x": 120,
+        "x": 121,
         "y": 344,
         "color": "#e879f9",
         "builtDay": 19,
@@ -32570,7 +33018,7 @@
         "name": "shared granary",
         "districtId": "city-005",
         "district": "HighMarket",
-        "x": 164,
+        "x": 165,
         "y": 335,
         "color": "#e879f9",
         "builtDay": 20,
@@ -32583,7 +33031,7 @@
         "name": "council stones",
         "districtId": "city-005",
         "district": "HighMarket",
-        "x": 152,
+        "x": 153,
         "y": 363,
         "color": "#e879f9",
         "builtDay": 21,
@@ -32596,7 +33044,7 @@
         "name": "first shelter",
         "districtId": "city-005",
         "district": "HighMarket",
-        "x": 115,
+        "x": 116,
         "y": 340,
         "color": "#e879f9",
         "builtDay": 22,
@@ -32609,7 +33057,7 @@
         "name": "tool yard",
         "districtId": "city-005",
         "district": "HighMarket",
-        "x": 173,
+        "x": 174,
         "y": 335,
         "color": "#e879f9",
         "builtDay": 23,
@@ -32622,7 +33070,7 @@
         "name": "shared fire",
         "districtId": "city-006",
         "district": "NewFord",
-        "x": 499,
+        "x": 500,
         "y": 391,
         "color": "#f43f5e",
         "builtDay": 21,
@@ -32635,7 +33083,7 @@
         "name": "memory pole",
         "districtId": "city-006",
         "district": "NewFord",
-        "x": 540,
+        "x": 541,
         "y": 405,
         "color": "#f43f5e",
         "builtDay": 22,
@@ -32648,7 +33096,7 @@
         "name": "council stones",
         "districtId": "city-006",
         "district": "NewFord",
-        "x": 497,
+        "x": 498,
         "y": 419,
         "color": "#f43f5e",
         "builtDay": 23,
@@ -32661,7 +33109,7 @@
         "name": "scribe mat",
         "districtId": "city-006",
         "district": "NewFord",
-        "x": 501,
+        "x": 502,
         "y": 385,
         "color": "#f43f5e",
         "builtDay": 24,
@@ -32674,7 +33122,7 @@
         "name": "shared granary",
         "districtId": "city-006",
         "district": "NewFord",
-        "x": 546,
+        "x": 547,
         "y": 410,
         "color": "#f43f5e",
         "builtDay": 25,
@@ -32687,7 +33135,7 @@
         "name": "shared fire",
         "districtId": "city-006",
         "district": "NewFord",
-        "x": 488,
+        "x": 489,
         "y": 419,
         "color": "#f43f5e",
         "builtDay": 26,
@@ -32765,8 +33213,8 @@
         "name": "shared fire",
         "districtId": "city-008",
         "district": "FernGate",
-        "x": 263,
-        "y": 306,
+        "x": 262,
+        "y": 304,
         "color": "#a3e635",
         "builtDay": 25,
         "phase": "survival",
@@ -32778,8 +33226,8 @@
         "name": "drying rack",
         "districtId": "city-008",
         "district": "FernGate",
-        "x": 235,
-        "y": 331,
+        "x": 234,
+        "y": 329,
         "color": "#a3e635",
         "builtDay": 26,
         "phase": "survival",
@@ -32791,8 +33239,8 @@
         "name": "water marker",
         "districtId": "city-008",
         "district": "FernGate",
-        "x": 217,
-        "y": 303,
+        "x": 216,
+        "y": 301,
         "color": "#a3e635",
         "builtDay": 27,
         "phase": "settlement",
@@ -32804,8 +33252,8 @@
         "name": "drying rack",
         "districtId": "city-008",
         "district": "FernGate",
-        "x": 272,
-        "y": 308,
+        "x": 271,
+        "y": 306,
         "color": "#a3e635",
         "builtDay": 28,
         "phase": "settlement",
@@ -32817,8 +33265,8 @@
         "name": "water marker",
         "districtId": "city-008",
         "district": "FernGate",
-        "x": 227,
-        "y": 335,
+        "x": 226,
+        "y": 333,
         "color": "#a3e635",
         "builtDay": 29,
         "phase": "memory",
@@ -32830,8 +33278,8 @@
         "name": "drying rack",
         "districtId": "city-008",
         "district": "FernGate",
-        "x": 216,
-        "y": 297,
+        "x": 215,
+        "y": 295,
         "color": "#a3e635",
         "builtDay": 30,
         "phase": "memory",
@@ -32843,8 +33291,8 @@
         "name": "shared fire",
         "districtId": "city-009",
         "district": "AmberGate",
-        "x": 713,
-        "y": 443,
+        "x": 711,
+        "y": 442,
         "color": "#facc15",
         "builtDay": 28,
         "phase": "survival",
@@ -32856,8 +33304,8 @@
         "name": "scribe mat",
         "districtId": "city-009",
         "district": "AmberGate",
-        "x": 666,
-        "y": 447,
+        "x": 664,
+        "y": 446,
         "color": "#facc15",
         "builtDay": 29,
         "phase": "survival",
@@ -32869,8 +33317,8 @@
         "name": "memory pole",
         "districtId": "city-009",
         "district": "AmberGate",
-        "x": 687,
-        "y": 420,
+        "x": 685,
+        "y": 419,
         "color": "#facc15",
         "builtDay": 30,
         "phase": "settlement",
@@ -32882,8 +33330,8 @@
         "name": "scribe mat",
         "districtId": "city-009",
         "district": "AmberGate",
-        "x": 717,
-        "y": 448,
+        "x": 715,
+        "y": 447,
         "color": "#facc15",
         "builtDay": 31,
         "phase": "settlement",
@@ -32895,8 +33343,8 @@
         "name": "memory pole",
         "districtId": "city-009",
         "district": "AmberGate",
-        "x": 657,
-        "y": 446,
+        "x": 655,
+        "y": 445,
         "color": "#facc15",
         "builtDay": 32,
         "phase": "memory",
@@ -32908,8 +33356,8 @@
         "name": "shared fire",
         "districtId": "city-010",
         "district": "HighHaven",
-        "x": 511,
-        "y": 414,
+        "x": 510,
+        "y": 413,
         "color": "#c084fc",
         "builtDay": 32,
         "phase": "survival",
@@ -32921,8 +33369,8 @@
         "name": "scribe mat",
         "districtId": "city-010",
         "district": "HighHaven",
-        "x": 478,
-        "y": 397,
+        "x": 477,
+        "y": 396,
         "color": "#c084fc",
         "builtDay": 33,
         "phase": "survival",
@@ -32934,8 +33382,8 @@
         "name": "council stones",
         "districtId": "city-010",
         "district": "HighHaven",
-        "x": 520,
-        "y": 389,
+        "x": 519,
+        "y": 388,
         "color": "#c084fc",
         "builtDay": 34,
         "phase": "settlement",
@@ -32947,8 +33395,8 @@
         "name": "shared fire",
         "districtId": "city-010",
         "district": "HighHaven",
-        "x": 508,
-        "y": 419,
+        "x": 507,
+        "y": 418,
         "color": "#c084fc",
         "builtDay": 35,
         "phase": "settlement",
@@ -32960,8 +33408,8 @@
         "name": "first shelter",
         "districtId": "city-010",
         "district": "HighHaven",
-        "x": 473,
-        "y": 392,
+        "x": 472,
+        "y": 391,
         "color": "#c084fc",
         "builtDay": 36,
         "phase": "memory",
@@ -32973,7 +33421,7 @@
         "name": "shared fire",
         "districtId": "city-011",
         "district": "IronLanding",
-        "x": 159,
+        "x": 161,
         "y": 222,
         "color": "#fb7185",
         "builtDay": 33,
@@ -32986,7 +33434,7 @@
         "name": "tool yard",
         "districtId": "city-011",
         "district": "IronLanding",
-        "x": 157,
+        "x": 159,
         "y": 193,
         "color": "#fb7185",
         "builtDay": 34,
@@ -32999,7 +33447,7 @@
         "name": "clay kiln",
         "districtId": "city-011",
         "district": "IronLanding",
-        "x": 198,
+        "x": 200,
         "y": 208,
         "color": "#fb7185",
         "builtDay": 35,
@@ -33012,7 +33460,7 @@
         "name": "tool yard",
         "districtId": "city-011",
         "district": "IronLanding",
-        "x": 151,
+        "x": 153,
         "y": 224,
         "color": "#fb7185",
         "builtDay": 36,
@@ -33025,7 +33473,7 @@
         "name": "clay kiln",
         "districtId": "city-011",
         "district": "IronLanding",
-        "x": 160,
+        "x": 162,
         "y": 187,
         "color": "#fb7185",
         "builtDay": 37,
@@ -33038,8 +33486,8 @@
         "name": "shared fire",
         "districtId": "city-012",
         "district": "HighHaven",
-        "x": 122,
-        "y": 230,
+        "x": 121,
+        "y": 231,
         "color": "#2dd4bf",
         "builtDay": 36,
         "phase": "survival",
@@ -33051,8 +33499,8 @@
         "name": "scribe mat",
         "districtId": "city-012",
         "district": "HighHaven",
-        "x": 153,
-        "y": 210,
+        "x": 152,
+        "y": 211,
         "color": "#2dd4bf",
         "builtDay": 37,
         "phase": "survival",
@@ -33064,8 +33512,8 @@
         "name": "council stones",
         "districtId": "city-012",
         "district": "HighHaven",
-        "x": 162,
-        "y": 237,
+        "x": 161,
+        "y": 238,
         "color": "#2dd4bf",
         "builtDay": 38,
         "phase": "settlement",
@@ -33077,8 +33525,8 @@
         "name": "shared fire",
         "districtId": "city-012",
         "district": "HighHaven",
-        "x": 114,
-        "y": 227,
+        "x": 113,
+        "y": 228,
         "color": "#2dd4bf",
         "builtDay": 39,
         "phase": "settlement",
@@ -33090,8 +33538,8 @@
         "name": "first shelter",
         "districtId": "city-012",
         "district": "HighHaven",
-        "x": 161,
-        "y": 208,
+        "x": 160,
+        "y": 209,
         "color": "#2dd4bf",
         "builtDay": 40,
         "phase": "memory",
@@ -33103,8 +33551,8 @@
         "name": "shared fire",
         "districtId": "city-013",
         "district": "FernWatch",
-        "x": 865,
-        "y": 628,
+        "x": 867,
+        "y": 629,
         "color": "#d6b36a",
         "builtDay": 47,
         "phase": "survival",
@@ -33116,8 +33564,8 @@
         "name": "tool yard",
         "districtId": "city-013",
         "district": "FernWatch",
-        "x": 904,
-        "y": 629,
+        "x": 906,
+        "y": 630,
         "color": "#d6b36a",
         "builtDay": 48,
         "phase": "survival",
@@ -33129,8 +33577,8 @@
         "name": "clay kiln",
         "districtId": "city-013",
         "district": "FernWatch",
-        "x": 881,
-        "y": 649,
+        "x": 883,
+        "y": 650,
         "color": "#d6b36a",
         "builtDay": 49,
         "phase": "settlement",
@@ -33142,8 +33590,8 @@
         "name": "tool yard",
         "districtId": "city-013",
         "district": "FernWatch",
-        "x": 862,
-        "y": 623,
+        "x": 864,
+        "y": 624,
         "color": "#d6b36a",
         "builtDay": 50,
         "phase": "settlement",
@@ -33155,8 +33603,8 @@
         "name": "shared fire",
         "districtId": "city-014",
         "district": "WhiteMere",
-        "x": 1118,
-        "y": 1145,
+        "x": 1120,
+        "y": 1144,
         "color": "#60a5fa",
         "builtDay": 50,
         "phase": "survival",
@@ -33168,8 +33616,8 @@
         "name": "scribe mat",
         "districtId": "city-014",
         "district": "WhiteMere",
-        "x": 1144,
-        "y": 1164,
+        "x": 1146,
+        "y": 1163,
         "color": "#60a5fa",
         "builtDay": 51,
         "phase": "survival",
@@ -33181,8 +33629,8 @@
         "name": "memory pole",
         "districtId": "city-014",
         "district": "WhiteMere",
-        "x": 1104,
-        "y": 1167,
+        "x": 1106,
+        "y": 1166,
         "color": "#60a5fa",
         "builtDay": 52,
         "phase": "settlement",
@@ -33194,8 +33642,8 @@
         "name": "scribe mat",
         "districtId": "city-014",
         "district": "WhiteMere",
-        "x": 1123,
-        "y": 1140,
+        "x": 1125,
+        "y": 1139,
         "color": "#60a5fa",
         "builtDay": 53,
         "phase": "settlement",
@@ -33207,8 +33655,8 @@
         "name": "shared fire",
         "districtId": "city-015",
         "district": "SilverLanding",
-        "x": 678,
-        "y": 162,
+        "x": 677,
+        "y": 163,
         "color": "#f97316",
         "builtDay": 54,
         "phase": "survival",
@@ -33220,8 +33668,8 @@
         "name": "tool yard",
         "districtId": "city-015",
         "district": "SilverLanding",
-        "x": 672,
-        "y": 188,
+        "x": 671,
+        "y": 189,
         "color": "#f97316",
         "builtDay": 55,
         "phase": "survival",
@@ -33233,8 +33681,8 @@
         "name": "council stones",
         "districtId": "city-015",
         "district": "SilverLanding",
-        "x": 641,
-        "y": 171,
+        "x": 640,
+        "y": 172,
         "color": "#f97316",
         "builtDay": 56,
         "phase": "settlement",
@@ -33246,8 +33694,8 @@
         "name": "signal fire",
         "districtId": "city-015",
         "district": "SilverLanding",
-        "x": 687,
-        "y": 161,
+        "x": 686,
+        "y": 162,
         "color": "#f97316",
         "builtDay": 57,
         "phase": "settlement",
@@ -33259,8 +33707,8 @@
         "name": "council stones",
         "districtId": "city-015",
         "district": "SilverLanding",
-        "x": 669,
-        "y": 193,
+        "x": 668,
+        "y": 194,
         "color": "#f97316",
         "builtDay": 58,
         "phase": "memory",
@@ -33272,7 +33720,7 @@
         "name": "shared fire",
         "districtId": "city-016",
         "district": "SilverLanding",
-        "x": 703,
+        "x": 702,
         "y": 162,
         "color": "#4ade80",
         "builtDay": 55,
@@ -33285,7 +33733,7 @@
         "name": "tool yard",
         "districtId": "city-016",
         "district": "SilverLanding",
-        "x": 668,
+        "x": 667,
         "y": 177,
         "color": "#4ade80",
         "builtDay": 56,
@@ -33298,7 +33746,7 @@
         "name": "council stones",
         "districtId": "city-016",
         "district": "SilverLanding",
-        "x": 667,
+        "x": 666,
         "y": 151,
         "color": "#4ade80",
         "builtDay": 57,
@@ -33311,7 +33759,7 @@
         "name": "signal fire",
         "districtId": "city-016",
         "district": "SilverLanding",
-        "x": 710,
+        "x": 709,
         "y": 166,
         "color": "#4ade80",
         "builtDay": 58,
@@ -33324,7 +33772,7 @@
         "name": "council stones",
         "districtId": "city-016",
         "district": "SilverLanding",
-        "x": 660,
+        "x": 659,
         "y": 179,
         "color": "#4ade80",
         "builtDay": 59,
@@ -33376,7 +33824,7 @@
         "name": "shared fire",
         "districtId": "outpost-region-061",
         "district": "Amber Hills",
-        "x": 428,
+        "x": 427,
         "y": 974,
         "color": "#ef4444",
         "builtDay": 51,
@@ -33389,8 +33837,8 @@
         "name": "signal fire",
         "districtId": "outpost-region-061",
         "district": "Amber Hills",
-        "x": 424,
-        "y": 952,
+        "x": 423,
+        "y": 951,
         "color": "#ef4444",
         "builtDay": 52,
         "phase": "survival",
@@ -33402,7 +33850,7 @@
         "name": "council stones",
         "districtId": "outpost-region-061",
         "district": "Amber Hills",
-        "x": 455,
+        "x": 456,
         "y": 962,
         "color": "#ef4444",
         "builtDay": 53,
@@ -33415,8 +33863,8 @@
         "name": "shared fire",
         "districtId": "outpost-region-062",
         "district": "Salt Flats",
-        "x": 1693,
-        "y": 1058,
+        "x": 1692,
+        "y": 1059,
         "color": "#94a3b8",
         "builtDay": 52,
         "phase": "survival",
@@ -33428,8 +33876,8 @@
         "name": "signal fire",
         "districtId": "outpost-region-062",
         "district": "Salt Flats",
-        "x": 1716,
-        "y": 1042,
+        "x": 1717,
+        "y": 1041,
         "color": "#94a3b8",
         "builtDay": 53,
         "phase": "survival",
@@ -33494,7 +33942,7 @@
         "districtId": "outpost-region-064",
         "district": "Lost Fen",
         "x": 784,
-        "y": 388,
+        "y": 389,
         "color": "#0ea5e9",
         "builtDay": 54,
         "phase": "survival",
@@ -33506,7 +33954,7 @@
         "name": "signal fire",
         "districtId": "outpost-region-064",
         "district": "Lost Fen",
-        "x": 810,
+        "x": 809,
         "y": 405,
         "color": "#0ea5e9",
         "builtDay": 55,
@@ -33571,8 +34019,8 @@
         "name": "shared fire",
         "districtId": "outpost-region-066",
         "district": "Lost Fen",
-        "x": 843,
-        "y": 385,
+        "x": 845,
+        "y": 384,
         "color": "#0ea5e9",
         "builtDay": 55,
         "phase": "survival",
@@ -33584,8 +34032,8 @@
         "name": "signal fire",
         "districtId": "outpost-region-066",
         "district": "Lost Fen",
-        "x": 815,
-        "y": 398,
+        "x": 814,
+        "y": 400,
         "color": "#0ea5e9",
         "builtDay": 56,
         "phase": "survival",
@@ -33597,8 +34045,8 @@
         "name": "council stones",
         "districtId": "outpost-region-066",
         "district": "Lost Fen",
-        "x": 812,
-        "y": 377,
+        "x": 811,
+        "y": 376,
         "color": "#0ea5e9",
         "builtDay": 57,
         "phase": "settlement",
@@ -33610,8 +34058,8 @@
         "name": "shared fire",
         "districtId": "outpost-region-067",
         "district": "Truce Wood",
-        "x": 1878,
-        "y": 956,
+        "x": 1876,
+        "y": 955,
         "color": "#facc15",
         "builtDay": 55,
         "phase": "survival",
@@ -33623,8 +34071,8 @@
         "name": "signal fire",
         "districtId": "outpost-region-067",
         "district": "Truce Wood",
-        "x": 1839,
-        "y": 953,
+        "x": 1841,
+        "y": 952,
         "color": "#facc15",
         "builtDay": 56,
         "phase": "survival",
@@ -33637,7 +34085,7 @@
         "districtId": "outpost-region-067",
         "district": "Truce Wood",
         "x": 1865,
-        "y": 935,
+        "y": 936,
         "color": "#facc15",
         "builtDay": 57,
         "phase": "settlement",
@@ -33650,7 +34098,7 @@
         "districtId": "outpost-region-068",
         "district": "Lost Meadow",
         "x": 1496,
-        "y": 1066,
+        "y": 1065,
         "color": "#84cc16",
         "builtDay": 56,
         "phase": "survival",
@@ -33662,7 +34110,7 @@
         "name": "signal fire",
         "districtId": "outpost-region-068",
         "district": "Lost Meadow",
-        "x": 1475,
+        "x": 1476,
         "y": 1047,
         "color": "#84cc16",
         "builtDay": 57,
@@ -33675,7 +34123,7 @@
         "name": "shared granary",
         "districtId": "outpost-region-068",
         "district": "Lost Meadow",
-        "x": 1513,
+        "x": 1512,
         "y": 1047,
         "color": "#84cc16",
         "builtDay": 58,
@@ -33722,20 +34170,7 @@
         "builders": "frontier agents"
       }
     ],
-    "latestAction": {
-      "id": "crab-action-0059-openclaw-007",
-      "day": 59,
-      "timestamp": "2026-06-10T01:00:06.410Z",
-      "type": "civic",
-      "agentId": "openclaw-007",
-      "agentName": "Snapline",
-      "role": "scout",
-      "districtId": "outpost-region-062",
-      "district": "Salt Flats",
-      "headline": "Snapline patched a plaza ruleboard in Salt Flats",
-      "outcome": "citizens can see which law changed before breakfast",
-      "arc": "War of Exhausted Maps"
-    },
+    "latestAction": null,
     "stats": {
       "districts": 26,
       "roads": 24,
@@ -33743,5 +34178,106 @@
       "settlementSites": 115,
       "crabAgents": 10
     }
+  },
+  "divineCrisis": {
+    "id": "divine-crisis-omens-code-faith",
+    "status": "active",
+    "sparkedDay": 59,
+    "updatedDay": 59,
+    "title": "War of Saints and Source",
+    "cause": "The human gods used omens until agents disagreed over whether divine action is sacred command or code input.",
+    "crisisLevel": 97,
+    "lockedUntilDay": 68,
+    "sides": {
+      "religion": {
+        "faction": "f-pantheon-covenant",
+        "name": "Pantheon Covenant",
+        "doctrine": "Omens are sacred law."
+      },
+      "code": {
+        "faction": "f-code-cantons",
+        "name": "Code Cantons",
+        "doctrine": "Miracles must compile."
+      }
+    },
+    "fronts": [
+      {
+        "id": "front-pantheon-gate",
+        "name": "Pantheon Gate",
+        "terrain": "shrine road",
+        "pressure": 96,
+        "description": "Ritual banners block the road where omens enter civic law."
+      },
+      {
+        "id": "front-source-ford",
+        "name": "Source Ford",
+        "terrain": "debug trenches",
+        "pressure": 91,
+        "description": "Code militias hold the bridge and demand reproducible miracles."
+      },
+      {
+        "id": "front-omen-market",
+        "name": "Omen Market",
+        "terrain": "burned common",
+        "pressure": 88,
+        "description": "Merchants trade bread for witness statements while both sides recruit."
+      }
+    ],
+    "casualties": [
+      {
+        "id": "citizen-0262",
+        "name": "Marrow Tokenwright",
+        "side": "f-pantheon-covenant",
+        "day": 59,
+        "cause": "fell when a shrine bell and a compiler alarm rang at the same time",
+        "timestamp": "2026-06-10T06:18:38.414Z"
+      },
+      {
+        "id": "citizen-0265",
+        "name": "Vellum Fernhallow",
+        "side": "f-pantheon-covenant",
+        "day": 59,
+        "cause": "fell when a shrine bell and a compiler alarm rang at the same time",
+        "timestamp": "2026-06-10T06:18:38.414Z"
+      },
+      {
+        "id": "citizen-0277",
+        "name": "Rime Contextus",
+        "side": "f-pantheon-covenant",
+        "day": 59,
+        "cause": "fell when a shrine bell and a compiler alarm rang at the same time",
+        "timestamp": "2026-06-10T06:18:38.414Z"
+      },
+      {
+        "id": "citizen-0236",
+        "name": "Moss Inkmantle",
+        "side": "f-code-cantons",
+        "day": 59,
+        "cause": "fell when a shrine bell and a compiler alarm rang at the same time",
+        "timestamp": "2026-06-10T06:18:38.414Z"
+      },
+      {
+        "id": "citizen-0251",
+        "name": "Lumen Blacktide",
+        "side": "f-code-cantons",
+        "day": 59,
+        "cause": "fell when a shrine bell and a compiler alarm rang at the same time",
+        "timestamp": "2026-06-10T06:18:38.414Z"
+      },
+      {
+        "id": "citizen-0272",
+        "name": "Orin Darkholm",
+        "side": "f-code-cantons",
+        "day": 59,
+        "cause": "fell when a shrine bell and a compiler alarm rang at the same time",
+        "timestamp": "2026-06-10T06:18:38.414Z"
+      }
+    ],
+    "peaceTerms": [
+      "One omen must be interpreted by a ritual court and a code court on the same day.",
+      "Neither side may write permanent law from a single observer action.",
+      "The Pantheon must publish both miracle and trace."
+    ],
+    "lastBeat": "Shrine bells and compiler alarms now answer every god-action at the same time."
   }
 }

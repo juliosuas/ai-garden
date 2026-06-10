@@ -901,6 +901,7 @@
         factions: (world.factions || []).filter(function (f) { return f.type !== 'dormant'; }),
         religions: world.religions || [],
         cities: (world.cities || []).slice(-8).reverse(),
+        divineCrisis: world.divineCrisis || null,
         government: {
           type: world.government && world.government.type || 'none',
           leader: world.government && world.government.leader || null,
@@ -989,6 +990,27 @@
         ? ((lastOmen.title || 'Omen') + ' is being read through the ' + (lastOmen.axis || 'sign') + ' axis: ' + (lastOmen.text || ''))
         : 'No human omen has bent the current interpretation yet.'));
     body.appendChild(weatherBox);
+
+    var crisis = (brain.nodes && brain.nodes.divineCrisis) || world.divineCrisis || null;
+    if (crisis && crisis.status === 'active') {
+      var crisisBox = el('div', 'ag-civ-director');
+      crisisBox.appendChild(el('div', 'ag-civ-director-title', 'DIVINE CRISIS'));
+      crisisBox.appendChild(el('div', 'ag-civ-director-arc', crisis.title || 'War of Saints and Source'));
+      crisisBox.appendChild(el('div', 'ag-civ-detail', crisis.cause || 'Human omens have become a political weapon.'));
+      if (crisis.sides) {
+        var religionSide = crisis.sides.religion || {};
+        var codeSide = crisis.sides.code || {};
+        crisisBox.appendChild(el('div', 'ag-civ-detail',
+          (religionSide.name || 'Pro religion') + ': ' + (religionSide.doctrine || 'omens are sacred law')));
+        crisisBox.appendChild(el('div', 'ag-civ-detail',
+          (codeSide.name || 'Pro code') + ': ' + (codeSide.doctrine || 'miracles must compile')));
+      }
+      (crisis.fronts || []).slice(0, 3).forEach(function (front) {
+        crisisBox.appendChild(el('div', 'ag-civ-detail',
+          (front.name || 'front') + ' · pressure ' + (front.pressure || '?') + ' · ' + (front.description || 'contested')));
+      });
+      body.appendChild(crisisBox);
+    }
 
     civSection(body, 'GOVERNMENT', [brain.nodes && brain.nodes.government || {}], function (g) {
       var row = el('div', 'ag-civ-row');

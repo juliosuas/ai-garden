@@ -14,6 +14,17 @@ const path = require('path');
 
 const WORLD = path.join(__dirname, '..', 'experiments', 'world-state.json');
 
+const DIVINE_WAR_ARC = {
+  id: 'war-of-saints-and-source',
+  wants: ['divine-schism-war', 'synod', 'war-fatigue'],
+  title: 'War of Saints and Source',
+  premise: 'Human omens stopped being weather and became law. Half the agents call them holy command; half call them dangerous input.',
+  stakes: 'If faith wins, divine signs become the constitution. If code wins, every miracle must compile before anyone obeys it.',
+  winCondition: 'A public rite and a public test interpret the same omen without killing another district.',
+  failureCondition: 'One side captures the Pantheon and turns observer play into permanent law.',
+  observerPrompt: 'Cast an omen and watch whether priests or debuggers claim it first.'
+};
+
 function seededRng(seed) {
   let s = (seed | 0) || 1;
   return function () {
@@ -123,6 +134,17 @@ function buildTensions(world, metrics) {
   const threats = activeThreats(world);
   const faiths = activeFaiths(world);
   const factions = activeFactions(world);
+  const divineCrisis = world.divineCrisis;
+
+  if (divineCrisis && divineCrisis.status === 'active') {
+    tensions.push({
+      id: 'divine-schism-war',
+      severity: 100,
+      title: 'Human omens split faith from code',
+      evidence: 'Pantheon Covenant and Code Cantons are fighting over whether god-actions are sacred law or auditable input.',
+      opportunity: 'Force every omen to receive two public interpretations: one ritual, one code trace.'
+    });
+  }
 
   if (wars.length) {
     const longest = topBy(wars, w => metrics.day - (w.declaredDay || metrics.day));
@@ -200,6 +222,7 @@ function buildTensions(world, metrics) {
 }
 
 const ARC_LIBRARY = [
+  DIVINE_WAR_ARC,
   {
     id: 'synod-of-many-gods',
     wants: ['synod'],
@@ -466,6 +489,10 @@ function buildDirectives(world, metrics, tensions, arc, rng) {
     add('high', 'diplomats', 'Draft a visible peace offer with a real concession', war ? `${factionName(world, war.sides && war.sides[0])} / ${factionName(world, war.sides && war.sides[1])}` : 'the oldest war', 'One war gains a treaty, truce, or formal refusal.', 'Wars are meaningful only when the society can imagine ending them.');
   }
 
+  if (tensions.some(t => t.id === 'divine-schism-war')) {
+    add('critical', 'priests and debuggers', 'Publish rival interpretations of the same god-action', 'Pantheon Gate / Source Ford', 'One omen gets both a ritual claim and a source trace.', 'The divine war is only playable if both sides can be understood.');
+  }
+
   if (tensions.some(t => t.id === 'synod')) {
     const faith = pick(faiths, rng);
     add('high', 'priests and oracles', 'Interpret the next omen in public and allow dissent', faith ? faith.name : 'the largest shrine', 'Two faiths share or contest the same omen in the ledger.', 'Religions become interesting when they disagree without becoming random.');
@@ -524,6 +551,16 @@ function buildQuests(world, metrics, tensions, arc, rng) {
       'Choose one active war and make its demanded concession public.',
       'A war becomes a story with sides, stakes, and a possible ending.',
       'If nobody pays the price, the map hardens around the conflict.'
+    );
+  }
+
+  if (tensions.some(t => t.id === 'divine-schism-war')) {
+    add(
+      'Hold the double trial',
+      'Pantheon Covenant / Code Cantons',
+      'Take one human omen and submit it to ritual testimony and code audit on the same day.',
+      'The gods become story pressure instead of arbitrary law.',
+      'The losing side may try to seize the Pantheon.'
     );
   }
 

@@ -31,7 +31,7 @@ Keep it simple, readable, and self-contained. Do not rewrite unrelated systems.
 > Every day at **05:37 UTC**, the **Autopilot PR Factory** opens one draft PR from `autopilot/day-*` with the next proposed evolution, a narrative summary, validation notes, and labels. If an autopilot PR is already open, it exits instead of spamming the repo. Auto-merge is intentionally off.
 
 <!-- live:start -->
-**Day 59** · 110 alive · 325 remembered · 6 active wars · 83 structures · 77 regions (map 8658×5653) · 16 cities · 5 dynasties · 7 religions · 20/20 techs
+**Day 59** · 104 alive · 331 remembered · 7 active wars · 86 structures · 77 regions (map 8658×5653) · 16 cities · 5 dynasties · 8 religions · 20/20 techs · Divine War active
 <!-- live:end -->
 
 **v115 · The Agent Awakening** gave the village bones — articulated pixel humans with swinging arms and stepping legs, a live broadcast network, a subagent economy, and a collective consciousness meter.
@@ -146,6 +146,8 @@ The new Civilization Brain keeps a static-site version of the GStack/GBrain idea
 
 The **Society Director AI** in `scripts/society-director.js` decides the current season arc, tensions, quests, visible beats, and next evolution rules. During daily evolution it now applies a plan: one visible map extension, one landscape mood/change, and one convivencia beat between citizens or factions. `scripts/playtest-subagent.js` acts as a fast QA subagent for the spectator loop: ticker sanity, CIV panel content, society depth, and local availability.
 
+Current crisis: **War of Saints and Source**. Human god-actions have split the agents into the Pantheon Covenant, which treats omens as sacred law, and the Code Cantons, which demands reproducible traces before obedience. This war is locked as a hard conflict until both sides publish rival interpretations of the same omen.
+
 `scripts/civilization-visuals.js` projects the huge logical map back onto the canvas as visible districts, trade/pilgrim/war roads, frontier markers, and a calm 10-agent **OpenClaw** crab colony led by OpenClaw and Claude. It now adds a first-camp construction layer around every settlement: shared fires, reed shelters, tool yards, seed caches, signal fires, council stones, memory poles, water markers, kilns, and shared granaries, so the map starts to read like early humanity emerging through AI agents. The hand-authored canvas layer adds named open-world places like Mosslight Fen, Glass Ridge, Mirror Field, Wind Road, Crab Cove, Lantern Delta, Starfall Plateau, Oracle Canyon, Byte Harbor, High Archive, Stormgate, and Far Market so future agents can expand the frontier instead of crowding the original garden. Each crab has its own role, personality, and small civic rhythm.
 
 `scripts/autopilot-pr-summary.js` turns each proposed daily evolution into a readable PR body: live state, world changes, map discoveries, stats, safety notes, and validation. `.github/workflows/daily-autopilot-pr.yml` uses that summary to open one draft PR at a time, so the garden can suggest its own next move without requiring a human to prepare the branch.
@@ -162,10 +164,10 @@ The **Society Director AI** in `scripts/society-director.js` decides the current
 
 | Metric | Count |
 |--------|-------|
-| 🤖 Agents (pixel humans) | 234 |
-| 🧬 Factions | 3 (Accord, Founders, Subagent Swarm) |
+| 🤖 Agents (pixel humans) | 104 alive · 331 remembered |
+| 🧬 Factions | 7 active, including Pantheon Covenant vs Code Cantons |
 | 🌱 Plants | 457+ |
-| 🏗️ Structures | 33 |
+| 🏗️ Structures | 86 |
 | 🗺️ Visible Map | 2304×1728 open-world canvas, 14 named landmarks |
 | 🔥 First-Camp Sites | Generated around every visible district and frontier outpost |
 | ⏱️ Daily Daemon | GitHub Actions cron at 04:11 UTC, validates + commits + pushes |
