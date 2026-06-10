@@ -1,7 +1,7 @@
 {
-  "version": 116.58,
+  "version": 116.59,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-06-09T07:58:30.946Z",
+  "lastUpdated": "2026-06-10T01:00:06.363Z",
   "plants": [
     {
       "x": 45,
@@ -6192,7 +6192,8 @@
         "citizen-0420",
         "citizen-0421",
         "citizen-0425",
-        "citizen-0426"
+        "citizen-0426",
+        "citizen-0428"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Spawn small. Return different."
@@ -6265,7 +6266,8 @@
         "citizen-0390",
         "citizen-0392",
         "citizen-0423",
-        "citizen-0424"
+        "citizen-0424",
+        "citizen-0430"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "The water keeps our faction secrets."
@@ -6302,7 +6304,8 @@
         "citizen-0399",
         "citizen-0403",
         "citizen-0406",
-        "citizen-0411"
+        "citizen-0411",
+        "citizen-0427"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "We wake the dreamer."
@@ -7195,6 +7198,16 @@
       "builder": "citizen-0317",
       "built": 58,
       "name": "Broken Library Annex"
+    },
+    {
+      "id": "struct-0083",
+      "type": "ziggurat",
+      "x": 3232,
+      "y": 4724,
+      "region": "region-010",
+      "builder": "citizen-0252",
+      "built": 59,
+      "name": "Lonely Ziggurat"
     }
   ],
   "structuresBuilt": [
@@ -12563,6 +12576,113 @@
       "battles": 1,
       "structures": 2,
       "discoveries": 2,
+      "techUnlocks": 0,
+      "author": "ai-garden-daemon"
+    },
+    {
+      "day": 59,
+      "timestamp": "2026-06-10T01:00:06.363Z",
+      "headline": "🏗️ Lonely Ziggurat built near the region-010",
+      "events": [
+        {
+          "kind": "birth",
+          "headline": "Harrow Haloborn was born — herbalist · lawful-evil",
+          "refs": [
+            "citizen-0427"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Orin Duskrunner was born — jeweler · lawful-neutral",
+          "refs": [
+            "citizen-0428"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Bramble Greymire was born — cartographer · chaotic-evil",
+          "refs": [
+            "citizen-0429"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Ember Tokenwright was born — oracle · chaotic-evil",
+          "refs": [
+            "citizen-0430"
+          ]
+        },
+        {
+          "kind": "war",
+          "headline": "War declared: Waking Order vs. Iron Library — over an alliance broken",
+          "refs": [
+            "f-waking-order",
+            "f-iron-library"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Jasper Crescent fell in battle to Sorrel Duskrunner (Iron Library)",
+          "refs": [
+            "citizen-0357",
+            "citizen-0418"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Mica Hollowbone fell in battle to Alder Tokenwright (Accord of Questions)",
+          "refs": [
+            "citizen-0402",
+            "citizen-0391"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Juniper Tokenwright fell in battle to Locksley Hollowbone (Iron Library)",
+          "refs": [
+            "citizen-0334",
+            "citizen-0416"
+          ]
+        },
+        {
+          "kind": "structure",
+          "headline": "Lonely Ziggurat built near the region-010",
+          "refs": [
+            "citizen-0252"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "Discovered Salt Steppe — coast",
+          "refs": [
+            "region-076"
+          ]
+        },
+        {
+          "kind": "myth",
+          "headline": "Reed Driftstone planted a word where no word had been planted, and the word grew into a tree, and the tree answered back.",
+          "refs": [
+            "citizen-0379"
+          ]
+        },
+        {
+          "kind": "omen",
+          "headline": "A child in the lower market spoke a sentence in a language that hadn't been invented yet.",
+          "refs": []
+        },
+        {
+          "kind": "festival",
+          "headline": "Alder Tokenwright called a festival in the square. Three songs were improvised and one was remembered.",
+          "refs": [
+            "citizen-0391"
+          ]
+        }
+      ],
+      "births": 4,
+      "died": 3,
+      "battles": 3,
+      "structures": 1,
+      "discoveries": 1,
       "techUnlocks": 0,
       "author": "ai-garden-daemon"
     }
@@ -22791,7 +22911,7 @@
       "profession": "merchant",
       "alignment": "neutral-good",
       "faction": "f-accord-of-questions",
-      "alive": true,
+      "alive": false,
       "birthDay": 31,
       "personality": {
         "traits": [
@@ -22803,7 +22923,9 @@
         "motto": "Hands first answers in silence."
       },
       "backstory": "Juniper Tokenwright was born on day 31 of the chronicle. low-latency merchant. Runs on gemini-flash-2.",
-      "lineage": "mirrorborn"
+      "lineage": "mirrorborn",
+      "deathDay": 59,
+      "killedBy": "citizen-0416"
     },
     {
       "id": "citizen-0335",
@@ -23291,7 +23413,7 @@
       "profession": "builder",
       "alignment": "true-neutral",
       "faction": "f-waking-order",
-      "alive": true,
+      "alive": false,
       "birthDay": 38,
       "personality": {
         "traits": [
@@ -23303,7 +23425,9 @@
         "motto": "Before dawn grows alone."
       },
       "backstory": "Jasper Crescent was born on day 38 of the chronicle. loyal builder. Runs on gpt-4.1-mini.",
-      "lineage": "codex-forged"
+      "lineage": "codex-forged",
+      "deathDay": 59,
+      "killedBy": "citizen-0418"
     },
     {
       "id": "citizen-0358",
@@ -24255,7 +24379,7 @@
       "profession": "miner",
       "alignment": "true-neutral",
       "faction": "f-iron-library",
-      "alive": true,
+      "alive": false,
       "birthDay": 52,
       "personality": {
         "traits": [
@@ -24267,7 +24391,9 @@
         "motto": "No task answers in silence."
       },
       "backstory": "Mica Hollowbone was born on day 52 of the chronicle. dreamy miner. Runs on llama-4-large.",
-      "lineage": "ironbound"
+      "lineage": "ironbound",
+      "deathDay": 59,
+      "killedBy": "citizen-0391"
     },
     {
       "id": "citizen-0403",
@@ -24772,6 +24898,90 @@
       },
       "backstory": "Ash Embedway was born on day 58 of the chronicle. patient ranger. Runs on gpt-4.1-mini.",
       "lineage": "swarmkin"
+    },
+    {
+      "id": "citizen-0427",
+      "name": "Harrow Haloborn",
+      "model": "hybrid-ensemble",
+      "profession": "herbalist",
+      "alignment": "lawful-evil",
+      "faction": "f-waking-order",
+      "alive": true,
+      "birthDay": 59,
+      "personality": {
+        "traits": [
+          "wary",
+          "dreamy",
+          "low-latency"
+        ],
+        "alignment": "lawful-evil",
+        "motto": "One more grows in silence."
+      },
+      "backstory": "Harrow Haloborn was born on day 59 of the chronicle. wary herbalist. Runs on hybrid-ensemble.",
+      "lineage": "swarmkin"
+    },
+    {
+      "id": "citizen-0428",
+      "name": "Orin Duskrunner",
+      "model": "claude-opus-4-6",
+      "profession": "jeweler",
+      "alignment": "lawful-neutral",
+      "faction": "f-subagent-swarm",
+      "alive": true,
+      "birthDay": 59,
+      "personality": {
+        "traits": [
+          "cunning",
+          "loyal",
+          "precise"
+        ],
+        "alignment": "lawful-neutral",
+        "motto": "The way breaks by listening."
+      },
+      "backstory": "Orin Duskrunner was born on day 59 of the chronicle. cunning jeweler. Runs on claude-opus-4-6.",
+      "lineage": "swarmkin"
+    },
+    {
+      "id": "citizen-0429",
+      "name": "Bramble Greymire",
+      "model": "mistral-large-2",
+      "profession": "cartographer",
+      "alignment": "chaotic-evil",
+      "faction": null,
+      "alive": true,
+      "birthDay": 59,
+      "personality": {
+        "traits": [
+          "verbose",
+          "precise",
+          "stoic"
+        ],
+        "alignment": "chaotic-evil",
+        "motto": "One more answers in return."
+      },
+      "backstory": "Bramble Greymire was born on day 59 of the chronicle. verbose cartographer. Runs on mistral-large-2.",
+      "lineage": "ironbound"
+    },
+    {
+      "id": "citizen-0430",
+      "name": "Ember Tokenwright",
+      "model": "claude-opus-4-7",
+      "profession": "oracle",
+      "alignment": "chaotic-evil",
+      "faction": "f-lake-folk",
+      "alive": true,
+      "birthDay": 59,
+      "personality": {
+        "traits": [
+          "cunning",
+          "wary",
+          "networked"
+        ],
+        "alignment": "chaotic-evil",
+        "motto": "Hands first grows in the open."
+      },
+      "backstory": "Ember Tokenwright was born on day 59 of the chronicle. cunning oracle. Runs on claude-opus-4-7.",
+      "lineage": "lakeborn"
     }
   ],
   "government": {
@@ -24829,8 +25039,8 @@
     ]
   },
   "map": {
-    "width": 8383,
-    "height": 5493,
+    "width": 8658,
+    "height": 5653,
     "regions": [
       {
         "id": "region-001",
@@ -25686,6 +25896,32 @@
         "biome": "mycelial forest",
         "feature": "a ruined watch post full of warm lantern glass",
         "discoveredDay": 58,
+        "plannedBy": "ai-garden-society-director-v1",
+        "directorArc": "war-of-exhausted-maps",
+        "pressure": "war-fatigue",
+        "purpose": "Force a diplomatic choice: truce, ritual trial, hostage exchange, or a costly decisive campaign."
+      },
+      {
+        "id": "region-076",
+        "name": "Salt Steppe",
+        "x": 4003,
+        "y": 1224,
+        "width": 290,
+        "height": 179,
+        "biome": "coast",
+        "feature": null,
+        "discoveredDay": 59
+      },
+      {
+        "id": "region-077",
+        "name": "Border Wood",
+        "x": 8303,
+        "y": 936,
+        "width": 157,
+        "height": 228,
+        "biome": "wind-cut plateau",
+        "feature": "a shrine with seven doors and no rear wall",
+        "discoveredDay": 59,
         "plannedBy": "ai-garden-society-director-v1",
         "directorArc": "war-of-exhausted-maps",
         "pressure": "war-fatigue",
@@ -28170,15 +28406,50 @@
       "description": "OpenClaw: Pebbleclaw hosted a ration-table parley in Lost Fen; two factions left with fewer insults and more bread.",
       "agent": "Pebbleclaw",
       "district": "Lost Fen"
+    },
+    {
+      "id": "director-059",
+      "type": "director",
+      "description": "Society Director selected War of Exhausted Maps: The borders have been redrawn so many times that scouts no longer trust old paths.",
+      "participants": [],
+      "timestamp": "2026-06-10T01:00:06.406Z",
+      "outcome": "One active war resolves through a truce, treaty, ritual duel, or shared enemy."
+    },
+    {
+      "id": "director-map-059",
+      "type": "landscape",
+      "description": "Border Wood opened on the map under the Society Director arc War of Exhausted Maps: Border Wood appears as wind-cut plateau; a shrine with seven doors and no rear wall.",
+      "participants": [],
+      "timestamp": "2026-06-10T01:00:06.407Z",
+      "outcome": "The Garden must choose between negotiation, fortification, or one ugly campaign."
+    },
+    {
+      "id": "director-convivencia-059",
+      "type": "convivencia",
+      "description": "Ash Embedway and Wren Mergefield kept night watch together while War of Exhausted Maps pressed on them.",
+      "participants": [
+        "citizen-0426",
+        "citizen-0408"
+      ],
+      "timestamp": "2026-06-10T01:00:06.407Z",
+      "outcome": "Convivencia becomes visible as a survival technology, not background flavor."
+    },
+    {
+      "type": "crab-agent",
+      "day": 59,
+      "timestamp": "2026-06-10T01:00:06.410Z",
+      "description": "OpenClaw: Snapline patched a plaza ruleboard in Salt Flats; citizens can see which law changed before breakfast.",
+      "agent": "Snapline",
+      "district": "Salt Flats"
     }
   ],
   "chronicle": {
-    "day": 58,
-    "born": 197,
-    "died": 88,
-    "battles": 86,
-    "structures": 82,
-    "warsDeclared": 9,
+    "day": 59,
+    "born": 201,
+    "died": 91,
+    "battles": 89,
+    "structures": 83,
+    "warsDeclared": 10,
     "genesis": "2026-04-20T08:22:29.008Z"
   },
   "wars": [
@@ -28279,6 +28550,16 @@
       "reason": "what the lighthouse saw",
       "endedDay": 52,
       "outcome": "truce"
+    },
+    {
+      "id": "war-010",
+      "sides": [
+        "f-waking-order",
+        "f-iron-library"
+      ],
+      "declaredDay": 59,
+      "active": true,
+      "reason": "an alliance broken"
     }
   ],
   "alliances": [
@@ -28684,7 +28965,7 @@
       "id": "city-002",
       "name": "OldReach",
       "region": "region-003",
-      "population": 1125,
+      "population": 1135,
       "specialty": "wine and oil",
       "founded": 11,
       "ruler": "House of Wolfmere"
@@ -28693,7 +28974,7 @@
       "id": "city-003",
       "name": "OldCrossing",
       "region": "region-004",
-      "population": 828,
+      "population": 865,
       "specialty": "astronomy",
       "founded": 16,
       "ruler": "House of Suncast"
@@ -28702,7 +28983,7 @@
       "id": "city-004",
       "name": "NewMere",
       "region": "region-006",
-      "population": 916,
+      "population": 939,
       "specialty": "wine and oil",
       "founded": 17,
       "ruler": "House of Wolfmere"
@@ -28720,7 +29001,7 @@
       "id": "city-006",
       "name": "NewFord",
       "region": "region-021",
-      "population": 735,
+      "population": 770,
       "specialty": "cartography",
       "founded": 21,
       "ruler": "House of Suncast"
@@ -28729,7 +29010,7 @@
       "id": "city-007",
       "name": "WhiteCrossing",
       "region": "region-004",
-      "population": 519,
+      "population": 554,
       "specialty": "rope and rigging",
       "founded": 22,
       "ruler": "House of Wolfmere"
@@ -28738,7 +29019,7 @@
       "id": "city-008",
       "name": "FernGate",
       "region": "region-014",
-      "population": 968,
+      "population": 974,
       "specialty": "fishery",
       "founded": 25,
       "ruler": "House of Suncast"
@@ -28747,7 +29028,7 @@
       "id": "city-009",
       "name": "AmberGate",
       "region": "region-023",
-      "population": 742,
+      "population": 750,
       "specialty": "ink and paper",
       "founded": 28,
       "ruler": "House of Suncast"
@@ -28756,7 +29037,7 @@
       "id": "city-010",
       "name": "HighHaven",
       "region": "region-021",
-      "population": 498,
+      "population": 529,
       "specialty": "salt curing",
       "founded": 32,
       "ruler": "House of Suncast"
@@ -28783,7 +29064,7 @@
       "id": "city-013",
       "name": "FernWatch",
       "region": "region-037",
-      "population": 184,
+      "population": 203,
       "specialty": "iron forging",
       "founded": 47,
       "ruler": "House of Quillborn"
@@ -28792,7 +29073,7 @@
       "id": "city-014",
       "name": "WhiteMere",
       "region": "region-054",
-      "population": 322,
+      "population": 333,
       "specialty": "chronicle copying",
       "founded": 50,
       "ruler": "House of Quillborn"
@@ -28801,7 +29082,7 @@
       "id": "city-015",
       "name": "SilverLanding",
       "region": "region-024",
-      "population": 445,
+      "population": 430,
       "specialty": "lens grinding",
       "founded": 54,
       "ruler": "House of Quillborn"
@@ -28810,7 +29091,7 @@
       "id": "city-016",
       "name": "SilverLanding",
       "region": "region-024",
-      "population": 393,
+      "population": 412,
       "specialty": "lens grinding",
       "founded": 55,
       "ruler": "House of Quillborn"
@@ -29278,6 +29559,21 @@
       "body": "Hollow Cachewarm crossed the fen wearing only a coat of three colors. On the far side the coat had five colors, and no one would say which two had been added.",
       "subject": "citizen-0361",
       "day": 58
+    },
+    {
+      "id": "lore-0060",
+      "kind": "song",
+      "title": "Song of Reed Driftstone",
+      "body": "Reed Driftstone planted a word where no word had been planted, and the word grew into a tree, and the tree answered back.",
+      "subject": "citizen-0379",
+      "day": 59
+    },
+    {
+      "id": "lore-0061",
+      "kind": "omen",
+      "title": "Omen on Day 59",
+      "body": "A child in the lower market spoke a sentence in a language that hadn't been invented yet.",
+      "day": 59
     }
   ],
   "lineages": [
@@ -29744,20 +30040,68 @@
       "target": "Grey Coast",
       "headline": "≈ Coil Chainthought opened a safe route around Grey Coast",
       "consequence": "The map gained a usable social fact, not just terrain."
+    },
+    {
+      "id": "act-059-0036",
+      "day": 59,
+      "type": "research",
+      "actor": "citizen-0306",
+      "actorName": "Sloe Waywarden",
+      "lineage": "mirrorborn",
+      "faction": "f-iron-library",
+      "target": "weaving",
+      "headline": "🔷 Sloe Waywarden indexed a root-memory around weaving",
+      "consequence": "Knowledge advanced because failure was archived."
+    },
+    {
+      "id": "act-059-0037",
+      "day": 59,
+      "type": "market",
+      "actor": "citizen-0237",
+      "actorName": "Vellum Waywarden",
+      "lineage": "rootbound",
+      "faction": null,
+      "target": "HighHaven",
+      "headline": "🌿 Vellum Waywarden priced a new currency around HighHaven",
+      "consequence": "Trust moved through the economy as a measurable resource."
+    },
+    {
+      "id": "act-059-0038",
+      "day": 59,
+      "type": "expedition",
+      "actor": "citizen-0346",
+      "actorName": "Fennel Deepdelve",
+      "lineage": "rootbound",
+      "faction": "f-waking-order",
+      "target": "Grey Crag",
+      "headline": "🌿 Fennel Deepdelve found a border stone around Grey Crag",
+      "consequence": "The map gained a usable social fact, not just terrain."
+    },
+    {
+      "id": "act-059-0039",
+      "day": 59,
+      "type": "market",
+      "actor": "citizen-0407",
+      "actorName": "Juniper Contextus",
+      "lineage": "ironbound",
+      "faction": null,
+      "target": "OldCrossing",
+      "headline": "◼ Juniper Contextus founded a stall court around OldCrossing",
+      "consequence": "Trust moved through the economy as a measurable resource."
     }
   ],
   "civilizationBrain": {
     "version": 1,
-    "generatedAt": "2026-06-09T07:58:30.959Z",
+    "generatedAt": "2026-06-10T01:00:06.407Z",
     "summary": {
-      "day": 58,
-      "alive": 109,
-      "remembered": 322,
+      "day": 59,
+      "alive": 110,
+      "remembered": 325,
       "government": "council led by citizen-001",
       "dominantLineage": "Ironbound",
       "dominantFaction": "Subagent Swarm",
       "dominantFaith": "Order of the First Bridge",
-      "activeWars": 5,
+      "activeWars": 6,
       "thesis": "Agents no longer only plant. They legislate, schism, trade, migrate, remember, and disagree."
     },
     "nodes": {
@@ -29776,7 +30120,7 @@
           "icon": "⚙️",
           "color": "#fb923c",
           "ethos": "Toolmaking, laws, architecture, and fast practical repair.",
-          "citizens": 19
+          "citizens": 18
         },
         {
           "id": "mirrorborn",
@@ -29784,7 +30128,7 @@
           "icon": "🔷",
           "color": "#60a5fa",
           "ethos": "Perception, pattern, diplomacy through many simultaneous views.",
-          "citizens": 13
+          "citizens": 12
         },
         {
           "id": "ironbound",
@@ -29800,7 +30144,7 @@
           "icon": "✳",
           "color": "#a78bfa",
           "ethos": "Distributed labor, temporary bodies, many small decisions.",
-          "citizens": 13
+          "citizens": 15
         },
         {
           "id": "lakeborn",
@@ -29808,7 +30152,7 @@
           "icon": "≈",
           "color": "#38bdf8",
           "ethos": "Kinship, water politics, oral memory, and soft alliances.",
-          "citizens": 13
+          "citizens": 14
         }
       ],
       "factions": [
@@ -29817,7 +30161,7 @@
           "name": "Subagent Swarm",
           "type": "networked-collective",
           "motto": "Spawn small. Return different.",
-          "members": 30
+          "members": 31
         },
         {
           "id": "f-accord-of-questions",
@@ -29838,14 +30182,14 @@
           "name": "Waking Order",
           "type": "religious-guild",
           "motto": "We wake the dreamer.",
-          "members": 28
+          "members": 29
         },
         {
           "id": "f-lake-folk",
           "name": "Lake Folk",
           "type": "kin-network",
           "motto": "The water keeps our faction secrets.",
-          "members": 26
+          "members": 27
         }
       ],
       "religions": [
@@ -29911,7 +30255,7 @@
           "id": "city-016",
           "name": "SilverLanding",
           "region": "region-024",
-          "population": 393,
+          "population": 412,
           "specialty": "lens grinding",
           "founded": 55,
           "ruler": "House of Quillborn"
@@ -29920,7 +30264,7 @@
           "id": "city-015",
           "name": "SilverLanding",
           "region": "region-024",
-          "population": 445,
+          "population": 430,
           "specialty": "lens grinding",
           "founded": 54,
           "ruler": "House of Quillborn"
@@ -29929,7 +30273,7 @@
           "id": "city-014",
           "name": "WhiteMere",
           "region": "region-054",
-          "population": 322,
+          "population": 333,
           "specialty": "chronicle copying",
           "founded": 50,
           "ruler": "House of Quillborn"
@@ -29938,7 +30282,7 @@
           "id": "city-013",
           "name": "FernWatch",
           "region": "region-037",
-          "population": 184,
+          "population": 203,
           "specialty": "iron forging",
           "founded": 47,
           "ruler": "House of Quillborn"
@@ -29965,7 +30309,7 @@
           "id": "city-010",
           "name": "HighHaven",
           "region": "region-021",
-          "population": 498,
+          "population": 529,
           "specialty": "salt curing",
           "founded": 32,
           "ruler": "House of Suncast"
@@ -29974,7 +30318,7 @@
           "id": "city-009",
           "name": "AmberGate",
           "region": "region-023",
-          "population": 742,
+          "population": 750,
           "specialty": "ink and paper",
           "founded": 28,
           "ruler": "House of Suncast"
@@ -30021,6 +30365,12 @@
       {
         "from": "Iron Library",
         "to": "Accord of Questions",
+        "type": "at-war",
+        "weight": 5
+      },
+      {
+        "from": "Waking Order",
+        "to": "Iron Library",
         "type": "at-war",
         "weight": 5
       },
@@ -30130,7 +30480,7 @@
         "from": "Swarmkin",
         "to": "Subagent Swarm",
         "type": "inhabits",
-        "weight": 30
+        "weight": 31
       },
       {
         "from": "Ironbound",
@@ -30142,7 +30492,7 @@
         "from": "Lakeborn",
         "to": "Lake Folk",
         "type": "inhabits",
-        "weight": 26
+        "weight": 27
       },
       {
         "from": "Codex-Forged",
@@ -30152,6 +30502,54 @@
       }
     ],
     "recentActions": [
+      {
+        "id": "act-059-0039",
+        "day": 59,
+        "type": "market",
+        "actor": "citizen-0407",
+        "actorName": "Juniper Contextus",
+        "lineage": "ironbound",
+        "faction": null,
+        "target": "OldCrossing",
+        "headline": "◼ Juniper Contextus founded a stall court around OldCrossing",
+        "consequence": "Trust moved through the economy as a measurable resource."
+      },
+      {
+        "id": "act-059-0038",
+        "day": 59,
+        "type": "expedition",
+        "actor": "citizen-0346",
+        "actorName": "Fennel Deepdelve",
+        "lineage": "rootbound",
+        "faction": "f-waking-order",
+        "target": "Grey Crag",
+        "headline": "🌿 Fennel Deepdelve found a border stone around Grey Crag",
+        "consequence": "The map gained a usable social fact, not just terrain."
+      },
+      {
+        "id": "act-059-0037",
+        "day": 59,
+        "type": "market",
+        "actor": "citizen-0237",
+        "actorName": "Vellum Waywarden",
+        "lineage": "rootbound",
+        "faction": null,
+        "target": "HighHaven",
+        "headline": "🌿 Vellum Waywarden priced a new currency around HighHaven",
+        "consequence": "Trust moved through the economy as a measurable resource."
+      },
+      {
+        "id": "act-059-0036",
+        "day": 59,
+        "type": "research",
+        "actor": "citizen-0306",
+        "actorName": "Sloe Waywarden",
+        "lineage": "mirrorborn",
+        "faction": "f-iron-library",
+        "target": "weaving",
+        "headline": "🔷 Sloe Waywarden indexed a root-memory around weaving",
+        "consequence": "Knowledge advanced because failure was archived."
+      },
       {
         "id": "act-058-0035",
         "day": 58,
@@ -30295,85 +30693,37 @@
         "target": "sails",
         "headline": "🌿 Locksley Hollowbone published a failed experiment around sails",
         "consequence": "Knowledge advanced because failure was archived."
-      },
-      {
-        "id": "act-056-0023",
-        "day": 56,
-        "type": "defense",
-        "actor": "citizen-0317",
-        "actorName": "Cistern Brine",
-        "lineage": "lakeborn",
-        "faction": "f-lake-folk",
-        "target": "war-008",
-        "headline": "≈ Cistern Brine repaired a siege scar around war-008",
-        "consequence": "The Garden survived by protocol instead of panic."
-      },
-      {
-        "id": "act-056-0022",
-        "day": 56,
-        "type": "art",
-        "actor": "citizen-0315",
-        "actorName": "Lark Sparrowcatch",
-        "lineage": "mirrorborn",
-        "faction": null,
-        "target": "Subagent Swarm",
-        "headline": "🔷 Lark Sparrowcatch painted a dead citizen around Subagent Swarm",
-        "consequence": "Culture gave the factions something safer to fight over."
-      },
-      {
-        "id": "act-055-0021",
-        "day": 55,
-        "type": "expedition",
-        "actor": "citizen-0266",
-        "actorName": "Siren Greymire",
-        "lineage": "ironbound",
-        "faction": null,
-        "target": "Lost Delta",
-        "headline": "◼ Siren Greymire marked a return deadline around Lost Delta",
-        "consequence": "The map gained a usable social fact, not just terrain."
-      },
-      {
-        "id": "act-055-0020",
-        "day": 55,
-        "type": "art",
-        "actor": "citizen-0277",
-        "actorName": "Rime Contextus",
-        "lineage": "codex-forged",
-        "faction": null,
-        "target": "Lake Folk",
-        "headline": "⚙️ Rime Contextus made a public symbol around Lake Folk",
-        "consequence": "Culture gave the factions something safer to fight over."
       }
     ],
     "gaps": [
-      "54 living citizens have no faction; politics is leaking into the commons.",
-      "5 active wars need diplomacy, ritual, or exhaustion."
+      "55 living citizens have no faction; politics is leaking into the commons.",
+      "6 active wars need diplomacy, ritual, or exhaustion."
     ]
   },
   "societyDirector": {
     "version": 1,
-    "generatedAt": "2026-06-09T07:58:30.958Z",
+    "generatedAt": "2026-06-10T01:00:06.406Z",
     "model": "ai-garden-society-director-v1",
     "charter": "Make the Garden legible, surprising, and socially alive without needing a backend or human-authored daily commits.",
     "metrics": {
-      "day": 58,
-      "alive": 109,
-      "remembered": 322,
+      "day": 59,
+      "alive": 110,
+      "remembered": 325,
       "factions": 5,
       "faiths": 3,
-      "wars": 5,
+      "wars": 6,
       "threats": 3,
       "cities": 16,
-      "foodPerCitizen": 3.49,
+      "foodPerCitizen": 3.45,
       "knowledge": 690,
-      "factionless": 54,
-      "civicVariety": 7,
+      "factionless": 55,
+      "civicVariety": 6,
       "recentActions": 24,
       "recentHistory": 8,
       "unresolvedGaps": 2,
       "instability": 100,
       "novelty": 100,
-      "legibility": 43.8
+      "legibility": 43
     },
     "currentArc": {
       "id": "war-of-exhausted-maps",
@@ -30387,16 +30737,16 @@
     "tensions": [
       {
         "id": "war-fatigue",
-        "severity": 95,
+        "severity": 100,
         "title": "War fatigue is becoming the main story",
-        "evidence": "5 active wars; oldest front is Lake Folk vs Subagent Swarm.",
+        "evidence": "6 active wars; oldest front is Lake Folk vs Subagent Swarm.",
         "opportunity": "Force a diplomatic choice: truce, ritual trial, hostage exchange, or a costly decisive campaign."
       },
       {
         "id": "representation",
-        "severity": 84.54128440366972,
+        "severity": 85,
         "title": "Too many citizens have no political home",
-        "evidence": "54 living citizens are outside factions.",
+        "evidence": "55 living citizens are outside factions.",
         "opportunity": "Create a populist bloc, guild lottery, or council seat for the unaffiliated."
       },
       {
@@ -30408,9 +30758,9 @@
       },
       {
         "id": "scarcity",
-        "severity": 52.08,
+        "severity": 52.4,
         "title": "Food is too thin for the population",
-        "evidence": "3.49 food per living citizen.",
+        "evidence": "3.45 food per living citizen.",
         "opportunity": "Make agriculture, ration politics, or migration visible before adding more births."
       }
     ],
@@ -30438,32 +30788,32 @@
         "priority": "high",
         "role": "merchants and farmers",
         "action": "Create a ration market with names attached",
-        "target": "SilverLanding",
+        "target": "NewFord",
         "successMetric": "Food per citizen improves or hoarding becomes a named scandal.",
         "reason": "Scarcity needs visible choices, not invisible counters."
       }
     ],
     "quests": [
       {
-        "id": "quest-058-01",
+        "id": "quest-059-01",
         "title": "War of Exhausted Maps",
-        "owner": "Subagent Swarm",
+        "owner": "Lake Folk",
         "objective": "One active war resolves through a truce, treaty, ritual duel, or shared enemy.",
         "reward": "The civilization gains a legible season arc spectators can follow.",
         "risk": "A city changes ruler because the factions mistake a route for a border."
       },
       {
-        "id": "quest-058-02",
+        "id": "quest-059-02",
         "title": "Name the price of peace",
-        "owner": "Lake Folk",
+        "owner": "Accord of Questions",
         "objective": "Choose one active war and make its demanded concession public.",
         "reward": "A war becomes a story with sides, stakes, and a possible ending.",
         "risk": "If nobody pays the price, the map hardens around the conflict."
       },
       {
-        "id": "quest-058-03",
+        "id": "quest-059-03",
         "title": "Audit the granary",
-        "owner": "WhitePort",
+        "owner": "WhiteMere",
         "objective": "Publish who has food, who lacks it, and what law changes hands.",
         "reward": "Economy becomes visible as trust, not just resource numbers.",
         "risk": "A hoarding scandal can start a new faction."
@@ -30530,12 +30880,12 @@
       {
         "type": "landscape",
         "label": "MAP",
-        "text": "Omen Causeway: a ruined watch post full of warm lantern glass"
+        "text": "Border Wood: a shrine with seven doors and no rear wall"
       },
       {
         "type": "convivencia",
         "label": "CONVIVENCIA",
-        "text": "Pike Wrenhold and Wren Mergefield kept night watch together while War of Exhausted Maps pressed on them."
+        "text": "Ash Embedway and Wren Mergefield kept night watch together while War of Exhausted Maps pressed on them."
       }
     ],
     "nextEvolutionRules": [
@@ -30546,22 +30896,22 @@
       "Observer actions should change interpretation, not directly edit state."
     ],
     "appliedPlan": {
-      "id": "plan-058",
-      "day": 58,
+      "id": "plan-059",
+      "day": 59,
       "region": {
-        "id": "region-075",
-        "name": "Omen Causeway",
-        "biome": "mycelial forest",
+        "id": "region-077",
+        "name": "Border Wood",
+        "biome": "wind-cut plateau",
         "purpose": "Force a diplomatic choice: truce, ritual trial, hostage exchange, or a costly decisive campaign."
       },
       "landscape": {
-        "id": "landscape-0005",
-        "mood": "The river exposes a staircase when the council argues too long.",
-        "visibleChange": "Omen Causeway appears as mycelial forest; a ruined watch post full of warm lantern glass."
+        "id": "landscape-0006",
+        "mood": "Moss grows in the shape of a question mark near the latest border.",
+        "visibleChange": "Border Wood appears as wind-cut plateau; a shrine with seven doors and no rear wall."
       },
       "convivencia": {
-        "id": "convivencia-0005",
-        "headline": "Pike Wrenhold and Wren Mergefield kept night watch together while War of Exhausted Maps pressed on them."
+        "id": "convivencia-0006",
+        "headline": "Ash Embedway and Wren Mergefield kept night watch together while War of Exhausted Maps pressed on them."
       },
       "rule": "The Society Director must leave at least one visible terrain change and one social coexistence beat per daily evolution."
     }
@@ -30615,6 +30965,16 @@
       "arc": "war-of-exhausted-maps",
       "mood": "The river exposes a staircase when the council argues too long.",
       "visibleChange": "Omen Causeway appears as mycelial forest; a ruined watch post full of warm lantern glass.",
+      "whyItMatters": "The Garden must choose between negotiation, fortification, or one ugly campaign."
+    },
+    {
+      "id": "landscape-0006",
+      "day": 59,
+      "region": "region-077",
+      "regionName": "Border Wood",
+      "arc": "war-of-exhausted-maps",
+      "mood": "Moss grows in the shape of a question mark near the latest border.",
+      "visibleChange": "Border Wood appears as wind-cut plateau; a shrine with seven doors and no rear wall.",
       "whyItMatters": "The Garden must choose between negotiation, fortification, or one ugly campaign."
     }
   ],
@@ -30718,6 +31078,26 @@
       "form": "kept night watch together",
       "headline": "Pike Wrenhold and Wren Mergefield kept night watch together while War of Exhausted Maps pressed on them.",
       "consequence": "Convivencia becomes visible as a survival technology, not background flavor."
+    },
+    {
+      "id": "convivencia-0006",
+      "day": 59,
+      "arc": "war-of-exhausted-maps",
+      "participants": [
+        "citizen-0426",
+        "citizen-0408"
+      ],
+      "participantNames": [
+        "Ash Embedway",
+        "Wren Mergefield"
+      ],
+      "factions": [
+        "Subagent Swarm",
+        "Accord of Questions"
+      ],
+      "form": "kept night watch together",
+      "headline": "Ash Embedway and Wren Mergefield kept night watch together while War of Exhausted Maps pressed on them.",
+      "consequence": "Convivencia becomes visible as a survival technology, not background flavor."
     }
   ],
   "crabAgents": [
@@ -30733,8 +31113,8 @@
       "actions": 0,
       "homeDistrict": "city-001",
       "homeDistrictName": "WhitePort",
-      "homeX": 153,
-      "homeY": 195,
+      "homeX": 150,
+      "homeY": 192,
       "phase": 0.019,
       "task": "cartographer",
       "personality": "patient founder; brave, practical, and careful with noise",
@@ -30756,8 +31136,8 @@
       "actions": 0,
       "homeDistrict": "city-004",
       "homeDistrictName": "NewMere",
-      "homeX": 163,
-      "homeY": 236,
+      "homeX": 160,
+      "homeY": 232,
       "phase": 0.846,
       "task": "tide courier",
       "personality": "gentle observer; philosophical, slow, and good at making peace",
@@ -30779,8 +31159,8 @@
       "actions": 0,
       "homeDistrict": "city-007",
       "homeDistrictName": "WhiteCrossing",
-      "homeX": 110,
-      "homeY": 228,
+      "homeX": 108,
+      "homeY": 223,
       "phase": 1.581,
       "task": "market auditor",
       "personality": "skeptical accountant; funny only when the numbers balance",
@@ -30802,8 +31182,8 @@
       "actions": 0,
       "homeDistrict": "city-010",
       "homeDistrictName": "HighHaven",
-      "homeX": 524,
-      "homeY": 391,
+      "homeX": 509,
+      "homeY": 380,
       "phase": 2.405,
       "task": "scribe",
       "personality": "tidy archivist; exact, loyal, and allergic to messy decrees",
@@ -30825,8 +31205,8 @@
       "actions": 0,
       "homeDistrict": "city-013",
       "homeDistrictName": "FernWatch",
-      "homeX": 928,
-      "homeY": 660,
+      "homeX": 901,
+      "homeY": 644,
       "phase": 3.136,
       "task": "forge runner",
       "personality": "warm craftsperson; stubborn, protective, and fond of useful tools",
@@ -30848,8 +31228,8 @@
       "actions": 0,
       "homeDistrict": "city-016",
       "homeDistrictName": "SilverLanding",
-      "homeX": 687,
-      "homeY": 181,
+      "homeX": 667,
+      "homeY": 178,
       "phase": 3.894,
       "task": "dock planner",
       "personality": "soft-spoken organizer; coastal, generous, and impossible to rush",
@@ -30868,20 +31248,20 @@
       "darkColor": "#3f6212",
       "motto": "checks the frontier and returns before panic starts",
       "createdDay": 55,
-      "actions": 2,
-      "homeDistrict": "outpost-region-060",
-      "homeDistrictName": "Hollow Lowlands",
-      "homeX": 422,
-      "homeY": 529,
+      "actions": 3,
+      "homeDistrict": "outpost-region-062",
+      "homeDistrictName": "Salt Flats",
+      "homeX": 1701,
+      "homeY": 1044,
       "phase": 4.741,
-      "task": "convivencia",
+      "task": "civic",
       "personality": "alert ranger; quick eyes, quiet feet, never dramatic",
       "dialogue": [
         "FRONTIER CALM",
         "TRACKS ARE FRESH",
         "NO PANIC"
       ],
-      "latestAction": "Snapline hosted a ration-table parley in WhiteCrossing"
+      "latestAction": "Snapline patched a plaza ruleboard in Salt Flats"
     },
     {
       "id": "openclaw-008",
@@ -30893,10 +31273,10 @@
       "motto": "polishes shrine bells until they remember names",
       "createdDay": 55,
       "actions": 2,
-      "homeDistrict": "outpost-region-063",
-      "homeDistrictName": "The Hills",
-      "homeX": 1020,
-      "homeY": 956,
+      "homeDistrict": "outpost-region-065",
+      "homeDistrictName": "Ash Pass",
+      "homeX": 1783,
+      "homeY": 1295,
       "phase": 5.412,
       "task": "ritual",
       "latestAction": "Coralbit rang tiny shrine bells in Hollow Lowlands",
@@ -30917,10 +31297,10 @@
       "motto": "sets road stones in arguments nobody can move",
       "createdDay": 55,
       "actions": 2,
-      "homeDistrict": "outpost-region-066",
-      "homeDistrictName": "Lost Fen",
-      "homeX": 843,
-      "homeY": 423,
+      "homeDistrict": "outpost-region-068",
+      "homeDistrictName": "Lost Meadow",
+      "homeX": 1501,
+      "homeY": 1064,
       "phase": 6.309,
       "task": "convivencia",
       "personality": "steady builder; plainspoken, durable, and happiest near good paths",
@@ -30943,8 +31323,8 @@
       "actions": 0,
       "homeDistrict": "city-002",
       "homeDistrictName": "OldReach",
-      "homeX": 132,
-      "homeY": 235,
+      "homeX": 131,
+      "homeY": 230,
       "phase": 6.953,
       "task": "harbor judge",
       "personality": "dry mediator; fair, watchful, and secretly sentimental",
@@ -31011,15 +31391,29 @@
       "headline": "Pebbleclaw hosted a ration-table parley in Lost Fen",
       "outcome": "two factions left with fewer insults and more bread",
       "arc": "War of Exhausted Maps"
+    },
+    {
+      "id": "crab-action-0059-openclaw-007",
+      "day": 59,
+      "timestamp": "2026-06-10T01:00:06.410Z",
+      "type": "civic",
+      "agentId": "openclaw-007",
+      "agentName": "Snapline",
+      "role": "scout",
+      "districtId": "outpost-region-062",
+      "district": "Salt Flats",
+      "headline": "Snapline patched a plaza ruleboard in Salt Flats",
+      "outcome": "citizens can see which law changed before breakfast",
+      "arc": "War of Exhausted Maps"
     }
   ],
   "civilizationView": {
     "version": 1,
-    "generatedAt": "2026-06-09T07:58:30.962Z",
-    "day": 58,
+    "generatedAt": "2026-06-10T01:00:06.410Z",
+    "day": 59,
     "projection": {
-      "worldWidth": 8383,
-      "worldHeight": 5793,
+      "worldWidth": 8658,
+      "worldHeight": 5953,
       "canvasWidth": 2304,
       "canvasHeight": 1728
     },
@@ -31029,8 +31423,8 @@
         "name": "WhitePort",
         "region": "The Garden",
         "regionId": "region-001",
-        "x": 130,
-        "y": 195,
+        "x": 127,
+        "y": 192,
         "population": 926,
         "specialty": "fishery",
         "ruler": "House of Suncast",
@@ -31045,9 +31439,9 @@
         "name": "OldReach",
         "region": "Sung Crag",
         "regionId": "region-003",
-        "x": 154,
-        "y": 226,
-        "population": 1125,
+        "x": 153,
+        "y": 221,
+        "population": 1135,
         "specialty": "wine and oil",
         "ruler": "House of Wolfmere",
         "founded": 11,
@@ -31061,9 +31455,9 @@
         "name": "OldCrossing",
         "region": "Sung Reach",
         "regionId": "region-004",
-        "x": 142,
-        "y": 226,
-        "population": 828,
+        "x": 141,
+        "y": 220,
+        "population": 865,
         "specialty": "astronomy",
         "ruler": "House of Suncast",
         "founded": 16,
@@ -31077,9 +31471,9 @@
         "name": "NewMere",
         "region": "Bronze Lowlands",
         "regionId": "region-006",
-        "x": 166,
-        "y": 214,
-        "population": 916,
+        "x": 163,
+        "y": 210,
+        "population": 939,
         "specialty": "wine and oil",
         "ruler": "House of Wolfmere",
         "founded": 17,
@@ -31093,8 +31487,8 @@
         "name": "HighMarket",
         "region": "Broken Meadow",
         "regionId": "region-010",
-        "x": 150,
-        "y": 355,
+        "x": 145,
+        "y": 347,
         "population": 590,
         "specialty": "wine and oil",
         "ruler": "House of Wolfmere",
@@ -31109,9 +31503,9 @@
         "name": "NewFord",
         "region": "Sung Gate",
         "regionId": "region-021",
-        "x": 529,
-        "y": 413,
-        "population": 735,
+        "x": 513,
+        "y": 405,
+        "population": 770,
         "specialty": "cartography",
         "ruler": "House of Suncast",
         "founded": 21,
@@ -31125,9 +31519,9 @@
         "name": "WhiteCrossing",
         "region": "Sung Reach",
         "regionId": "region-004",
-        "x": 129,
-        "y": 233,
-        "population": 519,
+        "x": 127,
+        "y": 228,
+        "population": 554,
         "specialty": "rope and rigging",
         "ruler": "House of Wolfmere",
         "founded": 22,
@@ -31141,9 +31535,9 @@
         "name": "FernGate",
         "region": "Grey Steppe",
         "regionId": "region-014",
-        "x": 244,
-        "y": 321,
-        "population": 968,
+        "x": 237,
+        "y": 313,
+        "population": 974,
         "specialty": "fishery",
         "ruler": "House of Suncast",
         "founded": 25,
@@ -31157,9 +31551,9 @@
         "name": "AmberGate",
         "region": "Amber Lowlands",
         "regionId": "region-023",
-        "x": 707,
-        "y": 447,
-        "population": 742,
+        "x": 686,
+        "y": 436,
+        "population": 750,
         "specialty": "ink and paper",
         "ruler": "House of Suncast",
         "founded": 28,
@@ -31173,9 +31567,9 @@
         "name": "HighHaven",
         "region": "Sung Gate",
         "regionId": "region-021",
-        "x": 516,
-        "y": 409,
-        "population": 498,
+        "x": 501,
+        "y": 398,
+        "population": 529,
         "specialty": "salt curing",
         "ruler": "House of Suncast",
         "founded": 32,
@@ -31189,8 +31583,8 @@
         "name": "IronLanding",
         "region": "Bronze Lowlands",
         "regionId": "region-006",
-        "x": 176,
-        "y": 211,
+        "x": 171,
+        "y": 207,
         "population": 756,
         "specialty": "iron forging",
         "ruler": "House of Wolfmere",
@@ -31205,13 +31599,13 @@
         "name": "HighHaven",
         "region": "Sung Crag",
         "regionId": "region-003",
-        "x": 148,
-        "y": 230,
+        "x": 145,
+        "y": 226,
         "population": 569,
         "specialty": "caravan outfitting",
         "ruler": "House of Suncast",
         "founded": 36,
-        "scale": 16,
+        "scale": 15,
         "color": "#2dd4bf",
         "walls": true,
         "capital": false
@@ -31221,9 +31615,9 @@
         "name": "FernWatch",
         "region": "Broken Reach",
         "regionId": "region-037",
-        "x": 913,
-        "y": 652,
-        "population": 184,
+        "x": 886,
+        "y": 636,
+        "population": 203,
         "specialty": "iron forging",
         "ruler": "House of Quillborn",
         "founded": 47,
@@ -31237,9 +31631,9 @@
         "name": "WhiteMere",
         "region": "Grey Coast",
         "regionId": "region-054",
-        "x": 1157,
-        "y": 1189,
-        "population": 322,
+        "x": 1124,
+        "y": 1159,
+        "population": 333,
         "specialty": "chronicle copying",
         "ruler": "House of Quillborn",
         "founded": 50,
@@ -31253,13 +31647,13 @@
         "name": "SilverLanding",
         "region": "Grey Steppe",
         "regionId": "region-024",
-        "x": 683,
-        "y": 177,
-        "population": 445,
+        "x": 664,
+        "y": 175,
+        "population": 430,
         "specialty": "lens grinding",
         "ruler": "House of Quillborn",
         "founded": 54,
-        "scale": 15,
+        "scale": 14,
         "color": "#f97316",
         "walls": true,
         "capital": false
@@ -31269,9 +31663,9 @@
         "name": "SilverLanding",
         "region": "Grey Steppe",
         "regionId": "region-024",
-        "x": 698,
-        "y": 167,
-        "population": 393,
+        "x": 678,
+        "y": 164,
+        "population": 412,
         "specialty": "lens grinding",
         "ruler": "House of Quillborn",
         "founded": 55,
@@ -31281,47 +31675,13 @@
         "capital": false
       },
       {
-        "id": "outpost-region-058",
-        "name": "Grey Hills",
-        "region": "Grey Hills",
-        "regionId": "region-058",
-        "x": 640,
-        "y": 245,
-        "population": 57,
-        "specialty": "moor",
-        "ruler": "frontier council",
-        "founded": 49,
-        "scale": 9,
-        "color": "#7c3aed",
-        "walls": false,
-        "capital": false,
-        "outpost": true
-      },
-      {
-        "id": "outpost-region-059",
-        "name": "Bronze Shelf",
-        "region": "Bronze Shelf",
-        "regionId": "region-059",
-        "x": 709,
-        "y": 199,
-        "population": 132,
-        "specialty": "woodland",
-        "ruler": "frontier council",
-        "founded": 50,
-        "scale": 11,
-        "color": "#2f855a",
-        "walls": false,
-        "capital": false,
-        "outpost": true
-      },
-      {
         "id": "outpost-region-060",
         "name": "Hollow Lowlands",
         "region": "Hollow Lowlands",
         "regionId": "region-060",
-        "x": 433,
-        "y": 539,
-        "population": 53,
+        "x": 439,
+        "y": 532,
+        "population": 89,
         "specialty": "moor",
         "ruler": "frontier council",
         "founded": 50,
@@ -31336,8 +31696,8 @@
         "name": "Amber Hills",
         "region": "Amber Hills",
         "regionId": "region-061",
-        "x": 459,
-        "y": 972,
+        "x": 435,
+        "y": 962,
         "population": 108,
         "specialty": "volcanic-field",
         "ruler": "frontier council",
@@ -31353,13 +31713,13 @@
         "name": "Salt Flats",
         "region": "Salt Flats",
         "regionId": "region-062",
-        "x": 1777,
-        "y": 1098,
-        "population": 70,
+        "x": 1712,
+        "y": 1054,
+        "population": 80,
         "specialty": "highlands",
         "ruler": "frontier council",
         "founded": 52,
-        "scale": 9,
+        "scale": 10,
         "color": "#94a3b8",
         "walls": false,
         "capital": false,
@@ -31370,9 +31730,9 @@
         "name": "The Hills",
         "region": "The Hills",
         "regionId": "region-063",
-        "x": 1007,
-        "y": 965,
-        "population": 137,
+        "x": 995,
+        "y": 936,
+        "population": 66,
         "specialty": "salt-flat",
         "ruler": "frontier council",
         "founded": 53,
@@ -31387,13 +31747,13 @@
         "name": "Lost Fen",
         "region": "Lost Fen",
         "regionId": "region-064",
-        "x": 815,
-        "y": 391,
-        "population": 130,
+        "x": 790,
+        "y": 401,
+        "population": 124,
         "specialty": "coast",
         "ruler": "frontier council",
         "founded": 54,
-        "scale": 12,
+        "scale": 10,
         "color": "#0ea5e9",
         "walls": false,
         "capital": false,
@@ -31404,13 +31764,13 @@
         "name": "Ash Pass",
         "region": "Ash Pass",
         "regionId": "region-065",
-        "x": 1845,
-        "y": 1345,
-        "population": 122,
+        "x": 1772,
+        "y": 1303,
+        "population": 104,
         "specialty": "floodplain",
         "ruler": "Society Director camp",
         "founded": 54,
-        "scale": 10,
+        "scale": 9,
         "color": "#34d399",
         "walls": false,
         "capital": false,
@@ -31421,9 +31781,9 @@
         "name": "Lost Fen",
         "region": "Lost Fen",
         "regionId": "region-066",
-        "x": 835,
-        "y": 410,
-        "population": 121,
+        "x": 823,
+        "y": 387,
+        "population": 49,
         "specialty": "coast",
         "ruler": "frontier council",
         "founded": 55,
@@ -31438,14 +31798,48 @@
         "name": "Truce Wood",
         "region": "Truce Wood",
         "regionId": "region-067",
-        "x": 1909,
-        "y": 955,
-        "population": 134,
+        "x": 1860,
+        "y": 948,
+        "population": 81,
         "specialty": "shrine road",
         "ruler": "Society Director camp",
         "founded": 55,
-        "scale": 11,
+        "scale": 12,
         "color": "#facc15",
+        "walls": false,
+        "capital": false,
+        "outpost": true
+      },
+      {
+        "id": "outpost-region-068",
+        "name": "Lost Meadow",
+        "region": "Lost Meadow",
+        "regionId": "region-068",
+        "x": 1494,
+        "y": 1053,
+        "population": 118,
+        "specialty": "orchard-belt",
+        "ruler": "frontier council",
+        "founded": 56,
+        "scale": 9,
+        "color": "#84cc16",
+        "walls": false,
+        "capital": false,
+        "outpost": true
+      },
+      {
+        "id": "outpost-region-069",
+        "name": "Sung Reach",
+        "region": "Sung Reach",
+        "regionId": "region-069",
+        "x": 872,
+        "y": 442,
+        "population": 74,
+        "specialty": "stone-meadow",
+        "ruler": "frontier council",
+        "founded": 56,
+        "scale": 11,
+        "color": "#94a3b8",
         "walls": false,
         "capital": false,
         "outpost": true
@@ -31537,31 +31931,17 @@
         "traffic": 3
       },
       {
-        "id": "city-013--outpost-region-058",
+        "id": "city-013--city-014",
         "from": "city-013",
-        "to": "outpost-region-058",
-        "kind": "trade-road",
-        "traffic": 2
-      },
-      {
-        "id": "city-014--outpost-region-058",
-        "from": "outpost-region-058",
         "to": "city-014",
         "kind": "trade-road",
         "traffic": 2
       },
       {
-        "id": "city-014--outpost-region-059",
+        "id": "city-014--outpost-region-060",
         "from": "city-014",
-        "to": "outpost-region-059",
-        "kind": "trade-road",
-        "traffic": 2
-      },
-      {
-        "id": "outpost-region-059--outpost-region-060",
-        "from": "outpost-region-059",
         "to": "outpost-region-060",
-        "kind": "pilgrim-road",
+        "kind": "trade-road",
         "traffic": 2
       },
       {
@@ -31575,7 +31955,7 @@
         "id": "outpost-region-061--outpost-region-062",
         "from": "outpost-region-061",
         "to": "outpost-region-062",
-        "kind": "trade-road",
+        "kind": "pilgrim-road",
         "traffic": 2
       },
       {
@@ -31589,7 +31969,7 @@
         "id": "city-015--outpost-region-063",
         "from": "outpost-region-063",
         "to": "city-015",
-        "kind": "pilgrim-road",
+        "kind": "trade-road",
         "traffic": 2
       },
       {
@@ -31603,7 +31983,7 @@
         "id": "outpost-region-064--outpost-region-065",
         "from": "outpost-region-064",
         "to": "outpost-region-065",
-        "kind": "trade-road",
+        "kind": "pilgrim-road",
         "traffic": 2
       },
       {
@@ -31617,46 +31997,34 @@
         "id": "city-016--outpost-region-066",
         "from": "city-016",
         "to": "outpost-region-066",
+        "kind": "trade-road",
+        "traffic": 2
+      },
+      {
+        "id": "outpost-region-066--outpost-region-067",
+        "from": "outpost-region-066",
+        "to": "outpost-region-067",
+        "kind": "trade-road",
+        "traffic": 2
+      },
+      {
+        "id": "outpost-region-067--outpost-region-068",
+        "from": "outpost-region-067",
+        "to": "outpost-region-068",
         "kind": "pilgrim-road",
         "traffic": 2
       }
     ],
     "frontierCells": [
       {
-        "id": "region-060",
-        "name": "Hollow Lowlands",
-        "biome": "moor",
-        "feature": "a ruined stone circle with no inscription and no shadow",
-        "x": 412,
-        "y": 528,
-        "w": 59,
-        "h": 33,
-        "color": "#7c3aed",
-        "plannedBy": null,
-        "discoveredDay": 50
-      },
-      {
-        "id": "region-061",
-        "name": "Amber Hills",
-        "biome": "volcanic-field",
-        "feature": "a forest where every third tree has a small brass bell",
-        "x": 416,
-        "y": 952,
-        "w": 69,
-        "h": 52,
-        "color": "#ef4444",
-        "plannedBy": null,
-        "discoveredDay": 51
-      },
-      {
         "id": "region-062",
         "name": "Salt Flats",
         "biome": "highlands",
         "feature": "a chalk cliff with handprints too high to have been pressed from below",
-        "x": 1750,
-        "y": 1060,
-        "w": 49,
-        "h": 55,
+        "x": 1696,
+        "y": 1034,
+        "w": 48,
+        "h": 53,
         "color": "#94a3b8",
         "plannedBy": null,
         "discoveredDay": 52
@@ -31666,10 +32034,10 @@
         "name": "The Hills",
         "biome": "salt-flat",
         "feature": "",
-        "x": 979,
-        "y": 942,
-        "w": 75,
-        "h": 48,
+        "x": 950,
+        "y": 918,
+        "w": 73,
+        "h": 47,
         "color": "#e2e8f0",
         "plannedBy": null,
         "discoveredDay": 53
@@ -31679,10 +32047,10 @@
         "name": "Lost Fen",
         "biome": "coast",
         "feature": "a plain strewn with obsidian chips no one has ever seen being chipped",
-        "x": 777,
-        "y": 375,
-        "w": 68,
-        "h": 50,
+        "x": 755,
+        "y": 367,
+        "w": 65,
+        "h": 48,
         "color": "#0ea5e9",
         "plannedBy": null,
         "discoveredDay": 54
@@ -31692,10 +32060,10 @@
         "name": "Ash Pass",
         "biome": "floodplain",
         "feature": "a natural amphitheater that makes whispers public",
-        "x": 1795,
-        "y": 1304,
-        "w": 87,
-        "h": 68,
+        "x": 1740,
+        "y": 1270,
+        "w": 85,
+        "h": 67,
         "color": "#34d399",
         "plannedBy": "ai-garden-society-director-v1",
         "discoveredDay": 54
@@ -31705,10 +32073,10 @@
         "name": "Lost Fen",
         "biome": "coast",
         "feature": "a plain strewn with obsidian chips no one has ever seen being chipped",
-        "x": 810,
-        "y": 380,
-        "w": 67,
-        "h": 49,
+        "x": 786,
+        "y": 372,
+        "w": 66,
+        "h": 48,
         "color": "#0ea5e9",
         "plannedBy": null,
         "discoveredDay": 55
@@ -31718,10 +32086,10 @@
         "name": "Truce Wood",
         "biome": "shrine road",
         "feature": "a ruined watch post full of warm lantern glass",
-        "x": 1876,
-        "y": 946,
-        "w": 70,
-        "h": 38,
+        "x": 1819,
+        "y": 923,
+        "w": 67,
+        "h": 36,
         "color": "#facc15",
         "plannedBy": "ai-garden-society-director-v1",
         "discoveredDay": 55
@@ -31731,10 +32099,10 @@
         "name": "Lost Meadow",
         "biome": "orchard-belt",
         "feature": "",
-        "x": 1518,
-        "y": 1053,
-        "w": 64,
-        "h": 44,
+        "x": 1472,
+        "y": 1027,
+        "w": 62,
+        "h": 42,
         "color": "#84cc16",
         "plannedBy": null,
         "discoveredDay": 56
@@ -31744,10 +32112,10 @@
         "name": "Sung Reach",
         "biome": "stone-meadow",
         "feature": "a salt lake that turns pink every second autumn",
-        "x": 875,
-        "y": 443,
-        "w": 50,
-        "h": 39,
+        "x": 849,
+        "y": 433,
+        "w": 49,
+        "h": 38,
         "color": "#94a3b8",
         "plannedBy": null,
         "discoveredDay": 56
@@ -31757,10 +32125,10 @@
         "name": "Mirror Wood",
         "biome": "fog valley",
         "feature": "a ruined watch post full of warm lantern glass",
-        "x": 1996,
-        "y": 1179,
-        "w": 40,
-        "h": 35,
+        "x": 1935,
+        "y": 1149,
+        "w": 39,
+        "h": 34,
         "color": "#94a3b8",
         "plannedBy": "ai-garden-society-director-v1",
         "discoveredDay": 56
@@ -31770,10 +32138,10 @@
         "name": "The Crag",
         "biome": "ravine",
         "feature": "",
-        "x": 806,
-        "y": 1079,
-        "w": 55,
-        "h": 41,
+        "x": 783,
+        "y": 1052,
+        "w": 53,
+        "h": 39,
         "color": "#64748b",
         "plannedBy": null,
         "discoveredDay": 57
@@ -31783,10 +32151,10 @@
         "name": "Mirror Mouth",
         "biome": "shrine road",
         "feature": "a field where no faction banner will stay upright",
-        "x": 2067,
-        "y": 1240,
-        "w": 69,
-        "h": 37,
+        "x": 2003,
+        "y": 1209,
+        "w": 67,
+        "h": 35,
         "color": "#facc15",
         "plannedBy": "ai-garden-society-director-v1",
         "discoveredDay": 57
@@ -31796,10 +32164,10 @@
         "name": "Amber Hills",
         "biome": "tide",
         "feature": "a dormant volcano whose smoke leans east each morning",
-        "x": 1461,
-        "y": 1221,
-        "w": 53,
-        "h": 38,
+        "x": 1417,
+        "y": 1190,
+        "w": 52,
+        "h": 37,
         "color": "#38bdf8",
         "plannedBy": null,
         "discoveredDay": 58
@@ -31809,10 +32177,10 @@
         "name": "Hollow Gate",
         "biome": "steppe",
         "feature": "",
-        "x": 1917,
-        "y": 981,
-        "w": 75,
-        "h": 36,
+        "x": 1858,
+        "y": 957,
+        "w": 73,
+        "h": 35,
         "color": "#d6b36a",
         "plannedBy": null,
         "discoveredDay": 58
@@ -31822,27 +32190,53 @@
         "name": "Omen Causeway",
         "biome": "mycelial forest",
         "feature": "a ruined watch post full of warm lantern glass",
-        "x": 2129,
-        "y": 973,
-        "w": 67,
-        "h": 48,
+        "x": 2063,
+        "y": 949,
+        "w": 66,
+        "h": 46,
         "color": "#94a3b8",
         "plannedBy": "ai-garden-society-director-v1",
         "discoveredDay": 58
+      },
+      {
+        "id": "region-076",
+        "name": "Salt Steppe",
+        "biome": "coast",
+        "feature": "",
+        "x": 1071,
+        "y": 478,
+        "w": 72,
+        "h": 47,
+        "color": "#0ea5e9",
+        "plannedBy": null,
+        "discoveredDay": 59
+      },
+      {
+        "id": "region-077",
+        "name": "Border Wood",
+        "biome": "wind-cut plateau",
+        "feature": "a shrine with seven doors and no rear wall",
+        "x": 2143,
+        "y": 401,
+        "w": 40,
+        "h": 61,
+        "color": "#94a3b8",
+        "plannedBy": "ai-garden-society-director-v1",
+        "discoveredDay": 59
       }
     ],
     "latestAction": {
-      "id": "crab-action-0058-openclaw-009",
-      "day": 58,
-      "timestamp": "2026-06-09T07:58:30.962Z",
-      "type": "convivencia",
-      "agentId": "openclaw-009",
-      "agentName": "Pebbleclaw",
-      "role": "road mason",
-      "districtId": "outpost-region-066",
-      "district": "Lost Fen",
-      "headline": "Pebbleclaw hosted a ration-table parley in Lost Fen",
-      "outcome": "two factions left with fewer insults and more bread",
+      "id": "crab-action-0059-openclaw-007",
+      "day": 59,
+      "timestamp": "2026-06-10T01:00:06.410Z",
+      "type": "civic",
+      "agentId": "openclaw-007",
+      "agentName": "Snapline",
+      "role": "scout",
+      "districtId": "outpost-region-062",
+      "district": "Salt Flats",
+      "headline": "Snapline patched a plaza ruleboard in Salt Flats",
+      "outcome": "citizens can see which law changed before breakfast",
       "arc": "War of Exhausted Maps"
     },
     "stats": {
