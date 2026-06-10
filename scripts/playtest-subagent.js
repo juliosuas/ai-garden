@@ -130,6 +130,12 @@ async function main() {
   check(index.includes('escapeTickerText'), 'ticker text escaping is missing');
   check(index.includes('ticker-track:hover'), 'ticker does not pause on hover');
   check(index.includes('toggleEventsPanel'), 'ticker does not open an event/detail panel');
+  check(index.includes('id="controls-dock"'), 'observer controls are not grouped into one dock');
+  check(index.includes('id="nav-help"'), 'camera/navigation help panel is missing');
+  check(index.includes('CAMERA GUIDE'), 'navigation help copy is missing');
+  check(index.includes('id="agent-focus-btn"'), 'featured agent focus button is missing');
+  check(index.includes('focusNextFeaturedAgent'), 'featured agent focus camera helper is missing');
+  check(index.includes('id="minimap-panel"'), 'minimap lacks a labeled jump panel');
   check(index.includes('getCivilizationDay'), 'top day counter is not tied to chronicle/civilization day');
   check(index.includes('minZoomForViewport'), 'zoom minimum is not dynamic to viewport size');
   check(index.includes('drawCivilizationProjection'), 'canvas does not draw the civilization projection');
