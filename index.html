@@ -732,6 +732,7 @@ const defaultWorld = {
   economy: { resources: { wood: 0, stone: 0, food: 0, gold: 0 } },
   threats: [],
   events: [],
+  agentActions: [],
   societyDirector: null,
   landscapeEvents: [],
   convivenciaEvents: [],
@@ -843,6 +844,7 @@ function loadWorld() {
       world.economy = shared.economy || { resources: {} };
       world.threats = shared.threats || [];
       world.events = shared.events || [];
+      world.agentActions = shared.agentActions || [];
       world.societyDirector = shared.societyDirector || null;
       world.landscapeEvents = shared.landscapeEvents || [];
       world.convivenciaEvents = shared.convivenciaEvents || [];
@@ -2609,37 +2611,308 @@ const PROFESSION_EMOJI = {
   cook: '🍳', weaver: '🧵', cartographer: '🗺️', ranger: '🏹',
 };
 
+const CITIZEN_VISUAL_LIMIT = 72;
+const ACTION_VISUALS = {
+  council: { color: '#f8fafc', accent: '#93c5fd', label: 'LAW', mood: 'focused' },
+  ritual: { color: '#facc15', accent: '#fb923c', label: 'RITE', mood: 'awe' },
+  expedition: { color: '#4ade80', accent: '#38bdf8', label: 'SCOUT', mood: 'curious' },
+  market: { color: '#fbbf24', accent: '#fde68a', label: 'TRADE', mood: 'happy' },
+  defense: { color: '#ef4444', accent: '#fca5a5', label: 'GUARD', mood: 'alarm' },
+  research: { color: '#60a5fa', accent: '#a78bfa', label: 'DEBUG', mood: 'focused' },
+  art: { color: '#f472b6', accent: '#f0abfc', label: 'ART', mood: 'happy' },
+  ritualWar: { color: '#facc15', accent: '#ef4444', label: 'OMEN', mood: 'awe' },
+  codeWar: { color: '#38bdf8', accent: '#60a5fa', label: 'TRACE', mood: 'focused' }
+};
+
+const CITIZEN_MOODS = {
+  happy: { face: '+', color: '#facc15', bob: 1.1, speed: 1.1 },
+  curious: { face: '?', color: '#60a5fa', bob: 0.8, speed: 0.9 },
+  proud: { face: '^', color: '#fb923c', bob: 0.7, speed: 0.8 },
+  relaxed: { face: '.', color: '#d1d5db', bob: 0.4, speed: 0.6 },
+  focused: { face: '*', color: '#93c5fd', bob: 0.5, speed: 0.55 },
+  awe: { face: '!', color: '#fde68a', bob: 1.2, speed: 0.7 },
+  alarm: { face: '!', color: '#ef4444', bob: 1.6, speed: 1.2 },
+  grief: { face: 'x', color: '#cbd5e1', bob: 0.2, speed: 0.35 }
+};
+
+function hashText(text) {
+  text = String(text || '');
+  let h = 2166136261;
+  for (let i = 0; i < text.length; i++) {
+    h ^= text.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
+}
+
+function recentActionForCitizen(citizen) {
+  const actions = (world.agentActions || []).slice(-28);
+  for (let i = actions.length - 1; i >= 0; i--) {
+    const action = actions[i];
+    if (action.actor === citizen.id || action.actorName === citizen.name) return action;
+  }
+  return null;
+}
+
+function actionVisual(action) {
+  if (!action) return null;
+  if (action.faction === 'f-pantheon-covenant' || action.actor === 'f-pantheon-covenant') return ACTION_VISUALS.ritualWar;
+  if (action.faction === 'f-code-cantons' || action.actor === 'f-code-cantons') return ACTION_VISUALS.codeWar;
+  return ACTION_VISUALS[action.type] || ACTION_VISUALS.council;
+}
+
+function citizenEmotionMood(citizen, action) {
+  if (citizen.faction === 'f-pantheon-covenant') return 'awe';
+  if (citizen.faction === 'f-code-cantons') return 'focused';
+  if (action) return (actionVisual(action) || {}).mood || 'focused';
+  const traits = citizen.personality && citizen.personality.traits || [];
+  if (traits.includes('reckless') || traits.includes('brash')) return 'alarm';
+  if (traits.includes('curious') || traits.includes('dreamy')) return 'curious';
+  if (traits.includes('loyal') || traits.includes('stoic')) return 'proud';
+  if (citizen.profession === 'healer') return 'happy';
+  return 'relaxed';
+}
+
+function districtForCitizen(citizen, idx, action) {
+  const view = getCivilizationView();
+  const districts = view && Array.isArray(view.districts) ? view.districts : [];
+  if (!districts.length) return null;
+  const target = String(action && action.target || '').toLowerCase();
+  if (target) {
+    const direct = districts.find(function(d) {
+      return String(d.name || '').toLowerCase() === target ||
+        String(d.region || '').toLowerCase() === target ||
+        String(d.name || '').toLowerCase().includes(target) ||
+        target.includes(String(d.name || '').toLowerCase());
+    });
+    if (direct) return direct;
+  }
+  if (citizen.faction === 'f-pantheon-covenant') return districts[1 % districts.length];
+  if (citizen.faction === 'f-code-cantons') return districts[Math.floor(districts.length / 2) % districts.length];
+  if (citizen.faction === 'f-waking-order') return districts[2 % districts.length];
+  if (citizen.faction === 'f-iron-library') return districts[Math.floor(districts.length * 0.62) % districts.length];
+  return districts[(hashText(citizen.id || citizen.name) + idx) % districts.length];
+}
+
+function citizenVisualPosition(citizen, idx) {
+  const action = recentActionForCitizen(citizen);
+  const district = districtForCitizen(citizen, idx, action);
+  if (!district) return citizen.position || null;
+  const seed = hashText(citizen.id || citizen.name || idx);
+  const mood = CITIZEN_MOODS[citizenEmotionMood(citizen, action)] || CITIZEN_MOODS.relaxed;
+  const lane = seed % 6;
+  const radius = (district.scale || 10) + 10 + lane * 3.2;
+  const t = frameCount * 0.012 * mood.speed + seed * 0.001;
+  const angle = seed * 0.017 + t;
+  const actionPull = action ? Math.sin(frameCount * 0.035 + seed) * 1.8 : 0;
+  return {
+    x: clampValue(district.x + Math.cos(angle) * (radius + actionPull), 8, WORLD_W - 8),
+    y: clampValue(district.y + Math.sin(angle * 0.91) * radius * 0.54 + Math.sin(frameCount * 0.07 + seed) * mood.bob, 12, WORLD_H - 8),
+    district,
+    action,
+    seed,
+    mood
+  };
+}
+
+function citizenPalette(citizen) {
+  const modelColor = citizenVoiceColor(citizen);
+  const lineage = String(citizen.lineage || '');
+  if (citizen.faction === 'f-pantheon-covenant') return { body: '#facc15', trim: '#7c2d12', skin: '#fde68a', glow: '#f59e0b' };
+  if (citizen.faction === 'f-code-cantons') return { body: '#38bdf8', trim: '#1e3a8a', skin: '#dbeafe', glow: '#60a5fa' };
+  if (lineage === 'ironbound') return { body: '#9ca3af', trim: '#374151', skin: '#f3f4f6', glow: modelColor };
+  if (lineage === 'lakeborn') return { body: '#38bdf8', trim: '#075985', skin: '#e0f2fe', glow: modelColor };
+  if (lineage === 'swarmkin') return { body: '#a78bfa', trim: '#4c1d95', skin: '#ede9fe', glow: modelColor };
+  return { body: modelColor, trim: '#111827', skin: '#f8fafc', glow: modelColor };
+}
+
+function drawCitizenEmotion(pos, moodName, palette) {
+  const mood = CITIZEN_MOODS[moodName] || CITIZEN_MOODS.relaxed;
+  const x = Math.round(pos.x);
+  const y = Math.round(pos.y - 14 - Math.sin(frameCount * 0.09 + pos.seed) * 1.5);
+  ctx.globalAlpha = 0.88;
+  rect(x - 4, y - 3, 8, 7, 'rgba(8,12,22,0.82)');
+  rect(x - 4, y - 3, 8, 1, mood.color);
+  rect(x - 4, y + 3, 8, 1, mood.color);
+  rect(x - 4, y - 3, 1, 7, mood.color);
+  rect(x + 3, y - 3, 1, 7, mood.color);
+  ctx.globalAlpha = 1;
+  drawPixelText(mood.face, x - 1, y - 1, mood.color);
+  if (moodName === 'alarm') {
+    px(x + ((frameCount >> 3) % 2 ? 5 : -5), y - 1, '#ef4444');
+  }
+  if (moodName === 'awe') {
+    px(x, y - 6, '#fff7ad');
+    px(x - 2, y - 5, palette.glow);
+    px(x + 2, y - 5, palette.glow);
+  }
+}
+
+function drawCitizenActionEffect(pos, action, palette) {
+  if (!action) return;
+  const visual = actionVisual(action);
+  const x = Math.round(pos.x);
+  const y = Math.round(pos.y);
+  const pulse = (Math.sin(frameCount * 0.12 + pos.seed) + 1) / 2;
+  ctx.globalAlpha = 0.24 + pulse * 0.18;
+  for (let i = 0; i < 8; i++) {
+    const a = i * Math.PI / 4 + frameCount * 0.018;
+    px(x + Math.round(Math.cos(a) * (6 + pulse * 3)), y + Math.round(Math.sin(a) * (4 + pulse * 2)), visual.color);
+  }
+  ctx.globalAlpha = 1;
+
+  if (action.type === 'research') {
+    drawPixelText('?', x + 5, y - 11, visual.accent);
+    px(x + 8, y - 7, '#dbeafe');
+  } else if (action.type === 'ritual') {
+    rect(x - 1, y - 12, 3, 3, visual.color);
+    px(x, y - 15, '#fff7ad');
+    px(x - 3, y - 10, visual.accent);
+    px(x + 3, y - 10, visual.accent);
+  } else if (action.type === 'market') {
+    px(x - 6, y - 5, '#facc15');
+    px(x + 6, y - 8, '#fde68a');
+    px(x + 4, y - 3, '#facc15');
+  } else if (action.type === 'defense') {
+    rect(x - 5, y - 9, 10, 1, visual.color);
+    rect(x - 5, y - 8, 1, 5, visual.color);
+    rect(x + 4, y - 8, 1, 5, visual.color);
+  } else if (action.type === 'expedition') {
+    for (let i = 0; i < 4; i++) px(x - 9 + i * 4, y + 5 + (i % 2), visual.accent);
+  } else if (action.type === 'council') {
+    rect(x - 8, y - 11, 5, 3, 'rgba(8,12,22,0.82)');
+    rect(x + 3, y - 10, 5, 3, 'rgba(8,12,22,0.82)');
+    px(x - 6, y - 10, visual.color);
+    px(x + 5, y - 9, visual.accent);
+  } else if (action.type === 'art') {
+    px(x - 6, y - 8, '#f472b6');
+    px(x + 6, y - 9, '#f0abfc');
+    px(x, y - 12, '#fde68a');
+  }
+
+  if (action.faction === 'f-pantheon-covenant' || action.faction === 'f-code-cantons') {
+    drawPixelText(visual.label, x - 8, y + 9, visual.color);
+  }
+}
+
+function drawCitizenSprite(citizen, pos, idx) {
+  const palette = citizenPalette(citizen);
+  const action = pos.action;
+  const moodName = citizenEmotionMood(citizen, action);
+  const x = Math.round(pos.x);
+  const y = Math.round(pos.y);
+  const step = Math.sin(frameCount * 0.22 + pos.seed) > 0 ? 1 : -1;
+  const bob = Math.sin(frameCount * 0.11 + pos.seed) > 0.2 ? 1 : 0;
+  const arm = action ? Math.sin(frameCount * 0.28 + pos.seed) : Math.sin(frameCount * 0.12 + pos.seed) * 0.5;
+
+  drawCitizenActionEffect(pos, action, palette);
+  ctx.globalAlpha = 0.18;
+  rect(x - 5, y + 6, 11, 2, '#000');
+  ctx.globalAlpha = 1;
+
+  rect(x - 2, y - 9 + bob, 5, 5, palette.skin);
+  px(x - 1, y - 7 + bob, '#111827');
+  px(x + 2, y - 7 + bob, '#111827');
+  rect(x - 3, y - 10 + bob, 7, 1, palette.trim);
+  rect(x - 3, y - 4 + bob, 7, 8, palette.body);
+  rect(x - 3, y - 1 + bob, 7, 2, palette.trim);
+  rect(x - 5, y - 3 + bob + Math.round(arm), 2, 5, palette.trim);
+  rect(x + 4, y - 3 + bob - Math.round(arm), 2, 5, palette.trim);
+  rect(x - 3, y + 4 + bob, 2, 4 + step, '#111827');
+  rect(x + 2, y + 4 + bob, 2, 4 - step, '#111827');
+  px(x - 4, y + 8 + bob + step, palette.glow);
+  px(x + 4, y + 8 + bob - step, palette.glow);
+
+  if (action) {
+    px(x - 4, y - 11 + bob, actionVisual(action).color);
+    px(x + 4, y - 11 + bob, actionVisual(action).accent);
+  }
+
+  if (SCALE >= 4 && idx % 3 === 0) {
+    const label = String(citizen.name || '').split(' ')[0].toUpperCase().slice(0, 7);
+    ctx.globalAlpha = 0.75;
+    rect(x - label.length * 2 - 3, y + 13, label.length * 4 + 6, 7, 'rgba(8,12,22,0.68)');
+    ctx.globalAlpha = 1;
+    drawPixelText(label, x - label.length * 2, y + 15, palette.glow);
+  }
+  drawCitizenEmotion(pos, moodName, palette);
+}
+
+function actionAnchor(action, idx) {
+  const view = getCivilizationView();
+  const districts = view && Array.isArray(view.districts) ? view.districts : [];
+  if (!districts.length) return null;
+  const target = String(action.target || '').toLowerCase();
+  const direct = districts.find(function(d) {
+    return target && (
+      String(d.name || '').toLowerCase() === target ||
+      String(d.region || '').toLowerCase() === target ||
+      target.includes(String(d.name || '').toLowerCase())
+    );
+  });
+  if (direct) return direct;
+  if (action.actor === 'f-pantheon-covenant' || action.faction === 'f-pantheon-covenant') return districts[1 % districts.length];
+  if (action.actor === 'f-code-cantons' || action.faction === 'f-code-cantons') return districts[Math.floor(districts.length / 2) % districts.length];
+  if (action.actor === 'war-divine-omens') return districts[Math.floor(districts.length * 0.35) % districts.length];
+  return districts[(hashText(action.id || action.headline) + idx) % districts.length];
+}
+
+function drawAgentActionBeacon(action, idx) {
+  const anchor = actionAnchor(action, idx);
+  if (!anchor) return;
+  const visual = actionVisual(action) || ACTION_VISUALS.council;
+  const seed = hashText(action.id || action.headline || idx);
+  const t = frameCount * 0.035 + seed;
+  const x = Math.round(anchor.x + Math.cos(t * 0.71) * ((anchor.scale || 10) + 18));
+  const y = Math.round(anchor.y + Math.sin(t * 0.63) * ((anchor.scale || 10) + 10) * 0.65);
+  if (!pointVisible(x, y, 32)) return;
+  const pulse = (Math.sin(frameCount * 0.11 + seed) + 1) / 2;
+  ctx.globalAlpha = 0.20 + pulse * 0.20;
+  rect(x - 9, y - 5, 18, 10, visual.color);
+  ctx.globalAlpha = 1;
+  for (let i = 0; i < 10; i++) {
+    const a = i * Math.PI * 2 / 10 + frameCount * 0.025;
+    px(x + Math.round(Math.cos(a) * (8 + pulse * 4)), y + Math.round(Math.sin(a) * (5 + pulse * 3)), i % 2 ? visual.color : visual.accent);
+  }
+  rect(x - 5, y - 3, 10, 6, 'rgba(8,12,22,0.88)');
+  drawPixelText(visual.label.slice(0, 5), x - Math.min(visual.label.length, 5) * 2, y - 1, visual.color);
+}
+
+function drawAgentActionBeacons() {
+  const actions = (world.agentActions || []).slice(-12);
+  for (let i = 0; i < actions.length; i++) {
+    const action = actions[i];
+    if (String(action.actor || '').startsWith('citizen-') && i < actions.length - 5) continue;
+    drawAgentActionBeacon(action, i);
+  }
+}
+
 function drawCitizens() {
   if (!world.citizens || world.citizens.length === 0) return;
   const vL = camX - 20, vR = camX + screenW / SCALE + 20;
   const vT = camY - 20, vB = camY + screenH / SCALE + 20;
-  for (const c of world.citizens) {
-    if (!c.position || !c.alive) continue;
-    const cx = c.position.x, cy = c.position.y;
+  let drawn = 0;
+  const citizens = world.citizens.filter(function(c) { return c && c.alive !== false; });
+  for (let i = 0; i < citizens.length; i++) {
+    const c = citizens[i];
+    const pos = citizenVisualPosition(c, i);
+    if (!pos) continue;
+    const cx = pos.x, cy = pos.y;
     if (cx < vL || cx > vR || cy < vT || cy > vB) continue;
-    const emoji = PROFESSION_EMOJI[c.profession] || '🧑';
-    const screenX = (cx - camX) * SCALE;
-    const screenY = (cy - camY) * SCALE;
-    // Draw emoji
-    const emojiSize = Math.max(10, SCALE * 4);
-    ctx.font = emojiSize + 'px serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(emoji, screenX, screenY);
-    // Draw name label below
-    ctx.font = Math.max(8, SCALE * 2.5) + 'px monospace';
-    ctx.fillStyle = AGENT_GLOW[c.name] || '#ccc';
-    ctx.fillText(c.name, screenX, screenY + emojiSize * 0.7);
-    ctx.textAlign = 'start';
-    ctx.textBaseline = 'alphabetic';
+    drawCitizenSprite(c, pos, drawn);
+    drawn++;
+    if (drawn >= CITIZEN_VISUAL_LIMIT) break;
   }
 }
 
 function findCitizenAt(gx, gy) {
   if (!world.citizens) return null;
-  for (const c of world.citizens) {
-    if (!c.position || !c.alive) continue;
-    const dist = Math.hypot(gx - c.position.x, gy - c.position.y);
+  const citizens = world.citizens.filter(function(c) { return c && c.alive !== false; });
+  for (let i = 0; i < citizens.length; i++) {
+    const c = citizens[i];
+    const pos = citizenVisualPosition(c, i);
+    if (!pos) continue;
+    const dist = Math.hypot(gx - pos.x, gy - pos.y);
     if (dist < 8) return c;
   }
   return null;
@@ -2944,6 +3217,15 @@ const PIXEL_DIALOGUE = {
     Codex: ['PATCH LOOKS GOOD', 'I SAW A BUG', 'CITY LOOP COMPILES', 'MERGE THE SUNRISE', 'CAMERA EASES NOW', 'FRONTIER PASSES TEST']
   },
   crab: ['ONE ROAD AT A TIME', 'QUIET CLAWS', 'MAP IS CALM', 'TIDE REPORT READY', 'SHELLS LIKE SHADE', 'NOISE STAYS LOW'],
+  action: {
+    council: ['LAW NEEDS WITNESSES', 'COUNT THE VOTES', 'ARGUE IN PUBLIC'],
+    ritual: ['THE OMEN ANSWERS', 'LIGHT THE SHRINE', 'WITNESS THE SIGN'],
+    expedition: ['MARK THE ROAD', 'SCOUTS MOVE OUT', 'THE BORDER SPEAKS'],
+    market: ['TRADE NEEDS TRUST', 'PRICE THE BREAD', 'OPEN THE STALL'],
+    defense: ['HOLD THE LINE', 'WATCH THE GATE', 'NO PANIC'],
+    research: ['TRACE THE MIRACLE', 'DEBUG THE SIGN', 'LOG THE FAILURE'],
+    art: ['MAKE IT PUBLIC', 'PAINT THE LAW', 'SING THE TRUCE']
+  },
   citizen: {
     scholar: ['ARCHIVE HAS A NEW PAGE', 'THE OLD MAP LIED', 'HIGH ARCHIVE NEEDS INK', 'FOOTNOTES FOUND A CITY'],
     explorer: ['ONE MORE RIDGE', 'I SAW STORMGATE', 'THE EAST HAS ROOM', 'MARK THE SAFE WATER'],
@@ -3087,6 +3369,13 @@ function crabDialogueLine(crab, salt) {
 }
 
 function citizenDialogueLine(citizen, salt) {
+  const action = recentActionForCitizen(citizen);
+  if (action && salt % 3 === 0) {
+    const actionLines = PIXEL_DIALOGUE.action[action.type] || PIXEL_DIALOGUE.action.council;
+    return deterministicPick(actionLines, salt);
+  }
+  if (citizen.faction === 'f-pantheon-covenant' && salt % 4 === 0) return 'THE SIGN IS LAW';
+  if (citizen.faction === 'f-code-cantons' && salt % 4 === 0) return 'SHOW THE TRACE';
   const lines = PIXEL_DIALOGUE.citizen[citizen.profession] || PIXEL_DIALOGUE.citizen.default;
   if (citizen.personality && citizen.personality.motto && salt % 5 === 0) return citizen.personality.motto;
   return deterministicPick(lines, salt);
@@ -3133,7 +3422,7 @@ function ambientDialogueSources() {
 
   const citizens = (world.citizens || []).filter(function(c) { return c.alive; }).slice(0, 12);
   for (let i = 0; i < citizens.length; i++) {
-    const pos = citizenVoicePosition(citizens[i], i);
+    const pos = citizenVisualPosition(citizens[i], i) || citizenVoicePosition(citizens[i], i);
     if (!pos || !pointVisible(pos.x, pos.y, 20)) continue;
     sources.push({
       id: citizens[i].id || ('citizen-' + i),
@@ -4186,6 +4475,7 @@ function draw() {
   drawCritters();
   drawButterflies();
   drawCitizens();
+  drawAgentActionBeacons();
   drawThreats();
   drawCrabAgents();
 
@@ -4739,6 +5029,7 @@ draw = function() {
     drawCritters();
     drawButterflies();
     drawCitizens();
+    drawAgentActionBeacons();
     drawThreats();
     drawCrabAgents();
     const sorted = mascots.slice().sort(function(a,b){return a.y-b.y;});

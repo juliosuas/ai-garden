@@ -123,6 +123,11 @@ async function main() {
   check(index.includes('<canvas id="minimap" width="176" height="132"></canvas>'), 'expanded map minimap is too small');
   check(index.includes('drawPrimitiveWork'), 'canvas does not draw first-camp construction sprites');
   check(index.includes('settlementSites'), 'canvas does not consume settlement construction sites');
+  check(index.includes('drawCitizenSprite'), 'citizens do not render as animated pixel sprites');
+  check(index.includes('citizenVisualPosition'), 'citizens are not projected into visible animated positions');
+  check(index.includes('drawAgentActionBeacons'), 'agent action animations are missing');
+  check(index.includes('citizenEmotionMood'), 'citizen emotion animation state is missing');
+  check(index.includes('world.agentActions = shared.agentActions || []'), 'client does not load shared agent action ledger');
   check(index.includes('addSpeechBubble'), 'pixel speech bubble helper is missing');
   check(index.includes('updateAmbientDialogues'), 'ambient agent dialogue scheduler is missing');
   check(index.includes('PIXEL_DIALOGUE'), 'pixel dialogue line pools are missing');
