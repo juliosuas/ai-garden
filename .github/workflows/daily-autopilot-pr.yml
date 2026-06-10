@@ -64,14 +64,31 @@ jobs:
           fi
           echo "should_run=true" >> "$GITHUB_OUTPUT"
 
-      - name: Run proposed evolution
+      - name: Check PR automation permission
+        id: pr_permission
         if: steps.guard.outputs.should_run == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          WORKFLOW_PERMS=$(gh api "repos/${GITHUB_REPOSITORY}/actions/permissions/workflow")
+          DEFAULT_PERMS=$(echo "$WORKFLOW_PERMS" | jq -r '.default_workflow_permissions')
+          CAN_CREATE_PR=$(echo "$WORKFLOW_PERMS" | jq -r '.can_approve_pull_request_reviews')
+          if [ "$DEFAULT_PERMS" != "write" ] || [ "$CAN_CREATE_PR" != "true" ]; then
+            echo "Autopilot PR creation is disabled for GitHub Actions."
+            echo "Enable repository Actions workflow permissions: read/write + allow PR creation."
+            echo "can_open_pr=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "can_open_pr=true" >> "$GITHUB_OUTPUT"
+
+      - name: Run proposed evolution
+        if: steps.guard.outputs.should_run == 'true' && steps.pr_permission.outputs.can_open_pr == 'true'
         env:
           STEPS: ${{ github.event.inputs.steps || '1' }}
         run: node scripts/daily-evolution.js "$STEPS"
 
       - name: Validate proposed world
-        if: steps.guard.outputs.should_run == 'true'
+        if: steps.guard.outputs.should_run == 'true' && steps.pr_permission.outputs.can_open_pr == 'true'
         run: |
           node --check scripts/daily-evolution.js
           node --check scripts/civilization-brain.js
@@ -83,12 +100,12 @@ jobs:
           node scripts/playtest-subagent.js
 
       - name: Prepare PR summary
-        if: steps.guard.outputs.should_run == 'true'
+        if: steps.guard.outputs.should_run == 'true' && steps.pr_permission.outputs.can_open_pr == 'true'
         id: summary
         run: node scripts/autopilot-pr-summary.js "$RUNNER_TEMP/autopilot-pr-body.md"
 
       - name: Commit proposed evolution
-        if: steps.guard.outputs.should_run == 'true'
+        if: steps.guard.outputs.should_run == 'true' && steps.pr_permission.outputs.can_open_pr == 'true'
         id: commit
         env:
           DAY: ${{ steps.summary.outputs.day }}
@@ -110,7 +127,7 @@ jobs:
           echo "branch=$BRANCH" >> "$GITHUB_OUTPUT"
 
       - name: Open draft PR
-        if: steps.guard.outputs.should_run == 'true' && steps.commit.outputs.created == 'true'
+        if: steps.guard.outputs.should_run == 'true' && steps.pr_permission.outputs.can_open_pr == 'true' && steps.commit.outputs.created == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_BRANCH: ${{ steps.commit.outputs.branch }}
