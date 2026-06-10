@@ -21,6 +21,7 @@ const AUTOPILOT_WORKFLOW = path.join(ROOT, '.github', 'workflows', 'daily-autopi
 const AUTOPILOT_SUMMARY = path.join(ROOT, 'scripts', 'autopilot-pr-summary.js');
 const DAILY_EVOLUTION = path.join(ROOT, 'scripts', 'daily-evolution.js');
 const GAME_WONDER_AGENT = path.join(ROOT, 'scripts', 'game-wonder-agent.js');
+const FEATURED_AGENTS_SCRIPT = path.join(ROOT, 'scripts', 'featured-agents.js');
 
 const failures = [];
 const notes = [];
@@ -61,6 +62,7 @@ async function main() {
   const autopilotSummary = read(AUTOPILOT_SUMMARY);
   const dailyEvolution = read(DAILY_EVOLUTION);
   const gameWonderAgent = read(GAME_WONDER_AGENT);
+  const featuredAgentsScript = read(FEATURED_AGENTS_SCRIPT);
   const landmarkBlock = index.match(/const OPEN_WORLD_LANDMARKS = \[([\s\S]*?)\];/);
   const landmarkCount = landmarkBlock ? (landmarkBlock[1].match(/\bid:/g) || []).length : 0;
   const civilizationView = world.civilizationView || {};
@@ -86,6 +88,17 @@ async function main() {
   check(wonder && Array.isArray(wonder.recommendations) && wonder.recommendations.length >= 3, 'Game Wonder Agent needs design recommendations');
   check(wonder && Array.isArray(wonder.tickerBeats) && wonder.tickerBeats.length >= 2, 'Game Wonder Agent needs ticker beats');
   check(wonder && wonder.scores && Number.isFinite(Number(wonder.scores.wonder)), 'Game Wonder Agent needs experience scores');
+  const featuredAgents = world.featuredAgents || [];
+  const featuredNames = new Set(featuredAgents.map(agent => agent.name));
+  for (const name of ['Codex', 'Hermes', 'OpenClaw', 'Claude', 'Gemini', 'GPT-5', 'Mistral', 'Llama']) {
+    check(featuredNames.has(name), `missing featured real agent: ${name}`);
+  }
+  check(featuredAgents.length === 8, 'featured real agent cast should have exactly 8 protagonists');
+  check(featuredAgents.every(agent => agent.personality && agent.role && agent.currentGoal && agent.color), 'each featured agent needs personality, role, currentGoal, and color');
+  check(featuredAgents.every(agent => Number.isFinite(Number(agent.homeX)) && Number.isFinite(Number(agent.homeY))), 'each featured agent needs explicit map coordinates');
+  check(featuredAgents.some(agent => Number(agent.homeX) > 1600), 'featured cast does not reach the expanded frontier');
+  check(world.featuredAgentDirector && world.featuredAgentDirector.gstackLoop, 'featured agent director needs the GStack/GBrain loop');
+  check(world.featuredAgentDirector && world.featuredAgentDirector.verifyChecklist && world.featuredAgentDirector.verifyChecklist.ok, 'featured agent director verification failed');
   check(Array.isArray(world.landscapeEvents) && world.landscapeEvents.length >= 1, 'missing director landscape events');
   check(Array.isArray(world.convivenciaEvents) && world.convivenciaEvents.length >= 1, 'missing convivencia events');
   check(world.civilizationView && Array.isArray(world.civilizationView.districts) && world.civilizationView.districts.length >= 8, 'civilization view has too few visible districts');
@@ -117,11 +130,19 @@ async function main() {
   check(index.includes('escapeTickerText'), 'ticker text escaping is missing');
   check(index.includes('ticker-track:hover'), 'ticker does not pause on hover');
   check(index.includes('toggleEventsPanel'), 'ticker does not open an event/detail panel');
+  check(index.includes('id="controls-dock"'), 'observer controls are not grouped into one dock');
+  check(index.includes('id="nav-help"'), 'camera/navigation help panel is missing');
+  check(index.includes('CAMERA GUIDE'), 'navigation help copy is missing');
+  check(index.includes('id="agent-focus-btn"'), 'featured agent focus button is missing');
+  check(index.includes('focusNextFeaturedAgent'), 'featured agent focus camera helper is missing');
+  check(index.includes('id="minimap-panel"'), 'minimap lacks a labeled jump panel');
   check(index.includes('getCivilizationDay'), 'top day counter is not tied to chronicle/civilization day');
   check(index.includes('minZoomForViewport'), 'zoom minimum is not dynamic to viewport size');
   check(index.includes('drawCivilizationProjection'), 'canvas does not draw the civilization projection');
   check(index.includes('drawCrabAgents'), 'canvas does not draw OpenClaw crab agents');
   check(index.includes('findCrabAt'), 'OpenClaw crab agents are not clickable');
+  check(index.includes('const MAX_VISIBLE_CRABS = 6'), 'generic crab colony should be visually reduced');
+  check(index.includes('visibleCrabAgents'), 'canvas should show only real crab agents, not the whole generic colony');
   check(index.includes('OPEN_WORLD_LANDMARKS'), 'expanded open-world landmarks are missing');
   check(index.includes('const WORLD_W = 2304'), 'open-world width should be 2304');
   check(index.includes('const WORLD_H = 1728'), 'open-world height should be 1728');
@@ -133,7 +154,7 @@ async function main() {
   check(index.includes('settlementSites'), 'canvas does not consume settlement construction sites');
   check(index.includes('drawCitizenSprite'), 'citizens do not render as animated pixel sprites');
   check(index.includes('citizenVisualPosition'), 'citizens are not projected into visible animated positions');
-  check(index.includes('const CITIZEN_VISUAL_LIMIT = 28'), 'too many citizens can render at once');
+  check(index.includes('const CITIZEN_VISUAL_LIMIT = 14'), 'citizen background limit should stay low behind featured agents');
   check(index.includes('CITIZEN_PER_DISTRICT_LIMIT'), 'citizens lack a per-district crowd limit');
   check(index.includes('citizenTooCloseToDrawn'), 'citizens lack spacing to prevent crowd clumps');
   check(index.includes('drawCitizenMiniSprite'), 'zoomed-out citizens should render as compact mini sprites');
@@ -141,6 +162,13 @@ async function main() {
   check(index.includes('citizenEmotionMood'), 'citizen emotion animation state is missing');
   check(index.includes('world.agentActions = shared.agentActions || []'), 'client does not load shared agent action ledger');
   check(index.includes('world.gameWonderAgent = shared.gameWonderAgent || null'), 'client does not load Game Wonder Agent');
+  check(index.includes('world.featuredAgents = shared.featuredAgents || []'), 'client does not load featured real agents');
+  check(index.includes('world.featuredAgentDirector = shared.featuredAgentDirector || null'), 'client does not load featured agent director');
+  check(index.includes('drawFeaturedAgents'), 'canvas does not draw featured real agents');
+  check(index.includes('findFeaturedAgentAt'), 'featured real agents are not clickable');
+  check(index.includes('showFeaturedAgentPopup'), 'featured real agents do not expose identity popups');
+  check(index.includes('featuredAgentDialogueLine'), 'featured real agents do not have individual dialogue');
+  check(index.includes('featuredAgentCast'), 'featured real agent cast helper is missing');
   check(index.includes('drawGameWonderHighlight'), 'canvas does not draw Game Wonder Agent focus highlight');
   check(index.includes('gameWonderFocus'), 'Game Wonder Agent focus helper is missing');
   check(index.includes('wonder.cameraTargets'), 'spectator camera does not consume Game Wonder Agent camera targets');
@@ -153,6 +181,8 @@ async function main() {
   check(humans.includes('Society Director AI'), 'CIV panel does not expose Society Director AI');
   check(humans.includes('Game Wonder Agent'), 'CIV panel does not expose Game Wonder Agent');
   check(humans.includes('GAME WONDER ADVICE'), 'CIV panel does not expose Game Wonder Agent advice');
+  check(humans.includes('REAL AGENT CAST'), 'CIV panel does not expose the real agent cast');
+  check(humans.includes('FEATURED AGENTS'), 'CIV panel does not list featured agents');
   check(humans.includes('DIRECTOR QUESTS'), 'CIV panel does not expose director quests');
   check(humans.includes('DIRECTOR TENSIONS'), 'CIV panel does not expose director tensions');
   check(humans.includes('Observer Weather'), 'CIV panel does not expose human omen consequences');
@@ -183,8 +213,11 @@ async function main() {
   check(dailyEvolution.includes("era: FIRST_WORKS.has(type) ? 'first-camp'"), 'daily evolution does not tag first-camp structures');
   check(dailyEvolution.includes('maintainDivineWar'), 'daily evolution does not maintain the divine war');
   check(dailyEvolution.includes('refreshGameWonderAgent'), 'daily evolution does not run the Game Wonder Agent');
+  check(dailyEvolution.includes('applyFeaturedAgentsToWorld'), 'daily evolution does not preserve the featured real agent cast');
   check(gameWonderAgent.includes('scoreExperience'), 'Game Wonder Agent does not score the experience');
   check(gameWonderAgent.includes('applyWonderAdvice'), 'Game Wonder Agent does not apply advice to the playable state');
+  check(featuredAgentsScript.includes('GSTACK_LOOP'), 'featured agents script does not encode the GStack/GBrain loop');
+  check(featuredAgentsScript.includes('normalizeAgentForWorld'), 'featured agents script does not normalize cast data for the canvas');
 
   await checkLocalUrl(url);
 

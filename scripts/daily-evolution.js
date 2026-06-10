@@ -24,6 +24,7 @@ const { applySocietyDirectorPlan, normalizeWorldLanguage, refreshSocietyDirector
 const { refreshCivilizationVisuals } = require('./civilization-visuals');
 const { maintainDivineWar } = require('./divine-war');
 const { refreshGameWonderAgent } = require('./game-wonder-agent');
+const { applyFeaturedAgentsToWorld } = require('./featured-agents');
 
 const WORLD  = path.join(__dirname, '..', 'experiments', 'world-state.json');
 const README = path.join(__dirname, '..', 'README.md');
@@ -808,6 +809,7 @@ applySocietyDirectorPlan(world, rng, { extendMap: true, addPublicEvents: true })
 refreshCivilization(world, rng);
 refreshCivilizationVisuals(world, rng, { addDailyCrabAction: true });
 refreshGameWonderAgent(world, rng, { applyAdvice: true });
+applyFeaturedAgentsToWorld(world);
 
 // Trim retention
 if (world.history.length > 400) world.history = world.history.slice(-400);
@@ -825,6 +827,7 @@ console.log(
   '. Tech: ' + world.technologies.length + '/' + TECH_TREE.length +
   '. Cities: ' + world.cities.length +
   '. Regions: ' + world.map.regions.length +
+  '. Featured agents: ' + ((world.featuredAgents && world.featuredAgents.length) || 0) +
   '. Map: ' + world.map.width + '×' + world.map.height + '.'
 );
 

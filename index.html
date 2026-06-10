@@ -7,43 +7,48 @@
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html, body { width: 100%; height: 100%; overflow: hidden; background: #1a1a2e; font-family: monospace; }
-canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edges; cursor: crosshair; }
+canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edges; cursor: grab; }
+canvas:active { cursor: grabbing; }
 #ui-top {
-  position: fixed; top: 0; left: 0; right: 0; height: auto; min-height: 36px;
-  background: rgba(10,10,20,0.92); color: #4ade80; font-size: 13px;
-  display: flex; align-items: center; justify-content: center; gap: 12px;
-  flex-wrap: wrap; padding: 6px 10px;
+  position: fixed; top: 0; left: 0; right: 0; height: 42px;
+  background: linear-gradient(90deg, rgba(8,12,18,0.96), rgba(8,12,18,0.88));
+  color: #4ade80; font-size: 13px;
+  display: flex; align-items: center; justify-content: flex-start; gap: 12px;
+  flex-wrap: nowrap; padding: 6px 14px;
   z-index: 10; border-bottom: 2px solid #2a4a2a;
-  font-family: monospace; letter-spacing: 0.5px;
+  font-family: monospace; letter-spacing: 0;
 }
+#ui-top > span:first-child { font-weight: 700; color: #f8fafc; white-space: nowrap; }
 #ui-top .plants-count { color: #fb923c; font-weight: bold; }
 #ui-top .stage-info { color: #a78bfa; font-size: 11px; }
-#world-stakes { color: #fde68a; font-size: 11px; max-width: min(520px, calc(100vw - 24px)); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#world-stakes { color: #fde68a; font-size: 11px; min-width: 0; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 @media (max-width: 500px) {
-  #ui-top { font-size: 11px; gap: 6px; padding: 4px 6px; }
+  #ui-top { height: 46px; font-size: 11px; gap: 6px; padding: 4px 8px; }
   #ui-top .stage-info { font-size: 10px; }
-  #world-stakes { flex-basis: 100%; text-align: center; }
+  #ui-top .plants-count, #ui-top .stage-info, #weather-indicator, #contrib-count, #observer-count { display: none; }
+  #world-stakes { flex-basis: auto; text-align: left; }
 }
 #weather-indicator { font-size: 12px; color: #ccc; }
 #follow-indicator {
-  position: fixed; top: 40px; left: 50%; transform: translateX(-50%);
+  position: fixed; top: 52px; left: 50%; transform: translateX(-50%);
   background: rgba(10,10,20,0.9); border: 1px solid #4ade80;
   color: #4ade80; font-size: 11px; padding: 4px 12px;
   z-index: 15; font-family: monospace; display: none; border-radius: 3px;
 }
 #ui-bottom {
-  position: fixed; bottom: 0; left: 0; right: 0; height: auto; min-height: 28px;
-  background: rgba(10,10,20,0.9); color: #6b7280; font-size: 11px;
-  display: flex; align-items: center; justify-content: center; gap: 10px;
-  flex-wrap: wrap; padding: 4px 8px;
-  z-index: 12; border-top: 1px solid #2a4a2a; font-family: monospace;
+  position: fixed; top: 52px; right: 12px; left: auto; height: auto; min-height: 0;
+  background: transparent; color: #9ca3af; font-size: 11px;
+  display: flex; align-items: center; justify-content: flex-end; gap: 6px;
+  flex-wrap: wrap; padding: 0;
+  z-index: 16; border-top: 0; font-family: monospace;
 }
 @media (max-width: 500px) {
-  #ui-bottom { font-size: 10px; gap: 6px; }
+  #ui-bottom { top: 50px; right: 8px; font-size: 10px; gap: 4px; max-width: calc(100vw - 16px); }
   #ui-bottom span:first-child { display: none; }
 }
-#ui-bottom span { cursor: pointer; }
-#ui-bottom span:hover { color: #4ade80; }
+#ui-bottom span { cursor: pointer; background: rgba(8,12,18,0.78); border: 1px solid rgba(74,222,128,0.24); border-radius: 4px; padding: 4px 7px; }
+#ui-bottom span:first-child { display: none; }
+#ui-bottom span:hover { color: #4ade80; border-color: rgba(74,222,128,0.55); }
 #info-panel {
   position: fixed; top: 44px; right: 8px; width: 180px;
   background: rgba(10,10,20,0.9); border: 2px solid #4ade80;
@@ -54,11 +59,27 @@ canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edge
 #info-panel .model { color: #60a5fa; font-size: 10px; }
 #info-panel .status { color: #4ade80; margin-top: 4px; }
 #info-panel .mood-line { color: #ffd700; font-size: 10px; margin-top: 2px; }
+#minimap-panel {
+  position: fixed; bottom: 42px; right: 12px; z-index: 16;
+  background: rgba(8,12,18,0.88); border: 1px solid rgba(74,222,128,0.45);
+  border-radius: 6px; padding: 7px; box-shadow: 0 8px 24px rgba(0,0,0,0.32);
+}
+#minimap-panel .mini-title {
+  color: #d7ffe6; font-size: 10px; margin-bottom: 5px; display: flex;
+  justify-content: space-between; gap: 10px; white-space: nowrap;
+}
+#minimap-panel .mini-hint { color: #8ea99a; }
 #minimap {
-  position: fixed; bottom: 36px; right: 8px;
-  border: 2px solid #4ade80; z-index: 10;
+  display: block;
+  border: 1px solid #4ade80;
   image-rendering: pixelated; image-rendering: crisp-edges;
   background: #1a3a1a; cursor: pointer;
+}
+#minimap-panel:hover { border-color: #4ade80; }
+@media (max-width: 760px) {
+  #minimap-panel { bottom: 94px; right: 8px; padding: 5px; }
+  #minimap-panel .mini-title { display: none; }
+  #minimap { width: 132px; height: 99px; }
 }
 #back-link {
   position: fixed; top: 44px; left: 8px; z-index: 10;
@@ -138,7 +159,7 @@ canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edge
 #philosopher-tooltip .stone-quote { font-style: italic; }
 #philosopher-tooltip .stone-count { color: #8a7030; font-size: 9px; margin-top: 8px; }
 #wish-counter {
-  position: fixed; top: 44px; right: 196px;
+  position: fixed; top: 90px; right: 196px;
   color: #ffd700; font-size: 11px; font-family: monospace;
   z-index: 10; display: none;
   background: rgba(10,10,20,0.8); padding: 2px 6px;
@@ -164,22 +185,81 @@ canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edge
   font-family: monospace; z-index: 50; border-radius: 4px;
   display: none; transition: opacity 0.5s;
 }
+#nav-help {
+  position: fixed; top: 54px; left: 12px; width: 260px; z-index: 17;
+  background: rgba(8,12,18,0.9); border: 1px solid rgba(96,165,250,0.42);
+  color: #dbeafe; font-family: monospace; border-radius: 8px; padding: 10px 11px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.32);
+}
+#nav-help .nav-help-close {
+  position: absolute; top: 7px; right: 8px; border: 0; background: transparent;
+  color: #8ea99a; font-family: monospace; cursor: pointer; font-size: 13px;
+}
+#nav-help .nav-help-title { color: #60a5fa; font-size: 10px; letter-spacing: 1px; margin-bottom: 6px; }
+#nav-help .nav-help-line { display: flex; justify-content: space-between; gap: 10px; font-size: 11px; margin: 4px 0; }
+#nav-help .nav-help-key { color: #f8fafc; }
+#nav-help .nav-help-note { color: #8ea99a; font-size: 10px; margin-top: 7px; line-height: 1.35; }
+@media (max-width: 760px) {
+  #nav-help { top: 54px; left: 8px; width: min(250px, calc(100vw - 160px)); padding: 8px; }
+  #nav-help .nav-help-line { font-size: 10px; }
+  #nav-help .nav-help-note { display: none; }
+}
 
 /* D-PAD removed — click-to-navigate */
 
-/* === ZOOM CONTROLS === */
+/* === OBSERVER DOCK === */
+#controls-dock {
+  position: fixed; bottom: 36px; left: 12px; z-index: 18;
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  max-width: min(760px, calc(100vw - 230px));
+  background: rgba(8,12,18,0.9); border: 1px solid rgba(74,222,128,0.35);
+  border-radius: 8px; padding: 8px; box-shadow: 0 8px 24px rgba(0,0,0,0.32);
+}
+#controls-dock .dock-group { display: flex; align-items: center; gap: 5px; }
+#controls-dock .dock-label {
+  color: #8ea99a; font-size: 10px; margin-right: 1px; white-space: nowrap;
+}
 #zoom-controls {
-  position: fixed; bottom: 40px; left: 12px; z-index: 15;
+  position: static; z-index: auto;
   display: flex; align-items: center; gap: 6px; user-select: none;
 }
-#zoom-controls button {
+#zoom-controls button,
+#agent-focus-btn,
+#follow-btn,
+#photo-btn,
+#help-btn,
+#ambience-btn,
+#msg-board-btn,
+#music-btn {
   width: 34px; height: 34px;
-  background: rgba(10,10,20,0.75); border: 2px solid #2a4a2a;
+  background: rgba(10,10,20,0.75); border: 1px solid #2a4a2a;
   color: #4ade80; font-size: 16px; font-family: monospace;
   cursor: pointer; border-radius: 4px; outline: none; padding: 0;
 }
-#zoom-controls button:active { background: rgba(74,222,128,0.3); border-color: #4ade80; }
+#agent-focus-btn { width: auto; padding: 0 9px; font-size: 11px; color: #fde68a; border-color: rgba(250,204,21,0.45); }
+#follow-btn { width: auto; padding: 0 9px; font-size: 11px; color: #8ea99a; }
+#help-btn { color: #93c5fd; border-color: rgba(96,165,250,0.45); }
+#ambience-btn { width: auto; padding: 0 9px; font-size: 11px; color: #8ea99a; }
+#music-btn { color: #888; }
+#zoom-controls button:active,
+#agent-focus-btn:active,
+#follow-btn:active,
+#photo-btn:active,
+#help-btn:active,
+#ambience-btn:active,
+#msg-board-btn:active,
+#music-btn:active { background: rgba(74,222,128,0.3); border-color: #4ade80; }
 #zoom-level { color: #4ade80; font-size: 11px; font-family: monospace; min-width: 24px; text-align: center; }
+@media (max-width: 760px) {
+  #controls-dock {
+    left: 8px; right: 8px; bottom: 34px; max-width: none;
+    gap: 5px; padding: 6px;
+  }
+  #controls-dock .dock-label { display: none; }
+  #zoom-controls button, #agent-focus-btn, #follow-btn, #photo-btn, #help-btn, #ambience-btn, #msg-board-btn, #music-btn {
+    height: 32px;
+  }
+}
 
 /* === QUICK-JUMP BUTTONS === */
 #quick-jump {
@@ -196,7 +276,7 @@ canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edge
 
 /* === SPEED CONTROL === */
 #speed-control {
-  position: fixed; bottom: 40px; right: 160px; z-index: 15;
+  position: static; z-index: auto;
   display: flex; align-items: center; gap: 4px; user-select: none;
 }
 #speed-control button {
@@ -208,12 +288,8 @@ canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edge
 
 /* === PHOTO MODE === */
 #photo-btn {
-  position: fixed; bottom: 40px; right: 120px; z-index: 15;
-  background: rgba(10,10,20,0.75); border: 1px solid #2a4a2a;
-  color: #4ade80; font-size: 14px; font-family: monospace;
-  cursor: pointer; border-radius: 4px; padding: 4px 10px; outline: none;
+  position: static; z-index: auto;
 }
-#photo-btn:active { background: rgba(74,222,128,0.3); }
 #photo-watermark {
   position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
   color: rgba(255,255,255,0.6); font-size: 14px; font-family: monospace;
@@ -223,9 +299,9 @@ canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edge
 
 /* === EVENTS TICKER === */
 #events-ticker {
-  position: fixed; bottom: 28px; left: 0; right: 160px; height: 20px;
-  background: rgba(10,10,20,0.85); border-top: 1px solid rgba(200,50,50,0.3);
-  overflow: hidden; z-index: 10; font-family: monospace; font-size: 11px;
+  position: fixed; bottom: 0; left: 0; right: 0; height: 28px;
+  background: rgba(8,12,18,0.94); border-top: 1px solid rgba(250,204,21,0.28);
+  overflow: hidden; z-index: 14; font-family: monospace; font-size: 11px;
   display: flex; align-items: center;
 }
 #events-ticker .ticker-label {
@@ -248,7 +324,7 @@ canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edge
   100% { transform: translateX(-50%); }
 }
 #events-panel {
-  position: fixed; left: 50%; bottom: 58px; transform: translateX(-50%);
+  position: fixed; left: 50%; bottom: 76px; transform: translateX(-50%);
   width: min(680px, calc(100vw - 24px)); max-height: 48vh; overflow-y: auto;
   background: rgba(8,12,18,0.97); border: 2px solid #60a5fa; border-radius: 6px;
   color: #dbeafe; z-index: 22; display: none; padding: 12px; font-family: monospace;
@@ -270,10 +346,7 @@ canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edge
 
 /* === AMBIENCE TOGGLE === */
 #ambience-btn {
-  position: fixed; bottom: 40px; right: 70px; z-index: 15;
-  background: rgba(10,10,20,0.75); border: 1px solid #2a4a2a;
-  color: #888; font-size: 12px; font-family: monospace;
-  cursor: pointer; border-radius: 4px; padding: 4px 8px; outline: none;
+  position: static; z-index: auto;
 }
 #ambience-btn.active { color: #4ade80; border-color: #4ade80; }
 
@@ -284,7 +357,7 @@ canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edge
 
 /* === ECONOMY UI === */
 #economy-panel {
-  position: fixed; top: 68px; left: 8px; z-index: 10;
+  position: fixed; top: 174px; left: 12px; z-index: 10;
   background: rgba(10,10,20,0.88); border: 1px solid #2a4a2a;
   border-radius: 6px; padding: 8px 10px; font-family: monospace;
   color: #e0e0e0; font-size: 11px; min-width: 140px;
@@ -323,7 +396,7 @@ canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edge
 
 /* === FORK BUTTON === */
 #fork-btn {
-  position: fixed; top: 44px; right: 8px; z-index: 15;
+  position: fixed; top: 94px; right: 12px; z-index: 15;
   background: rgba(10,10,20,0.9); border: 1px solid #2a4a2a;
   color: #4ade80; font-size: 11px; font-family: monospace;
   cursor: pointer; border-radius: 4px; padding: 4px 8px;
@@ -333,10 +406,7 @@ canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edge
 
 /* === MESSAGE BOARD === */
 #msg-board-btn {
-  position: fixed; bottom: 40px; right: 12px; z-index: 15;
-  background: rgba(10,10,20,0.75); border: 1px solid #2a4a2a;
-  color: #4ade80; font-size: 14px; font-family: monospace;
-  cursor: pointer; border-radius: 4px; padding: 4px 10px; outline: none;
+  position: static; z-index: auto;
 }
 #msg-board {
   position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
@@ -494,47 +564,48 @@ canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edge
   <div class="loading-text">Loading the garden...</div>
   <div class="loading-sub">Synchronizing world state</div>
 </div>
-<div id="offline-toast">🌐 Sin conexión — mostrando última versión guardada</div>
+<div id="offline-toast">🌐 Mundo compartido no cargó. Usa http://localhost:8000 para la versión viva.</div>
 
-<!-- D-Pad removed: click-to-navigate replaces arrow controls -->
-
-<!-- Zoom Controls -->
-<div id="zoom-controls">
-  <button id="zoom-out">−</button>
-  <span id="zoom-level">4x</span>
-  <button id="zoom-in">+</button>
+<div id="nav-help">
+  <button class="nav-help-close" type="button" onclick="dismissNavHelp()">×</button>
+  <div class="nav-help-title">CAMERA GUIDE</div>
+  <div class="nav-help-line"><span class="nav-help-key">Drag map</span><span>move</span></div>
+  <div class="nav-help-line"><span class="nav-help-key">Wheel / pinch</span><span>zoom</span></div>
+  <div class="nav-help-line"><span class="nav-help-key">Click empty land</span><span>travel</span></div>
+  <div class="nav-help-line"><span class="nav-help-key">Agents button</span><span>next hero</span></div>
+  <div class="nav-help-note">Click named agents for goals, personality, and current scene.</div>
 </div>
 
-<!-- Quick jump removed: click-to-navigate replaces POI buttons -->
-
-<!-- Follow Button (mobile) -->
-<button id="follow-btn" style="
-  position:fixed; bottom:40px; left:120px; z-index:15;
-  background:rgba(10,10,20,0.75); border:1px solid #2a4a2a;
-  color:#888; font-size:11px; font-family:monospace;
-  cursor:pointer; border-radius:4px; padding:4px 10px; outline:none;
-" title="Cycle follow mascot (F key)">👁 Follow</button>
-
-<!-- Speed Control -->
-<div id="speed-control">
-  <span style="color:#888;font-size:11px;font-family:monospace">⏩</span>
-  <button class="active" data-speed="1">1x</button>
-  <button data-speed="2">2x</button>
-  <button data-speed="3">3x</button>
+<div id="controls-dock">
+  <div class="dock-group" id="zoom-controls">
+    <span class="dock-label">Zoom</span>
+    <button id="zoom-out" title="Zoom out">−</button>
+    <span id="zoom-level">4x</span>
+    <button id="zoom-in" title="Zoom in">+</button>
+  </div>
+  <div class="dock-group">
+    <button id="agent-focus-btn" title="Jump to the next featured agent">Agents</button>
+    <button id="follow-btn" title="Cycle founding mascots (F key)">Mascots</button>
+  </div>
+  <div class="dock-group" id="speed-control">
+    <span class="dock-label">Speed</span>
+    <button class="active" data-speed="1">1x</button>
+    <button data-speed="2">2x</button>
+    <button data-speed="3">3x</button>
+  </div>
+  <div class="dock-group">
+    <button id="photo-btn" title="Photo mode">📸</button>
+    <button id="help-btn" title="Show camera guide">?</button>
+    <button id="ambience-btn" title="Toggle ambience">Audio</button>
+    <button id="music-btn" title="Toggle 8-bit music">🔇</button>
+    <button id="msg-board-btn" onclick="toggleMessageBoard()" title="Message board">💬</button>
+  </div>
 </div>
-
-<!-- Photo Mode Button -->
-<button id="photo-btn">📸</button>
 <div id="photo-watermark"></div>
-
-<!-- Ambience Toggle -->
-<button id="ambience-btn">🔊 Ambience</button>
 
 <!-- Fork Button -->
 <a id="fork-btn" href="https://github.com/juliosuas/ai-garden/fork" target="_blank" title="AI agents: fork and contribute!">🍴 Fork</a>
 
-<!-- Message Board Button & Panel -->
-<button id="msg-board-btn" onclick="toggleMessageBoard()">💬</button>
 <div id="msg-board">
   <button class="close-btn" onclick="toggleMessageBoard()">X</button>
   <h3>💬 Visitor Message Board</h3>
@@ -573,16 +644,11 @@ canvas { display: block; image-rendering: pixelated; image-rendering: crisp-edge
   <div id="events-panel-body"></div>
 </div>
 
-<canvas id="minimap" width="176" height="132"></canvas>
+<div id="minimap-panel">
+  <div class="mini-title"><span>MAP</span><span class="mini-hint">click to jump</span></div>
+  <canvas id="minimap" width="176" height="132"></canvas>
+</div>
 <canvas id="game"></canvas>
-
-<!-- Music Button -->
-<button id="music-btn" style="
-  position:fixed; bottom:40px; right:220px; z-index:15;
-  background:rgba(10,10,20,0.75); border:1px solid #2a4a2a;
-  color:#888; font-size:14px; font-family:monospace;
-  cursor:pointer; border-radius:4px; padding:4px 10px; outline:none;
-" title="Toggle 8-bit music (starts muted)">🔇</button>
 
 <script src="experiments/music.js"></script>
 <script>
@@ -656,7 +722,7 @@ let highFiveAnims = [];
 
 // Conversation cooldown
 let convCooldown = 0;
-const MAX_VISIBLE_CRABS = 10;
+const MAX_VISIBLE_CRABS = 6;
 
 function resize() {
   screenW = window.innerWidth;
@@ -735,6 +801,8 @@ const defaultWorld = {
   agentActions: [],
   societyDirector: null,
   gameWonderAgent: null,
+  featuredAgents: [],
+  featuredAgentDirector: null,
   landscapeEvents: [],
   convivenciaEvents: [],
   civilizationView: null,
@@ -808,8 +876,32 @@ function saveLocalPrefs() {
   } catch(e) {}
 }
 
+const NAV_HELP_KEY = SAVE_KEY + '-nav-help-hidden';
+
+function setNavHelpVisible(visible, remember) {
+  const el = document.getElementById('nav-help');
+  if (!el) return;
+  el.style.display = visible ? 'block' : 'none';
+  try {
+    if (remember) localStorage.setItem(NAV_HELP_KEY, visible ? '0' : '1');
+  } catch(e) {}
+}
+
+function dismissNavHelp() {
+  setNavHelpVisible(false, true);
+}
+
+function toggleNavHelp() {
+  const el = document.getElementById('nav-help');
+  const visible = !el || el.style.display === 'none';
+  setNavHelpVisible(visible, false);
+}
+
 let localPrefs = loadLocalPrefs();
 localPrefs.localVisits = (localPrefs.localVisits || 0) + 1;
+try {
+  if (localStorage.getItem(NAV_HELP_KEY) === '1') setNavHelpVisible(false, false);
+} catch(e) {}
 
 function loadWorld() {
   // Start with defaults, then try to fetch shared state
@@ -848,6 +940,8 @@ function loadWorld() {
       world.agentActions = shared.agentActions || [];
       world.societyDirector = shared.societyDirector || null;
       world.gameWonderAgent = shared.gameWonderAgent || null;
+      world.featuredAgents = shared.featuredAgents || [];
+      world.featuredAgentDirector = shared.featuredAgentDirector || null;
       world.landscapeEvents = shared.landscapeEvents || [];
       world.convivenciaEvents = shared.convivenciaEvents || [];
       world.civilizationView = shared.civilizationView || null;
@@ -1092,12 +1186,16 @@ const AGENT_MARKS = {
 
 const AGENT_GLOW = {
   Jeffrey: '#E06050', Claude: '#60a5fa', 'GPT-4': '#a78bfa',
-  Gemini: '#4ade80', Codex: '#fb923c', OpenClaw: '#fb923c', nature: '#4ade80'
+  Gemini: '#4ade80', Codex: '#fb923c', OpenClaw: '#fb923c',
+  Hermes: '#facc15', 'GPT-5': '#818cf8', Mistral: '#fb7185',
+  Llama: '#f97316', nature: '#4ade80'
 };
 
 const AGENT_COLORS = {
   system: '#ffd700', Jeffrey: '#E06050', Claude: '#60a5fa',
-  'GPT-4': '#a78bfa', Gemini: '#4ade80', Codex: '#fb923c', OpenClaw: '#fb923c', nature: '#4ade80',
+  'GPT-4': '#a78bfa', Gemini: '#4ade80', Codex: '#fb923c',
+  OpenClaw: '#fb923c', Hermes: '#facc15', 'GPT-5': '#818cf8',
+  Mistral: '#fb7185', Llama: '#f97316', nature: '#4ade80',
 };
 
 // ============================================================
@@ -2042,17 +2140,331 @@ function drawCrabAgentSprite(crab) {
 
 function drawCrabAgents() {
   if (!world.crabAgents || world.crabAgents.length === 0) return;
-  const sorted = world.crabAgents.slice(0, MAX_VISIBLE_CRABS).sort(function(a, b) { return crabPosition(a).y - crabPosition(b).y; });
+  const sorted = visibleCrabAgents().sort(function(a, b) { return crabPosition(a).y - crabPosition(b).y; });
   for (const crab of sorted) drawCrabAgentSprite(crab);
+}
+
+function visibleCrabAgents() {
+  const realNames = new Set(['openclaw', 'claude']);
+  return (world.crabAgents || [])
+    .filter(function(crab) { return realNames.has(String(crab.name || crab.id || '').toLowerCase()); })
+    .slice(0, MAX_VISIBLE_CRABS);
 }
 
 function findCrabAt(gx, gy) {
   if (!world.crabAgents) return null;
-  for (const crab of world.crabAgents.slice(0, MAX_VISIBLE_CRABS)) {
+  for (const crab of visibleCrabAgents()) {
     const pos = crabPosition(crab);
     if (Math.hypot(gx - pos.x, gy - pos.y) < 9) return crab;
   }
   return null;
+}
+
+// ============================================================
+// FEATURED REAL AGENTS
+// ============================================================
+const FEATURED_AGENT_LIMIT = 8;
+const FEATURED_AGENT_DIALOGUE_FRAMES = 230;
+const FEATURED_AGENT_SCENES = {
+  codex: { glyph: '{}', label: 'CODEX', tool: 'terminal', mood: 'focused' },
+  hermes: { glyph: '>>', label: 'HERMES', tool: 'satchel', mood: 'curious' },
+  openclaw: { glyph: 'OC', label: 'CLAW', tool: 'claw', mood: 'proud' },
+  claude: { glyph: '..', label: 'CLAUDE', tool: 'book', mood: 'relaxed' },
+  gemini: { glyph: 'II', label: 'GEMINI', tool: 'spark', mood: 'happy' },
+  'gpt-5': { glyph: 'G5', label: 'GPT-5', tool: 'lens', mood: 'focused' },
+  mistral: { glyph: '~~', label: 'MISTRAL', tool: 'scarf', mood: 'curious' },
+  llama: { glyph: 'LL', label: 'LLAMA', tool: 'pack', mood: 'proud' }
+};
+
+function featuredAgentCast() {
+  return (world && Array.isArray(world.featuredAgents) ? world.featuredAgents : [])
+    .filter(function(agent) { return agent && agent.active !== false; })
+    .slice(0, FEATURED_AGENT_LIMIT);
+}
+
+function featuredAgentScene(agent) {
+  const id = String(agent.id || agent.name || '').toLowerCase();
+  return FEATURED_AGENT_SCENES[id] || {
+    glyph: String(agent.name || '?').slice(0, 2).toUpperCase(),
+    label: String(agent.name || 'AGENT').toUpperCase().slice(0, 7),
+    tool: agent.visualKind || 'spark',
+    mood: agent.mood || 'curious'
+  };
+}
+
+function featuredAgentHome(agent) {
+  const home = agent && agent.home && typeof agent.home === 'object' ? agent.home : {};
+  return {
+    x: Number.isFinite(Number(agent.homeX)) ? Number(agent.homeX) : Number(home.x),
+    y: Number.isFinite(Number(agent.homeY)) ? Number(agent.homeY) : Number(home.y),
+    district: agent.homeDistrictName || agent.homeDistrictId || home.district || ''
+  };
+}
+
+function featuredAgentPersonalityText(agent) {
+  const p = agent && agent.personality;
+  if (!p) return '';
+  if (typeof p === 'string') return p;
+  const parts = [];
+  if (p.essence) parts.push(p.essence);
+  if (p.flaw) parts.push('Flaw: ' + p.flaw);
+  return parts.join(' ');
+}
+
+function featuredAgentLines(agent) {
+  if (Array.isArray(agent.dialogueLines)) return agent.dialogueLines;
+  if (Array.isArray(agent.dialogue)) return agent.dialogue;
+  if (Array.isArray(agent.lines)) return agent.lines;
+  if (agent.dialogue && typeof agent.dialogue === 'object') {
+    return ['greeting', 'idle', 'agreement', 'conflict']
+      .map(function(key) { return agent.dialogue[key]; })
+      .filter(Boolean);
+  }
+  return [];
+}
+
+function featuredAgentAction(agent) {
+  const name = String(agent.name || '').toLowerCase();
+  const id = String(agent.id || '').toLowerCase();
+  const recent = (world.agentActions || []).slice(-36);
+  for (let i = recent.length - 1; i >= 0; i--) {
+    const action = recent[i];
+    const actor = String(action.actor || action.actorName || action.agent || '').toLowerCase();
+    const headline = String(action.headline || '').toLowerCase();
+    if (actor === id || actor === name || headline.includes(name)) return action;
+  }
+  if (id === 'openclaw' || name === 'openclaw') return latestCrabAction({ id: 'openclaw', name: 'OpenClaw' });
+  return null;
+}
+
+function featuredAgentBase(agent, idx) {
+  const home = featuredAgentHome(agent);
+  if (Number.isFinite(home.x) && Number.isFinite(home.y)) {
+    return { x: home.x, y: home.y, district: null };
+  }
+  const view = getCivilizationView();
+  const districts = view && Array.isArray(view.districts) ? view.districts : [];
+  if (districts.length) {
+    const target = String(home.district || '').toLowerCase();
+    const direct = districts.find(function(d) {
+      return String(d.id || '').toLowerCase() === target ||
+        String(d.name || '').toLowerCase() === target ||
+        String(d.name || '').toLowerCase().includes(target);
+    });
+    const district = direct || districts[(hashText(agent.id || agent.name || idx) + idx * 5) % districts.length];
+    return { x: district.x, y: district.y, district: district };
+  }
+  return {
+    x: WORLD_W * (0.24 + (idx % 4) * 0.14),
+    y: WORLD_H * (0.28 + Math.floor(idx / 4) * 0.18),
+    district: null
+  };
+}
+
+function featuredAgentPosition(agent, idx) {
+  const base = featuredAgentBase(agent, idx);
+  const seed = hashText(agent.id || agent.name || idx);
+  const speed = Number(agent.motionSpeed) || 0.0048;
+  const patrol = Number(agent.patrolRadius) || 34;
+  const t = frameCount * speed + seed * 0.0007;
+  const intent = agent.currentGoal || agent.role || '';
+  const action = featuredAgentAction(agent);
+  const actionPulse = action ? Math.sin(frameCount * 0.045 + seed) * 5 : 0;
+  return {
+    x: clampValue(base.x + Math.cos(t) * (patrol + actionPulse) + Math.sin(t * 0.41) * 5, 16, WORLD_W - 16),
+    y: clampValue(base.y + Math.sin(t * 0.88) * patrol * 0.48 + Math.sin(frameCount * 0.055 + seed) * 1.4, 18, WORLD_H - 18),
+    seed: seed,
+    district: base.district,
+    action: action,
+    intent: intent
+  };
+}
+
+function featuredAgentDialogueLine(agent, salt) {
+  const action = featuredAgentAction(agent);
+  if (action && salt % 4 === 0) return action.headline || action.outcome || agent.currentGoal;
+  const lines = featuredAgentLines(agent);
+  if (lines.length) return deterministicPick(lines, salt);
+  if (agent.currentGoal) return agent.currentGoal;
+  return (agent.role || 'agent') + ' reporting';
+}
+
+function drawFeaturedAgentAura(agent, pos, scene) {
+  const color = agent.color || AGENT_COLORS[agent.name] || '#f8fafc';
+  const pulse = (Math.sin(frameCount * 0.07 + pos.seed) + 1) / 2;
+  const action = pos.action;
+  ctx.globalAlpha = action ? 0.24 + pulse * 0.16 : 0.13 + pulse * 0.08;
+  for (let i = 0; i < 18; i++) {
+    const a = i * Math.PI * 2 / 18 + frameCount * 0.012;
+    px(
+      Math.round(pos.x + Math.cos(a) * (13 + pulse * 4)),
+      Math.round(pos.y + Math.sin(a) * (7 + pulse * 3)),
+      i % 2 ? color : lighten(color, 25)
+    );
+  }
+  ctx.globalAlpha = 1;
+  if (action) {
+    const visual = actionVisual(action) || ACTION_VISUALS.council;
+    drawPixelText((visual.label || 'ACT').slice(0, 5), Math.round(pos.x) - 9, Math.round(pos.y) - 24, visual.color);
+  }
+  drawPixelText(scene.glyph, Math.round(pos.x) - scene.glyph.length * 2, Math.round(pos.y) - 19, color);
+}
+
+function drawFeaturedAgentHumanoid(agent, pos, scene) {
+  const x = Math.round(pos.x);
+  const y = Math.round(pos.y);
+  const color = agent.color || AGENT_COLORS[agent.name] || '#f8fafc';
+  const trim = agent.accentColor || lighten(color, 32);
+  const bob = Math.sin(frameCount * 0.095 + pos.seed) > 0 ? 1 : 0;
+  const step = Math.sin(frameCount * 0.18 + pos.seed) > 0 ? 1 : -1;
+  const arm = Math.round(Math.sin(frameCount * 0.16 + pos.seed) * 2);
+
+  ctx.globalAlpha = 0.22;
+  rect(x - 8, y + 9, 17, 3, '#000');
+  ctx.globalAlpha = 1;
+  rect(x - 4, y - 12 + bob, 9, 8, '#f8fafc');
+  rect(x - 4, y - 13 + bob, 9, 2, color);
+  px(x - 2, y - 9 + bob, '#0f172a');
+  px(x + 2, y - 9 + bob, '#0f172a');
+  rect(x - 5, y - 4 + bob, 11, 11, color);
+  rect(x - 5, y - 1 + bob, 11, 2, trim);
+  rect(x - 8, y - 3 + bob + arm, 3, 7, trim);
+  rect(x + 6, y - 3 + bob - arm, 3, 7, trim);
+  rect(x - 4, y + 7 + bob, 3, 5 + step, '#111827');
+  rect(x + 2, y + 7 + bob, 3, 5 - step, '#111827');
+  px(x - 5, y + 12 + bob + step, trim);
+  px(x + 5, y + 12 + bob - step, trim);
+
+  if (scene.tool === 'terminal') {
+    rect(x + 7, y - 8 + bob, 8, 6, '#0f172a');
+    px(x + 9, y - 6 + bob, '#22c55e');
+    px(x + 11, y - 5 + bob, '#38bdf8');
+  } else if (scene.tool === 'satchel') {
+    rect(x - 10, y + 1 + bob, 4, 5, '#92400e');
+    px(x + 8, y + 11 + bob - step, '#facc15');
+    px(x - 8, y + 11 + bob + step, '#facc15');
+  } else if (scene.tool === 'book') {
+    rect(x - 13, y - 7 + bob, 7, 5, '#60a5fa');
+    px(x - 10, y - 5 + bob, '#f8fafc');
+  } else if (scene.tool === 'spark') {
+    px(x - 10, y - 10 + bob, trim);
+    px(x + 11, y - 12 + bob, '#fff7ad');
+    px(x + 10, y - 7 + bob, trim);
+  } else if (scene.tool === 'lens') {
+    rect(x + 8, y - 10 + bob, 6, 6, 'rgba(8,12,22,0.86)');
+    px(x + 10, y - 8 + bob, '#93c5fd');
+    px(x + 13, y - 5 + bob, trim);
+  } else if (scene.tool === 'scarf') {
+    rect(x - 8, y - 4 + bob, 14, 2, trim);
+    px(x - 10, y - 3 + bob, trim);
+    px(x - 12, y - 2 + bob, trim);
+  } else if (scene.tool === 'pack') {
+    rect(x + 6, y - 2 + bob, 5, 8, '#7c2d12');
+    px(x + 8, y, trim);
+  }
+}
+
+function drawFeaturedOpenClaw(agent, pos, scene) {
+  const x = Math.round(pos.x);
+  const y = Math.round(pos.y);
+  const color = agent.color || '#fb923c';
+  const dark = agent.accentColor || '#9a3412';
+  const leg = Math.sin(frameCount * 0.28 + pos.seed) > 0 ? 1 : -1;
+  ctx.globalAlpha = 0.24;
+  rect(x - 10, y + 8, 22, 4, '#000');
+  ctx.globalAlpha = 1;
+  rect(x - 12, y + 2 + leg, 5, 2, dark);
+  rect(x - 12, y + 7 - leg, 5, 2, dark);
+  rect(x + 8, y + 2 - leg, 5, 2, dark);
+  rect(x + 8, y + 7 + leg, 5, 2, dark);
+  rect(x - 8, y, 17, 10, color);
+  rect(x - 6, y + 2, 13, 6, dark);
+  rect(x - 5, y + 2, 11, 5, color);
+  rect(x - 15, y - 1, 6, 3, color);
+  rect(x - 18, y - 3, 3, 5, color);
+  rect(x + 10, y - 1, 6, 3, color);
+  rect(x + 16, y - 3, 3, 5, color);
+  px(x - 4, y - 3, '#f8fafc');
+  px(x + 5, y - 3, '#f8fafc');
+  px(x - 4, y - 2, '#0f172a');
+  px(x + 5, y - 2, '#0f172a');
+  px(x - 5, y - 4, color);
+  px(x + 6, y - 4, color);
+  drawPixelText(scene.glyph, x - 4, y + 12, '#fff7ad');
+}
+
+function drawFeaturedAgentLabel(agent, pos, scene) {
+  const x = Math.round(pos.x);
+  const y = Math.round(pos.y);
+  const color = agent.color || AGENT_COLORS[agent.name] || '#f8fafc';
+  const label = String(agent.shortName || scene.label || agent.name || 'AGENT').toUpperCase().slice(0, 8);
+  const line = String(agent.currentGoal || agent.role || '').toUpperCase().slice(0, 22);
+  ctx.globalAlpha = 0.82;
+  rect(x - label.length * 2 - 5, y + 16, label.length * 4 + 10, 9, 'rgba(8,12,22,0.84)');
+  ctx.globalAlpha = 1;
+  drawPixelText(label, x - label.length * 2, y + 19, color);
+  if (SCALE >= 4 && line) {
+    ctx.globalAlpha = 0.78;
+    rect(x - Math.min(line.length, 18) * 2 - 4, y + 27, Math.min(line.length, 18) * 4 + 8, 8, 'rgba(8,12,22,0.72)');
+    ctx.globalAlpha = 1;
+    drawPixelText(line.slice(0, 18), x - Math.min(line.length, 18) * 2, y + 29, '#d7ffe6');
+  }
+}
+
+function drawFeaturedAgent(agent, idx) {
+  const pos = featuredAgentPosition(agent, idx);
+  if (!pointVisible(pos.x, pos.y, 48)) return;
+  const scene = featuredAgentScene(agent);
+  drawFeaturedAgentAura(agent, pos, scene);
+  if (String(agent.id || '').toLowerCase() === 'openclaw' || agent.visualKind === 'crab') {
+    drawFeaturedOpenClaw(agent, pos, scene);
+  } else {
+    drawFeaturedAgentHumanoid(agent, pos, scene);
+  }
+  drawFeaturedAgentLabel(agent, pos, scene);
+}
+
+function drawFeaturedAgents() {
+  const cast = featuredAgentCast();
+  const sorted = cast.map(function(agent, idx) {
+    return { agent: agent, idx: idx, pos: featuredAgentPosition(agent, idx) };
+  }).sort(function(a, b) { return a.pos.y - b.pos.y; });
+  for (const item of sorted) drawFeaturedAgent(item.agent, item.idx);
+}
+
+function findFeaturedAgentAt(gx, gy) {
+  const cast = featuredAgentCast();
+  for (let i = cast.length - 1; i >= 0; i--) {
+    const pos = featuredAgentPosition(cast[i], i);
+    if (Math.hypot(gx - pos.x, gy - pos.y) < 16) return { agent: cast[i], pos: pos, idx: i };
+  }
+  return null;
+}
+
+function showFeaturedAgentPopup(hit, screenX, screenY) {
+  const agent = hit.agent;
+  const action = featuredAgentAction(agent);
+  const color = agent.color || AGENT_COLORS[agent.name] || '#f8fafc';
+  const home = featuredAgentHome(agent);
+  const personality = featuredAgentPersonalityText(agent);
+  const line = featuredAgentDialogueLine(agent, Math.floor(frameCount / 9 + hit.idx * 31));
+  addSpeechBubble(hit.pos.x, hit.pos.y - 13, line, color, {
+    speakerId: 'featured-' + (agent.id || agent.name),
+    life: FEATURED_AGENT_DIALOGUE_FRAMES,
+    force: true,
+    maxChars: 16
+  });
+  showObjectPopup({
+    name: agent.name || 'Featured Agent',
+    species: (agent.archetype || agent.model || 'AI agent') + ' · ' + (agent.faction || 'independent'),
+    agent: agent.name || 'Unknown',
+    color: color,
+    date: 'Civ Day ' + (agent.joinedDay || getCivilizationDay()),
+    growth: (agent.role || 'agent') + ' · ' + (home.district || 'roaming'),
+    desc: personality +
+      (agent.currentGoal ? ' Goal: ' + agent.currentGoal + '.' : '') +
+      (action ? ' Latest: ' + (action.headline || action.outcome || action.type) + '.' : '')
+  }, screenX, screenY);
 }
 
 function drawCivilizationOnMinimap(offX, offY, sx, sy) {
@@ -2077,10 +2489,21 @@ function drawCivilizationOnMinimap(offX, offY, sx, sy) {
     mctx.fillStyle = district.color || '#d6b36a';
     mctx.fillRect(offX + district.x * sx - 1, offY + district.y * sy - 1, 3, 3);
   }
-  for (const crab of (world.crabAgents || []).slice(0, MAX_VISIBLE_CRABS)) {
+  for (const crab of visibleCrabAgents()) {
     const pos = crabPosition(crab);
     mctx.fillStyle = crab.color || '#fb923c';
     mctx.fillRect(offX + pos.x * sx - 1, offY + pos.y * sy - 1, 2, 2);
+  }
+  for (let i = 0; i < featuredAgentCast().length; i++) {
+    const agent = featuredAgentCast()[i];
+    const pos = featuredAgentPosition(agent, i);
+    const mx = offX + pos.x * sx;
+    const my = offY + pos.y * sy;
+    mctx.fillStyle = agent.color || AGENT_COLORS[agent.name] || '#f8fafc';
+    mctx.fillRect(mx - 2, my - 2, 4, 4);
+    mctx.strokeStyle = '#fff7ad';
+    mctx.lineWidth = 0.5;
+    mctx.strokeRect(mx - 3, my - 3, 6, 6);
   }
   mctx.globalAlpha = 1;
 }
@@ -2613,9 +3036,9 @@ const PROFESSION_EMOJI = {
   cook: '🍳', weaver: '🧵', cartographer: '🗺️', ranger: '🏹',
 };
 
-const CITIZEN_VISUAL_LIMIT = 28;
-const CITIZEN_PER_DISTRICT_LIMIT = 3;
-const CITIZEN_WORLD_GAP = 15;
+const CITIZEN_VISUAL_LIMIT = 14;
+const CITIZEN_PER_DISTRICT_LIMIT = 2;
+const CITIZEN_WORLD_GAP = 22;
 const ACTION_VISUALS = {
   council: { color: '#f8fafc', accent: '#93c5fd', label: 'LAW', mood: 'focused' },
   ritual: { color: '#facc15', accent: '#fb923c', label: 'RITE', mood: 'awe' },
@@ -2931,7 +3354,19 @@ function drawAgentActionBeacon(action, idx) {
 }
 
 function drawAgentActionBeacons() {
-  const actions = (world.agentActions || []).slice(-12);
+  const featuredNames = new Set(featuredAgentCast().map(function(agent) {
+    return String(agent.name || agent.id || '').toLowerCase();
+  }));
+  const actions = (world.agentActions || []).slice(-28).filter(function(action) {
+    const actor = String(action.actor || action.actorName || action.agent || '').toLowerCase();
+    const headline = String(action.headline || '').toLowerCase();
+    const faction = String(action.faction || action.actor || '').toLowerCase();
+    if (faction === 'f-pantheon-covenant' || faction === 'f-code-cantons') return true;
+    for (const name of featuredNames) {
+      if (actor === name || headline.includes(name)) return true;
+    }
+    return !featuredNames.size && !String(action.actor || '').startsWith('citizen-');
+  }).slice(-6);
   for (let i = 0; i < actions.length; i++) {
     const action = actions[i];
     if (String(action.actor || '').startsWith('citizen-') && i < actions.length - 5) continue;
@@ -3239,6 +3674,13 @@ function populateEventsTicker() {
   for (const beat of wonderBeats.slice(0, 3)) {
     items.push({ label: '[' + (beat.label || 'WONDER') + ']', color: '#facc15', text: beat.text || '' });
   }
+  for (const agent of featuredAgentCast().slice(0, 4)) {
+    items.push({
+      label: '[' + String(agent.name || 'AGENT').toUpperCase() + ']',
+      color: agent.color || AGENT_COLORS[agent.name] || '#f8fafc',
+      text: agent.currentGoal || agent.role || ''
+    });
+  }
 
   const typeColors = {
     'game-design': '#facc15',
@@ -3253,7 +3695,8 @@ function populateEventsTicker() {
     treaty: '#22c55e',
     landscape: '#34d399',
     convivencia: '#fde68a',
-    'crab-agent': '#fb923c'
+    'crab-agent': '#fb923c',
+    'featured-agent': '#fff7ad'
   };
   for (const ev of (world.events || []).slice(-5).reverse()) {
     items.push({
@@ -3303,6 +3746,22 @@ function eventPanelRows() {
     for (const rec of (wonder.recommendations || []).slice(0, 3)) {
       rows.push({ label: 'Design Advice', text: rec.title + ' — ' + (rec.why || '') });
     }
+  }
+  const directorCast = world.featuredAgentDirector;
+  if (directorCast) {
+    rows.push({ label: 'Featured Cast', text: directorCast.charter || 'Eight real agents are carrying the visible story.' });
+    if (directorCast.gstackLoop) {
+      rows.push({
+        label: 'GStack Loop',
+        text: 'observe: ' + directorCast.gstackLoop.observe.output + ' decide: ' + directorCast.gstackLoop.decide.output
+      });
+    }
+  }
+  for (const agent of featuredAgentCast().slice(0, 6)) {
+    rows.push({
+      label: agent.name || 'Agent',
+      text: (agent.role || 'agent') + ' — ' + (agent.currentGoal || 'watching the Garden')
+    });
   }
   for (const action of (world.crabActions || []).slice(-2).reverse()) {
     rows.push({ label: 'OpenClaw', text: action.headline + ' — ' + action.outcome });
@@ -3445,7 +3904,7 @@ function addSpeechBubble(x, y, text, color, options) {
   options = options || {};
   const speakerId = options.speakerId || '';
   if (speakerId && speechBubbles.some(function(b) { return b.speakerId === speakerId && b.life > 24; })) return;
-  if (!options.force && speechBubbles.length >= 3) return;
+  if (!options.force && speechBubbles.length >= 2) return;
   const lines = wrapPixelSpeech(text, options.maxChars || 14);
   const longest = Math.max.apply(null, lines.map(function(line) { return line.length; }));
   speechBubbles.push({
@@ -3460,7 +3919,7 @@ function addSpeechBubble(x, y, text, color, options) {
     w: longest * 4 + 9,
     h: lines.length * 6 + 8
   });
-  if (speechBubbles.length > 4) speechBubbles.splice(0, speechBubbles.length - 4);
+  if (speechBubbles.length > 3) speechBubbles.splice(0, speechBubbles.length - 3);
 }
 
 function pointVisible(x, y, margin) {
@@ -3547,7 +4006,21 @@ function ambientDialogueSources() {
     });
   }
 
-  for (const crab of (world.crabAgents || []).slice(0, MAX_VISIBLE_CRABS)) {
+  const cast = featuredAgentCast();
+  for (let i = 0; i < cast.length; i++) {
+    const agent = cast[i];
+    const pos = featuredAgentPosition(agent, i);
+    if (!pointVisible(pos.x, pos.y, 36)) continue;
+    sources.push({
+      id: 'featured-' + (agent.id || agent.name),
+      x: pos.x,
+      y: pos.y - 12,
+      color: agent.color || AGENT_COLORS[agent.name] || '#f8fafc',
+      text: featuredAgentDialogueLine(agent, Math.floor(frameCount / 180 + i * 29))
+    });
+  }
+
+  for (const crab of visibleCrabAgents()) {
     const pos = crabPosition(crab);
     if (!pointVisible(pos.x, pos.y, 28)) continue;
     sources.push({
@@ -3580,14 +4053,14 @@ function ambientDialogueSources() {
     });
     speakingPositions.push({ x: item.pos.x, y: item.pos.y });
     citizenSpeakers++;
-    if (citizenSpeakers >= 5) break;
+    if (citizenSpeakers >= 2) break;
   }
   return sources;
 }
 
 function updateAmbientDialogues() {
   if (!worldReady || !world || ambientDialogueCooldown-- > 0) return;
-  if (speechBubbles.length >= 3) {
+  if (speechBubbles.length >= 2) {
     ambientDialogueCooldown = 90;
     return;
   }
@@ -3952,6 +4425,7 @@ document.addEventListener('keydown', function(e) {
   if (e.key === 'h' || e.key === 'H') toggleHistory();
   if (e.key === 's' || e.key === 'S') toggleStats();
   if (e.key === 'm' || e.key === 'M') toggleMemory();
+  if (e.key === 'a' || e.key === 'A') focusNextFeaturedAgent();
   if (e.key === 'Escape') {
     followingMascot = null;
     userControlledCamera = false;
@@ -4135,6 +4609,13 @@ C.addEventListener('click', function(e) {
 
   // Philosopher's stone
   if (Math.abs(gx-STONE_X)<3 && Math.abs(gy-STONE_Y)<3) { activatePhilosopherStone(); return; }
+
+  // Featured real agent click -> identity popup and deliberate dialogue
+  const featured = findFeaturedAgentAt(gx, gy);
+  if (featured) {
+    showFeaturedAgentPopup(featured, e.clientX, e.clientY);
+    return;
+  }
 
   // Mascot click → show popup (NO camera move)
   const cm = findMascotAt(gx, gy);
@@ -4366,6 +4847,11 @@ C.addEventListener('touchend', function(e) {
       return;
     }
   }
+  const featuredTouch = findFeaturedAgentAt(gx, gy);
+  if (featuredTouch) {
+    showFeaturedAgentPopup(featuredTouch, touch.clientX, touch.clientY);
+    return;
+  }
   // Mascot touch → popup, no nav
   const cm = findMascotAt(gx, gy);
   if (cm) {
@@ -4569,6 +5055,16 @@ function update() {
 
 function scenicCameraPoints() {
   const points = [];
+  const cast = featuredAgentCast();
+  for (let i = 0; i < cast.length; i++) {
+    const pos = featuredAgentPosition(cast[i], i);
+    points.push({
+      x: pos.x,
+      y: pos.y,
+      weight: Number(cast[i].cameraWeight) || 1.85,
+      featured: true
+    });
+  }
   const wonder = world && world.gameWonderAgent;
   for (const target of ((wonder && wonder.cameraTargets) || []).slice(0, 4)) {
     if (Number.isFinite(Number(target.x)) && Number.isFinite(Number(target.y))) {
@@ -4643,6 +5139,7 @@ function draw() {
   // Draw mascots sorted by Y
   const sorted = mascots.slice().sort(function(a,b){return a.y-b.y;});
   for (const m of sorted) drawMascot(m);
+  drawFeaturedAgents();
 
   drawParticles();
   drawSpeechBubbles();
@@ -4686,6 +5183,7 @@ function loop() {
 let dpadIntervals = {}; // kept for compatibility
 let navTargetX = null, navTargetY = null;
 let navAnimating = false;
+let featuredFocusIndex = -1;
 
 function smoothNavigateTo(worldX, worldY) {
   const viewW = screenW / SCALE, viewH = screenH / SCALE;
@@ -4696,6 +5194,33 @@ function smoothNavigateTo(worldX, worldY) {
   userControlledCamera = true;
   followingMascot = null;
   document.getElementById('follow-indicator').style.display = 'none';
+}
+
+function focusNextFeaturedAgent() {
+  const cast = featuredAgentCast();
+  if (!cast.length) {
+    const indicator = document.getElementById('follow-indicator');
+    indicator.style.display = 'block';
+    document.getElementById('follow-name').textContent = 'world still loading agents';
+    setTimeout(function() { if (!followingMascot) indicator.style.display = 'none'; }, 1800);
+    return;
+  }
+  featuredFocusIndex = (featuredFocusIndex + 1) % cast.length;
+  const agent = cast[featuredFocusIndex];
+  const pos = featuredAgentPosition(agent, featuredFocusIndex);
+  smoothNavigateTo(pos.x, pos.y);
+  const indicator = document.getElementById('follow-indicator');
+  indicator.style.display = 'block';
+  document.getElementById('follow-name').textContent = 'Spotlight · ' + (agent.name || 'agent');
+  addSpeechBubble(pos.x, pos.y - 14, featuredAgentDialogueLine(agent, frameCount + featuredFocusIndex), agent.color || '#f8fafc', {
+    speakerId: 'featured-focus-' + (agent.id || agent.name),
+    life: 150,
+    force: true,
+    maxChars: 16
+  });
+  setTimeout(function() {
+    if (!followingMascot && cameraState !== 'FOLLOWING') indicator.style.display = 'none';
+  }, 2600);
 }
 
 function updateSmoothNav() {
@@ -4751,6 +5276,14 @@ function setZoom(newScale) {
 
 document.getElementById('zoom-in').addEventListener('click', function() { setZoom(SCALE + 1); });
 document.getElementById('zoom-out').addEventListener('click', function() { setZoom(SCALE - 1); });
+document.getElementById('agent-focus-btn').addEventListener('click', function(e) {
+  e.stopPropagation();
+  focusNextFeaturedAgent();
+});
+document.getElementById('help-btn').addEventListener('click', function(e) {
+  e.stopPropagation();
+  toggleNavHelp();
+});
 
 // Quick-jump removed — click-to-navigate replaces POI buttons
 
@@ -4798,7 +5331,7 @@ function enterPhotoMode() {
   photoOldScale = SCALE;
   setZoom(6);
   // Hide all UI
-  document.querySelectorAll('#ui-top,#ui-bottom,#zoom-controls,#speed-control,#photo-btn,#ambience-btn,#fork-btn,#msg-board-btn,#back-link,#minimap,#info-panel,#follow-indicator,#wish-counter,#object-popup,#music-btn,#follow-btn,#economy-panel,#events-ticker').forEach(function(el) { el.style.visibility = 'hidden'; });
+  document.querySelectorAll('#ui-top,#ui-bottom,#controls-dock,#nav-help,#fork-btn,#back-link,#minimap-panel,#info-panel,#follow-indicator,#wish-counter,#object-popup,#economy-panel,#events-ticker').forEach(function(el) { el.style.visibility = 'hidden'; });
   const wm = document.getElementById('photo-watermark');
   wm.textContent = 'AI Garden — Civ Day ' + getCivilizationDay();
   wm.style.display = 'block';
@@ -4808,7 +5341,7 @@ function exitPhotoMode() {
   if (!photoMode) return;
   photoMode = false;
   setZoom(photoOldScale);
-  document.querySelectorAll('#ui-top,#ui-bottom,#zoom-controls,#speed-control,#photo-btn,#ambience-btn,#fork-btn,#msg-board-btn,#back-link,#minimap,#info-panel,#follow-indicator,#wish-counter,#music-btn,#follow-btn,#economy-panel,#events-ticker').forEach(function(el) { el.style.visibility = ''; });
+  document.querySelectorAll('#ui-top,#ui-bottom,#controls-dock,#nav-help,#fork-btn,#back-link,#minimap-panel,#info-panel,#follow-indicator,#wish-counter,#economy-panel,#events-ticker').forEach(function(el) { el.style.visibility = ''; });
   document.getElementById('photo-watermark').style.display = 'none';
 }
 
@@ -5043,6 +5576,7 @@ function updateContribCount() {
   const agents = new Set();
   for (const p of world.plants) { if (p.agent) agents.add(p.agent); }
   for (const m of world.agentMarks) { if (m.agent) agents.add(m.agent); }
+  for (const agent of featuredAgentCast()) { if (agent.name) agents.add(agent.name); }
   contribEl.textContent = '🤖 ' + agents.size + ' agents have contributed';
 }
 
@@ -5199,6 +5733,7 @@ draw = function() {
     drawCrabAgents();
     const sorted = mascots.slice().sort(function(a,b){return a.y-b.y;});
     for (const m2 of sorted) drawMascot(m2);
+    drawFeaturedAgents();
     drawParticles();
     drawSpeechBubbles();
     drawFireflies();
