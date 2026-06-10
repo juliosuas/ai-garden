@@ -60,7 +60,7 @@ canvas:active { cursor: grabbing; }
 #info-panel .status { color: #4ade80; margin-top: 4px; }
 #info-panel .mood-line { color: #ffd700; font-size: 10px; margin-top: 2px; }
 #minimap-panel {
-  position: fixed; bottom: 42px; right: 12px; z-index: 16;
+  position: fixed; top: 52px; right: 284px; bottom: auto; z-index: 16;
   background: rgba(8,12,18,0.88); border: 1px solid rgba(74,222,128,0.45);
   border-radius: 6px; padding: 7px; box-shadow: 0 8px 24px rgba(0,0,0,0.32);
 }
@@ -76,10 +76,20 @@ canvas:active { cursor: grabbing; }
   background: #1a3a1a; cursor: pointer;
 }
 #minimap-panel:hover { border-color: #4ade80; }
-@media (max-width: 760px) {
-  #minimap-panel { bottom: 94px; right: 8px; padding: 5px; }
+@media (max-width: 900px) {
+  #minimap-panel {
+    top: 52px; left: 50%; right: auto; bottom: auto;
+    transform: translateX(-50%); padding: 6px;
+  }
+  #minimap { width: 148px; height: 111px; }
+}
+@media (max-width: 640px) {
+  #minimap-panel {
+    top: auto; left: 8px; right: auto; bottom: 374px;
+    transform: none; padding: 4px;
+  }
   #minimap-panel .mini-title { display: none; }
-  #minimap { width: 132px; height: 99px; }
+  #minimap { width: 116px; height: 87px; }
 }
 #back-link {
   position: fixed; top: 44px; left: 8px; z-index: 10;
@@ -644,8 +654,8 @@ canvas:active { cursor: grabbing; }
   <div id="events-panel-body"></div>
 </div>
 
-<div id="minimap-panel">
-  <div class="mini-title"><span>MAP</span><span class="mini-hint">click to jump</span></div>
+<div id="minimap-panel" aria-label="Command map">
+  <div class="mini-title"><span>COMMAND MAP</span><span class="mini-hint">click to jump</span></div>
   <canvas id="minimap" width="176" height="132"></canvas>
 </div>
 <canvas id="game"></canvas>

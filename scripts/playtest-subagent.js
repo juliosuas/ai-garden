@@ -136,6 +136,9 @@ async function main() {
   check(index.includes('id="agent-focus-btn"'), 'featured agent focus button is missing');
   check(index.includes('focusNextFeaturedAgent'), 'featured agent focus camera helper is missing');
   check(index.includes('id="minimap-panel"'), 'minimap lacks a labeled jump panel');
+  check(index.includes('COMMAND MAP'), 'minimap should read as a command HUD map');
+  check(index.includes('aria-label="Command map"'), 'compact minimap should keep an accessible command-map label');
+  check(index.includes('top: 52px; right: 284px; bottom: auto'), 'desktop minimap should sit away from the observer chat rail');
   check(index.includes('getCivilizationDay'), 'top day counter is not tied to chronicle/civilization day');
   check(index.includes('minZoomForViewport'), 'zoom minimum is not dynamic to viewport size');
   check(index.includes('drawCivilizationProjection'), 'canvas does not draw the civilization projection');
