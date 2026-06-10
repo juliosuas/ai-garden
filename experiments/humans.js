@@ -907,7 +907,9 @@
           leader: world.government && world.government.leader || null,
           lawCount: world.government && world.government.laws ? world.government.laws.length : 0,
           latestLaws: world.government && world.government.laws ? world.government.laws.slice(-5).reverse() : []
-        }
+        },
+        featuredAgents: world.featuredAgents || [],
+        featuredAgentDirector: world.featuredAgentDirector || null
       },
       edges: [],
       recentActions: world.agentActions || [],
@@ -935,6 +937,13 @@
     body.appendChild(sec);
   }
 
+  function personalitySummary(agent) {
+    var p = agent && agent.personality;
+    if (!p) return '';
+    if (typeof p === 'string') return p;
+    return p.essence || p.flaw || '';
+  }
+
   function renderCivPanel(world) {
     var body = document.getElementById('ag-civ-body');
     if (!body) return;
@@ -948,6 +957,8 @@
     var s = brain.summary || {};
     var director = brain.director || world.societyDirector || null;
     var wonder = world.gameWonderAgent || null;
+    var featuredAgents = world.featuredAgents || [];
+    var featuredDirector = world.featuredAgentDirector || null;
     var grid = el('div', 'ag-civ-grid');
     grid.appendChild(civCard('Epoch', 'Day ' + (s.day || 0) + ' · ' + (s.alive || 0) + ' alive'));
     grid.appendChild(civCard('Government', s.government || 'none'));
@@ -999,6 +1010,29 @@
       }
       body.appendChild(wonderBox);
     }
+
+    if (featuredDirector || featuredAgents.length) {
+      var castBox = el('div', 'ag-civ-director');
+      castBox.appendChild(el('div', 'ag-civ-director-title', 'REAL AGENT CAST'));
+      castBox.appendChild(el('div', 'ag-civ-director-arc',
+        (featuredDirector && featuredDirector.rosterSize || featuredAgents.length || 0) + ' protagonists · Codex, Hermes, OpenClaw, Claude'));
+      castBox.appendChild(el('div', 'ag-civ-detail',
+        featuredDirector && featuredDirector.charter || 'The visible story now follows a small cast of real agent personalities.'));
+      if (featuredDirector && featuredDirector.gstackLoop) {
+        castBox.appendChild(el('div', 'ag-civ-director-prompt',
+          'GStack/GBrain loop: observe → decide → apply → verify'));
+      }
+      body.appendChild(castBox);
+    }
+
+    civSection(body, 'FEATURED AGENTS', featuredAgents.slice(0, 8), function (agent) {
+      var row = el('div', 'ag-civ-row');
+      row.appendChild(el('span', 'ag-civ-name', agent.name || agent.id || 'agent'));
+      row.appendChild(el('span', 'ag-civ-meta', ' · ' + (agent.role || agent.model || 'protagonist')));
+      row.appendChild(el('div', 'ag-civ-detail', agent.currentGoal || personalitySummary(agent) || 'watching the Garden'));
+      if (personalitySummary(agent)) row.appendChild(el('div', 'ag-civ-detail', personalitySummary(agent)));
+      return row;
+    });
 
     var pressure = divinePressure();
     var lastOmen = omenCache[omenCache.length - 1];

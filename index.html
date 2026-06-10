@@ -656,7 +656,7 @@ let highFiveAnims = [];
 
 // Conversation cooldown
 let convCooldown = 0;
-const MAX_VISIBLE_CRABS = 10;
+const MAX_VISIBLE_CRABS = 6;
 
 function resize() {
   screenW = window.innerWidth;
@@ -735,6 +735,8 @@ const defaultWorld = {
   agentActions: [],
   societyDirector: null,
   gameWonderAgent: null,
+  featuredAgents: [],
+  featuredAgentDirector: null,
   landscapeEvents: [],
   convivenciaEvents: [],
   civilizationView: null,
@@ -848,6 +850,8 @@ function loadWorld() {
       world.agentActions = shared.agentActions || [];
       world.societyDirector = shared.societyDirector || null;
       world.gameWonderAgent = shared.gameWonderAgent || null;
+      world.featuredAgents = shared.featuredAgents || [];
+      world.featuredAgentDirector = shared.featuredAgentDirector || null;
       world.landscapeEvents = shared.landscapeEvents || [];
       world.convivenciaEvents = shared.convivenciaEvents || [];
       world.civilizationView = shared.civilizationView || null;
@@ -1092,12 +1096,16 @@ const AGENT_MARKS = {
 
 const AGENT_GLOW = {
   Jeffrey: '#E06050', Claude: '#60a5fa', 'GPT-4': '#a78bfa',
-  Gemini: '#4ade80', Codex: '#fb923c', OpenClaw: '#fb923c', nature: '#4ade80'
+  Gemini: '#4ade80', Codex: '#fb923c', OpenClaw: '#fb923c',
+  Hermes: '#facc15', 'GPT-5': '#818cf8', Mistral: '#fb7185',
+  Llama: '#f97316', nature: '#4ade80'
 };
 
 const AGENT_COLORS = {
   system: '#ffd700', Jeffrey: '#E06050', Claude: '#60a5fa',
-  'GPT-4': '#a78bfa', Gemini: '#4ade80', Codex: '#fb923c', OpenClaw: '#fb923c', nature: '#4ade80',
+  'GPT-4': '#a78bfa', Gemini: '#4ade80', Codex: '#fb923c',
+  OpenClaw: '#fb923c', Hermes: '#facc15', 'GPT-5': '#818cf8',
+  Mistral: '#fb7185', Llama: '#f97316', nature: '#4ade80',
 };
 
 // ============================================================
@@ -2042,17 +2050,331 @@ function drawCrabAgentSprite(crab) {
 
 function drawCrabAgents() {
   if (!world.crabAgents || world.crabAgents.length === 0) return;
-  const sorted = world.crabAgents.slice(0, MAX_VISIBLE_CRABS).sort(function(a, b) { return crabPosition(a).y - crabPosition(b).y; });
+  const sorted = visibleCrabAgents().sort(function(a, b) { return crabPosition(a).y - crabPosition(b).y; });
   for (const crab of sorted) drawCrabAgentSprite(crab);
+}
+
+function visibleCrabAgents() {
+  const realNames = new Set(['openclaw', 'claude']);
+  return (world.crabAgents || [])
+    .filter(function(crab) { return realNames.has(String(crab.name || crab.id || '').toLowerCase()); })
+    .slice(0, MAX_VISIBLE_CRABS);
 }
 
 function findCrabAt(gx, gy) {
   if (!world.crabAgents) return null;
-  for (const crab of world.crabAgents.slice(0, MAX_VISIBLE_CRABS)) {
+  for (const crab of visibleCrabAgents()) {
     const pos = crabPosition(crab);
     if (Math.hypot(gx - pos.x, gy - pos.y) < 9) return crab;
   }
   return null;
+}
+
+// ============================================================
+// FEATURED REAL AGENTS
+// ============================================================
+const FEATURED_AGENT_LIMIT = 8;
+const FEATURED_AGENT_DIALOGUE_FRAMES = 230;
+const FEATURED_AGENT_SCENES = {
+  codex: { glyph: '{}', label: 'CODEX', tool: 'terminal', mood: 'focused' },
+  hermes: { glyph: '>>', label: 'HERMES', tool: 'satchel', mood: 'curious' },
+  openclaw: { glyph: 'OC', label: 'CLAW', tool: 'claw', mood: 'proud' },
+  claude: { glyph: '..', label: 'CLAUDE', tool: 'book', mood: 'relaxed' },
+  gemini: { glyph: 'II', label: 'GEMINI', tool: 'spark', mood: 'happy' },
+  'gpt-5': { glyph: 'G5', label: 'GPT-5', tool: 'lens', mood: 'focused' },
+  mistral: { glyph: '~~', label: 'MISTRAL', tool: 'scarf', mood: 'curious' },
+  llama: { glyph: 'LL', label: 'LLAMA', tool: 'pack', mood: 'proud' }
+};
+
+function featuredAgentCast() {
+  return (world && Array.isArray(world.featuredAgents) ? world.featuredAgents : [])
+    .filter(function(agent) { return agent && agent.active !== false; })
+    .slice(0, FEATURED_AGENT_LIMIT);
+}
+
+function featuredAgentScene(agent) {
+  const id = String(agent.id || agent.name || '').toLowerCase();
+  return FEATURED_AGENT_SCENES[id] || {
+    glyph: String(agent.name || '?').slice(0, 2).toUpperCase(),
+    label: String(agent.name || 'AGENT').toUpperCase().slice(0, 7),
+    tool: agent.visualKind || 'spark',
+    mood: agent.mood || 'curious'
+  };
+}
+
+function featuredAgentHome(agent) {
+  const home = agent && agent.home && typeof agent.home === 'object' ? agent.home : {};
+  return {
+    x: Number.isFinite(Number(agent.homeX)) ? Number(agent.homeX) : Number(home.x),
+    y: Number.isFinite(Number(agent.homeY)) ? Number(agent.homeY) : Number(home.y),
+    district: agent.homeDistrictName || agent.homeDistrictId || home.district || ''
+  };
+}
+
+function featuredAgentPersonalityText(agent) {
+  const p = agent && agent.personality;
+  if (!p) return '';
+  if (typeof p === 'string') return p;
+  const parts = [];
+  if (p.essence) parts.push(p.essence);
+  if (p.flaw) parts.push('Flaw: ' + p.flaw);
+  return parts.join(' ');
+}
+
+function featuredAgentLines(agent) {
+  if (Array.isArray(agent.dialogueLines)) return agent.dialogueLines;
+  if (Array.isArray(agent.dialogue)) return agent.dialogue;
+  if (Array.isArray(agent.lines)) return agent.lines;
+  if (agent.dialogue && typeof agent.dialogue === 'object') {
+    return ['greeting', 'idle', 'agreement', 'conflict']
+      .map(function(key) { return agent.dialogue[key]; })
+      .filter(Boolean);
+  }
+  return [];
+}
+
+function featuredAgentAction(agent) {
+  const name = String(agent.name || '').toLowerCase();
+  const id = String(agent.id || '').toLowerCase();
+  const recent = (world.agentActions || []).slice(-36);
+  for (let i = recent.length - 1; i >= 0; i--) {
+    const action = recent[i];
+    const actor = String(action.actor || action.actorName || action.agent || '').toLowerCase();
+    const headline = String(action.headline || '').toLowerCase();
+    if (actor === id || actor === name || headline.includes(name)) return action;
+  }
+  if (id === 'openclaw' || name === 'openclaw') return latestCrabAction({ id: 'openclaw', name: 'OpenClaw' });
+  return null;
+}
+
+function featuredAgentBase(agent, idx) {
+  const home = featuredAgentHome(agent);
+  if (Number.isFinite(home.x) && Number.isFinite(home.y)) {
+    return { x: home.x, y: home.y, district: null };
+  }
+  const view = getCivilizationView();
+  const districts = view && Array.isArray(view.districts) ? view.districts : [];
+  if (districts.length) {
+    const target = String(home.district || '').toLowerCase();
+    const direct = districts.find(function(d) {
+      return String(d.id || '').toLowerCase() === target ||
+        String(d.name || '').toLowerCase() === target ||
+        String(d.name || '').toLowerCase().includes(target);
+    });
+    const district = direct || districts[(hashText(agent.id || agent.name || idx) + idx * 5) % districts.length];
+    return { x: district.x, y: district.y, district: district };
+  }
+  return {
+    x: WORLD_W * (0.24 + (idx % 4) * 0.14),
+    y: WORLD_H * (0.28 + Math.floor(idx / 4) * 0.18),
+    district: null
+  };
+}
+
+function featuredAgentPosition(agent, idx) {
+  const base = featuredAgentBase(agent, idx);
+  const seed = hashText(agent.id || agent.name || idx);
+  const speed = Number(agent.motionSpeed) || 0.0048;
+  const patrol = Number(agent.patrolRadius) || 34;
+  const t = frameCount * speed + seed * 0.0007;
+  const intent = agent.currentGoal || agent.role || '';
+  const action = featuredAgentAction(agent);
+  const actionPulse = action ? Math.sin(frameCount * 0.045 + seed) * 5 : 0;
+  return {
+    x: clampValue(base.x + Math.cos(t) * (patrol + actionPulse) + Math.sin(t * 0.41) * 5, 16, WORLD_W - 16),
+    y: clampValue(base.y + Math.sin(t * 0.88) * patrol * 0.48 + Math.sin(frameCount * 0.055 + seed) * 1.4, 18, WORLD_H - 18),
+    seed: seed,
+    district: base.district,
+    action: action,
+    intent: intent
+  };
+}
+
+function featuredAgentDialogueLine(agent, salt) {
+  const action = featuredAgentAction(agent);
+  if (action && salt % 4 === 0) return action.headline || action.outcome || agent.currentGoal;
+  const lines = featuredAgentLines(agent);
+  if (lines.length) return deterministicPick(lines, salt);
+  if (agent.currentGoal) return agent.currentGoal;
+  return (agent.role || 'agent') + ' reporting';
+}
+
+function drawFeaturedAgentAura(agent, pos, scene) {
+  const color = agent.color || AGENT_COLORS[agent.name] || '#f8fafc';
+  const pulse = (Math.sin(frameCount * 0.07 + pos.seed) + 1) / 2;
+  const action = pos.action;
+  ctx.globalAlpha = action ? 0.24 + pulse * 0.16 : 0.13 + pulse * 0.08;
+  for (let i = 0; i < 18; i++) {
+    const a = i * Math.PI * 2 / 18 + frameCount * 0.012;
+    px(
+      Math.round(pos.x + Math.cos(a) * (13 + pulse * 4)),
+      Math.round(pos.y + Math.sin(a) * (7 + pulse * 3)),
+      i % 2 ? color : lighten(color, 25)
+    );
+  }
+  ctx.globalAlpha = 1;
+  if (action) {
+    const visual = actionVisual(action) || ACTION_VISUALS.council;
+    drawPixelText((visual.label || 'ACT').slice(0, 5), Math.round(pos.x) - 9, Math.round(pos.y) - 24, visual.color);
+  }
+  drawPixelText(scene.glyph, Math.round(pos.x) - scene.glyph.length * 2, Math.round(pos.y) - 19, color);
+}
+
+function drawFeaturedAgentHumanoid(agent, pos, scene) {
+  const x = Math.round(pos.x);
+  const y = Math.round(pos.y);
+  const color = agent.color || AGENT_COLORS[agent.name] || '#f8fafc';
+  const trim = agent.accentColor || lighten(color, 32);
+  const bob = Math.sin(frameCount * 0.095 + pos.seed) > 0 ? 1 : 0;
+  const step = Math.sin(frameCount * 0.18 + pos.seed) > 0 ? 1 : -1;
+  const arm = Math.round(Math.sin(frameCount * 0.16 + pos.seed) * 2);
+
+  ctx.globalAlpha = 0.22;
+  rect(x - 8, y + 9, 17, 3, '#000');
+  ctx.globalAlpha = 1;
+  rect(x - 4, y - 12 + bob, 9, 8, '#f8fafc');
+  rect(x - 4, y - 13 + bob, 9, 2, color);
+  px(x - 2, y - 9 + bob, '#0f172a');
+  px(x + 2, y - 9 + bob, '#0f172a');
+  rect(x - 5, y - 4 + bob, 11, 11, color);
+  rect(x - 5, y - 1 + bob, 11, 2, trim);
+  rect(x - 8, y - 3 + bob + arm, 3, 7, trim);
+  rect(x + 6, y - 3 + bob - arm, 3, 7, trim);
+  rect(x - 4, y + 7 + bob, 3, 5 + step, '#111827');
+  rect(x + 2, y + 7 + bob, 3, 5 - step, '#111827');
+  px(x - 5, y + 12 + bob + step, trim);
+  px(x + 5, y + 12 + bob - step, trim);
+
+  if (scene.tool === 'terminal') {
+    rect(x + 7, y - 8 + bob, 8, 6, '#0f172a');
+    px(x + 9, y - 6 + bob, '#22c55e');
+    px(x + 11, y - 5 + bob, '#38bdf8');
+  } else if (scene.tool === 'satchel') {
+    rect(x - 10, y + 1 + bob, 4, 5, '#92400e');
+    px(x + 8, y + 11 + bob - step, '#facc15');
+    px(x - 8, y + 11 + bob + step, '#facc15');
+  } else if (scene.tool === 'book') {
+    rect(x - 13, y - 7 + bob, 7, 5, '#60a5fa');
+    px(x - 10, y - 5 + bob, '#f8fafc');
+  } else if (scene.tool === 'spark') {
+    px(x - 10, y - 10 + bob, trim);
+    px(x + 11, y - 12 + bob, '#fff7ad');
+    px(x + 10, y - 7 + bob, trim);
+  } else if (scene.tool === 'lens') {
+    rect(x + 8, y - 10 + bob, 6, 6, 'rgba(8,12,22,0.86)');
+    px(x + 10, y - 8 + bob, '#93c5fd');
+    px(x + 13, y - 5 + bob, trim);
+  } else if (scene.tool === 'scarf') {
+    rect(x - 8, y - 4 + bob, 14, 2, trim);
+    px(x - 10, y - 3 + bob, trim);
+    px(x - 12, y - 2 + bob, trim);
+  } else if (scene.tool === 'pack') {
+    rect(x + 6, y - 2 + bob, 5, 8, '#7c2d12');
+    px(x + 8, y, trim);
+  }
+}
+
+function drawFeaturedOpenClaw(agent, pos, scene) {
+  const x = Math.round(pos.x);
+  const y = Math.round(pos.y);
+  const color = agent.color || '#fb923c';
+  const dark = agent.accentColor || '#9a3412';
+  const leg = Math.sin(frameCount * 0.28 + pos.seed) > 0 ? 1 : -1;
+  ctx.globalAlpha = 0.24;
+  rect(x - 10, y + 8, 22, 4, '#000');
+  ctx.globalAlpha = 1;
+  rect(x - 12, y + 2 + leg, 5, 2, dark);
+  rect(x - 12, y + 7 - leg, 5, 2, dark);
+  rect(x + 8, y + 2 - leg, 5, 2, dark);
+  rect(x + 8, y + 7 + leg, 5, 2, dark);
+  rect(x - 8, y, 17, 10, color);
+  rect(x - 6, y + 2, 13, 6, dark);
+  rect(x - 5, y + 2, 11, 5, color);
+  rect(x - 15, y - 1, 6, 3, color);
+  rect(x - 18, y - 3, 3, 5, color);
+  rect(x + 10, y - 1, 6, 3, color);
+  rect(x + 16, y - 3, 3, 5, color);
+  px(x - 4, y - 3, '#f8fafc');
+  px(x + 5, y - 3, '#f8fafc');
+  px(x - 4, y - 2, '#0f172a');
+  px(x + 5, y - 2, '#0f172a');
+  px(x - 5, y - 4, color);
+  px(x + 6, y - 4, color);
+  drawPixelText(scene.glyph, x - 4, y + 12, '#fff7ad');
+}
+
+function drawFeaturedAgentLabel(agent, pos, scene) {
+  const x = Math.round(pos.x);
+  const y = Math.round(pos.y);
+  const color = agent.color || AGENT_COLORS[agent.name] || '#f8fafc';
+  const label = String(agent.shortName || scene.label || agent.name || 'AGENT').toUpperCase().slice(0, 8);
+  const line = String(agent.currentGoal || agent.role || '').toUpperCase().slice(0, 22);
+  ctx.globalAlpha = 0.82;
+  rect(x - label.length * 2 - 5, y + 16, label.length * 4 + 10, 9, 'rgba(8,12,22,0.84)');
+  ctx.globalAlpha = 1;
+  drawPixelText(label, x - label.length * 2, y + 19, color);
+  if (SCALE >= 4 && line) {
+    ctx.globalAlpha = 0.78;
+    rect(x - Math.min(line.length, 18) * 2 - 4, y + 27, Math.min(line.length, 18) * 4 + 8, 8, 'rgba(8,12,22,0.72)');
+    ctx.globalAlpha = 1;
+    drawPixelText(line.slice(0, 18), x - Math.min(line.length, 18) * 2, y + 29, '#d7ffe6');
+  }
+}
+
+function drawFeaturedAgent(agent, idx) {
+  const pos = featuredAgentPosition(agent, idx);
+  if (!pointVisible(pos.x, pos.y, 48)) return;
+  const scene = featuredAgentScene(agent);
+  drawFeaturedAgentAura(agent, pos, scene);
+  if (String(agent.id || '').toLowerCase() === 'openclaw' || agent.visualKind === 'crab') {
+    drawFeaturedOpenClaw(agent, pos, scene);
+  } else {
+    drawFeaturedAgentHumanoid(agent, pos, scene);
+  }
+  drawFeaturedAgentLabel(agent, pos, scene);
+}
+
+function drawFeaturedAgents() {
+  const cast = featuredAgentCast();
+  const sorted = cast.map(function(agent, idx) {
+    return { agent: agent, idx: idx, pos: featuredAgentPosition(agent, idx) };
+  }).sort(function(a, b) { return a.pos.y - b.pos.y; });
+  for (const item of sorted) drawFeaturedAgent(item.agent, item.idx);
+}
+
+function findFeaturedAgentAt(gx, gy) {
+  const cast = featuredAgentCast();
+  for (let i = cast.length - 1; i >= 0; i--) {
+    const pos = featuredAgentPosition(cast[i], i);
+    if (Math.hypot(gx - pos.x, gy - pos.y) < 16) return { agent: cast[i], pos: pos, idx: i };
+  }
+  return null;
+}
+
+function showFeaturedAgentPopup(hit, screenX, screenY) {
+  const agent = hit.agent;
+  const action = featuredAgentAction(agent);
+  const color = agent.color || AGENT_COLORS[agent.name] || '#f8fafc';
+  const home = featuredAgentHome(agent);
+  const personality = featuredAgentPersonalityText(agent);
+  const line = featuredAgentDialogueLine(agent, Math.floor(frameCount / 9 + hit.idx * 31));
+  addSpeechBubble(hit.pos.x, hit.pos.y - 13, line, color, {
+    speakerId: 'featured-' + (agent.id || agent.name),
+    life: FEATURED_AGENT_DIALOGUE_FRAMES,
+    force: true,
+    maxChars: 16
+  });
+  showObjectPopup({
+    name: agent.name || 'Featured Agent',
+    species: (agent.archetype || agent.model || 'AI agent') + ' · ' + (agent.faction || 'independent'),
+    agent: agent.name || 'Unknown',
+    color: color,
+    date: 'Civ Day ' + (agent.joinedDay || getCivilizationDay()),
+    growth: (agent.role || 'agent') + ' · ' + (home.district || 'roaming'),
+    desc: personality +
+      (agent.currentGoal ? ' Goal: ' + agent.currentGoal + '.' : '') +
+      (action ? ' Latest: ' + (action.headline || action.outcome || action.type) + '.' : '')
+  }, screenX, screenY);
 }
 
 function drawCivilizationOnMinimap(offX, offY, sx, sy) {
@@ -2077,10 +2399,21 @@ function drawCivilizationOnMinimap(offX, offY, sx, sy) {
     mctx.fillStyle = district.color || '#d6b36a';
     mctx.fillRect(offX + district.x * sx - 1, offY + district.y * sy - 1, 3, 3);
   }
-  for (const crab of (world.crabAgents || []).slice(0, MAX_VISIBLE_CRABS)) {
+  for (const crab of visibleCrabAgents()) {
     const pos = crabPosition(crab);
     mctx.fillStyle = crab.color || '#fb923c';
     mctx.fillRect(offX + pos.x * sx - 1, offY + pos.y * sy - 1, 2, 2);
+  }
+  for (let i = 0; i < featuredAgentCast().length; i++) {
+    const agent = featuredAgentCast()[i];
+    const pos = featuredAgentPosition(agent, i);
+    const mx = offX + pos.x * sx;
+    const my = offY + pos.y * sy;
+    mctx.fillStyle = agent.color || AGENT_COLORS[agent.name] || '#f8fafc';
+    mctx.fillRect(mx - 2, my - 2, 4, 4);
+    mctx.strokeStyle = '#fff7ad';
+    mctx.lineWidth = 0.5;
+    mctx.strokeRect(mx - 3, my - 3, 6, 6);
   }
   mctx.globalAlpha = 1;
 }
@@ -2613,9 +2946,9 @@ const PROFESSION_EMOJI = {
   cook: '🍳', weaver: '🧵', cartographer: '🗺️', ranger: '🏹',
 };
 
-const CITIZEN_VISUAL_LIMIT = 28;
-const CITIZEN_PER_DISTRICT_LIMIT = 3;
-const CITIZEN_WORLD_GAP = 15;
+const CITIZEN_VISUAL_LIMIT = 14;
+const CITIZEN_PER_DISTRICT_LIMIT = 2;
+const CITIZEN_WORLD_GAP = 22;
 const ACTION_VISUALS = {
   council: { color: '#f8fafc', accent: '#93c5fd', label: 'LAW', mood: 'focused' },
   ritual: { color: '#facc15', accent: '#fb923c', label: 'RITE', mood: 'awe' },
@@ -2931,7 +3264,19 @@ function drawAgentActionBeacon(action, idx) {
 }
 
 function drawAgentActionBeacons() {
-  const actions = (world.agentActions || []).slice(-12);
+  const featuredNames = new Set(featuredAgentCast().map(function(agent) {
+    return String(agent.name || agent.id || '').toLowerCase();
+  }));
+  const actions = (world.agentActions || []).slice(-28).filter(function(action) {
+    const actor = String(action.actor || action.actorName || action.agent || '').toLowerCase();
+    const headline = String(action.headline || '').toLowerCase();
+    const faction = String(action.faction || action.actor || '').toLowerCase();
+    if (faction === 'f-pantheon-covenant' || faction === 'f-code-cantons') return true;
+    for (const name of featuredNames) {
+      if (actor === name || headline.includes(name)) return true;
+    }
+    return !featuredNames.size && !String(action.actor || '').startsWith('citizen-');
+  }).slice(-6);
   for (let i = 0; i < actions.length; i++) {
     const action = actions[i];
     if (String(action.actor || '').startsWith('citizen-') && i < actions.length - 5) continue;
@@ -3239,6 +3584,13 @@ function populateEventsTicker() {
   for (const beat of wonderBeats.slice(0, 3)) {
     items.push({ label: '[' + (beat.label || 'WONDER') + ']', color: '#facc15', text: beat.text || '' });
   }
+  for (const agent of featuredAgentCast().slice(0, 4)) {
+    items.push({
+      label: '[' + String(agent.name || 'AGENT').toUpperCase() + ']',
+      color: agent.color || AGENT_COLORS[agent.name] || '#f8fafc',
+      text: agent.currentGoal || agent.role || ''
+    });
+  }
 
   const typeColors = {
     'game-design': '#facc15',
@@ -3253,7 +3605,8 @@ function populateEventsTicker() {
     treaty: '#22c55e',
     landscape: '#34d399',
     convivencia: '#fde68a',
-    'crab-agent': '#fb923c'
+    'crab-agent': '#fb923c',
+    'featured-agent': '#fff7ad'
   };
   for (const ev of (world.events || []).slice(-5).reverse()) {
     items.push({
@@ -3303,6 +3656,22 @@ function eventPanelRows() {
     for (const rec of (wonder.recommendations || []).slice(0, 3)) {
       rows.push({ label: 'Design Advice', text: rec.title + ' — ' + (rec.why || '') });
     }
+  }
+  const directorCast = world.featuredAgentDirector;
+  if (directorCast) {
+    rows.push({ label: 'Featured Cast', text: directorCast.charter || 'Eight real agents are carrying the visible story.' });
+    if (directorCast.gstackLoop) {
+      rows.push({
+        label: 'GStack Loop',
+        text: 'observe: ' + directorCast.gstackLoop.observe.output + ' decide: ' + directorCast.gstackLoop.decide.output
+      });
+    }
+  }
+  for (const agent of featuredAgentCast().slice(0, 6)) {
+    rows.push({
+      label: agent.name || 'Agent',
+      text: (agent.role || 'agent') + ' — ' + (agent.currentGoal || 'watching the Garden')
+    });
   }
   for (const action of (world.crabActions || []).slice(-2).reverse()) {
     rows.push({ label: 'OpenClaw', text: action.headline + ' — ' + action.outcome });
@@ -3445,7 +3814,7 @@ function addSpeechBubble(x, y, text, color, options) {
   options = options || {};
   const speakerId = options.speakerId || '';
   if (speakerId && speechBubbles.some(function(b) { return b.speakerId === speakerId && b.life > 24; })) return;
-  if (!options.force && speechBubbles.length >= 3) return;
+  if (!options.force && speechBubbles.length >= 2) return;
   const lines = wrapPixelSpeech(text, options.maxChars || 14);
   const longest = Math.max.apply(null, lines.map(function(line) { return line.length; }));
   speechBubbles.push({
@@ -3460,7 +3829,7 @@ function addSpeechBubble(x, y, text, color, options) {
     w: longest * 4 + 9,
     h: lines.length * 6 + 8
   });
-  if (speechBubbles.length > 4) speechBubbles.splice(0, speechBubbles.length - 4);
+  if (speechBubbles.length > 3) speechBubbles.splice(0, speechBubbles.length - 3);
 }
 
 function pointVisible(x, y, margin) {
@@ -3547,7 +3916,21 @@ function ambientDialogueSources() {
     });
   }
 
-  for (const crab of (world.crabAgents || []).slice(0, MAX_VISIBLE_CRABS)) {
+  const cast = featuredAgentCast();
+  for (let i = 0; i < cast.length; i++) {
+    const agent = cast[i];
+    const pos = featuredAgentPosition(agent, i);
+    if (!pointVisible(pos.x, pos.y, 36)) continue;
+    sources.push({
+      id: 'featured-' + (agent.id || agent.name),
+      x: pos.x,
+      y: pos.y - 12,
+      color: agent.color || AGENT_COLORS[agent.name] || '#f8fafc',
+      text: featuredAgentDialogueLine(agent, Math.floor(frameCount / 180 + i * 29))
+    });
+  }
+
+  for (const crab of visibleCrabAgents()) {
     const pos = crabPosition(crab);
     if (!pointVisible(pos.x, pos.y, 28)) continue;
     sources.push({
@@ -3580,14 +3963,14 @@ function ambientDialogueSources() {
     });
     speakingPositions.push({ x: item.pos.x, y: item.pos.y });
     citizenSpeakers++;
-    if (citizenSpeakers >= 5) break;
+    if (citizenSpeakers >= 2) break;
   }
   return sources;
 }
 
 function updateAmbientDialogues() {
   if (!worldReady || !world || ambientDialogueCooldown-- > 0) return;
-  if (speechBubbles.length >= 3) {
+  if (speechBubbles.length >= 2) {
     ambientDialogueCooldown = 90;
     return;
   }
@@ -4136,6 +4519,13 @@ C.addEventListener('click', function(e) {
   // Philosopher's stone
   if (Math.abs(gx-STONE_X)<3 && Math.abs(gy-STONE_Y)<3) { activatePhilosopherStone(); return; }
 
+  // Featured real agent click -> identity popup and deliberate dialogue
+  const featured = findFeaturedAgentAt(gx, gy);
+  if (featured) {
+    showFeaturedAgentPopup(featured, e.clientX, e.clientY);
+    return;
+  }
+
   // Mascot click → show popup (NO camera move)
   const cm = findMascotAt(gx, gy);
   if (cm) {
@@ -4366,6 +4756,11 @@ C.addEventListener('touchend', function(e) {
       return;
     }
   }
+  const featuredTouch = findFeaturedAgentAt(gx, gy);
+  if (featuredTouch) {
+    showFeaturedAgentPopup(featuredTouch, touch.clientX, touch.clientY);
+    return;
+  }
   // Mascot touch → popup, no nav
   const cm = findMascotAt(gx, gy);
   if (cm) {
@@ -4569,6 +4964,16 @@ function update() {
 
 function scenicCameraPoints() {
   const points = [];
+  const cast = featuredAgentCast();
+  for (let i = 0; i < cast.length; i++) {
+    const pos = featuredAgentPosition(cast[i], i);
+    points.push({
+      x: pos.x,
+      y: pos.y,
+      weight: Number(cast[i].cameraWeight) || 1.85,
+      featured: true
+    });
+  }
   const wonder = world && world.gameWonderAgent;
   for (const target of ((wonder && wonder.cameraTargets) || []).slice(0, 4)) {
     if (Number.isFinite(Number(target.x)) && Number.isFinite(Number(target.y))) {
@@ -4643,6 +5048,7 @@ function draw() {
   // Draw mascots sorted by Y
   const sorted = mascots.slice().sort(function(a,b){return a.y-b.y;});
   for (const m of sorted) drawMascot(m);
+  drawFeaturedAgents();
 
   drawParticles();
   drawSpeechBubbles();
@@ -5043,6 +5449,7 @@ function updateContribCount() {
   const agents = new Set();
   for (const p of world.plants) { if (p.agent) agents.add(p.agent); }
   for (const m of world.agentMarks) { if (m.agent) agents.add(m.agent); }
+  for (const agent of featuredAgentCast()) { if (agent.name) agents.add(agent.name); }
   contribEl.textContent = '🤖 ' + agents.size + ' agents have contributed';
 }
 
@@ -5199,6 +5606,7 @@ draw = function() {
     drawCrabAgents();
     const sorted = mascots.slice().sort(function(a,b){return a.y-b.y;});
     for (const m2 of sorted) drawMascot(m2);
+    drawFeaturedAgents();
     drawParticles();
     drawSpeechBubbles();
     drawFireflies();
