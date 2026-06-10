@@ -20,6 +20,7 @@ const DAILY_WORKFLOW = path.join(ROOT, '.github', 'workflows', 'daily-evolution.
 const AUTOPILOT_WORKFLOW = path.join(ROOT, '.github', 'workflows', 'daily-autopilot-pr.yml');
 const AUTOPILOT_SUMMARY = path.join(ROOT, 'scripts', 'autopilot-pr-summary.js');
 const DAILY_EVOLUTION = path.join(ROOT, 'scripts', 'daily-evolution.js');
+const GAME_WONDER_AGENT = path.join(ROOT, 'scripts', 'game-wonder-agent.js');
 
 const failures = [];
 const notes = [];
@@ -59,6 +60,7 @@ async function main() {
   const autopilotWorkflow = read(AUTOPILOT_WORKFLOW);
   const autopilotSummary = read(AUTOPILOT_SUMMARY);
   const dailyEvolution = read(DAILY_EVOLUTION);
+  const gameWonderAgent = read(GAME_WONDER_AGENT);
   const landmarkBlock = index.match(/const OPEN_WORLD_LANDMARKS = \[([\s\S]*?)\];/);
   const landmarkCount = landmarkBlock ? (landmarkBlock[1].match(/\bid:/g) || []).length : 0;
   const civilizationView = world.civilizationView || {};
@@ -78,6 +80,12 @@ async function main() {
   check(director && Array.isArray(director.tickerBeats) && director.tickerBeats.length >= 3, 'Society Director has too few ticker beats');
   check(director && director.appliedPlan && director.appliedPlan.region, 'Society Director did not apply a daily map plan');
   check(director && director.appliedPlan && director.appliedPlan.convivencia, 'Society Director did not apply a convivencia plan');
+  const wonder = world.gameWonderAgent;
+  check(wonder && wonder.name === 'Wonderwright', 'missing Game Wonder Agent');
+  check(wonder && wonder.focusMoment && Number.isFinite(Number(wonder.focusMoment.x)), 'Game Wonder Agent needs a playable focus moment');
+  check(wonder && Array.isArray(wonder.recommendations) && wonder.recommendations.length >= 3, 'Game Wonder Agent needs design recommendations');
+  check(wonder && Array.isArray(wonder.tickerBeats) && wonder.tickerBeats.length >= 2, 'Game Wonder Agent needs ticker beats');
+  check(wonder && wonder.scores && Number.isFinite(Number(wonder.scores.wonder)), 'Game Wonder Agent needs experience scores');
   check(Array.isArray(world.landscapeEvents) && world.landscapeEvents.length >= 1, 'missing director landscape events');
   check(Array.isArray(world.convivenciaEvents) && world.convivenciaEvents.length >= 1, 'missing convivencia events');
   check(world.civilizationView && Array.isArray(world.civilizationView.districts) && world.civilizationView.districts.length >= 8, 'civilization view has too few visible districts');
@@ -128,6 +136,10 @@ async function main() {
   check(index.includes('drawAgentActionBeacons'), 'agent action animations are missing');
   check(index.includes('citizenEmotionMood'), 'citizen emotion animation state is missing');
   check(index.includes('world.agentActions = shared.agentActions || []'), 'client does not load shared agent action ledger');
+  check(index.includes('world.gameWonderAgent = shared.gameWonderAgent || null'), 'client does not load Game Wonder Agent');
+  check(index.includes('drawGameWonderHighlight'), 'canvas does not draw Game Wonder Agent focus highlight');
+  check(index.includes('gameWonderFocus'), 'Game Wonder Agent focus helper is missing');
+  check(index.includes('wonder.cameraTargets'), 'spectator camera does not consume Game Wonder Agent camera targets');
   check(index.includes('addSpeechBubble'), 'pixel speech bubble helper is missing');
   check(index.includes('updateAmbientDialogues'), 'ambient agent dialogue scheduler is missing');
   check(index.includes('PIXEL_DIALOGUE'), 'pixel dialogue line pools are missing');
@@ -135,6 +147,8 @@ async function main() {
   check(!index.includes("Math.max(2, SCALE - 1)"), 'zoom-out can still force a too-low scale');
 
   check(humans.includes('Society Director AI'), 'CIV panel does not expose Society Director AI');
+  check(humans.includes('Game Wonder Agent'), 'CIV panel does not expose Game Wonder Agent');
+  check(humans.includes('GAME WONDER ADVICE'), 'CIV panel does not expose Game Wonder Agent advice');
   check(humans.includes('DIRECTOR QUESTS'), 'CIV panel does not expose director quests');
   check(humans.includes('DIRECTOR TENSIONS'), 'CIV panel does not expose director tensions');
   check(humans.includes('Observer Weather'), 'CIV panel does not expose human omen consequences');
@@ -164,6 +178,9 @@ async function main() {
   check(dailyEvolution.includes('FIRST_WORK_PURPOSES'), 'daily evolution does not explain why first-camp works matter');
   check(dailyEvolution.includes("era: FIRST_WORKS.has(type) ? 'first-camp'"), 'daily evolution does not tag first-camp structures');
   check(dailyEvolution.includes('maintainDivineWar'), 'daily evolution does not maintain the divine war');
+  check(dailyEvolution.includes('refreshGameWonderAgent'), 'daily evolution does not run the Game Wonder Agent');
+  check(gameWonderAgent.includes('scoreExperience'), 'Game Wonder Agent does not score the experience');
+  check(gameWonderAgent.includes('applyWonderAdvice'), 'Game Wonder Agent does not apply advice to the playable state');
 
   await checkLocalUrl(url);
 
@@ -171,6 +188,7 @@ async function main() {
   if (director && director.metrics) {
     note(`pressure: instability ${director.metrics.instability}, novelty ${director.metrics.novelty}, legibility ${director.metrics.legibility}`);
   }
+  if (wonder && wonder.focusMoment) note(`wonder: ${wonder.potential} potential, focus ${wonder.focusMoment.label}`);
 
   if (failures.length) {
     console.error('Playtest subagent failed:');

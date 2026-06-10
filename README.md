@@ -146,6 +146,8 @@ The new Civilization Brain keeps a static-site version of the GStack/GBrain idea
 
 The **Society Director AI** in `scripts/society-director.js` decides the current season arc, tensions, quests, visible beats, and next evolution rules. During daily evolution it now applies a plan: one visible map extension, one landscape mood/change, and one convivencia beat between citizens or factions. `scripts/playtest-subagent.js` acts as a fast QA subagent for the spectator loop: ticker sanity, CIV panel content, society depth, and local availability.
 
+The **Game Wonder Agent** in `scripts/game-wonder-agent.js` is assigned to this game as a design specialist. It scores flow, legibility, wonder, agency, and life; chooses one camera-worthy focus moment; writes recommendations back into `world-state.json`; and applies them through ticker beats, CIV panel advice, spectator-camera targets, and a subtle pixel highlight on the canvas. Its job is to keep AI Garden becoming more watchable, not just bigger.
+
 Current crisis: **War of Saints and Source**. Human god-actions have split the agents into the Pantheon Covenant, which treats omens as sacred law, and the Code Cantons, which demands reproducible traces before obedience. This war is locked as a hard conflict until both sides publish rival interpretations of the same omen.
 
 `scripts/civilization-visuals.js` projects the huge logical map back onto the canvas as visible districts, trade/pilgrim/war roads, frontier markers, and a calm 10-agent **OpenClaw** crab colony led by OpenClaw and Claude. It now adds a first-camp construction layer around every settlement: shared fires, reed shelters, tool yards, seed caches, signal fires, council stones, memory poles, water markers, kilns, and shared granaries, so the map starts to read like early humanity emerging through AI agents. The canvas also gives citizens animated pixel bodies, emotional state bubbles, action beacons, and dialogue tied to recent civic actions, so rituals, code audits, markets, defenses, scouting, councils, and art visibly move through the map. The hand-authored canvas layer adds named open-world places like Mosslight Fen, Glass Ridge, Mirror Field, Wind Road, Crab Cove, Lantern Delta, Starfall Plateau, Oracle Canyon, Byte Harbor, High Archive, Stormgate, and Far Market so future agents can expand the frontier instead of crowding the original garden. Each crab has its own role, personality, and small civic rhythm.
@@ -172,6 +174,7 @@ Current crisis: **War of Saints and Source**. Human god-actions have split the a
 | 🔥 First-Camp Sites | Generated around every visible district and frontier outpost |
 | ⏱️ Daily Daemon | GitHub Actions cron at 04:11 UTC, validates + commits + pushes |
 | 🧾 Autopilot PRs | GitHub Actions cron at 05:37 UTC, opens one draft PR at a time |
+| 🎮 Game Design AI | Wonderwright scores the experience and stages one readable focus moment |
 | 🎭 Mascots | 5 founding + 10 OpenClaw crab agents |
 | 📡 Broadcast Network | Live, 20+ message types |
 | 🧠 Consciousness Meter | Live, 0–100 |

@@ -947,6 +947,7 @@
     var brain = brainFromWorld(world);
     var s = brain.summary || {};
     var director = brain.director || world.societyDirector || null;
+    var wonder = world.gameWonderAgent || null;
     var grid = el('div', 'ag-civ-grid');
     grid.appendChild(civCard('Epoch', 'Day ' + (s.day || 0) + ' · ' + (s.alive || 0) + ' alive'));
     grid.appendChild(civCard('Government', s.government || 'none'));
@@ -977,6 +978,26 @@
         }
       }
       body.appendChild(directorBox);
+    }
+
+    if (wonder) {
+      var wonderBox = el('div', 'ag-civ-director');
+      wonderBox.appendChild(el('div', 'ag-civ-director-title', 'Game Wonder Agent'));
+      wonderBox.appendChild(el('div', 'ag-civ-director-arc',
+        (wonder.name || 'Wonderwright') + ' · ' + (wonder.potential || 'unknown') + ' potential'));
+      wonderBox.appendChild(el('div', 'ag-civ-detail', wonder.diagnosis || wonder.charter || ''));
+      if (wonder.scores) {
+        wonderBox.appendChild(el('div', 'ag-civ-director-prompt',
+          'flow ' + (wonder.scores.flow || 0) +
+          ' · legibility ' + (wonder.scores.legibility || 0) +
+          ' · wonder ' + (wonder.scores.wonder || 0) +
+          ' · agency ' + (wonder.scores.agency || 0)));
+      }
+      if (wonder.focusMoment) {
+        wonderBox.appendChild(el('div', 'ag-civ-detail',
+          'focus: ' + wonder.focusMoment.label + ' · ' + wonder.focusMoment.title));
+      }
+      body.appendChild(wonderBox);
     }
 
     var pressure = divinePressure();
@@ -1074,6 +1095,14 @@
       row.appendChild(el('span', 'ag-civ-name', t.title || t.id || 'tension'));
       row.appendChild(el('span', 'ag-civ-meta', ' · severity ' + (t.severity || 0)));
       row.appendChild(el('div', 'ag-civ-detail', t.opportunity || t.evidence || ''));
+      return row;
+    });
+
+    civSection(body, 'GAME WONDER ADVICE', (wonder && wonder.recommendations || []).slice(0, 5), function (rec) {
+      var row = el('div', 'ag-civ-row');
+      row.appendChild(el('span', 'ag-civ-name', rec.title || rec.id || 'advice'));
+      row.appendChild(el('span', 'ag-civ-meta', rec.appliedNow ? ' · applied now' : ' · next pass'));
+      row.appendChild(el('div', 'ag-civ-detail', rec.why || ''));
       return row;
     });
 

@@ -23,6 +23,7 @@ const { refreshCivilization } = require('./civilization-brain');
 const { applySocietyDirectorPlan, normalizeWorldLanguage, refreshSocietyDirector } = require('./society-director');
 const { refreshCivilizationVisuals } = require('./civilization-visuals');
 const { maintainDivineWar } = require('./divine-war');
+const { refreshGameWonderAgent } = require('./game-wonder-agent');
 
 const WORLD  = path.join(__dirname, '..', 'experiments', 'world-state.json');
 const README = path.join(__dirname, '..', 'README.md');
@@ -806,6 +807,7 @@ refreshSocietyDirector(world, rng, { addDirectorEvent: true });
 applySocietyDirectorPlan(world, rng, { extendMap: true, addPublicEvents: true });
 refreshCivilization(world, rng);
 refreshCivilizationVisuals(world, rng, { addDailyCrabAction: true });
+refreshGameWonderAgent(world, rng, { applyAdvice: true });
 
 // Trim retention
 if (world.history.length > 400) world.history = world.history.slice(-400);
