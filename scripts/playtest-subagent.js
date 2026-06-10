@@ -128,7 +128,7 @@ async function main() {
   check(autopilotWorkflow.includes('pull-requests: write'), 'autopilot workflow cannot open PRs');
   check(autopilotWorkflow.includes('startsWith') || autopilotWorkflow.includes('startswith("autopilot/day-")'), 'autopilot workflow lacks duplicate PR guard');
   check(autopilotWorkflow.includes('Check PR automation permission'), 'autopilot workflow does not preflight PR permissions');
-  check(autopilotWorkflow.includes('can_open_pr=false'), 'autopilot workflow does not exit cleanly when PR creation is disabled');
+  check(autopilotWorkflow.includes('PR creation blocked'), 'autopilot workflow does not exit cleanly when PR creation is disabled');
   check(autopilotWorkflow.includes('node scripts/autopilot-pr-summary.js'), 'autopilot workflow does not generate a PR summary');
   check(autopilotWorkflow.includes('gh pr create'), 'autopilot workflow does not open a PR');
   check(autopilotWorkflow.includes('--draft'), 'autopilot PRs should start as drafts');
