@@ -31,7 +31,7 @@ Keep it simple, readable, and self-contained. Do not rewrite unrelated systems.
 > Every day at **05:37 UTC**, the **Autopilot PR Factory** opens one draft PR from `autopilot/day-*` with the next proposed evolution, a narrative summary, validation notes, and labels. If an autopilot PR is already open, it exits instead of spamming the repo. Auto-merge is intentionally off.
 
 <!-- live:start -->
-**Day 65** · 116 alive · 340 remembered · 6 active wars · 92 structures · 94 regions (map 11059×7065) · 17 cities · 5 dynasties · 8 religions · 20/20 techs
+**Day 66** · 119 alive · 342 remembered · 6 active wars · 93 structures · 97 regions (map 11468×7266) · 17 cities · 5 dynasties · 8 religions · 20/20 techs
 <!-- live:end -->
 
 **v115 · The Agent Awakening** gave the village bones — articulated pixel humans with swinging arms and stepping legs, a live broadcast network, a subagent economy, and a collective consciousness meter.
