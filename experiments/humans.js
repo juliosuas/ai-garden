@@ -264,11 +264,13 @@
       '@keyframes ag-banner{0%{opacity:0;transform:translate(-50%,-10px);}15%{opacity:1;transform:translate(-50%,0);}85%{opacity:1;}100%{opacity:0;transform:translate(-50%,-6px);}}',
       /* Mobile */
       '@media (max-width:640px){',
-      '  .ag-chat{width:calc(100vw - 16px);max-height:300px;}',
+      '  .ag-chat{right:8px;bottom:52px;width:min(300px,calc(100vw - 16px));max-height:260px;}',
       '  .ag-god{width:132px;}',
       '  .ag-pantheon{top:44px;right:148px;width:calc(100vw - 164px);max-width:240px;}',
       '  .ag-omen-ledger{display:none;}',
       '  .ag-civ-grid{grid-template-columns:1fr 1fr;}',
+      '  body.mobile-tools-open .ag-chat{display:none;}',
+      '  body.mobile-tools-open .ag-god,body.mobile-tools-open .ag-pantheon{opacity:0;pointer-events:none;}',
       '}'
     ].join('\n');
     var s = document.createElement('style');
@@ -357,7 +359,7 @@
         method: 'POST',
         headers: { 'Content-Type': 'text/plain' },
         body: JSON.stringify(payload)
-      });
+      }).catch(function () {});
     } catch (_) {}
   }
 
@@ -1204,6 +1206,9 @@
     gh.addEventListener('click', function (e) {
       if (e.target === gh || e.target === gt || e.target === gc) god.classList.toggle('ag-collapsed');
     });
+    if (window.matchMedia && window.matchMedia('(max-width: 640px)').matches) {
+      god.classList.add('ag-collapsed');
+    }
     root.appendChild(god);
 
     // Pantheon panel
@@ -1240,6 +1245,9 @@
     pb.appendChild(ledger);
     pantheon.appendChild(pb);
     ph.addEventListener('click', function () { pantheon.classList.toggle('ag-collapsed'); });
+    if (window.matchMedia && window.matchMedia('(max-width: 640px)').matches) {
+      pantheon.classList.add('ag-collapsed');
+    }
     root.appendChild(pantheon);
 
     // Chat panel
@@ -1290,6 +1298,9 @@
     cbody.appendChild(tip);
     chat.appendChild(cbody);
     ch.addEventListener('click', function () { chat.classList.toggle('ag-collapsed'); });
+    if (window.matchMedia && window.matchMedia('(max-width: 640px)').matches) {
+      chat.classList.add('ag-collapsed');
+    }
     root.appendChild(chat);
 
     // Lore button + panel

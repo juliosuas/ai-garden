@@ -22,6 +22,7 @@ const AUTOPILOT_SUMMARY = path.join(ROOT, 'scripts', 'autopilot-pr-summary.js');
 const DAILY_EVOLUTION = path.join(ROOT, 'scripts', 'daily-evolution.js');
 const GAME_WONDER_AGENT = path.join(ROOT, 'scripts', 'game-wonder-agent.js');
 const FEATURED_AGENTS_SCRIPT = path.join(ROOT, 'scripts', 'featured-agents.js');
+const MUSIC = path.join(ROOT, 'experiments', 'music.js');
 
 const failures = [];
 const notes = [];
@@ -63,6 +64,7 @@ async function main() {
   const dailyEvolution = read(DAILY_EVOLUTION);
   const gameWonderAgent = read(GAME_WONDER_AGENT);
   const featuredAgentsScript = read(FEATURED_AGENTS_SCRIPT);
+  const music = read(MUSIC);
   const landmarkBlock = index.match(/const OPEN_WORLD_LANDMARKS = \[([\s\S]*?)\];/);
   const landmarkCount = landmarkBlock ? (landmarkBlock[1].match(/\bid:/g) || []).length : 0;
   const civilizationView = world.civilizationView || {};
@@ -131,6 +133,10 @@ async function main() {
   check(index.includes('ticker-track:hover'), 'ticker does not pause on hover');
   check(index.includes('toggleEventsPanel'), 'ticker does not open an event/detail panel');
   check(index.includes('id="controls-dock"'), 'observer controls are not grouped into one dock');
+  check(index.includes('id="mobile-menu-toggle"'), 'mobile tools menu button is missing');
+  check(index.includes('setMobileToolsOpen'), 'mobile tools drawer cannot be closed programmatically');
+  check(index.includes('mobile-tools-open'), 'mobile UI lacks a body state for keeping panels out of the way');
+  check(index.includes('id="mobile-dock-close"'), 'mobile tools drawer lacks an explicit close button');
   check(index.includes('id="nav-help"'), 'camera/navigation help panel is missing');
   check(index.includes('CAMERA GUIDE'), 'navigation help copy is missing');
   check(index.includes('id="agent-focus-btn"'), 'featured agent focus button is missing');
@@ -193,6 +199,13 @@ async function main() {
   check(humans.includes('convivencia:'), 'CIV panel does not expose applied convivencia plan');
   check(!humans.includes('cosmetic · agents do not see'), 'God Mode still says it is cosmetic');
   check(humans.includes("m.kind !== 'god'"), 'Observer Lounge may still render god spam');
+  check(humans.includes("chat.classList.add('ag-collapsed')"), 'mobile observer chat should start collapsed');
+  check(humans.includes('body.mobile-tools-open .ag-chat'), 'mobile tools drawer should move chat out of the way');
+
+  check(music.includes('HOOK_STEPS'), '8-bit music lacks a repeatable original hook');
+  check(music.includes('playNoiseBurst'), '8-bit music lacks chip noise percussion');
+  check(music.includes('playChipKick'), '8-bit music lacks a chiptune kick');
+  check(music.includes('ARP_STEPS'), '8-bit music lacks arpeggiated motion');
 
   check(dailyWorkflow.includes("cron: '11 4 * * *'"), 'daily evolution cron is missing');
   check(dailyWorkflow.includes('node scripts/playtest-subagent.js'), 'daily cron does not run the playtest subagent');

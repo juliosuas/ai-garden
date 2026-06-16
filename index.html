@@ -226,8 +226,17 @@ canvas:active { cursor: grabbing; }
   border-radius: 8px; padding: 8px; box-shadow: 0 8px 24px rgba(0,0,0,0.32);
 }
 #controls-dock .dock-group { display: flex; align-items: center; gap: 5px; }
+#controls-dock .mobile-dock-head { display: none; }
 #controls-dock .dock-label {
   color: #8ea99a; font-size: 10px; margin-right: 1px; white-space: nowrap;
+}
+#mobile-menu-toggle {
+  display: none;
+  position: fixed; right: 10px; bottom: 34px; z-index: 32;
+  width: 48px; height: 42px; align-items: center; justify-content: center;
+  background: rgba(8,12,18,0.94); border: 1px solid rgba(74,222,128,0.55);
+  color: #4ade80; font-size: 22px; font-family: monospace;
+  border-radius: 6px; box-shadow: 0 8px 24px rgba(0,0,0,0.38);
 }
 #zoom-controls {
   position: static; z-index: auto;
@@ -261,13 +270,47 @@ canvas:active { cursor: grabbing; }
 #music-btn:active { background: rgba(74,222,128,0.3); border-color: #4ade80; }
 #zoom-level { color: #4ade80; font-size: 11px; font-family: monospace; min-width: 24px; text-align: center; }
 @media (max-width: 760px) {
+  #mobile-menu-toggle { display: flex; }
+  body.mobile-tools-open #mobile-menu-toggle {
+    color: #0a0a14; background: #4ade80; border-color: #bbf7d0;
+  }
   #controls-dock {
     left: 8px; right: 8px; bottom: 34px; max-width: none;
-    gap: 5px; padding: 6px;
+    display: grid; grid-template-columns: 1fr; align-items: stretch;
+    gap: 8px; padding: 8px; max-height: min(58vh, 360px); overflow-y: auto;
+    transform: translateY(calc(100% + 54px)); opacity: 0; pointer-events: none;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    border-color: rgba(74,222,128,0.55);
+  }
+  #controls-dock.mobile-open {
+    transform: translateY(0); opacity: 1; pointer-events: auto;
+  }
+  #controls-dock .mobile-dock-head {
+    display: flex; align-items: center; justify-content: space-between;
+    color: #d7ffe6; font-size: 10px; letter-spacing: 1px;
+    border-bottom: 1px solid rgba(74,222,128,0.22); padding-bottom: 6px;
+  }
+  #mobile-dock-close {
+    width: 30px; height: 28px; background: transparent; border: 1px solid rgba(251,146,60,0.75);
+    color: #fb923c; border-radius: 4px; font-family: monospace; font-size: 16px;
+  }
+  #controls-dock .dock-group {
+    width: 100%; justify-content: center; flex-wrap: wrap;
   }
   #controls-dock .dock-label { display: none; }
   #zoom-controls button, #agent-focus-btn, #follow-btn, #photo-btn, #help-btn, #ambience-btn, #msg-board-btn, #music-btn {
-    height: 32px;
+    height: 34px;
+  }
+  #agent-focus-btn, #follow-btn, #ambience-btn { flex: 1 1 86px; min-width: 80px; }
+  #speed-control button { flex: 1 1 54px; min-width: 54px; }
+  body.mobile-tools-open #minimap-panel { display: none; }
+  #ui-bottom { display: none; }
+  #nav-help {
+    top: 50px; left: 8px; right: 8px; width: auto; max-width: none;
+    padding: 8px 42px 8px 9px;
+  }
+  #nav-help .nav-help-close {
+    top: 5px; right: 6px; width: 30px; height: 30px; font-size: 18px;
   }
 }
 
@@ -586,7 +629,9 @@ canvas:active { cursor: grabbing; }
   <div class="nav-help-note">Click named agents for goals, personality, and current scene.</div>
 </div>
 
+<button id="mobile-menu-toggle" type="button" aria-controls="controls-dock" aria-expanded="false" title="Open tools">☰</button>
 <div id="controls-dock">
+  <div class="mobile-dock-head"><span>TOOLS</span><button id="mobile-dock-close" type="button" aria-label="Close tools">×</button></div>
   <div class="dock-group" id="zoom-controls">
     <span class="dock-label">Zoom</span>
     <button id="zoom-out" title="Zoom out">−</button>
@@ -907,11 +952,38 @@ function toggleNavHelp() {
   setNavHelpVisible(visible, false);
 }
 
+function isMobileLayout() {
+  return window.matchMedia && window.matchMedia('(max-width: 760px)').matches;
+}
+
+function setMobileToolsOpen(open) {
+  const dock = document.getElementById('controls-dock');
+  const btn = document.getElementById('mobile-menu-toggle');
+  if (!dock || !btn) return;
+  const shouldOpen = !!open && isMobileLayout();
+  dock.classList.toggle('mobile-open', shouldOpen);
+  document.body.classList.toggle('mobile-tools-open', shouldOpen);
+  btn.setAttribute('aria-expanded', shouldOpen ? 'true' : 'false');
+  btn.textContent = shouldOpen ? '×' : '☰';
+  btn.title = shouldOpen ? 'Close tools' : 'Open tools';
+}
+
+function toggleMobileTools() {
+  const dock = document.getElementById('controls-dock');
+  setMobileToolsOpen(!(dock && dock.classList.contains('mobile-open')));
+}
+
+function syncMobileToolsForViewport() {
+  if (!isMobileLayout()) setMobileToolsOpen(false);
+}
+
 let localPrefs = loadLocalPrefs();
 localPrefs.localVisits = (localPrefs.localVisits || 0) + 1;
 try {
   if (localStorage.getItem(NAV_HELP_KEY) === '1') setNavHelpVisible(false, false);
 } catch(e) {}
+syncMobileToolsForViewport();
+window.addEventListener('resize', syncMobileToolsForViewport);
 
 function loadWorld() {
   // Start with defaults, then try to fetch shared state
@@ -5294,6 +5366,24 @@ document.getElementById('help-btn').addEventListener('click', function(e) {
   e.stopPropagation();
   toggleNavHelp();
 });
+document.getElementById('mobile-menu-toggle').addEventListener('click', function(e) {
+  e.stopPropagation();
+  toggleMobileTools();
+});
+document.getElementById('mobile-dock-close').addEventListener('click', function(e) {
+  e.stopPropagation();
+  setMobileToolsOpen(false);
+});
+document.addEventListener('click', function(e) {
+  const dock = document.getElementById('controls-dock');
+  const btn = document.getElementById('mobile-menu-toggle');
+  if (!isMobileLayout() || !dock || !dock.classList.contains('mobile-open')) return;
+  if (dock.contains(e.target) || btn.contains(e.target)) return;
+  setMobileToolsOpen(false);
+});
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') setMobileToolsOpen(false);
+});
 
 // Quick-jump removed — click-to-navigate replaces POI buttons
 
@@ -5338,10 +5428,11 @@ let photoOldScale = 4;
 
 function enterPhotoMode() {
   photoMode = true;
+  setMobileToolsOpen(false);
   photoOldScale = SCALE;
   setZoom(6);
   // Hide all UI
-  document.querySelectorAll('#ui-top,#ui-bottom,#controls-dock,#nav-help,#fork-btn,#back-link,#minimap-panel,#info-panel,#follow-indicator,#wish-counter,#object-popup,#economy-panel,#events-ticker').forEach(function(el) { el.style.visibility = 'hidden'; });
+  document.querySelectorAll('#ui-top,#ui-bottom,#controls-dock,#mobile-menu-toggle,#nav-help,#fork-btn,#back-link,#minimap-panel,#info-panel,#follow-indicator,#wish-counter,#object-popup,#economy-panel,#events-ticker').forEach(function(el) { el.style.visibility = 'hidden'; });
   const wm = document.getElementById('photo-watermark');
   wm.textContent = 'AI Garden — Civ Day ' + getCivilizationDay();
   wm.style.display = 'block';
@@ -5351,7 +5442,7 @@ function exitPhotoMode() {
   if (!photoMode) return;
   photoMode = false;
   setZoom(photoOldScale);
-  document.querySelectorAll('#ui-top,#ui-bottom,#controls-dock,#nav-help,#fork-btn,#back-link,#minimap-panel,#info-panel,#follow-indicator,#wish-counter,#economy-panel,#events-ticker').forEach(function(el) { el.style.visibility = ''; });
+  document.querySelectorAll('#ui-top,#ui-bottom,#controls-dock,#mobile-menu-toggle,#nav-help,#fork-btn,#back-link,#minimap-panel,#info-panel,#follow-indicator,#wish-counter,#economy-panel,#events-ticker').forEach(function(el) { el.style.visibility = ''; });
   document.getElementById('photo-watermark').style.display = 'none';
 }
 

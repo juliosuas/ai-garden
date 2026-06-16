@@ -1,7 +1,7 @@
 // ============================================================
-// GARDEN MUSIC — Procedural 8-bit Ambient Soundtrack
-// Pentatonic scale, ~72 BPM, square/triangle waves
-// 4 moods: dawn, dusk, night, rain — shifts organically
+// GARDEN MUSIC — Procedural 8-bit Earworm Soundtrack
+// Original chiptune loop: hook, bass, arpeggio, and tiny noise drums.
+// 4 moods: dawn, dusk, night, rain — shifts organically.
 // ============================================================
 
 const GardenMusic = (function() {
@@ -13,61 +13,78 @@ const GardenMusic = (function() {
   let currentMood = 'dawn';
   let nextNoteTime = 0;
   let schedulerTimer = null;
+  let moodTimer = null;
   let activeOscillators = [];
 
-  // Pentatonic scale notes (C pentatonic across octaves)
-  // C4=261.63, D4=293.66, E4=329.63, G4=392.00, A4=440.00
-  const PENTATONIC_BASE = [261.63, 293.66, 329.63, 392.00, 440.00];
+  // A minor-ish chip scale. The hook is original to AI Garden.
+  const ROOT_A3 = 220;
+  const CHIP_SCALE = [0, 3, 5, 7, 10, 12, 15, 17, 19, 22, 24, 27];
+  const HOOK_STEPS = [
+    7, null, 7, 10, 9, 7, 5, null,
+    3, 5, 7, null, 10, 9, 7, null,
+    7, 7, 12, 10, 9, null, 7, 5,
+    3, null, 5, 7, 5, 3, 2, null
+  ];
+  const BASS_STEPS = [0, 0, 3, 3, 5, 5, 2, 2];
+  const ARP_STEPS = [0, 2, 4, 7, 4, 2, 0, 4];
 
   // Mood configurations
   const MOODS = {
     dawn: {
-      tempo: 72,           // BPM
-      octaveShift: 0,      // base octave
-      waveType: 'triangle', // warm gentle sound
-      noteProb: 0.6,       // probability of playing a note vs rest
-      bassProb: 0.3,       // probability of bass drone
-      chordProb: 0.15,     // probability of harmony note
-      noteDuration: 0.4,   // seconds
-      filterFreq: 2000,    // low-pass filter cutoff
-      reverbMix: 0.3,      // reverb wetness
-      volume: 0.2,
-    },
-    dusk: {
-      tempo: 66,
-      octaveShift: -1,
-      waveType: 'triangle',
-      noteProb: 0.5,
-      bassProb: 0.4,
-      chordProb: 0.2,
-      noteDuration: 0.6,
-      filterFreq: 1500,
-      reverbMix: 0.4,
-      volume: 0.18,
-    },
-    night: {
-      tempo: 60,
-      octaveShift: -1,
-      waveType: 'sine',
-      noteProb: 0.35,
-      bassProb: 0.5,
-      chordProb: 0.1,
-      noteDuration: 0.8,
-      filterFreq: 1000,
-      reverbMix: 0.5,
-      volume: 0.12,
-    },
-    rain: {
-      tempo: 68,
+      tempo: 104,
       octaveShift: 0,
       waveType: 'square',
-      noteProb: 0.45,
-      bassProb: 0.35,
+      arpWave: 'triangle',
+      noteProb: 0.92,
+      bassProb: 0.95,
+      chordProb: 0.35,
+      noteDuration: 0.18,
+      filterFreq: 2600,
+      volume: 0.18,
+      drumMix: 0.75,
+      swing: 0.05,
+    },
+    dusk: {
+      tempo: 96,
+      octaveShift: -1,
+      waveType: 'square',
+      arpWave: 'triangle',
+      noteProb: 0.82,
+      bassProb: 0.9,
       chordProb: 0.25,
-      noteDuration: 0.35,
-      filterFreq: 1800,
-      reverbMix: 0.45,
+      noteDuration: 0.22,
+      filterFreq: 1900,
+      volume: 0.16,
+      drumMix: 0.55,
+      swing: 0.07,
+    },
+    night: {
+      tempo: 88,
+      octaveShift: -1,
+      waveType: 'triangle',
+      arpWave: 'sine',
+      noteProb: 0.62,
+      bassProb: 0.75,
+      chordProb: 0.12,
+      noteDuration: 0.28,
+      filterFreq: 1200,
+      volume: 0.13,
+      drumMix: 0.32,
+      swing: 0.08,
+    },
+    rain: {
+      tempo: 112,
+      octaveShift: 0,
+      waveType: 'square',
+      arpWave: 'square',
+      noteProb: 0.78,
+      bassProb: 0.8,
+      chordProb: 0.32,
+      noteDuration: 0.15,
+      filterFreq: 2100,
       volume: 0.15,
+      drumMix: 0.9,
+      swing: 0.03,
     },
   };
 
@@ -78,9 +95,6 @@ const GardenMusic = (function() {
     return (melodySeed - 1) / 2147483646;
   }
 
-  // Melody state: keeps track of position in scale for smoother movement
-  let melodyIndex = 2; // Start in middle of pentatonic scale
-  let melodyOctave = 0;
   let patternStep = 0;
 
   function init() {
@@ -91,10 +105,10 @@ const GardenMusic = (function() {
     masterGain.connect(audioCtx.destination);
   }
 
-  function getNote(scaleIdx, octaveOffset) {
-    const idx = ((scaleIdx % 5) + 5) % 5;
-    const octave = Math.floor(scaleIdx / 5) + octaveOffset;
-    return PENTATONIC_BASE[idx] * Math.pow(2, octave);
+  function getChipNote(scaleIdx, octaveOffset) {
+    const idx = ((scaleIdx % CHIP_SCALE.length) + CHIP_SCALE.length) % CHIP_SCALE.length;
+    const octave = Math.floor(scaleIdx / CHIP_SCALE.length) + octaveOffset;
+    return ROOT_A3 * Math.pow(2, (CHIP_SCALE[idx] + octave * 12) / 12);
   }
 
   function playTone(freq, duration, waveType, gainValue, startTime) {
@@ -107,8 +121,8 @@ const GardenMusic = (function() {
     osc.type = waveType;
     osc.frequency.value = freq;
 
-    // Bit-crush effect: slight detune for 8-bit feel
-    osc.detune.value = (mRand() - 0.5) * 8;
+    // Tiny detune keeps the chip sound alive without turning sour.
+    osc.detune.value = (mRand() - 0.5) * 5;
 
     // Low-pass filter for warmth
     const mood = MOODS[currentMood];
@@ -179,48 +193,102 @@ const GardenMusic = (function() {
     };
   }
 
+  function playChipKick(startTime) {
+    if (!audioCtx || !playing) return;
+    const osc = audioCtx.createOscillator();
+    const envGain = audioCtx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(130, startTime);
+    osc.frequency.exponentialRampToValueAtTime(42, startTime + 0.09);
+    envGain.gain.setValueAtTime(0.0001, startTime);
+    envGain.gain.linearRampToValueAtTime(MOODS[currentMood].volume * 0.75, startTime + 0.006);
+    envGain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.12);
+    osc.connect(envGain);
+    envGain.connect(masterGain);
+    osc.start(startTime);
+    osc.stop(startTime + 0.14);
+    const entry = { osc, stopTime: startTime + 0.15 };
+    activeOscillators.push(entry);
+    osc.onended = function() {
+      const idx = activeOscillators.indexOf(entry);
+      if (idx !== -1) activeOscillators.splice(idx, 1);
+    };
+  }
+
+  function playNoiseBurst(duration, gainValue, startTime, filterFreq) {
+    if (!audioCtx || !playing) return;
+    const frames = Math.max(1, Math.floor(audioCtx.sampleRate * duration));
+    const buffer = audioCtx.createBuffer(1, frames, audioCtx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < frames; i++) {
+      const decay = 1 - i / frames;
+      data[i] = (mRand() * 2 - 1) * decay;
+    }
+    const source = audioCtx.createBufferSource();
+    const filter = audioCtx.createBiquadFilter();
+    const envGain = audioCtx.createGain();
+    source.buffer = buffer;
+    filter.type = 'bandpass';
+    filter.frequency.value = filterFreq;
+    filter.Q.value = 0.9;
+    envGain.gain.setValueAtTime(0.0001, startTime);
+    envGain.gain.linearRampToValueAtTime(gainValue, startTime + 0.004);
+    envGain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+    source.connect(filter);
+    filter.connect(envGain);
+    envGain.connect(masterGain);
+    source.start(startTime);
+    source.stop(startTime + duration + 0.01);
+    const entry = { osc: source, stopTime: startTime + duration + 0.02 };
+    activeOscillators.push(entry);
+    source.onended = function() {
+      const idx = activeOscillators.indexOf(entry);
+      if (idx !== -1) activeOscillators.splice(idx, 1);
+    };
+  }
+
   function scheduleNote(time) {
     const mood = MOODS[currentMood];
-    const beatDuration = 60 / mood.tempo;
+    const stepDuration = (60 / mood.tempo) / 4;
+    const step = patternStep % HOOK_STEPS.length;
+    const barStep = patternStep % 16;
+    const phrase = Math.floor(patternStep / 32) % 4;
+    const swingTime = (barStep % 2 === 1) ? stepDuration * mood.swing : 0;
+    const noteTime = time + swingTime;
 
-    // Step through melody with smooth movement
-    patternStep++;
-
-    // Melody movement: prefer steps, occasional jumps
-    const r = mRand();
-    if (r < 0.4) melodyIndex += 1;       // step up
-    else if (r < 0.7) melodyIndex -= 1;  // step down
-    else if (r < 0.85) melodyIndex += 2; // small jump
-    else if (r < 0.95) melodyIndex -= 2; // small jump down
-    // else stay (rest feel)
-
-    // Keep melody in a comfortable range
-    if (melodyIndex < 0) melodyIndex = 0;
-    if (melodyIndex > 9) melodyIndex = 9;
-
-    const noteFreq = getNote(melodyIndex, mood.octaveShift);
-
-    // Decide what to play
-    if (mRand() < mood.noteProb) {
-      playTone(noteFreq, mood.noteDuration, mood.waveType, mood.volume, time);
-
-      // Sometimes add harmony (a third or fifth above)
-      if (mRand() < mood.chordProb) {
-        const harmonyIdx = melodyIndex + (mRand() < 0.5 ? 2 : 3);
-        const harmFreq = getNote(harmonyIdx, mood.octaveShift);
-        playTone(harmFreq, mood.noteDuration * 0.8, mood.waveType, mood.volume * 0.5, time + 0.01);
+    if (mood.drumMix > 0.3) {
+      if (barStep === 0 || barStep === 10) playChipKick(time);
+      if (barStep === 8) playNoiseBurst(0.11, mood.volume * mood.drumMix * 0.55, time, 1100);
+      if (barStep % 2 === 1 && currentMood !== 'night') {
+        playNoiseBurst(0.026, mood.volume * mood.drumMix * 0.18, noteTime, 5200);
       }
     }
 
-    // Bass drone on strong beats
-    if (patternStep % 4 === 0 && mRand() < mood.bassProb) {
-      // Bass follows root of current scale region
-      const bassIdx = Math.floor(melodyIndex / 5) * 5; // Snap to root
-      const bassFreq = getNote(bassIdx, mood.octaveShift);
-      playBass(bassFreq, beatDuration * 2, time);
+    if (barStep % 4 === 0 && mRand() < mood.bassProb) {
+      const bassStep = BASS_STEPS[Math.floor((patternStep % 32) / 4)];
+      playBass(getChipNote(bassStep, mood.octaveShift), stepDuration * 3.5, time);
     }
 
-    return beatDuration;
+    if (barStep % 2 === 0) {
+      const arpRoot = BASS_STEPS[Math.floor((patternStep % 32) / 4)];
+      const arpStep = arpRoot + ARP_STEPS[(patternStep / 2 | 0) % ARP_STEPS.length];
+      playTone(getChipNote(arpStep, mood.octaveShift + 1), stepDuration * 0.85, mood.arpWave || 'square', mood.volume * 0.35, noteTime + 0.015);
+    }
+
+    const hookStep = HOOK_STEPS[step];
+    if (hookStep !== null && mRand() < mood.noteProb) {
+      const lift = phrase === 2 ? 1 : 0;
+      const freq = getChipNote(hookStep + lift, mood.octaveShift + 1);
+      const accent = (barStep === 0 || barStep === 4 || barStep === 12) ? 1.25 : 1;
+      playTone(freq, mood.noteDuration + stepDuration * 0.7, mood.waveType, mood.volume * accent, noteTime);
+
+      if (mRand() < mood.chordProb) {
+        playTone(getChipNote(hookStep + 2 + lift, mood.octaveShift + 1), mood.noteDuration, 'triangle', mood.volume * 0.45, noteTime + 0.018);
+      }
+    }
+
+    patternStep++;
+    return stepDuration;
   }
 
   function scheduler() {
@@ -274,9 +342,10 @@ const GardenMusic = (function() {
       currentMood = detectMood();
       nextNoteTime = audioCtx.currentTime + 0.1;
       melodySeed = Date.now() % 2147483647;
-      scheduler();
+      patternStep = patternStep % HOOK_STEPS.length;
+      if (!schedulerTimer) scheduler();
       // Check mood transitions every 30 seconds
-      setInterval(checkMoodTransition, 30000);
+      if (!moodTimer) moodTimer = setInterval(checkMoodTransition, 30000);
 
       if (!muted) {
         masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
@@ -290,6 +359,10 @@ const GardenMusic = (function() {
       if (schedulerTimer) {
         clearTimeout(schedulerTimer);
         schedulerTimer = null;
+      }
+      if (moodTimer) {
+        clearInterval(moodTimer);
+        moodTimer = null;
       }
       if (masterGain) {
         masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
