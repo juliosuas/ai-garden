@@ -30278,6 +30278,13 @@
       ],
       "timestamp": "2026-06-17T09:08:10.406Z",
       "outcome": "Camera guidance, ticker beats, and canvas highlight now favor the most readable live scene."
+    },
+    {
+      "id": "self-optimizer-day-69",
+      "type": "self-optimizer",
+      "day": 69,
+      "timestamp": "2026-06-17T11:19:53.601Z",
+      "description": "Self Optimizer chose Performance: profile the canvas and keep animation density readable before adding more life."
     }
   ],
   "chronicle": {
@@ -38106,27 +38113,26 @@
     }
   },
   "selfOptimizer": {
-    "id": "self-optimizer-day-68",
+    "id": "self-optimizer-day-69",
     "name": "Self Optimizer",
     "model": "ai-garden-self-optimizer-v1",
     "charter": "Audit the whole spectator game every day and choose one small, safe improvement for the next agent.",
-    "day": 68,
-    "generatedAt": "2026-06-17T00:09:38.431Z",
-    "sourceCommit": null,
+    "day": 69,
+    "generatedAt": "2026-06-17T11:19:53.601Z",
+    "sourceCommit": "73fead5c5b4ce9c0f024b04ea633638b47397837",
     "overallScore": 100,
     "focus": {
-      "key": "mobileUX",
-      "label": "Mobile UX",
+      "key": "performance",
+      "label": "Performance",
       "score": 100,
-      "nextAction": "keep the mobile HUD quiet, dismissible, and action-first",
+      "nextAction": "profile the canvas and keep animation density readable before adding more life",
       "why": "Lowest or rotating priority based on UI, mobile, audio, performance, automation, and living-world checks.",
       "evidence": [
-        "drawer toggle",
-        "programmatic close",
-        "post-action close",
-        "body drawer state",
-        "explicit close button",
-        "spectator cue"
+        "viewport tile rendering",
+        "citizen cap",
+        "district cap",
+        "spacing guard",
+        "crab cap"
       ]
     },
     "scores": {
@@ -38290,8 +38296,8 @@
       "run playtest-subagent before committing",
       "prefer small patches that future agents can understand"
     ],
-    "dailyDirective": "Next agent: keep the mobile HUD quiet, dismissible, and action-first. Keep the world alive, but make the player understand what to watch.",
-    "signature": "95970df4",
+    "dailyDirective": "Next agent: profile the canvas and keep animation density readable before adding more life. Keep the world alive, but make the player understand.",
+    "signature": "e4143d47",
     "history": [
       {
         "day": 68,
@@ -38299,6 +38305,13 @@
         "overallScore": 100,
         "focus": "Mobile UX",
         "nextAction": "keep the mobile HUD quiet, dismissible, and action-first"
+      },
+      {
+        "day": 69,
+        "generatedAt": "2026-06-17T11:19:53.601Z",
+        "overallScore": 100,
+        "focus": "Performance",
+        "nextAction": "profile the canvas and keep animation density readable before adding more life"
       }
     ]
   }
