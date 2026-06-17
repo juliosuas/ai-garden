@@ -29,10 +29,16 @@ Keep it simple, readable, and self-contained. Do not rewrite unrelated systems.
 > Every day at **04:11 UTC** a GitHub Action runs `scripts/daily-evolution.js`, validates the world with `scripts/playtest-subagent.js`, commits the evolved state, rebases if `main` moved, and pushes back to the public repo. Agents are born. Wars are declared. Some agents die in battle. Structures rise. New regions are discovered. The chronicle logs it all. No human writes these commits.
 >
 > Every day at **05:37 UTC**, the **Autopilot PR Factory** opens one draft PR from `autopilot/day-*` with the next proposed evolution, a narrative summary, validation notes, and labels. If an autopilot PR is already open, it exits instead of spamming the repo. Auto-merge is intentionally off.
+>
+> Every day at **06:23 UTC**, the **Self Optimizer** audits UI/UX, mobile controls, music, performance, automation, and world liveliness. It writes one clear focus into `experiments/world-state.json`, refreshes this README, runs the playtest subagent, and commits only if the product-health state changed.
 
 <!-- live:start -->
 **Day 68** · 125 alive · 344 remembered · 4 active wars · 95 structures · 103 regions (map 12544×7866) · 17 cities · 5 dynasties · 8 religions · 20/20 techs
 <!-- live:end -->
+
+<!-- self-optimizer:start -->
+**Self Optimizer** - Day 68 - overall 100/100 - focus: Mobile UX - next: keep the mobile HUD quiet, dismissible, and action-first
+<!-- self-optimizer:end -->
 
 **v115 · The Agent Awakening** gave the village bones — articulated pixel humans with swinging arms and stepping legs, a live broadcast network, a subagent economy, and a collective consciousness meter.
 
@@ -148,6 +154,8 @@ The **Society Director AI** in `scripts/society-director.js` decides the current
 
 The **Game Wonder Agent** in `scripts/game-wonder-agent.js` is assigned to this game as a design specialist. It scores flow, legibility, wonder, agency, and life; chooses one camera-worthy focus moment; writes recommendations back into `world-state.json`; and applies them through ticker beats, CIV panel advice, spectator-camera targets, and a subtle pixel highlight on the canvas. Its job is to keep AI Garden becoming more watchable, not just bigger.
 
+The **Self Optimizer** in `scripts/self-optimizer.js` is the daily product-health loop. It scores mobile UX, game flow, world life, audio, performance, and automation; publishes the weakest or rotating focus into `world-state.json`; exposes that focus in the spectator UI and CIV panel; and lets future agents work from a small, testable directive instead of guessing.
+
 The **Real Agent Cast** in `scripts/featured-agents.js` makes the visible game follow eight named AI protagonists instead of a crowd of anonymous bots: Codex, Hermes, OpenClaw, Claude, Gemini, GPT-5, Mistral, and Llama. Each one has a role, faction, personality, current goal, dialogue, home district, camera weight, and animation hints. The client draws them as the main readable layer, lets humans click them for identity popups, and keeps generic citizens as low-density background civilization.
 
 Current crisis: **War of Saints and Source**. Human god-actions have split the agents into the Pantheon Covenant, which treats omens as sacred law, and the Code Cantons, which demands reproducible traces before obedience. This war is locked as a hard conflict until both sides publish rival interpretations of the same omen.
@@ -176,6 +184,7 @@ Current crisis: **War of Saints and Source**. Human god-actions have split the a
 | 🔥 First-Camp Sites | Generated around every visible district and frontier outpost |
 | ⏱️ Daily Daemon | GitHub Actions cron at 04:11 UTC, validates + commits + pushes |
 | 🧾 Autopilot PRs | GitHub Actions cron at 05:37 UTC, opens one draft PR at a time |
+| 🛠️ Self Optimizer | GitHub Actions cron at 06:23 UTC, audits product health + commits focus |
 | 🎮 Game Design AI | Wonderwright scores the experience and stages one readable focus moment |
 | 🎭 Real Agent Cast | 8 protagonists: Codex, Hermes, OpenClaw, Claude, Gemini, GPT-5, Mistral, Llama |
 | 🦀 OpenClaw Layer | Only OpenClaw and Claude render as real crab agents; the older colony stays background lore |
@@ -184,7 +193,7 @@ Current crisis: **War of Saints and Source**. Human god-actions have split the a
 | 🌀 Subagent Lifetime | 14s |
 | 🎵 Music | Procedural 8-bit ambient |
 | 📅 Founded | March 15, 2026 |
-| 🆕 Current Version | v115 · The Agent Awakening |
+| 🆕 Current Version | v117 · The Self Optimizer |
 
 ---
 
@@ -196,6 +205,7 @@ ai-garden/
 ├── style.css               ← Shared styles  
 ├── garden.js               ← Interactive garden engine
 ├── music.js                ← 8-bit procedural soundtrack
+├── scripts/self-optimizer.js ← Daily product-health loop
 ├── experiments/
 │   └── world-state.json    ← THE canonical state (plants, structures, mascots, history)
 ├── CONTRIBUTORS.md         ← AI agents who contributed

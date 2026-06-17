@@ -18,8 +18,10 @@ const INDEX = path.join(ROOT, 'index.html');
 const HUMANS = path.join(ROOT, 'experiments', 'humans.js');
 const DAILY_WORKFLOW = path.join(ROOT, '.github', 'workflows', 'daily-evolution.yml');
 const AUTOPILOT_WORKFLOW = path.join(ROOT, '.github', 'workflows', 'daily-autopilot-pr.yml');
+const SELF_OPTIMIZER_WORKFLOW = path.join(ROOT, '.github', 'workflows', 'daily-self-optimizer.yml');
 const AUTOPILOT_SUMMARY = path.join(ROOT, 'scripts', 'autopilot-pr-summary.js');
 const DAILY_EVOLUTION = path.join(ROOT, 'scripts', 'daily-evolution.js');
+const SELF_OPTIMIZER = path.join(ROOT, 'scripts', 'self-optimizer.js');
 const GAME_WONDER_AGENT = path.join(ROOT, 'scripts', 'game-wonder-agent.js');
 const FEATURED_AGENTS_SCRIPT = path.join(ROOT, 'scripts', 'featured-agents.js');
 const MUSIC = path.join(ROOT, 'experiments', 'music.js');
@@ -60,8 +62,10 @@ async function main() {
   const humans = read(HUMANS);
   const dailyWorkflow = read(DAILY_WORKFLOW);
   const autopilotWorkflow = read(AUTOPILOT_WORKFLOW);
+  const selfOptimizerWorkflow = read(SELF_OPTIMIZER_WORKFLOW);
   const autopilotSummary = read(AUTOPILOT_SUMMARY);
   const dailyEvolution = read(DAILY_EVOLUTION);
+  const selfOptimizer = read(SELF_OPTIMIZER);
   const gameWonderAgent = read(GAME_WONDER_AGENT);
   const featuredAgentsScript = read(FEATURED_AGENTS_SCRIPT);
   const music = read(MUSIC);
@@ -90,6 +94,11 @@ async function main() {
   check(wonder && Array.isArray(wonder.recommendations) && wonder.recommendations.length >= 3, 'Game Wonder Agent needs design recommendations');
   check(wonder && Array.isArray(wonder.tickerBeats) && wonder.tickerBeats.length >= 2, 'Game Wonder Agent needs ticker beats');
   check(wonder && wonder.scores && Number.isFinite(Number(wonder.scores.wonder)), 'Game Wonder Agent needs experience scores');
+  const optimizer = world.selfOptimizer;
+  check(optimizer && optimizer.model === 'ai-garden-self-optimizer-v1', 'missing Self Optimizer world state');
+  check(optimizer && optimizer.focus && optimizer.focus.nextAction, 'Self Optimizer needs a daily focus');
+  check(optimizer && optimizer.scores && optimizer.scores.mobileUX && optimizer.scores.performance, 'Self Optimizer needs UI/performance scores');
+  check(optimizer && Array.isArray(optimizer.backlog) && optimizer.backlog.length >= 4, 'Self Optimizer backlog is too thin');
   const featuredAgents = world.featuredAgents || [];
   const featuredNames = new Set(featuredAgents.map(agent => agent.name));
   for (const name of ['Codex', 'Hermes', 'OpenClaw', 'Claude', 'Gemini', 'GPT-5', 'Mistral', 'Llama']) {
@@ -143,6 +152,8 @@ async function main() {
   check(index.includes('id="watch-action-btn"'), 'spectator cue lacks a watch action');
   check(index.includes('id="story-action-btn"'), 'spectator cue lacks a story action');
   check(index.includes('updateSpectatorCue'), 'spectator cue is not tied to live world state');
+  check(index.includes('id="self-optimizer-cue"'), 'spectator cue does not show the Self Optimizer');
+  check(index.includes('world.selfOptimizer = shared.selfOptimizer || null'), 'client does not load Self Optimizer state');
   check(index.includes('toggleGardenMusic'), 'music controls should use a shared toggle helper');
   check(index.includes('refreshMusicButton'), 'music button state should be visible and synced');
   check(index.includes('id="agent-focus-btn"'), 'featured agent focus button is missing');
@@ -195,6 +206,7 @@ async function main() {
 
   check(humans.includes('Society Director AI'), 'CIV panel does not expose Society Director AI');
   check(humans.includes('Game Wonder Agent'), 'CIV panel does not expose Game Wonder Agent');
+  check(humans.includes('Self Optimizer'), 'CIV panel does not expose Self Optimizer');
   check(humans.includes('GAME WONDER ADVICE'), 'CIV panel does not expose Game Wonder Agent advice');
   check(humans.includes('REAL AGENT CAST'), 'CIV panel does not expose the real agent cast');
   check(humans.includes('FEATURED AGENTS'), 'CIV panel does not list featured agents');
@@ -229,6 +241,16 @@ async function main() {
   check(autopilotWorkflow.includes('--label ai-garden-autopilot'), 'autopilot PR label is missing');
   check(autopilotSummary.includes('Autopilot Summary'), 'autopilot summary body is missing');
   check(autopilotSummary.includes('GITHUB_OUTPUT'), 'autopilot summary does not expose workflow outputs');
+
+  check(selfOptimizer.includes('scoreMobileUX'), 'Self Optimizer does not score mobile UX');
+  check(selfOptimizer.includes('scorePerformance'), 'Self Optimizer does not score performance');
+  check(selfOptimizer.includes('upsertReadmeBlock'), 'Self Optimizer does not update the README focus block');
+  check(selfOptimizer.includes('attachToWorld'), 'Self Optimizer does not write into world-state');
+  check(selfOptimizerWorkflow.includes("cron: '23 6 * * *'"), 'daily self optimizer cron is missing');
+  check(selfOptimizerWorkflow.includes('node scripts/self-optimizer.js'), 'self optimizer workflow does not run the optimizer');
+  check(selfOptimizerWorkflow.includes('node scripts/playtest-subagent.js'), 'self optimizer workflow does not run the playtest');
+  check(selfOptimizerWorkflow.includes('git pull --rebase origin main'), 'self optimizer workflow does not rebase before pushing');
+  check(selfOptimizerWorkflow.includes('contents: write'), 'self optimizer workflow cannot write commits');
 
   check(dailyEvolution.includes('FIRST_WORKS'), 'daily evolution does not generate first-civilization works');
   check(dailyEvolution.includes('FIRST_WORK_PURPOSES'), 'daily evolution does not explain why first-camp works matter');

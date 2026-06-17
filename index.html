@@ -220,6 +220,7 @@ canvas:active { cursor: grabbing; }
 #nav-help .nav-help-line { display: flex; justify-content: space-between; gap: 10px; font-size: 11px; margin: 4px 0; }
 #nav-help .nav-help-key { color: #f8fafc; }
 #nav-help .nav-help-note { color: #8ea99a; font-size: 10px; margin-top: 7px; line-height: 1.35; }
+#nav-help .nav-help-self { color: #facc15; font-size: 10px; margin-top: 6px; line-height: 1.35; }
 @media (max-width: 760px) {
   #nav-help {
     top: 50px; left: 8px; right: 74px; width: auto; max-width: none;
@@ -647,6 +648,7 @@ canvas:active { cursor: grabbing; }
   <div class="nav-help-line"><span class="nav-help-key">Drag / pinch</span><span>map</span></div>
   <div class="nav-help-line"><span class="nav-help-key">Tap agents</span><span>identity</span></div>
   <div class="nav-help-note">The director follows the agents with the strongest current scene.</div>
+  <div class="nav-help-self" id="self-optimizer-cue">Self Optimizer checks UX, flow, audio, and performance daily.</div>
 </div>
 
 <button id="mobile-menu-toggle" type="button" aria-controls="controls-dock" aria-expanded="false" title="Open tools">TOOLS</button>
@@ -876,6 +878,7 @@ const defaultWorld = {
   agentActions: [],
   societyDirector: null,
   gameWonderAgent: null,
+  selfOptimizer: null,
   featuredAgents: [],
   featuredAgentDirector: null,
   landscapeEvents: [],
@@ -988,6 +991,19 @@ function updateSpectatorCue() {
   } else {
     el.textContent = 'Watch the named agents build, argue, travel, and leave traces in the world.';
   }
+  updateSelfOptimizerCue();
+}
+
+function updateSelfOptimizerCue() {
+  const el = document.getElementById('self-optimizer-cue');
+  if (!el || !world) return;
+  const optimizer = world.selfOptimizer || {};
+  const focus = optimizer.focus || {};
+  if (focus.label && focus.nextAction) {
+    el.textContent = 'Self Optimizer Day ' + (optimizer.day || 0) + ': ' + focus.label + ' -> ' + focus.nextAction + '.';
+  } else {
+    el.textContent = 'Self Optimizer checks UX, flow, audio, and performance daily.';
+  }
 }
 
 function isMobileLayout() {
@@ -1091,6 +1107,7 @@ function loadWorld() {
       world.agentActions = shared.agentActions || [];
       world.societyDirector = shared.societyDirector || null;
       world.gameWonderAgent = shared.gameWonderAgent || null;
+      world.selfOptimizer = shared.selfOptimizer || null;
       world.featuredAgents = shared.featuredAgents || [];
       world.featuredAgentDirector = shared.featuredAgentDirector || null;
       world.landscapeEvents = shared.landscapeEvents || [];
@@ -3825,6 +3842,14 @@ function populateEventsTicker() {
   for (const beat of wonderBeats.slice(0, 3)) {
     items.push({ label: '[' + (beat.label || 'WONDER') + ']', color: '#facc15', text: beat.text || '' });
   }
+  const optimizer = world.selfOptimizer || null;
+  if (optimizer && optimizer.focus) {
+    items.push({
+      label: '[SELF OPTIMIZER]',
+      color: '#facc15',
+      text: optimizer.focus.label + ': ' + optimizer.focus.nextAction
+    });
+  }
   for (const agent of featuredAgentCast().slice(0, 4)) {
     items.push({
       label: '[' + String(agent.name || 'AGENT').toUpperCase() + ']',
@@ -3847,7 +3872,8 @@ function populateEventsTicker() {
     landscape: '#34d399',
     convivencia: '#fde68a',
     'crab-agent': '#fb923c',
-    'featured-agent': '#fff7ad'
+    'featured-agent': '#fff7ad',
+    'self-optimizer': '#facc15'
   };
   for (const ev of (world.events || []).slice(-5).reverse()) {
     items.push({
@@ -3896,6 +3922,16 @@ function eventPanelRows() {
     }
     for (const rec of (wonder.recommendations || []).slice(0, 3)) {
       rows.push({ label: 'Design Advice', text: rec.title + ' — ' + (rec.why || '') });
+    }
+  }
+  const optimizer = world.selfOptimizer;
+  if (optimizer && optimizer.focus) {
+    rows.push({
+      label: 'Self Optimizer',
+      text: 'overall ' + (optimizer.overallScore || '?') + '/100 - ' + optimizer.focus.label + ': ' + optimizer.focus.nextAction
+    });
+    for (const item of (optimizer.backlog || []).slice(0, 2)) {
+      rows.push({ label: 'Optimize Next', text: item.label + ' ' + item.score + '/100 - ' + item.nextAction });
     }
   }
   const directorCast = world.featuredAgentDirector;

@@ -1,0 +1,67 @@
+name: Daily Self Optimizer
+
+# Product-health loop. This runs after the evolution daemon and autopilot PR
+# proposal, audits the whole static game surface, writes one daily improvement
+# directive into world-state.json, validates the spectator loop, and commits the
+# updated focus back to main.
+
+on:
+  schedule:
+    - cron: '23 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: read
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+concurrency:
+  group: daily-self-optimizer
+  cancel-in-progress: false
+
+jobs:
+  optimize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Run self optimizer
+        run: node scripts/self-optimizer.js
+
+      - name: Validate self-optimized garden
+        run: |
+          node --check scripts/self-optimizer.js
+          node --check scripts/playtest-subagent.js
+          node --check scripts/daily-evolution.js
+          node --check scripts/game-wonder-agent.js
+          jq empty experiments/world-state.json
+          node scripts/playtest-subagent.js
+
+      - name: Commit and push self-optimizer state
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          git config user.name "ai-garden-self-optimizer"
+          git config user.email "ai-garden-self-optimizer@users.noreply.github.com"
+          git add experiments/world-state.json README.md
+          if git diff --cached --quiet; then
+            echo "Self Optimizer found no change to commit."
+            exit 0
+          fi
+          DAY=$(node -e "console.log(require('./experiments/world-state.json').selfOptimizer?.day || 0)")
+          FOCUS=$(node -e "console.log(require('./experiments/world-state.json').selfOptimizer?.focus?.label || 'Experience')")
+          git commit -m "Self Optimizer - Day ${DAY} - ${FOCUS}" -m "Automated product-health audit by ai-garden-self-optimizer." -m "Triggered by: ${EVENT_NAME}" -m "Run: ${RUN_ID}"
+          git pull --rebase origin main
+          git push

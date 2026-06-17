@@ -959,6 +959,7 @@
     var s = brain.summary || {};
     var director = brain.director || world.societyDirector || null;
     var wonder = world.gameWonderAgent || null;
+    var optimizer = world.selfOptimizer || null;
     var featuredAgents = world.featuredAgents || [];
     var featuredDirector = world.featuredAgentDirector || null;
     var grid = el('div', 'ag-civ-grid');
@@ -1011,6 +1012,19 @@
           'focus: ' + wonder.focusMoment.label + ' · ' + wonder.focusMoment.title));
       }
       body.appendChild(wonderBox);
+    }
+
+    if (optimizer && optimizer.focus) {
+      var optimizerBox = el('div', 'ag-civ-director');
+      optimizerBox.appendChild(el('div', 'ag-civ-director-title', 'Self Optimizer'));
+      optimizerBox.appendChild(el('div', 'ag-civ-director-arc',
+        'Day ' + (optimizer.day || 0) + ' - overall ' + (optimizer.overallScore || '?') + '/100'));
+      optimizerBox.appendChild(el('div', 'ag-civ-detail',
+        optimizer.focus.label + ': ' + optimizer.focus.nextAction));
+      if (optimizer.dailyDirective) {
+        optimizerBox.appendChild(el('div', 'ag-civ-director-prompt', optimizer.dailyDirective));
+      }
+      body.appendChild(optimizerBox);
     }
 
     if (featuredDirector || featuredAgents.length) {

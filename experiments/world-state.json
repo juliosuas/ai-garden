@@ -30134,6 +30134,13 @@
       ],
       "timestamp": "2026-06-16T11:36:35.339Z",
       "outcome": "Camera guidance, ticker beats, and canvas highlight now favor the most readable live scene."
+    },
+    {
+      "id": "self-optimizer-day-68",
+      "type": "self-optimizer",
+      "day": 68,
+      "timestamp": "2026-06-17T00:09:38.431Z",
+      "description": "Self Optimizer chose Mobile UX: keep the mobile HUD quiet, dismissible, and action-first."
     }
   ],
   "chronicle": {
@@ -37775,5 +37782,202 @@
       "incomplete": [],
       "ok": true
     }
+  },
+  "selfOptimizer": {
+    "id": "self-optimizer-day-68",
+    "name": "Self Optimizer",
+    "model": "ai-garden-self-optimizer-v1",
+    "charter": "Audit the whole spectator game every day and choose one small, safe improvement for the next agent.",
+    "day": 68,
+    "generatedAt": "2026-06-17T00:09:38.431Z",
+    "sourceCommit": null,
+    "overallScore": 100,
+    "focus": {
+      "key": "mobileUX",
+      "label": "Mobile UX",
+      "score": 100,
+      "nextAction": "keep the mobile HUD quiet, dismissible, and action-first",
+      "why": "Lowest or rotating priority based on UI, mobile, audio, performance, automation, and living-world checks.",
+      "evidence": [
+        "drawer toggle",
+        "programmatic close",
+        "post-action close",
+        "body drawer state",
+        "explicit close button",
+        "spectator cue"
+      ]
+    },
+    "scores": {
+      "mobileUX": {
+        "label": "Mobile UX",
+        "score": 100,
+        "evidence": [
+          "drawer toggle",
+          "programmatic close",
+          "post-action close",
+          "body drawer state",
+          "explicit close button",
+          "spectator cue"
+        ]
+      },
+      "flow": {
+        "label": "Game Flow",
+        "score": 100,
+        "evidence": [
+          "pixel-speed ticker",
+          "hover pause",
+          "event details panel",
+          "spectator camera",
+          "featured-agent jump",
+          "dynamic zoom minimum"
+        ]
+      },
+      "worldLife": {
+        "label": "World Life",
+        "score": 100,
+        "evidence": [
+          "8 featured agents",
+          "bounded crab cast",
+          "districts",
+          "roads",
+          "first-camp work sites",
+          "ambient dialogue"
+        ]
+      },
+      "audio": {
+        "label": "Audio",
+        "score": 100,
+        "evidence": [
+          "original hook",
+          "arpeggio motion",
+          "chip kick",
+          "noise percussion",
+          "synced music button"
+        ]
+      },
+      "performance": {
+        "label": "Performance",
+        "score": 100,
+        "evidence": [
+          "viewport tile rendering",
+          "citizen cap",
+          "district cap",
+          "spacing guard",
+          "crab cap"
+        ]
+      },
+      "automation": {
+        "label": "Autonomy",
+        "score": 100,
+        "evidence": [
+          "daily daemon",
+          "daemon playtest",
+          "autopilot PRs",
+          "self-optimizer cron",
+          "self-optimizer playtest contract"
+        ]
+      }
+    },
+    "backlog": [
+      {
+        "key": "mobileUX",
+        "label": "Mobile UX",
+        "score": 100,
+        "nextAction": "keep the mobile HUD quiet, dismissible, and action-first",
+        "evidence": [
+          "drawer toggle",
+          "programmatic close",
+          "post-action close",
+          "body drawer state",
+          "explicit close button",
+          "spectator cue"
+        ]
+      },
+      {
+        "key": "flow",
+        "label": "Game Flow",
+        "score": 100,
+        "nextAction": "slow the spectacle into one readable scene at a time",
+        "evidence": [
+          "pixel-speed ticker",
+          "hover pause",
+          "event details panel",
+          "spectator camera",
+          "featured-agent jump",
+          "dynamic zoom minimum"
+        ]
+      },
+      {
+        "key": "worldLife",
+        "label": "World Life",
+        "score": 100,
+        "nextAction": "add motion, emotion, and civic work without increasing crowd density",
+        "evidence": [
+          "8 featured agents",
+          "bounded crab cast",
+          "districts",
+          "roads",
+          "first-camp work sites",
+          "ambient dialogue"
+        ]
+      },
+      {
+        "key": "audio",
+        "label": "Audio",
+        "score": 100,
+        "nextAction": "make the bit hook memorable while keeping the first click optional",
+        "evidence": [
+          "original hook",
+          "arpeggio motion",
+          "chip kick",
+          "noise percussion",
+          "synced music button"
+        ]
+      },
+      {
+        "key": "performance",
+        "label": "Performance",
+        "score": 100,
+        "nextAction": "profile the canvas and keep animation density readable before adding more life",
+        "evidence": [
+          "viewport tile rendering",
+          "citizen cap",
+          "district cap",
+          "spacing guard",
+          "crab cap"
+        ]
+      },
+      {
+        "key": "automation",
+        "label": "Autonomy",
+        "score": 100,
+        "nextAction": "keep one direct evolution loop, one PR loop, and one self-audit loop healthy",
+        "evidence": [
+          "daily daemon",
+          "daemon playtest",
+          "autopilot PRs",
+          "self-optimizer cron",
+          "self-optimizer playtest contract"
+        ]
+      }
+    ],
+    "guardrails": [
+      "one readable improvement before adding more entities",
+      "mobile controls must stay dismissible",
+      "ticker and observer lounge must stay calm",
+      "run playtest-subagent before committing",
+      "prefer small patches that future agents can understand"
+    ],
+    "dailyDirective": "Next agent: keep the mobile HUD quiet, dismissible, and action-first. Keep the world alive, but make the player understand what to watch.",
+    "signature": "95970df4",
+    "history": [
+      {
+        "day": 68,
+        "generatedAt": "2026-06-17T00:09:38.431Z",
+        "overallScore": 100,
+        "focus": "Mobile UX",
+        "nextAction": "keep the mobile HUD quiet, dismissible, and action-first"
+      }
+    ]
   }
 }
