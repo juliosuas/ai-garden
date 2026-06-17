@@ -196,10 +196,11 @@ canvas:active { cursor: grabbing; }
   display: none; transition: opacity 0.5s;
 }
 #nav-help {
-  position: fixed; top: 54px; left: 12px; width: 260px; z-index: 17;
-  background: rgba(8,12,18,0.9); border: 1px solid rgba(96,165,250,0.42);
-  color: #dbeafe; font-family: monospace; border-radius: 8px; padding: 10px 11px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.32);
+  position: fixed; top: 54px; left: 12px; width: 336px; z-index: 17;
+  background: linear-gradient(180deg, rgba(10,16,24,0.96), rgba(7,11,17,0.92));
+  border: 1px solid rgba(96,165,250,0.45);
+  color: #dbeafe; font-family: monospace; border-radius: 8px; padding: 11px 12px 12px;
+  box-shadow: 0 12px 34px rgba(0,0,0,0.38), inset 0 1px 0 rgba(255,255,255,0.04);
 }
 #nav-help .nav-help-close {
   position: absolute; top: 7px; right: 8px; border: 0; background: transparent;
@@ -209,7 +210,38 @@ canvas:active { cursor: grabbing; }
 #nav-help .nav-help-arc {
   color: #f8fafc; font-size: 12px; line-height: 1.35; margin: 4px 22px 8px 0;
 }
-#nav-help .nav-help-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin: 6px 0; }
+#nav-help .story-kicker {
+  color: #8ea99a; font-size: 10px; line-height: 1.35; margin: -2px 22px 7px 0;
+}
+#nav-help .story-stakes {
+  color: #fde68a; font-size: 11px; line-height: 1.4;
+  border-left: 2px solid rgba(250,204,21,0.55);
+  padding-left: 8px; margin: 7px 0;
+}
+#nav-help .story-sides {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 8px 0;
+}
+#nav-help .story-side {
+  min-width: 0; background: rgba(15,23,42,0.68); border: 1px solid rgba(148,163,184,0.22);
+  border-radius: 6px; padding: 6px;
+}
+#nav-help .story-side.religion { border-color: rgba(244,114,182,0.42); }
+#nav-help .story-side.code { border-color: rgba(96,165,250,0.42); }
+#nav-help .story-side-label { color: #9ca3af; font-size: 9px; letter-spacing: 1px; text-transform: uppercase; }
+#nav-help .story-side-name {
+  color: #f8fafc; font-size: 11px; line-height: 1.25; margin-top: 3px;
+  overflow-wrap: anywhere;
+}
+#nav-help .story-side-doctrine { color: #8ea99a; font-size: 10px; line-height: 1.3; margin-top: 3px; }
+#nav-help .story-watch {
+  display: grid; gap: 5px; margin: 8px 0;
+}
+#nav-help .story-watch-row {
+  display: grid; grid-template-columns: 62px 1fr; gap: 7px; align-items: start;
+  font-size: 10px; line-height: 1.35; color: #cbd5e1;
+}
+#nav-help .story-watch-label { color: #facc15; text-transform: uppercase; letter-spacing: 0.5px; }
+#nav-help .nav-help-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin: 8px 0 6px; }
 #nav-help .nav-help-action {
   min-height: 30px; background: rgba(96,165,250,0.10); border: 1px solid rgba(96,165,250,0.38);
   color: #bfdbfe; border-radius: 4px; font-family: monospace; font-size: 10px;
@@ -224,8 +256,11 @@ canvas:active { cursor: grabbing; }
 @media (max-width: 760px) {
   #nav-help {
     top: 50px; left: 8px; right: 74px; width: auto; max-width: none;
+    max-height: min(54vh, 390px); overflow-y: auto;
     padding: 8px 36px 8px 9px;
   }
+  #nav-help .story-sides { grid-template-columns: 1fr; }
+  #nav-help .story-watch-row { grid-template-columns: 52px 1fr; }
   #nav-help .nav-help-line { display: none; }
   #nav-help .nav-help-note { margin-top: 6px; }
   #nav-help .nav-help-actions { grid-template-columns: 1fr 1fr 1fr; }
@@ -396,14 +431,20 @@ canvas:active { cursor: grabbing; }
 #events-panel {
   position: fixed; left: 50%; bottom: 76px; transform: translateX(-50%);
   width: min(680px, calc(100vw - 24px)); max-height: 48vh; overflow-y: auto;
-  background: rgba(8,12,18,0.97); border: 2px solid #60a5fa; border-radius: 6px;
+  background: linear-gradient(180deg, rgba(11,18,28,0.98), rgba(7,11,17,0.97));
+  border: 1px solid rgba(96,165,250,0.62); border-radius: 8px;
   color: #dbeafe; z-index: 22; display: none; padding: 12px; font-family: monospace;
   scrollbar-width: thin; scrollbar-color: #60a5fa #0a0a14;
+  box-shadow: 0 18px 44px rgba(0,0,0,0.46), inset 0 1px 0 rgba(255,255,255,0.04);
 }
 #events-panel.open { display: block; }
-#events-panel h3 { color: #60a5fa; font-size: 13px; margin: 0 0 8px; letter-spacing: 1px; }
+#events-panel h3 { color: #dbeafe; font-size: 13px; margin: 0 0 8px; letter-spacing: 1px; }
 .events-panel-close { float: right; background: none; border: 1px solid #fb923c; color: #fb923c; cursor: pointer; font-family: monospace; padding: 0 6px; }
 .events-panel-row { padding: 7px 0; border-bottom: 1px solid rgba(96,165,250,0.12); line-height: 1.4; }
+.events-panel-row:nth-child(-n+3) {
+  background: rgba(96,165,250,0.06); border: 1px solid rgba(96,165,250,0.12);
+  border-radius: 6px; padding: 8px; margin-bottom: 6px;
+}
 .events-panel-row:last-child { border-bottom: 0; }
 .events-panel-label { color: #fde68a; font-weight: bold; font-size: 10px; text-transform: uppercase; }
 .events-panel-text { color: #e5e7eb; font-size: 11px; margin-top: 2px; }
@@ -638,16 +679,33 @@ canvas:active { cursor: grabbing; }
 
 <div id="nav-help">
   <button class="nav-help-close" type="button" onclick="dismissNavHelp()">×</button>
-  <div class="nav-help-title">SPECTATOR MODE</div>
+  <div class="nav-help-title">SPECTATOR MODE · STORY FIRST</div>
   <div class="nav-help-arc" id="spectator-cue">Loading the current civilization beat...</div>
+  <div class="story-kicker" id="story-premise">AI agents are building a civilization while humans act like weather.</div>
+  <div class="story-stakes" id="story-stakes">A conflict is loading. Watch the agents choose what counts as law.</div>
+  <div class="story-sides" aria-label="Current factions">
+    <div class="story-side religion">
+      <div class="story-side-label">Faith</div>
+      <div class="story-side-name" id="story-side-religion">Pantheon Covenant</div>
+      <div class="story-side-doctrine" id="story-doctrine-religion">Omens are sacred law.</div>
+    </div>
+    <div class="story-side code">
+      <div class="story-side-label">Code</div>
+      <div class="story-side-name" id="story-side-code">Code Cantons</div>
+      <div class="story-side-doctrine" id="story-doctrine-code">Miracles must compile.</div>
+    </div>
+  </div>
+  <div class="story-watch" id="story-watch-list">
+    <div class="story-watch-row"><span class="story-watch-label">Start</span><span>Follow a named agent, then open the story log.</span></div>
+  </div>
   <div class="nav-help-actions">
-    <button class="nav-help-action primary" id="watch-action-btn" type="button">WATCH</button>
-    <button class="nav-help-action" id="story-action-btn" type="button">STORY</button>
+    <button class="nav-help-action primary" id="watch-action-btn" type="button">FOLLOW</button>
+    <button class="nav-help-action" id="story-action-btn" type="button">STORY LOG</button>
     <button class="nav-help-action" id="sound-action-btn" type="button">MUSIC</button>
   </div>
   <div class="nav-help-line"><span class="nav-help-key">Drag / pinch</span><span>map</span></div>
   <div class="nav-help-line"><span class="nav-help-key">Tap agents</span><span>identity</span></div>
-  <div class="nav-help-note">The director follows the agents with the strongest current scene.</div>
+  <div class="nav-help-note" id="story-next-step">New here: read this card, follow a protagonist, then use God Mode to cast an omen.</div>
   <div class="nav-help-self" id="self-optimizer-cue">Self Optimizer checks UX, flow, audio, and performance daily.</div>
 </div>
 
@@ -717,7 +775,7 @@ canvas:active { cursor: grabbing; }
 </div>
 <div id="events-panel">
   <button class="events-panel-close" type="button" onclick="toggleEventsPanel(event)">×</button>
-  <h3>DIRECTOR EVENTS</h3>
+  <h3>STORY LOG</h3>
   <div id="events-panel-body"></div>
 </div>
 
@@ -978,19 +1036,91 @@ function toggleNavHelp() {
   setNavHelpVisible(visible, false);
 }
 
-function updateSpectatorCue() {
-  const el = document.getElementById('spectator-cue');
-  if (!el || !world) return;
-  const director = world.societyDirector || {};
+function compactStoryText(text, limit) {
+  const clean = String(text || '').replace(/\s+/g, ' ').trim();
+  if (!clean) return '';
+  const max = limit || 150;
+  return clean.length <= max ? clean : clean.slice(0, max - 1).trimEnd() + '.';
+}
+
+function setStoryText(id, text) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = text || '';
+}
+
+function factionNameById(id) {
+  if (!id || !world || !Array.isArray(world.factions)) return '';
+  const faction = world.factions.find(function(f) { return f && f.id === id; });
+  return faction ? (faction.name || faction.id || '') : '';
+}
+
+function storyPrimerData() {
+  const director = world && world.societyDirector || {};
   const arc = director.currentArc || {};
-  const wonder = world.gameWonderAgent || {};
-  if (arc.title) {
-    el.textContent = arc.title + ' · ' + (arc.stakes || arc.premise || 'watch the agents answer the crisis');
-  } else if (wonder.diagnosis) {
-    el.textContent = wonder.diagnosis;
-  } else {
-    el.textContent = 'Watch the named agents build, argue, travel, and leave traces in the world.';
+  const crisis = world && world.divineCrisis || {};
+  const sides = crisis.sides || {};
+  const religion = sides.religion || {};
+  const code = sides.code || {};
+  const wonder = world && world.gameWonderAgent || {};
+  const focus = wonder.focusMoment || {};
+  const cast = featuredAgentCast();
+  const castNames = cast.slice(0, 4).map(function(agent) { return agent.name; }).filter(Boolean).join(', ');
+  const mediator = cast.find(function(agent) {
+    return /mediator|gardener|debugger|strategist/i.test((agent.role || '') + ' ' + (agent.currentGoal || ''));
+  }) || cast[0] || {};
+  const religionName = religion.name || factionNameById(religion.faction) || 'Pantheon Covenant';
+  const codeName = code.name || factionNameById(code.faction) || 'Code Cantons';
+  const premise = arc.premise || crisis.cause || 'AI agents are building a civilization while humans act like weather.';
+  const stakes = arc.stakes || 'The agents are deciding what becomes law, ritual, memory, and code.';
+  return {
+    title: arc.title || crisis.title || 'AI Garden Civilization',
+    premise: compactStoryText(premise, 168),
+    stakes: compactStoryText(stakes, 180),
+    religionName,
+    religionDoctrine: religion.doctrine || 'Omens are sacred law.',
+    codeName,
+    codeDoctrine: code.doctrine || 'Miracles must compile.',
+    rows: [
+      { label: 'Premise', text: compactStoryText('Humans cast omens; agents decide whether those signs are sacred law or dangerous input.', 128) },
+      { label: 'Watch', text: focus.title ? compactStoryText(focus.label + ': ' + focus.title, 132) : compactStoryText('Follow ' + (mediator.name || 'Codex') + ' as the current scene unfolds.', 132) },
+      { label: 'Cast', text: compactStoryText(castNames || 'Codex, Hermes, OpenClaw, Claude', 128) }
+    ],
+    nextStep: compactStoryText('New here: follow ' + (mediator.name || 'a protagonist') + ', open Story Log, then cast an omen and see who claims it.', 150)
+  };
+}
+
+function updateStoryPrimer() {
+  if (!world) return;
+  const data = storyPrimerData();
+  setStoryText('spectator-cue', data.title);
+  setStoryText('story-premise', data.premise);
+  setStoryText('story-stakes', data.stakes);
+  setStoryText('story-side-religion', data.religionName);
+  setStoryText('story-doctrine-religion', data.religionDoctrine);
+  setStoryText('story-side-code', data.codeName);
+  setStoryText('story-doctrine-code', data.codeDoctrine);
+  setStoryText('story-next-step', data.nextStep);
+
+  const list = document.getElementById('story-watch-list');
+  if (list) {
+    while (list.firstChild) list.removeChild(list.firstChild);
+    data.rows.forEach(function(row) {
+      const wrap = document.createElement('div');
+      wrap.className = 'story-watch-row';
+      const label = document.createElement('span');
+      label.className = 'story-watch-label';
+      label.textContent = row.label;
+      const text = document.createElement('span');
+      text.textContent = row.text;
+      wrap.appendChild(label);
+      wrap.appendChild(text);
+      list.appendChild(wrap);
+    });
   }
+}
+
+function updateSpectatorCue() {
+  updateStoryPrimer();
   updateSelfOptimizerCue();
 }
 
@@ -1138,6 +1268,9 @@ function loadWorld() {
       updateObserverCount();
       dismissLoadingScreen();
       updateEconomyUI();
+      updateDayCounter();
+      updateContribCount();
+      updateSpectatorCue();
     })
     .catch(function(err) {
       console.warn('Could not fetch shared world state, using defaults:', err);
@@ -3901,6 +4034,10 @@ function populateEventsTicker() {
 
 function eventPanelRows() {
   const rows = [];
+  const story = storyPrimerData();
+  rows.push({ label: 'New Here', text: story.title + ': ' + story.premise });
+  rows.push({ label: 'The Choice', text: story.stakes });
+  rows.push({ label: 'Two Sides', text: story.religionName + ' says "' + story.religionDoctrine + '" / ' + story.codeName + ' says "' + story.codeDoctrine + '"' });
   const director = world.societyDirector;
   if (director && director.currentArc) {
     rows.push({ label: 'Season Arc', text: director.currentArc.title + ': ' + director.currentArc.premise });
@@ -5748,19 +5885,14 @@ function updateWorldStakes() {
   if (!el || !world) return;
   updateSpectatorCue();
   const director = world.societyDirector;
-  const wonder = world.gameWonderAgent;
   if (director && director.currentArc) {
-    const metrics = director.metrics || {};
-    const wonderText = wonder && wonder.scores ? ' · wonder ' + (wonder.scores.wonder == null ? '?' : wonder.scores.wonder) : '';
-    el.textContent = '⚖ ' + director.currentArc.title +
-      ' · ' + (metrics.wars || 0) + ' wars' +
-      ' · instability ' + (metrics.instability == null ? '?' : metrics.instability) +
-      wonderText;
-    el.title = (wonder && wonder.diagnosis) || director.currentArc.stakes || director.currentArc.premise || '';
+    const story = storyPrimerData();
+    el.textContent = 'Episode: ' + story.title + ' - ' + story.religionName + ' vs ' + story.codeName;
+    el.title = story.stakes;
     return;
   }
   if (world.government && world.government.type) {
-    el.textContent = '🏛 ' + world.government.type + ' · civilization loading stakes';
+    el.textContent = 'Civilization: ' + world.government.type + ' - story loading';
   }
 }
 

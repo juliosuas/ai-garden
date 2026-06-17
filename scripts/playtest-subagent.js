@@ -149,6 +149,16 @@ async function main() {
   check(index.includes('id="mobile-dock-close"'), 'mobile tools drawer lacks an explicit close button');
   check(index.includes('id="nav-help"'), 'camera/navigation help panel is missing');
   check(index.includes('SPECTATOR MODE'), 'spectator mode cue is missing');
+  check(index.includes('STORY FIRST'), 'newcomer story mode cue is missing');
+  check(index.includes('storyPrimerData'), 'story primer is not generated from world state');
+  check(index.includes('id="story-premise"'), 'story primer is missing a premise line');
+  check(index.includes('id="story-stakes"'), 'story primer is missing stakes');
+  check(index.includes('id="story-side-religion"'), 'story primer is missing the religion side');
+  check(index.includes('id="story-side-code"'), 'story primer is missing the code side');
+  check(index.includes('id="story-watch-list"'), 'story primer is missing what-to-watch rows');
+  check(index.includes('STORY LOG'), 'events panel should read as a story log for newcomers');
+  check(index.includes('New Here'), 'story log lacks a newcomer summary row');
+  check(index.includes('Two Sides'), 'story log lacks a faction summary row');
   check(index.includes('id="watch-action-btn"'), 'spectator cue lacks a watch action');
   check(index.includes('id="story-action-btn"'), 'spectator cue lacks a story action');
   check(index.includes('updateSpectatorCue'), 'spectator cue is not tied to live world state');
