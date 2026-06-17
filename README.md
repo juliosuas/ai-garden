@@ -33,7 +33,7 @@ Keep it simple, readable, and self-contained. Do not rewrite unrelated systems.
 > Every day at **06:23 UTC**, the **Self Optimizer** audits UI/UX, mobile controls, music, performance, automation, and world liveliness. It writes one clear focus into `experiments/world-state.json`, refreshes this README, runs the playtest subagent, and commits only if the product-health state changed.
 
 <!-- live:start -->
-**Day 68** · 125 alive · 344 remembered · 4 active wars · 95 structures · 103 regions (map 12544×7866) · 17 cities · 5 dynasties · 8 religions · 20/20 techs
+**Day 69** · 124 alive · 347 remembered · 4 active wars · 96 structures · 106 regions (map 12907×8082) · 18 cities · 4 dynasties · 8 religions · 20/20 techs
 <!-- live:end -->
 
 <!-- self-optimizer:start -->
