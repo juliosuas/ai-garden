@@ -135,10 +135,16 @@ async function main() {
   check(index.includes('id="controls-dock"'), 'observer controls are not grouped into one dock');
   check(index.includes('id="mobile-menu-toggle"'), 'mobile tools menu button is missing');
   check(index.includes('setMobileToolsOpen'), 'mobile tools drawer cannot be closed programmatically');
+  check(index.includes('closeMobileToolsAfterAction'), 'mobile tools drawer should close after single-action controls');
   check(index.includes('mobile-tools-open'), 'mobile UI lacks a body state for keeping panels out of the way');
   check(index.includes('id="mobile-dock-close"'), 'mobile tools drawer lacks an explicit close button');
   check(index.includes('id="nav-help"'), 'camera/navigation help panel is missing');
-  check(index.includes('CAMERA GUIDE'), 'navigation help copy is missing');
+  check(index.includes('SPECTATOR MODE'), 'spectator mode cue is missing');
+  check(index.includes('id="watch-action-btn"'), 'spectator cue lacks a watch action');
+  check(index.includes('id="story-action-btn"'), 'spectator cue lacks a story action');
+  check(index.includes('updateSpectatorCue'), 'spectator cue is not tied to live world state');
+  check(index.includes('toggleGardenMusic'), 'music controls should use a shared toggle helper');
+  check(index.includes('refreshMusicButton'), 'music button state should be visible and synced');
   check(index.includes('id="agent-focus-btn"'), 'featured agent focus button is missing');
   check(index.includes('focusNextFeaturedAgent'), 'featured agent focus camera helper is missing');
   check(index.includes('id="minimap-panel"'), 'minimap lacks a labeled jump panel');

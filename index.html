@@ -206,13 +206,29 @@ canvas:active { cursor: grabbing; }
   color: #8ea99a; font-family: monospace; cursor: pointer; font-size: 13px;
 }
 #nav-help .nav-help-title { color: #60a5fa; font-size: 10px; letter-spacing: 1px; margin-bottom: 6px; }
+#nav-help .nav-help-arc {
+  color: #f8fafc; font-size: 12px; line-height: 1.35; margin: 4px 22px 8px 0;
+}
+#nav-help .nav-help-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin: 6px 0; }
+#nav-help .nav-help-action {
+  min-height: 30px; background: rgba(96,165,250,0.10); border: 1px solid rgba(96,165,250,0.38);
+  color: #bfdbfe; border-radius: 4px; font-family: monospace; font-size: 10px;
+}
+#nav-help .nav-help-action.primary {
+  background: rgba(250,204,21,0.12); border-color: rgba(250,204,21,0.55); color: #fde68a;
+}
 #nav-help .nav-help-line { display: flex; justify-content: space-between; gap: 10px; font-size: 11px; margin: 4px 0; }
 #nav-help .nav-help-key { color: #f8fafc; }
 #nav-help .nav-help-note { color: #8ea99a; font-size: 10px; margin-top: 7px; line-height: 1.35; }
 @media (max-width: 760px) {
-  #nav-help { top: 54px; left: 8px; width: min(250px, calc(100vw - 160px)); padding: 8px; }
-  #nav-help .nav-help-line { font-size: 10px; }
-  #nav-help .nav-help-note { display: none; }
+  #nav-help {
+    top: 50px; left: 8px; right: 74px; width: auto; max-width: none;
+    padding: 8px 36px 8px 9px;
+  }
+  #nav-help .nav-help-line { display: none; }
+  #nav-help .nav-help-note { margin-top: 6px; }
+  #nav-help .nav-help-actions { grid-template-columns: 1fr 1fr 1fr; }
+  #nav-help .nav-help-action { min-height: 32px; font-size: 9px; }
 }
 
 /* D-PAD removed — click-to-navigate */
@@ -233,9 +249,9 @@ canvas:active { cursor: grabbing; }
 #mobile-menu-toggle {
   display: none;
   position: fixed; right: 10px; bottom: 34px; z-index: 32;
-  width: 48px; height: 42px; align-items: center; justify-content: center;
+  width: 66px; height: 42px; align-items: center; justify-content: center;
   background: rgba(8,12,18,0.94); border: 1px solid rgba(74,222,128,0.55);
-  color: #4ade80; font-size: 22px; font-family: monospace;
+  color: #4ade80; font-size: 11px; font-family: monospace; letter-spacing: 1px;
   border-radius: 6px; box-shadow: 0 8px 24px rgba(0,0,0,0.38);
 }
 #zoom-controls {
@@ -260,6 +276,10 @@ canvas:active { cursor: grabbing; }
 #help-btn { color: #93c5fd; border-color: rgba(96,165,250,0.45); }
 #ambience-btn { width: auto; padding: 0 9px; font-size: 11px; color: #8ea99a; }
 #music-btn { color: #888; }
+#music-btn.music-on {
+  color: #4ade80; border-color: #4ade80;
+  box-shadow: inset 0 -3px 0 rgba(74,222,128,0.24), 0 0 14px rgba(74,222,128,0.16);
+}
 #zoom-controls button:active,
 #agent-focus-btn:active,
 #follow-btn:active,
@@ -304,14 +324,10 @@ canvas:active { cursor: grabbing; }
   #agent-focus-btn, #follow-btn, #ambience-btn { flex: 1 1 86px; min-width: 80px; }
   #speed-control button { flex: 1 1 54px; min-width: 54px; }
   body.mobile-tools-open #minimap-panel { display: none; }
-  #ui-bottom { display: none; }
-  #nav-help {
-    top: 50px; left: 8px; right: 8px; width: auto; max-width: none;
-    padding: 8px 42px 8px 9px;
-  }
   #nav-help .nav-help-close {
     top: 5px; right: 6px; width: 30px; height: 30px; font-size: 18px;
   }
+  #ui-bottom { display: none; }
 }
 
 /* === QUICK-JUMP BUTTONS === */
@@ -621,15 +637,19 @@ canvas:active { cursor: grabbing; }
 
 <div id="nav-help">
   <button class="nav-help-close" type="button" onclick="dismissNavHelp()">×</button>
-  <div class="nav-help-title">CAMERA GUIDE</div>
-  <div class="nav-help-line"><span class="nav-help-key">Drag map</span><span>move</span></div>
-  <div class="nav-help-line"><span class="nav-help-key">Wheel / pinch</span><span>zoom</span></div>
-  <div class="nav-help-line"><span class="nav-help-key">Click empty land</span><span>travel</span></div>
-  <div class="nav-help-line"><span class="nav-help-key">Agents button</span><span>next hero</span></div>
-  <div class="nav-help-note">Click named agents for goals, personality, and current scene.</div>
+  <div class="nav-help-title">SPECTATOR MODE</div>
+  <div class="nav-help-arc" id="spectator-cue">Loading the current civilization beat...</div>
+  <div class="nav-help-actions">
+    <button class="nav-help-action primary" id="watch-action-btn" type="button">WATCH</button>
+    <button class="nav-help-action" id="story-action-btn" type="button">STORY</button>
+    <button class="nav-help-action" id="sound-action-btn" type="button">MUSIC</button>
+  </div>
+  <div class="nav-help-line"><span class="nav-help-key">Drag / pinch</span><span>map</span></div>
+  <div class="nav-help-line"><span class="nav-help-key">Tap agents</span><span>identity</span></div>
+  <div class="nav-help-note">The director follows the agents with the strongest current scene.</div>
 </div>
 
-<button id="mobile-menu-toggle" type="button" aria-controls="controls-dock" aria-expanded="false" title="Open tools">☰</button>
+<button id="mobile-menu-toggle" type="button" aria-controls="controls-dock" aria-expanded="false" title="Open tools">TOOLS</button>
 <div id="controls-dock">
   <div class="mobile-dock-head"><span>TOOLS</span><button id="mobile-dock-close" type="button" aria-label="Close tools">×</button></div>
   <div class="dock-group" id="zoom-controls">
@@ -932,6 +952,8 @@ function saveLocalPrefs() {
 }
 
 const NAV_HELP_KEY = SAVE_KEY + '-nav-help-hidden';
+const NAV_HELP_VERSION_KEY = SAVE_KEY + '-nav-help-version';
+const NAV_HELP_VERSION = 'spectator-mode-v1';
 
 function setNavHelpVisible(visible, remember) {
   const el = document.getElementById('nav-help');
@@ -939,6 +961,7 @@ function setNavHelpVisible(visible, remember) {
   el.style.display = visible ? 'block' : 'none';
   try {
     if (remember) localStorage.setItem(NAV_HELP_KEY, visible ? '0' : '1');
+    if (visible) localStorage.setItem(NAV_HELP_VERSION_KEY, NAV_HELP_VERSION);
   } catch(e) {}
 }
 
@@ -950,6 +973,21 @@ function toggleNavHelp() {
   const el = document.getElementById('nav-help');
   const visible = !el || el.style.display === 'none';
   setNavHelpVisible(visible, false);
+}
+
+function updateSpectatorCue() {
+  const el = document.getElementById('spectator-cue');
+  if (!el || !world) return;
+  const director = world.societyDirector || {};
+  const arc = director.currentArc || {};
+  const wonder = world.gameWonderAgent || {};
+  if (arc.title) {
+    el.textContent = arc.title + ' · ' + (arc.stakes || arc.premise || 'watch the agents answer the crisis');
+  } else if (wonder.diagnosis) {
+    el.textContent = wonder.diagnosis;
+  } else {
+    el.textContent = 'Watch the named agents build, argue, travel, and leave traces in the world.';
+  }
 }
 
 function isMobileLayout() {
@@ -964,7 +1002,7 @@ function setMobileToolsOpen(open) {
   dock.classList.toggle('mobile-open', shouldOpen);
   document.body.classList.toggle('mobile-tools-open', shouldOpen);
   btn.setAttribute('aria-expanded', shouldOpen ? 'true' : 'false');
-  btn.textContent = shouldOpen ? '×' : '☰';
+  btn.textContent = shouldOpen ? '×' : 'TOOLS';
   btn.title = shouldOpen ? 'Close tools' : 'Open tools';
 }
 
@@ -974,13 +1012,44 @@ function toggleMobileTools() {
 }
 
 function syncMobileToolsForViewport() {
-  if (!isMobileLayout()) setMobileToolsOpen(false);
+  setMobileToolsOpen(false);
+}
+
+function closeMobileToolsAfterAction() {
+  if (isMobileLayout()) setMobileToolsOpen(false);
+}
+
+function refreshMusicButton(unmuted) {
+  const btn = document.getElementById('music-btn');
+  const soundBtn = document.getElementById('sound-action-btn');
+  if (!btn || typeof GardenMusic === 'undefined') return;
+  const isOn = typeof unmuted === 'boolean' ? unmuted : !GardenMusic.isMuted();
+  const mood = GardenMusic.getMood ? GardenMusic.getMood() : 'theme';
+  btn.textContent = isOn ? '♪' : '🔇';
+  btn.classList.toggle('music-on', isOn);
+  btn.setAttribute('aria-pressed', isOn ? 'true' : 'false');
+  btn.title = isOn ? '8-bit theme: ' + mood : 'Turn on 8-bit theme';
+  if (soundBtn) {
+    soundBtn.textContent = isOn ? ('♪ ' + mood.toUpperCase()) : 'MUSIC';
+    soundBtn.classList.toggle('primary', isOn);
+  }
+}
+
+function toggleGardenMusic() {
+  if (typeof GardenMusic === 'undefined') return false;
+  const unmuted = GardenMusic.toggleMute();
+  refreshMusicButton(unmuted);
+  return unmuted;
 }
 
 let localPrefs = loadLocalPrefs();
 localPrefs.localVisits = (localPrefs.localVisits || 0) + 1;
 try {
-  if (localStorage.getItem(NAV_HELP_KEY) === '1') setNavHelpVisible(false, false);
+  if (localStorage.getItem(NAV_HELP_VERSION_KEY) !== NAV_HELP_VERSION) {
+    setNavHelpVisible(true, false);
+  } else if (localStorage.getItem(NAV_HELP_KEY) === '1') {
+    setNavHelpVisible(false, false);
+  }
 } catch(e) {}
 syncMobileToolsForViewport();
 window.addEventListener('resize', syncMobileToolsForViewport);
@@ -5361,10 +5430,12 @@ document.getElementById('zoom-out').addEventListener('click', function() { setZo
 document.getElementById('agent-focus-btn').addEventListener('click', function(e) {
   e.stopPropagation();
   focusNextFeaturedAgent();
+  closeMobileToolsAfterAction();
 });
 document.getElementById('help-btn').addEventListener('click', function(e) {
   e.stopPropagation();
   toggleNavHelp();
+  closeMobileToolsAfterAction();
 });
 document.getElementById('mobile-menu-toggle').addEventListener('click', function(e) {
   e.stopPropagation();
@@ -5373,6 +5444,23 @@ document.getElementById('mobile-menu-toggle').addEventListener('click', function
 document.getElementById('mobile-dock-close').addEventListener('click', function(e) {
   e.stopPropagation();
   setMobileToolsOpen(false);
+});
+document.getElementById('watch-action-btn').addEventListener('click', function(e) {
+  e.stopPropagation();
+  focusNextFeaturedAgent();
+  setNavHelpVisible(false, false);
+});
+document.getElementById('story-action-btn').addEventListener('click', function(e) {
+  e.stopPropagation();
+  toggleEventsPanel(e);
+  setNavHelpVisible(false, false);
+});
+document.getElementById('sound-action-btn').addEventListener('click', function(e) {
+  e.stopPropagation();
+  toggleGardenMusic();
+});
+document.getElementById('msg-board-btn').addEventListener('click', function() {
+  closeMobileToolsAfterAction();
 });
 document.addEventListener('click', function(e) {
   const dock = document.getElementById('controls-dock');
@@ -5417,6 +5505,7 @@ document.querySelectorAll('#speed-control button').forEach(function(btn) {
     gameSpeed = parseInt(btn.dataset.speed);
     document.querySelectorAll('#speed-control button').forEach(function(b) { b.classList.remove('active'); });
     btn.classList.add('active');
+    closeMobileToolsAfterAction();
   });
 });
 
@@ -5460,6 +5549,7 @@ document.getElementById('ambience-btn').addEventListener('click', function() {
   ambienceOn = !ambienceOn;
   this.classList.toggle('active', ambienceOn);
   if (!ambienceOn) ambienceParticles = [];
+  closeMobileToolsAfterAction();
 });
 
 function updateAmbienceVisuals() {
@@ -5620,6 +5710,7 @@ function getGardenAgeDay() {
 function updateWorldStakes() {
   const el = document.getElementById('world-stakes');
   if (!el || !world) return;
+  updateSpectatorCue();
   const director = world.societyDirector;
   const wonder = world.gameWonderAgent;
   if (director && director.currentArc) {
@@ -5872,6 +5963,7 @@ document.getElementById('follow-btn').addEventListener('click', function(e) {
       this.style.color = '#888';
       this.style.borderColor = '#2a4a2a';
       document.getElementById('follow-indicator').style.display = 'none';
+      closeMobileToolsAfterAction();
       return;
     }
     followingMascot = mascots[idx + 1];
@@ -5882,20 +5974,20 @@ document.getElementById('follow-btn').addEventListener('click', function(e) {
   this.style.borderColor = '#4ade80';
   document.getElementById('follow-indicator').style.display = 'block';
   document.getElementById('follow-name').textContent = followingMascot.name;
+  closeMobileToolsAfterAction();
 });
 
 // === MUSIC BUTTON ===
 document.getElementById('music-btn').addEventListener('click', function(e) {
   e.stopPropagation();
-  const unmuted = GardenMusic.toggleMute();
-  this.textContent = unmuted ? '🔊' : '🔇';
-  this.style.color = unmuted ? '#4ade80' : '#888';
-  this.style.borderColor = unmuted ? '#4ade80' : '#2a4a2a';
+  toggleGardenMusic();
+  closeMobileToolsAfterAction();
 });
 
 // Start music system (muted by default — user clicks to unmute)
 if (typeof GardenMusic !== 'undefined') {
   GardenMusic.start();
+  refreshMusicButton(false);
 }
 
 // === DAY/NIGHT CYCLE (real-time based) ===
