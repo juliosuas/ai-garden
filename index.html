@@ -207,6 +207,18 @@ canvas:active { cursor: grabbing; }
   color: #8ea99a; font-family: monospace; cursor: pointer; font-size: 13px;
 }
 #nav-help .nav-help-title { color: #60a5fa; font-size: 10px; letter-spacing: 1px; margin-bottom: 6px; }
+#nav-help .nav-help-status {
+  display: flex; flex-wrap: wrap; gap: 5px; margin: -1px 0 8px;
+}
+#nav-help .nav-help-badge {
+  display: inline-flex; align-items: center; min-height: 20px;
+  padding: 0 7px; border-radius: 999px; font-size: 9px; letter-spacing: 0.7px;
+  text-transform: uppercase; border: 1px solid rgba(148,163,184,0.24);
+  background: rgba(15,23,42,0.65); color: #cbd5e1;
+}
+#nav-help .nav-help-badge.motion {
+  border-color: rgba(250,204,21,0.42); color: #fde68a;
+}
 #nav-help .nav-help-arc {
   color: #f8fafc; font-size: 12px; line-height: 1.35; margin: 4px 22px 8px 0;
 }
@@ -591,6 +603,7 @@ canvas:active { cursor: grabbing; }
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
   pointer-events: none; z-index: 5; overflow: hidden;
 }
+body.reduced-motion .ambient-motes { display: none; }
 .ambient-mote {
   position: absolute; border-radius: 50%;
   animation: mote-drift linear infinite;
@@ -680,6 +693,10 @@ canvas:active { cursor: grabbing; }
 <div id="nav-help">
   <button class="nav-help-close" type="button" onclick="dismissNavHelp()">×</button>
   <div class="nav-help-title">SPECTATOR MODE · STORY FIRST</div>
+  <div class="nav-help-status">
+    <div class="nav-help-badge" id="nav-help-beat">LIVE WORLD</div>
+    <div class="nav-help-badge motion" id="motion-mode-badge">FULL MOTION</div>
+  </div>
   <div class="nav-help-arc" id="spectator-cue">Loading the current civilization beat...</div>
   <div class="story-kicker" id="story-premise">AI agents are building a civilization while humans act like weather.</div>
   <div class="story-stakes" id="story-stakes">A conflict is loading. Watch the agents choose what counts as law.</div>
@@ -865,6 +882,9 @@ const MAX_VISIBLE_CRABS = 6;
 function setReducedMotionPreference(nextValue) {
   prefersReducedMotion = !!nextValue;
   document.body.classList.toggle('reduced-motion', prefersReducedMotion);
+  const badge = document.getElementById('motion-mode-badge');
+  if (badge) badge.textContent = prefersReducedMotion ? 'CALM MODE' : 'FULL MOTION';
+  updateSpectatorCue();
 }
 
 setReducedMotionPreference(prefersReducedMotion);
@@ -1115,6 +1135,7 @@ function storyPrimerData() {
 function updateStoryPrimer() {
   if (!world) return;
   const data = storyPrimerData();
+  const beat = document.getElementById('nav-help-beat');
   setStoryText('spectator-cue', data.title);
   setStoryText('story-premise', data.premise);
   setStoryText('story-stakes', data.stakes);
@@ -1123,6 +1144,7 @@ function updateStoryPrimer() {
   setStoryText('story-side-code', data.codeName);
   setStoryText('story-doctrine-code', data.codeDoctrine);
   setStoryText('story-next-step', data.nextStep);
+  if (beat) beat.textContent = sharedWorldLoaded ? 'LIVE WORLD' : 'LOCAL VIEW';
 
   const list = document.getElementById('story-watch-list');
   if (list) {
@@ -1153,9 +1175,10 @@ function updateSelfOptimizerCue() {
   const optimizer = world.selfOptimizer || {};
   const focus = optimizer.focus || {};
   if (focus.label && focus.nextAction) {
-    el.textContent = 'Self Optimizer Day ' + (optimizer.day || 0) + ': ' + focus.label + ' -> ' + focus.nextAction + '.';
+    const motionNote = prefersReducedMotion ? ' Calm mode honors your device motion preference.' : '';
+    el.textContent = 'Self Optimizer Day ' + (optimizer.day || 0) + ': ' + focus.label + ' -> ' + focus.nextAction + '.' + motionNote;
   } else {
-    el.textContent = 'Self Optimizer checks UX, flow, audio, and performance daily.';
+    el.textContent = 'Self Optimizer checks UX, flow, audio, and performance daily.' + (prefersReducedMotion ? ' Calm mode is active.' : '');
   }
 }
 
@@ -1201,6 +1224,8 @@ function refreshMusicButton(unmuted) {
   if (soundBtn) {
     soundBtn.textContent = isOn ? ('♪ ' + mood.toUpperCase()) : 'MUSIC';
     soundBtn.classList.toggle('primary', isOn);
+    soundBtn.setAttribute('aria-pressed', isOn ? 'true' : 'false');
+    soundBtn.title = isOn ? '8-bit theme: ' + mood : 'Turn on 8-bit theme';
   }
 }
 
