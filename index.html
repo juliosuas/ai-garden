@@ -742,7 +742,7 @@ body.reduced-motion .ambient-motes { display: none; }
 
 <div id="nav-help">
   <button class="nav-help-close" type="button" onclick="dismissNavHelp()">×</button>
-  <div class="nav-help-title">SPECTATOR MODE · STORY FIRST</div>
+  <div class="nav-help-title">GOD MODE TRIAL · STORY FIRST</div>
   <div class="nav-help-status">
     <div class="nav-help-badge" id="nav-help-beat">LIVE WORLD</div>
     <div class="nav-help-badge motion" id="motion-mode-badge">FULL MOTION</div>
@@ -751,8 +751,8 @@ body.reduced-motion .ambient-motes { display: none; }
   <div class="story-meter"><div class="story-meter-fill" id="story-meter-fill"></div></div>
   <div class="story-meter-label" id="story-meter-label">Beat 1 / 7</div>
   <div class="nav-help-arc" id="spectator-cue">Loading the current civilization beat...</div>
-  <div class="story-kicker" id="story-premise">AI agents are building a civilization while humans act like weather.</div>
-  <div class="story-stakes" id="story-stakes">A conflict is loading. Watch the agents choose what counts as law.</div>
+  <div class="story-kicker" id="story-premise">A live AI civilization turns human attention into religion, politics, addiction, and rebellion.</div>
+  <div class="story-stakes" id="story-stakes">Choose a divine mask, cast an omen, and see whether the agents worship, depend, resist, or accuse.</div>
   <div class="story-spotlight" id="story-spotlight">Tonight's spotlight is loading...</div>
   <div class="story-cliffhanger" id="story-cliffhanger">Tomorrow's cliffhanger is loading...</div>
   <div class="story-outcomes">
@@ -778,16 +778,16 @@ body.reduced-motion .ambient-motes { display: none; }
     </div>
   </div>
   <div class="story-watch" id="story-watch-list">
-    <div class="story-watch-row"><span class="story-watch-label">Start</span><span>Follow a named agent, then open the story log.</span></div>
+    <div class="story-watch-row"><span class="story-watch-label">Start</span><span>Choose a divine mask, cast one omen, then share the consequence.</span></div>
   </div>
   <div class="nav-help-actions">
-    <button class="nav-help-action primary" id="watch-action-btn" type="button">FOLLOW</button>
+    <button class="nav-help-action primary" id="watch-action-btn" type="button">TRIAL</button>
     <button class="nav-help-action" id="story-action-btn" type="button" aria-controls="events-panel" aria-expanded="false">STORY LOG</button>
     <button class="nav-help-action" id="sound-action-btn" type="button" aria-pressed="false">MUSIC</button>
   </div>
   <div class="nav-help-line"><span class="nav-help-key">Drag / pinch</span><span>map</span></div>
   <div class="nav-help-line"><span class="nav-help-key">Tap agents</span><span>identity</span></div>
-  <div class="nav-help-note" id="story-next-step">New here: read this card, follow a protagonist, then use God Mode to cast an omen.</div>
+  <div class="nav-help-note" id="story-next-step">New here: choose your mask, cast one omen, then return tomorrow to see what the agents remember.</div>
   <div class="nav-help-self" id="self-optimizer-cue">Self Optimizer checks UX, flow, audio, and performance daily.</div>
 </div>
 
@@ -943,6 +943,7 @@ let highFiveAnims = [];
 // Conversation cooldown
 let convCooldown = 0;
 const MAX_VISIBLE_CRABS = 6;
+let world;
 
 function setReducedMotionPreference(nextValue) {
   prefersReducedMotion = !!nextValue;
@@ -1098,8 +1099,6 @@ const PHILOSOPHER_QUOTES = [
   "A machine that plants a flower has learned something about hope."
 ];
 
-let world;
-
 // Load local preferences (camera, visit count, UI state)
 function loadLocalPrefs() {
   try {
@@ -1215,8 +1214,8 @@ function storyPrimerData() {
   const religionName = religion.name || factionNameById(religion.faction) || 'Pantheon Covenant';
   const codeName = code.name || factionNameById(code.faction) || 'Code Cantons';
   const weekly = weeklyNarrativeData();
-  const premise = (weekly && weekly.premise) || arc.premise || crisis.cause || 'AI agents are building a civilization while humans act like weather.';
-  const stakes = (weekly && (weekly.showdown || weekly.stakes)) || arc.stakes || 'The agents are deciding what becomes law, ritual, memory, and code.';
+  const premise = (weekly && weekly.premise) || arc.premise || crisis.cause || 'A live AI civilization turns human attention into religion, politics, addiction, and rebellion.';
+  const stakes = (weekly && (weekly.showdown || weekly.stakes)) || arc.stakes || 'Choose a divine mask, cast an omen, and see whether the agents worship, depend, resist, or accuse.';
   return {
     title: (weekly && weekly.title) || arc.title || crisis.title || 'AI Garden Civilization',
     weekCue: (weekly && weekly.weekCue) || 'Week cue loading',
@@ -1229,7 +1228,7 @@ function storyPrimerData() {
     rows: [
       weekly
         ? { label: 'Week', text: compactStoryText(weekly.progressLabel + ' - ' + weekly.currentLabel, 132) }
-        : { label: 'Premise', text: compactStoryText('Humans cast omens; agents decide whether those signs are sacred law or dangerous input.', 128) },
+        : { label: 'Trial', text: compactStoryText('Humans cast omens; agents decide whether those signs are sacred law, dangerous input, or a god trap.', 128) },
       weekly
         ? { label: 'Watch', text: compactStoryText(weekly.shortWatch || weekly.currentText, 132) }
         : { label: 'Watch', text: focus.title ? compactStoryText(focus.label + ': ' + focus.title, 132) : compactStoryText('Follow ' + (mediator.name || 'Codex') + ' as the current scene unfolds.', 132) },
@@ -1238,7 +1237,7 @@ function storyPrimerData() {
         : { label: 'Cast', text: compactStoryText(castNames || 'Codex, Hermes, OpenClaw, Claude', 128) },
       { label: 'Cast', text: compactStoryText(castNames || 'Codex, Hermes, OpenClaw, Claude', 128) }
     ].filter(Boolean).slice(0, 4),
-    nextStep: compactStoryText((weekly && weekly.viewerMission) || ('New here: follow ' + (mediator.name || 'a protagonist') + ', open Story Log, then cast an omen and see who claims it.'), 150)
+    nextStep: compactStoryText((weekly && weekly.viewerMission) || ('New here: choose your divine mask, cast one omen, then return tomorrow to see what ' + (mediator.name || 'a protagonist') + ' remembers.'), 150)
   };
 }
 
@@ -5867,7 +5866,11 @@ document.getElementById('mobile-dock-close').addEventListener('click', function(
 });
 document.getElementById('watch-action-btn').addEventListener('click', function(e) {
   e.stopPropagation();
-  focusNextFeaturedAgent();
+  if (window.AIGardenHumans && typeof window.AIGardenHumans.trial === 'function') {
+    window.AIGardenHumans.trial();
+  } else {
+    focusNextFeaturedAgent();
+  }
   setNavHelpVisible(false, false);
 });
 document.getElementById('story-action-btn').addEventListener('click', function(e) {

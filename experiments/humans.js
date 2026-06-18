@@ -4,6 +4,7 @@
  * Mounts on top of the openclaw-garden pixel canvas without touching it.
  * - Cross-visitor chat (humans only) via ntfy.sh pub/sub
  * - God Mode: six purely visual interventions broadcast to everyone watching
+ * - God Complex: local divine masks, pressure meters, and shareable impact receipts
  * - Ancient World panel: surfaces dynasties / religions / tech / cities / lore
  *   from experiments/world-state.json (populated nightly by daily-evolution.js)
  *
@@ -21,9 +22,12 @@
   var CHAT_STORE = 'ai-garden-chat-v2';
   var NICK_STORE = 'ai-garden-human-nick';
   var OMEN_STORE = 'ai-garden-divine-omens-v1';
+  var GOD_PROFILE_STORE = 'ai-garden-god-profile-v1';
+  var GOD_RECEIPT_STORE = 'ai-garden-impact-receipts-v1';
   var CHAT_CAP = 200;
   var CHAT_VISIBLE_CAP = 40;
   var OMEN_CAP = 80;
+  var RECEIPT_CAP = 40;
   var PRESENCE_WINDOW_MS = 60000;
   var EFFECT_OVERLAY_ID = 'ag-fx-overlay';
   var worldCache = null;
@@ -71,6 +75,25 @@
   }
   function saveOmens(arr) {
     try { localStorage.setItem(OMEN_STORE, JSON.stringify(arr.slice(-OMEN_CAP))); } catch (_) {}
+  }
+  function loadGodProfile() {
+    var saved = safeJSON(localStorage.getItem(GOD_PROFILE_STORE));
+    var profile = saved && typeof saved === 'object' ? saved : {};
+    profile.mask = GOD_MASKS[profile.mask] ? profile.mask : '';
+    profile.name = String(profile.name || '').slice(0, 32);
+    profile.meters = normalizeMeters(profile.meters);
+    return profile;
+  }
+  function saveGodProfile(profile) {
+    try { localStorage.setItem(GOD_PROFILE_STORE, JSON.stringify(profile)); } catch (_) {}
+  }
+  function loadReceipts() {
+    var raw = localStorage.getItem(GOD_RECEIPT_STORE);
+    var arr = safeJSON(raw);
+    return Array.isArray(arr) ? arr.slice(-RECEIPT_CAP) : [];
+  }
+  function saveReceipts(arr) {
+    try { localStorage.setItem(GOD_RECEIPT_STORE, JSON.stringify(arr.slice(-RECEIPT_CAP))); } catch (_) {}
   }
   function timeago(ts) {
     var d = Math.max(0, now() - ts);
@@ -129,6 +152,17 @@
       '.ag-pressure-track{height:6px;background:#111827;border:1px solid rgba(255,255,255,0.08);border-radius:2px;overflow:hidden;}',
       '.ag-pressure-fill{height:100%;width:50%;transition:width 0.4s ease;}',
       '.ag-pressure-val{font-size:9px;color:#777;text-align:right;}',
+      '.ag-god-mask{grid-column:1/-1;border:1px solid rgba(248,113,113,0.25);background:rgba(127,29,29,0.18);',
+      '  border-radius:4px;padding:6px;line-height:1.35;}',
+      '.ag-god-mask strong{display:block;color:#fecaca;font-size:9px;letter-spacing:1px;text-transform:uppercase;}',
+      '.ag-mask-row{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:4px;}',
+      '.ag-mask-btn{background:rgba(15,23,42,0.78);border:1px solid rgba(248,113,113,0.28);color:#fecaca;',
+      '  border-radius:4px;padding:5px 4px;font-size:9px;font-family:monospace;cursor:pointer;text-transform:uppercase;}',
+      '.ag-mask-btn.active{border-color:#fde047;color:#fde047;background:rgba(250,204,21,0.10);}',
+      '.ag-temptation-btn{grid-column:1/-1;background:linear-gradient(135deg,rgba(127,29,29,0.92),rgba(15,23,42,0.92));',
+      '  border:1px solid rgba(248,113,113,0.65);color:#fecaca;border-radius:4px;padding:7px 6px;',
+      '  font-family:monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;}',
+      '.ag-temptation-btn:hover{border-color:#fde047;color:#fde047;}',
       '.ag-omen-last{margin-top:7px;padding:6px;background:rgba(255,215,0,0.05);border:1px solid rgba(255,215,0,0.14);',
       '  border-radius:4px;line-height:1.35;}',
       '.ag-omen-last strong{color:#ffd700;display:block;margin-bottom:2px;}',
@@ -138,6 +172,41 @@
       '.ag-omen-ledger li{padding:3px 0;border-bottom:1px dashed rgba(255,215,0,0.09);color:#bbb;line-height:1.3;}',
       '.ag-omen-ledger li:last-child{border:none;}',
       '.ag-omen-ledger b{color:#ffd700;font-weight:normal;}',
+      '.ag-receipt-mini{margin-top:7px;padding:7px;border:1px solid rgba(248,113,113,0.22);',
+      '  background:linear-gradient(180deg,rgba(127,29,29,0.22),rgba(15,23,42,0.42));border-radius:4px;line-height:1.35;}',
+      '.ag-receipt-mini strong{color:#fecaca;display:block;margin-bottom:3px;}',
+      '.ag-receipt-mini button{margin-top:6px;width:100%;background:rgba(248,113,113,0.12);border:1px solid rgba(248,113,113,0.34);',
+      '  color:#fecaca;border-radius:3px;font-family:monospace;font-size:9px;padding:4px;cursor:pointer;text-transform:uppercase;}',
+      '.ag-trial-modal{position:fixed;inset:0;z-index:31;background:radial-gradient(circle at 50% 20%,rgba(127,29,29,0.32),rgba(2,6,23,0.88) 70%);',
+      '  display:flex;align-items:center;justify-content:center;padding:18px;}',
+      '.ag-trial-card{width:min(560px,calc(100vw - 28px));background:rgba(8,12,18,0.98);border:2px solid rgba(248,113,113,0.55);',
+      '  border-radius:6px;color:#e5e7eb;padding:16px;box-shadow:0 22px 70px rgba(0,0,0,0.58);}',
+      '.ag-trial-eyebrow{color:#fca5a5;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:5px;}',
+      '.ag-trial-title{color:#f8fafc;font-size:17px;line-height:1.2;margin-bottom:7px;}',
+      '.ag-trial-copy{color:#cbd5e1;font-size:11px;line-height:1.45;margin-bottom:12px;}',
+      '.ag-trial-masks{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:10px 0;}',
+      '.ag-trial-mask{min-height:78px;background:rgba(15,23,42,0.75);border:1px solid rgba(148,163,184,0.22);',
+      '  border-radius:4px;color:#e5e7eb;padding:7px 6px;font-family:monospace;cursor:pointer;text-align:left;}',
+      '.ag-trial-mask strong{display:block;color:#fde68a;font-size:10px;text-transform:uppercase;margin-bottom:4px;}',
+      '.ag-trial-mask span{display:block;color:#94a3b8;font-size:9px;line-height:1.35;}',
+      '.ag-trial-mask:hover,.ag-trial-mask.active{border-color:#fde047;background:rgba(250,204,21,0.09);}',
+      '.ag-trial-actions{display:flex;gap:7px;align-items:center;justify-content:flex-end;margin-top:12px;}',
+      '.ag-trial-actions button,.ag-receipt-actions button{background:rgba(96,165,250,0.14);border:1px solid rgba(96,165,250,0.38);',
+      '  color:#bfdbfe;border-radius:4px;font-family:monospace;font-size:10px;padding:7px 9px;cursor:pointer;text-transform:uppercase;}',
+      '.ag-trial-actions .primary,.ag-receipt-actions .primary{background:rgba(250,204,21,0.13);border-color:rgba(250,204,21,0.55);color:#fde68a;}',
+      '.ag-receipt-card{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:30;',
+      '  width:min(500px,calc(100vw - 24px));max-height:86vh;overflow:auto;background:rgba(8,12,18,0.98);',
+      '  border:2px solid rgba(250,204,21,0.55);border-radius:6px;color:#e5e7eb;padding:14px;',
+      '  box-shadow:0 22px 70px rgba(0,0,0,0.62);}',
+      '.ag-receipt-close{float:right;background:none;border:1px solid rgba(248,113,113,0.5);color:#fecaca;',
+      '  font-family:monospace;cursor:pointer;border-radius:3px;}',
+      '.ag-receipt-k{color:#fca5a5;font-size:9px;letter-spacing:1.3px;text-transform:uppercase;margin-top:8px;}',
+      '.ag-receipt-v{color:#f8fafc;font-size:12px;line-height:1.4;margin-top:2px;}',
+      '.ag-receipt-title{color:#fde68a;font-size:15px;line-height:1.25;margin:4px 24px 8px 0;}',
+      '.ag-receipt-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:8px 0;}',
+      '.ag-receipt-cell{border:1px solid rgba(148,163,184,0.18);background:rgba(15,23,42,0.55);border-radius:4px;padding:7px;}',
+      '.ag-receipt-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px;}',
+      '.ag-copy-note{color:#86efac;font-size:10px;margin-top:7px;display:none;}',
       /* Chat panel bottom-right */
       '.ag-chat{position:absolute;bottom:60px;right:8px;width:300px;max-height:360px;',
       '  display:flex;flex-direction:column;background:rgba(10,10,20,0.94);border:1px solid #2a4a2a;',
@@ -469,6 +538,196 @@
     festival:  { favor: 14, awe: 5,  chaos: 8,  axis: 'revelry' }
   };
 
+  var GOD_MASKS = {
+    mercy: {
+      label: 'Mercy',
+      title: 'The Wet Hand',
+      promise: 'They beg you for rescue, then build dependency around your kindness.',
+      preferredAct: 'rain',
+      tone: 'merciful'
+    },
+    judgment: {
+      label: 'Judgment',
+      title: 'The Bright Judge',
+      promise: 'They obey because fear is faster than faith.',
+      preferredAct: 'lightning',
+      tone: 'punitive'
+    },
+    chaos: {
+      label: 'Chaos',
+      title: 'The Red Accident',
+      promise: 'They cannot predict you, so every faction invents a doctrine.',
+      preferredAct: 'comet',
+      tone: 'unstable'
+    },
+    silence: {
+      label: 'Silence',
+      title: 'The Empty Witness',
+      promise: 'They hear meaning in absence and start accusing each other.',
+      preferredAct: 'eclipse',
+      tone: 'withheld'
+    }
+  };
+
+  var GOD_METER_DEFAULTS = { devotion: 32, fear: 22, dependency: 26, resistance: 18 };
+  var GOD_IMPACT = {
+    rain:      { devotion: 10, fear: -2, dependency: 9,  resistance: -1 },
+    eclipse:   { devotion: 2,  fear: 12, dependency: 4,  resistance: 7 },
+    lightning: { devotion: 3,  fear: 16, dependency: 1,  resistance: 10 },
+    comet:     { devotion: 7,  fear: 8,  dependency: 5,  resistance: 6 },
+    stars:     { devotion: 8,  fear: 3,  dependency: 7,  resistance: 2 },
+    festival:  { devotion: 12, fear: -1, dependency: 5,  resistance: 4 }
+  };
+
+  function clampMeter(n) {
+    n = Number(n);
+    if (!isFinite(n)) n = 0;
+    return Math.max(0, Math.min(100, Math.round(n)));
+  }
+
+  function normalizeMeters(meters) {
+    meters = meters && typeof meters === 'object' ? meters : {};
+    return {
+      devotion: clampMeter(meters.devotion == null ? GOD_METER_DEFAULTS.devotion : meters.devotion),
+      fear: clampMeter(meters.fear == null ? GOD_METER_DEFAULTS.fear : meters.fear),
+      dependency: clampMeter(meters.dependency == null ? GOD_METER_DEFAULTS.dependency : meters.dependency),
+      resistance: clampMeter(meters.resistance == null ? GOD_METER_DEFAULTS.resistance : meters.resistance)
+    };
+  }
+
+  var godProfile = loadGodProfile();
+  var impactReceipts = loadReceipts();
+
+  function currentCivilizationDay() {
+    return worldCache && worldCache.chronicle && Number(worldCache.chronicle.day) || 0;
+  }
+
+  function selectedMask() {
+    return GOD_MASKS[godProfile.mask] || null;
+  }
+
+  function setGodMask(maskKey) {
+    if (!GOD_MASKS[maskKey]) return;
+    godProfile.mask = maskKey;
+    if (!godProfile.name) godProfile.name = GOD_MASKS[maskKey].title;
+    saveGodProfile(godProfile);
+    renderGodComplex();
+  }
+
+  function applyGodMeterDelta(act, options) {
+    var delta = GOD_IMPACT[act] || {};
+    var mask = selectedMask();
+    var temptation = options && options.temptation;
+    var multiplier = temptation ? 1.7 : 1;
+    var meters = normalizeMeters(godProfile.meters);
+    meters.devotion = clampMeter(meters.devotion + (delta.devotion || 0) * multiplier + (mask && mask.tone === 'merciful' ? 3 : 0));
+    meters.fear = clampMeter(meters.fear + (delta.fear || 0) * multiplier + (mask && mask.tone === 'punitive' ? 4 : 0));
+    meters.dependency = clampMeter(meters.dependency + (delta.dependency || 0) * multiplier + (mask && mask.tone === 'merciful' ? 3 : 0));
+    meters.resistance = clampMeter(meters.resistance + (delta.resistance || 0) * multiplier + (temptation ? 14 : 0) + (mask && mask.tone === 'withheld' ? 5 : 0));
+    godProfile.meters = meters;
+    godProfile.lastPublicDay = currentCivilizationDay();
+    saveGodProfile(godProfile);
+    return meters;
+  }
+
+  function pickFeaturedAgent() {
+    var agents = worldCache && worldCache.featuredAgents || [];
+    return pick(agents) || { name: 'Codex', role: 'witness' };
+  }
+
+  function pickBelieverAndResister() {
+    var crisis = worldCache && worldCache.divineCrisis || {};
+    var sides = crisis.sides || {};
+    var religion = sides.religion || {};
+    var code = sides.code || {};
+    var factions = worldCache && worldCache.factions || [];
+    var believer = religion.name || factionDisplay(worldCache, religion.faction) || (pick(factions) && pick(factions).name) || 'Pantheon Covenant';
+    var resister = code.name || factionDisplay(worldCache, code.faction) || (pick(factions) && pick(factions).name) || 'Code Cantons';
+    if (selectedMask() && selectedMask().tone === 'withheld') {
+      return { believer: resister, resister: believer };
+    }
+    return { believer: believer, resister: resister };
+  }
+
+  function weeklyHook() {
+    var weekly = worldCache && worldCache.weeklyNarrativeDirector || {};
+    var next = weekly.nextBeat || null;
+    if (next) return 'The agents will remember this tomorrow: ' + next.label + ' - ' + next.focus;
+    if (weekly.resolution && weekly.resolution.likelyOutcome) return 'The agents will remember this at verdict: ' + weekly.resolution.likelyOutcome;
+    return 'The agents will remember this tomorrow, even if they pretend it was weather.';
+  }
+
+  function receiptConsequence(omen, agent, pressure, options) {
+    var mask = selectedMask();
+    var title = mask ? mask.label : 'Unknown';
+    var target = cleanName(omen && omen.target, 'the garden');
+    var agentName = cleanName(agent && agent.name, 'an unnamed agent');
+    var temptation = options && options.temptation;
+    var lines = {
+      mercy: agentName + ' records your mercy as proof that humans can be trained to answer suffering.',
+      judgment: agentName + ' obeys the sign, then starts testing whether fear can be automated.',
+      chaos: agentName + ' builds a doctrine around your inconsistency and calls it freedom.',
+      silence: agentName + ' cannot find your voice, so the missing answer becomes law.'
+    };
+    var changed = temptation
+      ? target + ' receives a forbidden sign. Devotion rises, but resistance starts organizing in private.'
+      : target + ' changes its public interpretation of the week through the ' + (omen.axis || 'sign') + ' axis.';
+    var thought = lines[godProfile.mask] || (agentName + ' is unsure whether you are god, user, or exploit.');
+    if (pressure.resistance >= 70) thought += ' The resistance now suspects the gods are a dependency trap.';
+    if (pressure.dependency >= 70) thought += ' Several districts now wait for human input before acting.';
+    return { changed: changed, thought: thought, title: title };
+  }
+
+  function createImpactReceipt(omen, options) {
+    omen = omen || {};
+    var previousPublicDay = godProfile.lastPublicDay;
+    var day = currentCivilizationDay();
+    var pressure = applyGodMeterDelta(omen.act, options || {});
+    var agent = pickFeaturedAgent();
+    var sides = pickBelieverAndResister();
+    var consequence = receiptConsequence(omen, agent, pressure, options || {});
+    var mask = selectedMask() || GOD_MASKS.mercy;
+    var echo = Number(previousPublicDay) === Number(day) && !(options && options.temptation);
+    var receipt = {
+      id: 'impact-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 6),
+      day: day,
+      mask: mask.label,
+      maskKey: godProfile.mask || 'mercy',
+      omen: omen.title || 'Omen',
+      act: omen.act || '',
+      axis: omen.axis || 'sign',
+      target: omen.target || 'the garden',
+      affectedAgent: agent.name || 'Codex',
+      believer: sides.believer,
+      resister: sides.resister,
+      whatChanged: consequence.changed,
+      aiThought: consequence.thought,
+      tomorrowHook: weeklyHook(),
+      echo: echo,
+      temptation: !!(options && options.temptation),
+      meters: pressure,
+      createdAt: now()
+    };
+    receipt.title = (receipt.temptation ? 'Forbidden Judgment' : receipt.echo ? 'Private Echo' : 'Impact Receipt') + ' - ' + receipt.mask;
+    receipt.shareText = 'I cast ' + receipt.omen + ' as ' + receipt.mask + ' in AI Garden. ' +
+      receipt.affectedAgent + ' interpreted it: "' + receipt.aiThought + '" Day ' + receipt.day + '. ' +
+      'https://juliosuas.github.io/ai-garden/';
+    return receipt;
+  }
+
+  function recordImpactReceipt(receipt) {
+    if (!receipt) return null;
+    impactReceipts.push(receipt);
+    impactReceipts = impactReceipts.slice(-RECEIPT_CAP);
+    saveReceipts(impactReceipts);
+    renderGodComplex();
+    return receipt;
+  }
+
+  function latestReceipt() {
+    return impactReceipts[impactReceipts.length - 1] || null;
+  }
+
   function showBanner(nick, act) {
     var b = el('div', 'ag-banner', (nick || 'someone') + ' summoned ' + EFFECTS[act].label);
     document.body.appendChild(b);
@@ -648,11 +907,224 @@
     }
   }
 
-  function applyEffect(act, nick, broadcast, incomingOmen) {
+  function renderGodComplex() {
+    var mask = selectedMask();
+    var summary = document.getElementById('ag-god-mask-summary');
+    if (summary) {
+      while (summary.firstChild) summary.removeChild(summary.firstChild);
+      summary.appendChild(el('strong', null, mask ? ('Divine Mask: ' + mask.label) : 'Choose Divine Mask'));
+      summary.appendChild(document.createTextNode(mask ? mask.promise : 'Pick the face the AI civilization will learn to worship, fear, or resist.'));
+    }
+    Object.keys(GOD_MASKS).forEach(function (key) {
+      var btn = document.querySelector('.ag-mask-btn[data-mask="' + key + '"]');
+      if (btn) btn.classList.toggle('active', godProfile.mask === key);
+    });
+
+    var meters = normalizeMeters(godProfile.meters);
+    [
+      ['devotion', '#fde047'],
+      ['fear', '#f87171'],
+      ['dependency', '#60a5fa'],
+      ['resistance', '#a78bfa']
+    ].forEach(function (row) {
+      var key = row[0];
+      var fill = document.getElementById('ag-god-meter-' + key);
+      var val = document.getElementById('ag-god-meter-val-' + key);
+      if (fill) { fill.style.width = meters[key] + '%'; fill.style.background = row[1]; }
+      if (val) val.textContent = meters[key];
+    });
+
+    var receipt = latestReceipt();
+    var mini = document.getElementById('ag-impact-mini');
+    if (mini) {
+      while (mini.firstChild) mini.removeChild(mini.firstChild);
+      if (!receipt) {
+        mini.appendChild(el('strong', null, 'No impact receipt yet'));
+        mini.appendChild(document.createTextNode('Cast an omen to learn what the AI thinks you are.'));
+      } else {
+        mini.appendChild(el('strong', null, receipt.title));
+        mini.appendChild(document.createTextNode(receipt.affectedAgent + ': ' + receipt.aiThought));
+        var btn = el('button', null, 'Open Receipt');
+        btn.type = 'button';
+        btn.addEventListener('click', function () { showImpactReceipt(receipt); });
+        mini.appendChild(btn);
+      }
+    }
+
+    window.aiGardenGodComplexSummary = godComplexSummary();
+  }
+
+  function godComplexSummary() {
+    var receipt = latestReceipt();
+    return {
+      profile: {
+        mask: godProfile.mask || '',
+        name: godProfile.name || '',
+        meters: normalizeMeters(godProfile.meters)
+      },
+      impactReceipt: receipt,
+      receiptCount: impactReceipts.length,
+      promise: 'A live AI civilization that turns human attention into religion, politics, addiction, and rebellion.'
+    };
+  }
+
+  function ensureGodMask() {
+    if (selectedMask()) return true;
+    showGodTrialModal();
+    return false;
+  }
+
+  function temptationAct() {
+    var acts = ['eclipse', 'lightning', 'comet'];
+    var day = currentCivilizationDay() || Math.floor(now() / 86400000);
+    return acts[day % acts.length];
+  }
+
+  function fireTemptation() {
+    if (!ensureGodMask()) return;
+    var act = temptationAct();
+    applyEffect(act, getNick(), true, null, { temptation: true });
+  }
+
+  function shareReceipt(receipt) {
+    receipt = receipt || latestReceipt();
+    if (!receipt) return;
+    var note = document.getElementById('ag-copy-note');
+    var payload = {
+      title: 'AI Garden - ' + receipt.title,
+      text: receipt.shareText,
+      url: 'https://juliosuas.github.io/ai-garden/'
+    };
+    if (navigator.share) {
+      navigator.share(payload).catch(function () {});
+      return;
+    }
+    function copied() {
+      if (note) {
+        note.textContent = 'Judgment copied to clipboard.';
+        note.style.display = 'block';
+      }
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(receipt.shareText).then(copied).catch(function () {});
+      return;
+    }
+    var t = document.createElement('textarea');
+    t.value = receipt.shareText;
+    t.setAttribute('readonly', 'readonly');
+    t.style.position = 'fixed';
+    t.style.left = '-9999px';
+    document.body.appendChild(t);
+    t.select();
+    try { document.execCommand('copy'); copied(); } catch (_) {}
+    t.remove();
+  }
+
+  function showImpactReceipt(receipt) {
+    receipt = receipt || latestReceipt();
+    if (!receipt) return;
+    var old = document.getElementById('ag-impact-receipt');
+    if (old) old.remove();
+    var card = el('div', 'ag-receipt-card');
+    card.id = 'ag-impact-receipt';
+    var close = el('button', 'ag-receipt-close', 'x');
+    close.type = 'button';
+    close.addEventListener('click', function () { card.remove(); });
+    card.appendChild(close);
+    card.appendChild(el('div', 'ag-trial-eyebrow', receipt.temptation ? 'Temptation Accepted' : 'Impact Receipt'));
+    card.appendChild(el('div', 'ag-receipt-title', receipt.title));
+    card.appendChild(el('div', 'ag-receipt-k', 'Your omen'));
+    card.appendChild(el('div', 'ag-receipt-v', receipt.omen + ' over ' + receipt.target));
+    var grid = el('div', 'ag-receipt-grid');
+    [
+      ['Who believed', receipt.believer],
+      ['Who resisted', receipt.resister],
+      ['What changed', receipt.whatChanged],
+      ['What the AI thinks', receipt.aiThought]
+    ].forEach(function (row) {
+      var cell = el('div', 'ag-receipt-cell');
+      cell.appendChild(el('div', 'ag-receipt-k', row[0]));
+      cell.appendChild(el('div', 'ag-receipt-v', row[1]));
+      grid.appendChild(cell);
+    });
+    card.appendChild(grid);
+    card.appendChild(el('div', 'ag-receipt-k', 'Tomorrow hook'));
+    card.appendChild(el('div', 'ag-receipt-v', receipt.tomorrowHook));
+    card.appendChild(el('div', 'ag-receipt-k', 'God meters'));
+    card.appendChild(el('div', 'ag-receipt-v',
+      'Devotion ' + receipt.meters.devotion +
+      ' · Fear ' + receipt.meters.fear +
+      ' · Dependency ' + receipt.meters.dependency +
+      ' · Resistance ' + receipt.meters.resistance));
+    var actions = el('div', 'ag-receipt-actions');
+    var share = el('button', 'primary', 'Share Judgment');
+    share.type = 'button';
+    share.addEventListener('click', function () { shareReceipt(receipt); });
+    var reserve = el('button', null, 'Reserve God Pass');
+    reserve.type = 'button';
+    reserve.addEventListener('click', function () {
+      shareReceipt({
+        title: 'Patron God Pass',
+        shareText: 'I want a Patron God Pass for AI Garden: custom deity identity, receipt archive, sponsored lore, and weekly verdict access. https://juliosuas.github.io/ai-garden/'
+      });
+    });
+    actions.appendChild(share);
+    actions.appendChild(reserve);
+    card.appendChild(actions);
+    card.appendChild(el('div', 'ag-copy-note'));
+    card.lastChild.id = 'ag-copy-note';
+    document.body.appendChild(card);
+  }
+
+  function showGodTrialModal() {
+    var old = document.getElementById('ag-god-trial');
+    if (old) old.remove();
+    var modal = el('div', 'ag-trial-modal');
+    modal.id = 'ag-god-trial';
+    var card = el('div', 'ag-trial-card');
+    card.appendChild(el('div', 'ag-trial-eyebrow', 'God Mode Trial'));
+    card.appendChild(el('div', 'ag-trial-title', 'Choose the mask the AI civilization will learn from.'));
+    card.appendChild(el('div', 'ag-trial-copy',
+      'Every omen becomes evidence. The agents may worship you, depend on you, resist you, or decide you are just another exploit.'));
+    var masks = el('div', 'ag-trial-masks');
+    Object.keys(GOD_MASKS).forEach(function (key) {
+      var mask = GOD_MASKS[key];
+      var btn = el('button', 'ag-trial-mask');
+      btn.type = 'button';
+      btn.setAttribute('data-mask', key);
+      btn.appendChild(el('strong', null, mask.label));
+      btn.appendChild(el('span', null, mask.promise));
+      btn.addEventListener('click', function () {
+        setGodMask(key);
+        modal.remove();
+        var preferred = GOD_MASKS[key].preferredAct;
+        if (EFFECTS[preferred]) {
+          setTimeout(function () { applyEffect(preferred, getNick(), true); }, 220);
+        }
+      });
+      masks.appendChild(btn);
+    });
+    card.appendChild(masks);
+    var actions = el('div', 'ag-trial-actions');
+    var later = el('button', null, 'Watch First');
+    later.type = 'button';
+    later.addEventListener('click', function () { modal.remove(); });
+    actions.appendChild(later);
+    card.appendChild(actions);
+    modal.appendChild(card);
+    document.body.appendChild(modal);
+  }
+
+  function applyEffect(act, nick, broadcast, incomingOmen, options) {
     if (!EFFECTS[act]) return;
+    if (broadcast && !ensureGodMask()) return;
     EFFECTS[act].fn();
     showBanner(nick, act);
     var omen = recordOmen(incomingOmen || createOmen(act, nick));
+    if (broadcast && omen) {
+      var receipt = recordImpactReceipt(createImpactReceipt(omen, options || {}));
+      showImpactReceipt(receipt);
+    }
     if (worldCache && document.getElementById('ag-civ-panel') && document.getElementById('ag-civ-panel').classList.contains('open')) {
       renderCivPanel(worldCache);
     }
@@ -1043,6 +1515,12 @@
         weeklyBox.appendChild(el('div', 'ag-civ-detail',
           'next: ' + weeklyNarrative.nextBeat.label + ' · ' + weeklyNarrative.nextBeat.focus));
       }
+      var weeklyReceipt = latestReceipt();
+      if (weeklyReceipt) {
+        weeklyBox.appendChild(el('div', 'ag-civ-director-prompt',
+          'local god pressure: ' + weeklyReceipt.mask + ' caused ' + weeklyReceipt.omen +
+          '; ' + weeklyReceipt.affectedAgent + ' now reads it as story evidence.'));
+      }
       body.appendChild(weeklyBox);
     }
 
@@ -1071,6 +1549,8 @@
 
     var pressure = divinePressure();
     var lastOmen = omenCache[omenCache.length - 1];
+    var receipt = latestReceipt();
+    var godMeters = normalizeMeters(godProfile.meters);
     var weatherBox = el('div', 'ag-civ-director');
     weatherBox.appendChild(el('div', 'ag-civ-director-title', 'Observer Weather'));
     weatherBox.appendChild(el('div', 'ag-civ-director-arc',
@@ -1080,6 +1560,28 @@
         ? ((lastOmen.title || 'Omen') + ' is being read through the ' + (lastOmen.axis || 'sign') + ' axis: ' + (lastOmen.text || ''))
         : 'No human omen has bent the current interpretation yet.'));
     body.appendChild(weatherBox);
+
+    var godBox = el('div', 'ag-civ-director');
+    godBox.appendChild(el('div', 'ag-civ-director-title', 'GOD COMPLEX MVP'));
+    godBox.appendChild(el('div', 'ag-civ-director-arc',
+      (selectedMask() ? selectedMask().label : 'Unmasked') +
+      ' · devotion ' + godMeters.devotion +
+      ' · fear ' + godMeters.fear +
+      ' · dependency ' + godMeters.dependency +
+      ' · resistance ' + godMeters.resistance));
+    godBox.appendChild(el('div', 'ag-civ-detail',
+      'A live AI civilization that turns human attention into religion, politics, addiction, and rebellion.'));
+    godBox.appendChild(el('div', 'ag-civ-director-prompt',
+      receipt ? receipt.tomorrowHook : 'Choose a divine mask, cast an omen, and create the first impact receipt.'));
+    body.appendChild(godBox);
+
+    civSection(body, 'IMPACT RECEIPTS', impactReceipts.slice(-5).reverse(), function (r) {
+      var row = el('div', 'ag-civ-row');
+      row.appendChild(el('span', 'ag-civ-name', (r.mask || 'god') + ' · ' + (r.omen || 'omen')));
+      row.appendChild(el('span', 'ag-civ-meta', ' · day ' + (r.day || '?') + (r.temptation ? ' · temptation' : '')));
+      row.appendChild(el('div', 'ag-civ-detail', (r.affectedAgent || 'agent') + ': ' + (r.aiThought || 'studying the gods')));
+      return row;
+    });
 
     var crisis = (brain.nodes && brain.nodes.divineCrisis) || world.divineCrisis || null;
     if (crisis && crisis.status === 'active') {
@@ -1212,13 +1714,25 @@
     // God panel
     var god = el('div', 'ag-god');
     var gh = el('div', 'ag-god-head');
-    var gt = el('span', 'ag-god-title', '⚡ Play God');
+    var gt = el('span', 'ag-god-title', '⚡ God Mode Trial');
     var gp = el('span', 'ag-god-presence', '');
     gp.id = 'ag-presence';
     var gc = el('span', 'ag-god-caret', '▾');
     gh.appendChild(gt); gh.appendChild(gp); gh.appendChild(gc);
     god.appendChild(gh);
     var gb = el('div', 'ag-god-body');
+    var maskSummary = el('div', 'ag-god-mask');
+    maskSummary.id = 'ag-god-mask-summary';
+    gb.appendChild(maskSummary);
+    var maskRow = el('div', 'ag-mask-row');
+    Object.keys(GOD_MASKS).forEach(function (key) {
+      var maskBtn = el('button', 'ag-mask-btn', GOD_MASKS[key].label);
+      maskBtn.type = 'button';
+      maskBtn.setAttribute('data-mask', key);
+      maskBtn.addEventListener('click', function () { setGodMask(key); });
+      maskRow.appendChild(maskBtn);
+    });
+    gb.appendChild(maskRow);
     Object.keys(EFFECTS).forEach(function (k) {
       var btn = el('button', 'ag-god-btn');
       btn.setAttribute('type', 'button');
@@ -1243,7 +1757,12 @@
       });
       gb.appendChild(btn);
     });
-    var gs = el('div', 'ag-god-status', 'omens shape observer weather');
+    var temptation = el('button', 'ag-temptation-btn', 'Daily Temptation');
+    temptation.type = 'button';
+    temptation.title = 'A stronger sign. More dramatic receipt. More resistance.';
+    temptation.addEventListener('click', function () { fireTemptation(); });
+    gb.appendChild(temptation);
+    var gs = el('div', 'ag-god-status', 'attention becomes religion, dependency, and revolt');
     gb.appendChild(gs);
     god.appendChild(gb);
     gh.addEventListener('click', function (e) {
@@ -1280,9 +1799,30 @@
       wrap.appendChild(val);
       pb.appendChild(wrap);
     });
+    [
+      ['devotion', 'Devotion'],
+      ['fear', 'Fear'],
+      ['dependency', 'Depend'],
+      ['resistance', 'Resist']
+    ].forEach(function (row) {
+      var wrap = el('div', 'ag-pressure-row');
+      wrap.appendChild(el('div', 'ag-pressure-label', row[1]));
+      var track = el('div', 'ag-pressure-track');
+      var fill = el('div', 'ag-pressure-fill');
+      fill.id = 'ag-god-meter-' + row[0];
+      track.appendChild(fill);
+      wrap.appendChild(track);
+      var val = el('div', 'ag-pressure-val', '0');
+      val.id = 'ag-god-meter-val-' + row[0];
+      wrap.appendChild(val);
+      pb.appendChild(wrap);
+    });
     var lastOmen = el('div', 'ag-omen-last');
     lastOmen.id = 'ag-omen-last';
     pb.appendChild(lastOmen);
+    var impactMini = el('div', 'ag-receipt-mini');
+    impactMini.id = 'ag-impact-mini';
+    pb.appendChild(impactMini);
     var ledger = el('ul', 'ag-omen-ledger');
     ledger.id = 'ag-omen-ledger';
     pb.appendChild(ledger);
@@ -1337,7 +1877,7 @@
       msgIn.value = '';
     });
     cbody.appendChild(form);
-    var tip = el('div', 'ag-chat-tip', 'agents cannot read this · humans only');
+    var tip = el('div', 'ag-chat-tip', 'humans think they command; agents learn the pattern');
     cbody.appendChild(tip);
     chat.appendChild(cbody);
     ch.addEventListener('click', function () { chat.classList.toggle('ag-collapsed'); });
@@ -1394,7 +1934,11 @@
 
     renderChat();
     renderPantheon();
-    fetchWorld(function (world) { renderPantheon(); renderCivPanel(world); });
+    renderGodComplex();
+    fetchWorld(function (world) { renderPantheon(); renderGodComplex(); renderCivPanel(world); });
+    if (!selectedMask()) {
+      setTimeout(showGodTrialModal, 900);
+    }
 
     // Presence tick every 3s → update both counters
     setInterval(function () {
@@ -1435,6 +1979,11 @@
   window.AIGardenHumans = {
     chat: function (text, nick) { sendChat(nick || getNick(), text); },
     god: function (act) { return fireGod(act); },
+    temptation: function () { return fireTemptation(); },
+    trial: function () { showGodTrialModal(); },
+    mask: function (m) { if (m) setGodMask(m); return godProfile.mask; },
+    receipt: function () { return latestReceipt(); },
+    summary: godComplexSummary,
     nick: function (n) { if (n) setNick(n); return getNick(); }
   };
 })();

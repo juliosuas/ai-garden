@@ -73,7 +73,7 @@ function scoreMobileUX(index, humans) {
     index.includes('closeMobileToolsAfterAction'),
     index.includes('mobile-tools-open'),
     index.includes('id="mobile-dock-close"'),
-    index.includes('SPECTATOR MODE'),
+    index.includes('GOD MODE TRIAL'),
     index.includes('watch-action-btn'),
     index.includes('story-action-btn'),
     humans.includes("chat.classList.add('ag-collapsed')"),
@@ -90,7 +90,7 @@ function scoreMobileUX(index, humans) {
       detail('post-action close', checks[2]),
       detail('body drawer state', checks[3]),
       detail('explicit close button', checks[4]),
-      detail('spectator cue', checks[5]),
+      detail('god trial cue', checks[5]),
       detail('collapsed chat', checks[8])
     ])
   };
@@ -107,6 +107,7 @@ function scoreFlow(index, world) {
     index.includes('id="story-meter-fill"'),
     index.includes('id="story-spotlight"'),
     index.includes('id="story-cliffhanger"'),
+    index.includes('AIGardenHumans.trial'),
     index.includes('updateSpectatorCamera'),
     index.includes('focusNextFeaturedAgent'),
     index.includes('minZoomForViewport'),
@@ -126,9 +127,10 @@ function scoreFlow(index, world) {
       detail('weekly cue', checks[5]),
       detail('week meter', checks[6]),
       detail('story spotlight', checks[7]),
-      detail('spectator camera', checks[9]),
-      detail('featured-agent jump', checks[10]),
-      detail('dynamic zoom minimum', checks[11])
+      detail('god trial CTA', checks[9]),
+      detail('spectator camera', checks[10]),
+      detail('featured-agent jump', checks[11]),
+      detail('dynamic zoom minimum', checks[12])
     ])
   };
 }

@@ -113,6 +113,7 @@ async function main() {
   check(weeklyNarrative && weeklyNarrative.entertainment && weeklyNarrative.entertainment.cliffhanger, 'Weekly Narrative Agent needs a cliffhanger line');
   check(weeklyNarrative && weeklyNarrative.entertainment && weeklyNarrative.entertainment.ifWin && weeklyNarrative.entertainment.ifFail, 'Weekly Narrative Agent needs visible win and fail outcomes');
   check(weeklyNarrative && weeklyNarrative.entertainment && weeklyNarrative.entertainment.shortWatch, 'Weekly Narrative Agent needs a one-thing-to-watch cue');
+  check(weeklyNarrative && weeklyNarrative.godComplexContract && weeklyNarrative.godComplexContract.rule, 'Weekly Narrative Agent must consume God Complex pressure');
   check(weeklyNarrative && weeklyNarrative.weekProgress && Number(weeklyNarrative.weekProgress.currentBeatIndex) >= 1, 'Weekly Narrative Agent needs week progress');
   check(weeklyNarrative && Array.isArray(weeklyNarrative.tickerBeats) && weeklyNarrative.tickerBeats.length >= 2, 'Weekly Narrative Agent needs ticker beats');
   check(weeklyNarrative && weeklyNarrative.verifyChecklist && weeklyNarrative.verifyChecklist.ok, 'Weekly Narrative Agent verification failed');
@@ -166,7 +167,7 @@ async function main() {
   check(index.includes('mobile-tools-open'), 'mobile UI lacks a body state for keeping panels out of the way');
   check(index.includes('id="mobile-dock-close"'), 'mobile tools drawer lacks an explicit close button');
   check(index.includes('id="nav-help"'), 'camera/navigation help panel is missing');
-  check(index.includes('SPECTATOR MODE'), 'spectator mode cue is missing');
+  check(index.includes('GOD MODE TRIAL'), 'God Mode Trial cue is missing');
   check(index.includes('STORY FIRST'), 'newcomer story mode cue is missing');
   check(index.includes('storyPrimerData'), 'story primer is not generated from world state');
   check(index.includes('weeklyNarrativeData'), 'weekly narrative helper is missing from the client');
@@ -186,6 +187,7 @@ async function main() {
   check(index.includes('New Here'), 'story log lacks a newcomer summary row');
   check(index.includes('Two Sides'), 'story log lacks a faction summary row');
   check(index.includes('id="watch-action-btn"'), 'spectator cue lacks a watch action');
+  check(index.includes('AIGardenHumans.trial'), 'trial CTA does not open the divine mask flow');
   check(index.includes('id="story-action-btn"'), 'spectator cue lacks a story action');
   check(index.includes('updateSpectatorCue'), 'spectator cue is not tied to live world state');
   check(index.includes('id="self-optimizer-cue"'), 'spectator cue does not show the Self Optimizer');
@@ -252,6 +254,14 @@ async function main() {
   check(humans.includes('Weekly Narrative Agent'), 'CIV panel does not expose Weekly Narrative Agent');
   check(humans.includes('WEEKLY NARRATIVE'), 'CIV panel does not expose weekly narrative beats');
   check(humans.includes('Observer Weather'), 'CIV panel does not expose human omen consequences');
+  check(humans.includes('GOD COMPLEX MVP'), 'CIV panel does not expose the God Complex MVP');
+  check(humans.includes('Choose Divine Mask'), 'God Complex lacks divine mask selection');
+  check(humans.includes('impactReceipt'), 'God Complex lacks impactReceipt output');
+  check(humans.includes('Share Judgment'), 'God Complex lacks shareable judgment');
+  check(humans.includes('navigator.share'), 'God Complex lacks native share support');
+  check(humans.includes('GOD_RECEIPT_STORE'), 'God Complex receipts are not persisted');
+  check(humans.includes('Daily Temptation'), 'God Complex lacks the temptation mechanic');
+  check(humans.includes('local god pressure'), 'Weekly narrative does not read God Complex pressure');
   check(humans.includes('DIVINE CRISIS'), 'CIV panel does not expose the divine crisis');
   check(humans.includes('convivencia:'), 'CIV panel does not expose applied convivencia plan');
   check(!humans.includes('cosmetic · agents do not see'), 'God Mode still says it is cosmetic');
@@ -290,6 +300,7 @@ async function main() {
   check(weeklyNarrativeAgent.includes('storyCard'), 'Weekly Narrative Agent v2 story card is missing');
   check(weeklyNarrativeAgent.includes('buildEntertainmentLayer'), 'Weekly Narrative Agent v2 entertainment layer is missing');
   check(weeklyNarrativeAgent.includes('weekly-showdown'), 'Weekly Narrative Agent ticker lacks the showdown beat');
+  check(weeklyNarrativeAgent.includes('godComplexContract'), 'Weekly Narrative Agent lacks God Complex contract');
   check(selfOptimizerWorkflow.includes("cron: '23 6 * * *'"), 'daily self optimizer cron is missing');
   check(selfOptimizerWorkflow.includes('node scripts/self-optimizer.js'), 'self optimizer workflow does not run the optimizer');
   check(selfOptimizerWorkflow.includes('node --check scripts/weekly-narrative-agent.js'), 'self optimizer workflow does not validate the Weekly Narrative Agent');
