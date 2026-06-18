@@ -807,6 +807,9 @@ let camX = 0, camY = 0;
 let dayTime = 0;
 let selectedMascot = null;
 let frameCount = 0;
+const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+let prefersReducedMotion = reducedMotionQuery.matches;
+let renderPaused = document.hidden;
 
 // Follow mode
 let followingMascot = null;
@@ -858,6 +861,26 @@ let highFiveAnims = [];
 // Conversation cooldown
 let convCooldown = 0;
 const MAX_VISIBLE_CRABS = 6;
+
+function setReducedMotionPreference(nextValue) {
+  prefersReducedMotion = !!nextValue;
+  document.body.classList.toggle('reduced-motion', prefersReducedMotion);
+}
+
+setReducedMotionPreference(prefersReducedMotion);
+if (typeof reducedMotionQuery.addEventListener === 'function') {
+  reducedMotionQuery.addEventListener('change', function(event) {
+    setReducedMotionPreference(event.matches);
+  });
+} else if (typeof reducedMotionQuery.addListener === 'function') {
+  reducedMotionQuery.addListener(function(event) {
+    setReducedMotionPreference(event.matches);
+  });
+}
+
+document.addEventListener('visibilitychange', function() {
+  renderPaused = document.hidden;
+});
 
 function resize() {
   screenW = window.innerWidth;
@@ -3101,7 +3124,13 @@ function updateParticles() {
   for (let i = particles.length-1; i >= 0; i--) { const p = particles[i]; p.x += p.vx; p.y += p.vy; p.vy += 0.01; p.life--; if (p.life <= 0) particles.splice(i,1); }
 }
 function drawParticles() {
-  for (const p of particles) { ctx.globalAlpha = p.life / p.maxLife; px(p.x, p.y, p.color); } ctx.globalAlpha = 1;
+  const budget = prefersReducedMotion ? 18 : particles.length;
+  for (let i = 0; i < particles.length && i < budget; i++) {
+    const p = particles[i];
+    ctx.globalAlpha = p.life / p.maxLife;
+    px(p.x, p.y, p.color);
+  }
+  ctx.globalAlpha = 1;
 }
 
 function updateButterflies() {
@@ -3135,6 +3164,7 @@ function updateFireflies() {
   }
 }
 function drawFireflies() {
+  if (prefersReducedMotion) return;
   const br = currentWeather === 'night' ? 1.5 : 1;
   for (const f of fireflies) { const g = (Math.sin(frameCount*0.08+f.phase)*0.5+0.5)*br; ctx.globalAlpha = Math.min(g,1); px(f.x,f.y,'#ffff80'); ctx.globalAlpha = Math.min(g*0.4,1); px(f.x-1,f.y,'#ffff40'); px(f.x+1,f.y,'#ffff40'); px(f.x,f.y-1,'#ffff40'); px(f.x,f.y+1,'#ffff40'); }
   ctx.globalAlpha = 1;
@@ -3150,7 +3180,11 @@ function updateConfetti() {
   }
   for (let i = confetti.length-1; i >= 0; i--) { const c = confetti[i]; c.x += c.vx; c.y += c.vy; c.vy += 0.015; c.vx *= 0.99; c.life--; if (c.life <= 0) confetti.splice(i,1); }
 }
-function drawConfetti() { for (const c of confetti) { ctx.globalAlpha = Math.min(c.life/30, 1); px(c.x, c.y, c.color); } ctx.globalAlpha = 1; }
+function drawConfetti() {
+  if (prefersReducedMotion) return;
+  for (const c of confetti) { ctx.globalAlpha = Math.min(c.life/30, 1); px(c.x, c.y, c.color); }
+  ctx.globalAlpha = 1;
+}
 
 // ============================================================
 // WEATHER SYSTEM
@@ -3180,7 +3214,20 @@ function updateWeather() {
 
 function drawWeatherEffects() {
   for (const c of clouds) { ctx.globalAlpha = 0.3; for (let dy=0; dy<c.h; dy++) for (let dx=0; dx<c.w; dx++) { if (Math.sqrt(((dx-c.w/2)/(c.w/2))**2+((dy-c.h/2)/(c.h/2))**2)<1) px(c.x+dx,c.y+dy,'#aabbcc'); } ctx.globalAlpha = 1; }
-  if (currentWeather === 'rainy') { ctx.globalAlpha = 0.6; for (const r of raindrops) { px(r.x,r.y,'#6090cc'); px(r.x,r.y-1,'#4070aa'); } ctx.globalAlpha = 0.1; ctx.fillStyle='#304060'; ctx.fillRect(0,0,screenW,screenH); ctx.globalAlpha = 1; }
+  if (currentWeather === 'rainy') {
+    ctx.globalAlpha = 0.6;
+    const step = prefersReducedMotion ? 3 : 1;
+    for (let i = 0; i < raindrops.length; i += step) {
+      const r = raindrops[i];
+      px(r.x,r.y,'#6090cc');
+      px(r.x,r.y-1,'#4070aa');
+    }
+    ctx.globalAlpha = prefersReducedMotion ? 0.05 : 0.1;
+    ctx.fillStyle='#304060';
+    ctx.fillRect(0,0,screenW,screenH);
+    ctx.globalAlpha = 1;
+  }
+  if (prefersReducedMotion) return;
   for (const s of shootingStars) { for (let i=0;i<s.trail.length;i++) { ctx.globalAlpha = (i/s.trail.length)*0.6; px(s.trail[i].x,s.trail[i].y,'#ffffaa'); } ctx.globalAlpha = 1; px(s.x,s.y,'#ffffff'); px(s.x-1,s.y,'#ffffcc'); }
 }
 
@@ -3224,10 +3271,22 @@ function drawCritters() {
 
 // Music notes & gift animations
 function updateMusicNotes() { for (let i=musicNotes.length-1;i>=0;i--) { const n=musicNotes[i]; n.x+=n.vx; n.y+=n.vy; n.vx+=(Math.random()-0.5)*0.01; n.life--; if(n.life<=0) musicNotes.splice(i,1); } }
-function drawMusicNotes() { for (const n of musicNotes) { ctx.globalAlpha = Math.min(n.life/20,1)*0.7; px(n.x,n.y,'#ffd700'); px(n.x,n.y+1,'#ffd700'); px(n.x,n.y+2,'#e0c000'); px(n.x-1,n.y+2,'#e0c000'); } ctx.globalAlpha = 1; }
+function drawMusicNotes() {
+  const budget = prefersReducedMotion ? 4 : musicNotes.length;
+  for (let i = 0; i < musicNotes.length && i < budget; i++) {
+    const n = musicNotes[i];
+    ctx.globalAlpha = Math.min(n.life/20,1)*0.7;
+    px(n.x,n.y,'#ffd700');
+    px(n.x,n.y+1,'#ffd700');
+    px(n.x,n.y+2,'#e0c000');
+    px(n.x-1,n.y+2,'#e0c000');
+  }
+  ctx.globalAlpha = 1;
+}
 
 function updateGifts() { for (let i=giftAnimations.length-1;i>=0;i--) { const g=giftAnimations[i]; g.progress+=0.02; if(g.progress>=1){addParticles(g.toX,g.toY,g.color,6);giftAnimations.splice(i,1);} } }
 function drawGifts() {
+  if (prefersReducedMotion) return;
   for (const g of giftAnimations) {
     const x = g.fromX+(g.toX-g.fromX)*g.progress, y = g.fromY+(g.toY-g.fromY)*g.progress-Math.sin(g.progress*Math.PI)*10;
     px(x,y,g.color); px(x+1,y,g.color); px(x,y+1,g.color); px(x+1,y+1,g.color);
@@ -5345,6 +5404,14 @@ function update() {
   updateMusicNotes();
   updateGifts();
   updateHighFives();
+  if (prefersReducedMotion) {
+    if (particles.length > 18) particles.splice(18);
+    if (raindrops.length > 24) raindrops.splice(24);
+    if (clouds.length > 3) clouds.splice(3);
+    if (shootingStars.length > 1) shootingStars.splice(1);
+    if (musicNotes.length > 4) musicNotes.splice(4);
+    if (giftAnimations.length > 1) giftAnimations.splice(1);
+  }
   autoGrow();
   checkProgression();
 
@@ -5417,12 +5484,14 @@ function scenicCameraPoints() {
 function updateSpectatorCamera(viewW, viewH) {
   const points = scenicCameraPoints();
   if (!points.length) return;
-  if (frameCount % 780 === 1) scenicCameraIndex = (scenicCameraIndex + 1) % points.length;
+  const focusInterval = prefersReducedMotion ? 1320 : 780;
+  if (frameCount % focusInterval === 1) scenicCameraIndex = (scenicCameraIndex + 1) % points.length;
   const target = points[scenicCameraIndex % points.length];
   const targetCamX = clampValue(target.x - viewW / 2, 0, Math.max(0, WORLD_W - viewW));
   const targetCamY = clampValue(target.y - viewH / 2, 0, Math.max(0, WORLD_H - viewH));
   const dist = Math.hypot(targetCamX - camX, targetCamY - camY);
-  const ease = clampValue(0.014 + dist / 26000, 0.014, 0.045) * (target.weight || 1);
+  const motionFactor = prefersReducedMotion ? 0.35 : 1;
+  const ease = clampValue(0.014 + dist / 26000, 0.014, 0.045) * (target.weight || 1) * motionFactor;
   camX += (targetCamX - camX) * ease;
   camY += (targetCamY - camY) * ease;
 }
@@ -5491,6 +5560,10 @@ function draw() {
 }
 
 function loop() {
+  if (renderPaused) {
+    requestAnimationFrame(loop);
+    return;
+  }
   frameCount++;
   if (worldReady) {
     update();
