@@ -22,6 +22,7 @@ const MUSIC = path.join(ROOT, 'experiments', 'music.js');
 const PLAYTEST = path.join(ROOT, 'scripts', 'playtest-subagent.js');
 const WEEKLY_NARRATIVE = path.join(ROOT, 'scripts', 'weekly-narrative-agent.js');
 const ROADMAP_PULSE = path.join(ROOT, 'scripts', 'roadmap-pulse.js');
+const GSTACK_COUNCIL = path.join(ROOT, 'scripts', 'gstack-council.js');
 const DAILY_WORKFLOW = path.join(ROOT, '.github', 'workflows', 'daily-evolution.yml');
 const AUTOPILOT_WORKFLOW = path.join(ROOT, '.github', 'workflows', 'daily-autopilot-pr.yml');
 const SELF_WORKFLOW = path.join(ROOT, '.github', 'workflows', 'daily-self-optimizer.yml');
@@ -224,7 +225,7 @@ function scorePerformance(index) {
   };
 }
 
-function scoreAutomation(dailyWorkflow, autopilotWorkflow, selfWorkflow, roadmapWorkflow, playtest, weeklyNarrative, roadmapPulse) {
+function scoreAutomation(dailyWorkflow, autopilotWorkflow, selfWorkflow, roadmapWorkflow, playtest, weeklyNarrative, roadmapPulse, gstackCouncil) {
   const checks = [
     dailyWorkflow.includes("cron: '11 4 * * *'"),
     dailyWorkflow.includes('node scripts/playtest-subagent.js'),
@@ -235,20 +236,27 @@ function scoreAutomation(dailyWorkflow, autopilotWorkflow, selfWorkflow, roadmap
     autopilotWorkflow.includes('--draft'),
     selfWorkflow.includes("cron: '23 6 * * *'"),
     selfWorkflow.includes('node scripts/self-optimizer.js'),
+    selfWorkflow.includes('node scripts/gstack-council.js'),
     selfWorkflow.includes('node --check scripts/weekly-narrative-agent.js'),
     selfWorkflow.includes('node --check scripts/roadmap-pulse.js'),
+    selfWorkflow.includes('node --check scripts/gstack-council.js'),
     selfWorkflow.includes('git pull --rebase origin main'),
     roadmapWorkflow.includes("cron: '17 7 * * *'"),
     roadmapWorkflow.includes('node scripts/roadmap-pulse.js'),
     roadmapWorkflow.includes('git add ROADMAP.md'),
     roadmapPulse.includes('Roadmap Pulse'),
     roadmapPulse.includes('BACKEND_SYNC_STORE'),
+    roadmapPulse.includes('Professional Council'),
     playtest.includes('SELF_OPTIMIZER'),
+    playtest.includes('GSTACK_COUNCIL'),
     playtest.includes('Weekly Narrative Agent'),
     playtest.includes('story-spotlight'),
     weeklyNarrative.includes('storyCard'),
     weeklyNarrative.includes('buildEntertainmentLayer'),
-    weeklyNarrative.includes('weekly-showdown')
+    weeklyNarrative.includes('weekly-showdown'),
+    gstackCouncil.includes('GStack Professional Council'),
+    gstackCouncil.includes('Product Lead'),
+    gstackCouncil.includes('Trust And Safety Lead')
   ];
   return {
     key: 'automation',
@@ -261,9 +269,10 @@ function scoreAutomation(dailyWorkflow, autopilotWorkflow, selfWorkflow, roadmap
       detail('weekly syntax check', checks[2]),
       detail('autopilot PRs', checks[4]),
       detail('self-optimizer cron', checks[7]),
-      detail('roadmap pulse cron', checks[12]),
-      detail('roadmap syntax check', checks[10]),
-      detail('weekly narrative contract', checks[18])
+      detail('professional council', checks[9]),
+      detail('roadmap pulse cron', checks[14]),
+      detail('roadmap syntax check', checks[11]),
+      detail('weekly narrative contract', checks[24])
     ])
   };
 }
@@ -329,7 +338,8 @@ function buildSnapshot(world, files) {
       files.roadmapWorkflow,
       files.playtest,
       files.weeklyNarrative,
-      files.roadmapPulse
+      files.roadmapPulse,
+      files.gstackCouncil
     )
   ];
   const focus = chooseFocus(scores, day);
@@ -428,6 +438,7 @@ function main() {
     playtest: read(PLAYTEST),
     weeklyNarrative: read(WEEKLY_NARRATIVE),
     roadmapPulse: read(ROADMAP_PULSE),
+    gstackCouncil: read(GSTACK_COUNCIL),
     dailyWorkflow: read(DAILY_WORKFLOW),
     autopilotWorkflow: read(AUTOPILOT_WORKFLOW),
     selfWorkflow: read(SELF_WORKFLOW),

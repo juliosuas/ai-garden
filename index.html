@@ -1047,6 +1047,7 @@ const defaultWorld = {
   societyDirector: null,
   gameWonderAgent: null,
   selfOptimizer: null,
+  gstackCouncil: null,
   weeklyNarrativeDirector: null,
   featuredAgents: [],
   featuredAgentDirector: null,
@@ -1418,6 +1419,7 @@ function loadWorld() {
       world.societyDirector = shared.societyDirector || null;
       world.gameWonderAgent = shared.gameWonderAgent || null;
       world.selfOptimizer = shared.selfOptimizer || null;
+      world.gstackCouncil = shared.gstackCouncil || null;
       world.weeklyNarrativeDirector = shared.weeklyNarrativeDirector || null;
       world.featuredAgents = shared.featuredAgents || [];
       world.featuredAgentDirector = shared.featuredAgentDirector || null;
@@ -4204,6 +4206,14 @@ function populateEventsTicker() {
       text: optimizer.focus.label + ': ' + optimizer.focus.nextAction
     });
   }
+  const council = world.gstackCouncil || null;
+  if (council && council.priority) {
+    items.push({
+      label: '[GSTACK COUNCIL]',
+      color: '#38bdf8',
+      text: council.priority.title + ': ' + council.priority.nextFix
+    });
+  }
   for (const agent of featuredAgentCast().slice(0, 4)) {
     items.push({
       label: '[' + String(agent.name || 'AGENT').toUpperCase() + ']',
@@ -4227,7 +4237,8 @@ function populateEventsTicker() {
     convivencia: '#fde68a',
     'crab-agent': '#fb923c',
     'featured-agent': '#fff7ad',
-    'self-optimizer': '#facc15'
+    'self-optimizer': '#facc15',
+    'gstack-council': '#38bdf8'
   };
   for (const ev of (world.events || []).slice(-5).reverse()) {
     items.push({
@@ -4302,6 +4313,19 @@ function eventPanelRows() {
     });
     for (const item of (optimizer.backlog || []).slice(0, 2)) {
       rows.push({ label: 'Optimize Next', text: item.label + ' ' + item.score + '/100 - ' + item.nextAction });
+    }
+  }
+  const council = world.gstackCouncil;
+  if (council && council.priority) {
+    rows.push({
+      label: 'GStack Professional Council',
+      text: 'overall ' + (council.overallScore || '?') + '/100 - ' + council.priority.title + ': ' + council.priority.nextFix
+    });
+    for (const item of (council.backlog || []).slice(0, 2)) {
+      rows.push({
+        label: 'Professional Gap',
+        text: item.title + ' ' + item.score + '/100 - ' + item.nextFix
+      });
     }
   }
   const directorCast = world.featuredAgentDirector;

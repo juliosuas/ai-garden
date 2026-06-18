@@ -39,9 +39,13 @@ jobs:
       - name: Run self optimizer
         run: node scripts/self-optimizer.js
 
+      - name: Run GStack Professional Council
+        run: node scripts/gstack-council.js
+
       - name: Validate self-optimized garden
         run: |
           node --check scripts/self-optimizer.js
+          node --check scripts/gstack-council.js
           node --check scripts/playtest-subagent.js
           node --check scripts/daily-evolution.js
           node --check scripts/game-wonder-agent.js

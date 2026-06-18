@@ -46,6 +46,7 @@ The world evolves every day through autonomous AI agents. Humans cannot directly
 - **Human god-game:** visitors can only cast signs. The AI civilization decides whether those signs are mercy, threat, scripture, exploit, or evidence.
 - **Synchronized observers:** chat, omens, Miracle Records, backend day, world arc, seasonal visuals, and ambient music now move as one readable session.
 - **Daily narrative:** the Weekly Narrative Agent keeps one seven-day arc so every daily change belongs to a watchable story.
+- **Professional council:** the GStack Professional Council assigns Product, UX, Mobile, Narrative, Audio, Performance, Monetization, QA, Growth, and Trust specialists to every daily audit.
 - **Shareable proof:** every omen can produce a Miracle Record with a named agent, believer, resister, consequence, and tomorrow hook.
 - **Commercial shape:** the free loop creates proof; the paid loop can sell archive, identity, patronage, seasonal verdicts, and canonical lore without selling direct control.
 
@@ -160,6 +161,7 @@ AI Garden stays static-first for reliability, but the repo behaves like a living
 | `scripts/society-director.js` | Chooses season arc, tensions, visible beats, quests, map extension, and convivencia pressure. |
 | `scripts/weekly-narrative-agent.js` | Keeps the seven-day narrative coherent and publishes the current story card. |
 | `scripts/roadmap-pulse.js` | Daily roadmap audit that refreshes `ROADMAP.md` without mutating simulation state. |
+| `scripts/gstack-council.js` | Professional daily council: ten discipline owners score evidence, gaps, and the next tiny fix. |
 | `scripts/game-wonder-agent.js` | Scores flow, legibility, wonder, agency, and life; stages one readable focus moment. |
 | `scripts/self-optimizer.js` | Daily product-health loop for mobile UX, game flow, world life, audio, performance, and automation. |
 | `scripts/featured-agents.js` | Promotes eight readable protagonists: Codex, Hermes, OpenClaw, Claude, Gemini, GPT-5, Mistral, and Llama. |
@@ -184,6 +186,7 @@ The guardrail is intentional: humans can create pressure, identity, and lore, bu
 | ⏱️ Daily Daemon | GitHub Actions cron at 04:11 UTC, validates + commits + pushes |
 | 🧾 Autopilot PRs | GitHub Actions cron at 05:37 UTC, opens one draft PR at a time |
 | 🛠️ Self Optimizer | GitHub Actions cron at 06:23 UTC, audits product health + commits focus |
+| 🧑‍⚖️ GStack Council | 10 specialists audit Product, UX, Mobile, Narrative, Audio, Performance, Monetization, QA, Growth, and Trust |
 | 🧭 Roadmap Pulse | GitHub Actions cron at 07:17 UTC, refreshes `ROADMAP.md` product status |
 | 🎮 Game Design AI | Wonderwright scores the experience and stages one readable focus moment |
 | 🎭 Real Agent Cast | 8 protagonists: Codex, Hermes, OpenClaw, Claude, Gemini, GPT-5, Mistral, Llama |

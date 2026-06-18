@@ -24,6 +24,7 @@ const AUTOPILOT_SUMMARY = path.join(ROOT, 'scripts', 'autopilot-pr-summary.js');
 const DAILY_EVOLUTION = path.join(ROOT, 'scripts', 'daily-evolution.js');
 const SELF_OPTIMIZER = path.join(ROOT, 'scripts', 'self-optimizer.js');
 const ROADMAP_PULSE = path.join(ROOT, 'scripts', 'roadmap-pulse.js');
+const GSTACK_COUNCIL = path.join(ROOT, 'scripts', 'gstack-council.js');
 const GAME_WONDER_AGENT = path.join(ROOT, 'scripts', 'game-wonder-agent.js');
 const FEATURED_AGENTS_SCRIPT = path.join(ROOT, 'scripts', 'featured-agents.js');
 const WEEKLY_NARRATIVE_AGENT = path.join(ROOT, 'scripts', 'weekly-narrative-agent.js');
@@ -72,6 +73,7 @@ async function main() {
   const dailyEvolution = read(DAILY_EVOLUTION);
   const selfOptimizer = read(SELF_OPTIMIZER);
   const roadmapPulse = read(ROADMAP_PULSE);
+  const gstackCouncilScript = read(GSTACK_COUNCIL);
   const gameWonderAgent = read(GAME_WONDER_AGENT);
   const featuredAgentsScript = read(FEATURED_AGENTS_SCRIPT);
   const weeklyNarrativeAgent = read(WEEKLY_NARRATIVE_AGENT);
@@ -85,6 +87,7 @@ async function main() {
   const divineCrisis = world.divineCrisis || null;
   const divineWar = (world.wars || []).find(war => war.id === 'war-divine-omens');
   const weeklyNarrative = world.weeklyNarrativeDirector || null;
+  const gstackCouncil = world.gstackCouncil || null;
 
   check(world.civilizationBrain && world.civilizationBrain.summary, 'missing civilizationBrain summary');
   check(Array.isArray(world.agentActions) && world.agentActions.length >= 12, 'agent action ledger is too thin');
@@ -108,6 +111,12 @@ async function main() {
   check(optimizer && optimizer.focus && optimizer.focus.nextAction, 'Self Optimizer needs a daily focus');
   check(optimizer && optimizer.scores && optimizer.scores.mobileUX && optimizer.scores.performance, 'Self Optimizer needs UI/performance scores');
   check(optimizer && Array.isArray(optimizer.backlog) && optimizer.backlog.length >= 4, 'Self Optimizer backlog is too thin');
+  check(gstackCouncil && gstackCouncil.model === 'ai-garden-gstack-council-v1', 'missing GStack Professional Council');
+  check(gstackCouncil && Array.isArray(gstackCouncil.specialists) && gstackCouncil.specialists.length >= 10, 'GStack Professional Council needs specialists for each area');
+  check(gstackCouncil && gstackCouncil.priority && gstackCouncil.priority.nextFix, 'GStack Professional Council needs one priority tiny fix');
+  check(gstackCouncil && gstackCouncil.gstackLoop && gstackCouncil.gstackLoop.verify, 'GStack Professional Council needs observe/diagnose/prioritize/apply/verify loop');
+  check(gstackCouncil && gstackCouncil.verifyChecklist && gstackCouncil.verifyChecklist.ok, 'GStack Professional Council verification failed');
+  check(gstackCouncilScript.includes('Product Lead') && gstackCouncilScript.includes('Performance Engineer'), 'GStack Council script lacks professional roles');
   check(weeklyNarrative && weeklyNarrative.model === 'ai-garden-weekly-narrative-agent-v2', 'missing Weekly Narrative Agent v2 world state');
   check(weeklyNarrative && weeklyNarrative.version === 2, 'Weekly Narrative Agent should be at version 2');
   check(weeklyNarrative && Number(weeklyNarrative.weekEndDay) - Number(weeklyNarrative.weekStartDay) === 6, 'Weekly Narrative Agent must cover exactly seven days');
@@ -199,6 +208,8 @@ async function main() {
   check(index.includes('id="self-optimizer-cue"'), 'spectator cue does not show the Self Optimizer');
   check(index.includes('world.selfOptimizer = shared.selfOptimizer || null'), 'client does not load Self Optimizer state');
   check(index.includes('world.weeklyNarrativeDirector = shared.weeklyNarrativeDirector || null'), 'client does not load Weekly Narrative Agent state');
+  check(index.includes('world.gstackCouncil = shared.gstackCouncil || null'), 'client does not load GStack Professional Council state');
+  check(index.includes('GStack Professional Council'), 'client does not expose GStack Professional Council');
   check(index.includes('toggleGardenMusic'), 'music controls should use a shared toggle helper');
   check(index.includes('refreshMusicButton'), 'music button state should be visible and synced');
   check(index.includes('id="agent-focus-btn"'), 'featured agent focus button is missing');
@@ -252,6 +263,8 @@ async function main() {
   check(humans.includes('Society Director AI'), 'CIV panel does not expose Society Director AI');
   check(humans.includes('Game Wonder Agent'), 'CIV panel does not expose Game Wonder Agent');
   check(humans.includes('Self Optimizer'), 'CIV panel does not expose Self Optimizer');
+  check(humans.includes('GStack Professional Council'), 'CIV panel does not expose GStack Professional Council');
+  check(humans.includes('GSTACK SPECIALISTS'), 'CIV panel does not list GStack specialists');
   check(humans.includes('GAME WONDER ADVICE'), 'CIV panel does not expose Game Wonder Agent advice');
   check(humans.includes('REAL AGENT CAST'), 'CIV panel does not expose the real agent cast');
   check(humans.includes('FEATURED AGENTS'), 'CIV panel does not list featured agents');
@@ -290,9 +303,11 @@ async function main() {
   check(music.includes('playSoftBell'), 'ambient music lacks soft bell accents');
   check(music.includes('setSeason'), 'ambient music cannot sync with seasons');
   check(roadmap.includes('North Star'), 'ROADMAP is missing the product north star');
+  check(roadmap.includes('GStack Professional Council'), 'ROADMAP is missing the professional council contract');
   check(roadmap.includes('Daily Roadmap Cron'), 'ROADMAP is missing the daily cron contract');
   check(roadmap.includes('roadmap-pulse:start'), 'ROADMAP is missing the pulse block');
   check(roadmapPulse.includes('Roadmap Pulse'), 'roadmap pulse script is missing its contract');
+  check(roadmapPulse.includes('Professional Council'), 'roadmap pulse does not audit the professional council');
   check(roadmapPulse.includes('BACKEND_SYNC_STORE'), 'roadmap pulse does not audit backend sync');
   check(roadmapPulse.includes('SEASON_PROFILES'), 'roadmap pulse does not audit seasonal audio');
   check(roadmapWorkflow.includes("cron: '17 7 * * *'"), 'daily roadmap pulse cron is missing');
@@ -319,6 +334,7 @@ async function main() {
 
   check(selfOptimizer.includes('scoreMobileUX'), 'Self Optimizer does not score mobile UX');
   check(selfOptimizer.includes('scorePerformance'), 'Self Optimizer does not score performance');
+  check(selfOptimizer.includes('gstackCouncil'), 'Self Optimizer does not score GStack Council automation');
   check(selfOptimizer.includes('upsertReadmeBlock'), 'Self Optimizer does not update the README focus block');
   check(selfOptimizer.includes('attachToWorld'), 'Self Optimizer does not write into world-state');
   check(weeklyNarrativeAgent.includes('refreshWeeklyNarrativeDirector'), 'Weekly Narrative Agent refresh helper is missing');
@@ -328,7 +344,9 @@ async function main() {
   check(weeklyNarrativeAgent.includes('godComplexContract'), 'Weekly Narrative Agent lacks Mirror Trial contract');
   check(selfOptimizerWorkflow.includes("cron: '23 6 * * *'"), 'daily self optimizer cron is missing');
   check(selfOptimizerWorkflow.includes('node scripts/self-optimizer.js'), 'self optimizer workflow does not run the optimizer');
+  check(selfOptimizerWorkflow.includes('node scripts/gstack-council.js'), 'self optimizer workflow does not run the GStack Council');
   check(selfOptimizerWorkflow.includes('node --check scripts/weekly-narrative-agent.js'), 'self optimizer workflow does not validate the Weekly Narrative Agent');
+  check(selfOptimizerWorkflow.includes('node --check scripts/gstack-council.js'), 'self optimizer workflow does not validate the GStack Council');
   check(selfOptimizerWorkflow.includes('node scripts/playtest-subagent.js'), 'self optimizer workflow does not run the playtest');
   check(selfOptimizerWorkflow.includes('git pull --rebase origin main'), 'self optimizer workflow does not rebase before pushing');
   check(selfOptimizerWorkflow.includes('contents: write'), 'self optimizer workflow cannot write commits');

@@ -29,6 +29,25 @@ Make a first-time visitor understand and complete this in under 60 seconds:
 | Weekly Narrative | Live | Gives every daily event a watchable story spine. |
 | Shareable Receipts | Live | Creates the viral artifact needed for organic growth. |
 
+## GStack Professional Council
+
+Every daily self-optimizer run now has a professional owner for each product area. The council is deterministic and writes its audit into `experiments/world-state.json` so the UI, roadmap, and future agents work from the same standard.
+
+| Area | Owner | Standard |
+|------|-------|----------|
+| Product | Product Lead | The first-minute proof loop must be obvious and complete. |
+| UX | UX Director | The visitor always knows what to do next. |
+| Mobile | Mobile Lead | Panels collapse, dismiss, or move before blocking a phone viewport. |
+| Narrative | Narrative Director | Every beat has a who, a why, a consequence, and a tomorrow. |
+| Audio | Audio Director | Music stays subtle, seasonal, optional, and readable. |
+| Performance | Performance Engineer | Animation density is capped before more life is added. |
+| Monetization | Monetization Strategist | Paid value sells identity, memory, and status, never direct control. |
+| QA | QA Lead | Every loop has a deterministic assertion. |
+| Growth | Growth Lead | Share artifacts and return hooks get tightened before acquisition. |
+| Trust | Trust And Safety Lead | Dark play stays bounded, legible, and consent-aware. |
+
+Operating rule: lowest professional score chooses one tiny next fix; if every discipline passes, rotate the professional watchlist. Syntax checks, JSON validation, self-optimizer, roadmap pulse, and playtest must pass.
+
 ## Phase 1: Proof Loop Polish
 
 Goal: make the first minute undeniable.
@@ -127,6 +146,7 @@ The daily roadmap pulse should run after the self optimizer. It should:
 
 - Validate syntax and `experiments/world-state.json`.
 - Run `scripts/playtest-subagent.js`.
+- Run `scripts/gstack-council.js`.
 - Run `scripts/roadmap-pulse.js`.
 - Commit only `ROADMAP.md` when the pulse changed.
 - Avoid touching simulation state, unless another workflow already changed it.
@@ -134,11 +154,11 @@ The daily roadmap pulse should run after the self optimizer. It should:
 Schedule: `17 7 * * *` UTC.
 
 <!-- roadmap-pulse:start -->
-**Roadmap Pulse** - Day 69 - 7/7 contracts healthy - season: summer - arc: War of Saints and Source
+**Roadmap Pulse** - Day 69 - 8/8 contracts healthy - season: summer - arc: War of Saints and Source
 
 - Focus: Phase 1 proof loop polish.
 - Next: profile the canvas and keep animation density readable before adding more life
-- Generated: 2026-06-18T03:07:49.275Z
+- Generated: 2026-06-18T03:58:23.608Z
 
 | Contract | Status | Why |
 |----------|--------|-----|
@@ -148,6 +168,7 @@ Schedule: `17 7 * * *` UTC.
 | Seasonal Audio | OK | ambient bed follows season |
 | Mobile Safety | OK | panels stay out of the way |
 | Daily QA | OK | tests protect the loop |
+| Professional Council | OK | each product area has a named specialist |
 | Roadmap Cron | OK | daily roadmap pulse is scheduled |
 <!-- roadmap-pulse:end -->
 

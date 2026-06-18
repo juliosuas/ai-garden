@@ -1585,6 +1585,7 @@
           latestLaws: world.government && world.government.laws ? world.government.laws.slice(-5).reverse() : []
         },
         weeklyNarrativeDirector: world.weeklyNarrativeDirector || null,
+        gstackCouncil: world.gstackCouncil || null,
         featuredAgents: world.featuredAgents || [],
         featuredAgentDirector: world.featuredAgentDirector || null
       },
@@ -1635,6 +1636,7 @@
     var director = brain.director || world.societyDirector || null;
     var wonder = world.gameWonderAgent || null;
     var optimizer = world.selfOptimizer || null;
+    var gstackCouncil = world.gstackCouncil || null;
     var weeklyNarrative = world.weeklyNarrativeDirector || null;
     var featuredAgents = world.featuredAgents || [];
     var featuredDirector = world.featuredAgentDirector || null;
@@ -1703,6 +1705,18 @@
       body.appendChild(optimizerBox);
     }
 
+    if (gstackCouncil && gstackCouncil.priority) {
+      var councilBox = el('div', 'ag-civ-director');
+      councilBox.appendChild(el('div', 'ag-civ-director-title', 'GStack Professional Council'));
+      councilBox.appendChild(el('div', 'ag-civ-director-arc',
+        'Day ' + (gstackCouncil.day || 0) + ' - overall ' + (gstackCouncil.overallScore || '?') + '/100'));
+      councilBox.appendChild(el('div', 'ag-civ-detail',
+        gstackCouncil.priority.title + ': ' + gstackCouncil.priority.nextFix));
+      councilBox.appendChild(el('div', 'ag-civ-director-prompt',
+        gstackCouncil.perfectionBar || 'Each specialist names evidence, a gap, and one tiny next fix.'));
+      body.appendChild(councilBox);
+    }
+
     if (weeklyNarrative && weeklyNarrative.currentBeat) {
       var weeklyBox = el('div', 'ag-civ-director');
       weeklyBox.appendChild(el('div', 'ag-civ-director-title', 'Weekly Narrative Agent'));
@@ -1746,6 +1760,16 @@
       row.appendChild(el('span', 'ag-civ-meta', ' · ' + (agent.role || agent.model || 'protagonist')));
       row.appendChild(el('div', 'ag-civ-detail', agent.currentGoal || personalitySummary(agent) || 'watching the Garden'));
       if (personalitySummary(agent)) row.appendChild(el('div', 'ag-civ-detail', personalitySummary(agent)));
+      return row;
+    });
+
+    civSection(body, 'GSTACK SPECIALISTS', (gstackCouncil && gstackCouncil.specialists || []).slice(0, 10), function (specialist) {
+      var row = el('div', 'ag-civ-row');
+      row.appendChild(el('span', 'ag-civ-name', specialist.title || specialist.id || 'specialist'));
+      row.appendChild(el('span', 'ag-civ-meta',
+        ' · ' + (specialist.score || 0) + '/100 · ' + (specialist.grade || 'reviewing')));
+      row.appendChild(el('div', 'ag-civ-detail', specialist.role || specialist.charter || 'professional audit owner'));
+      row.appendChild(el('div', 'ag-civ-detail', 'next: ' + (specialist.nextFix || specialist.tinyPatchRule || 'find one small fix')));
       return row;
     });
 

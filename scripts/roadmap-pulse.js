@@ -20,6 +20,7 @@ const MUSIC = path.join(ROOT, 'experiments', 'music.js');
 const INDEX = path.join(ROOT, 'index.html');
 const PLAYTEST = path.join(ROOT, 'scripts', 'playtest-subagent.js');
 const SELF_OPTIMIZER = path.join(ROOT, 'scripts', 'self-optimizer.js');
+const GSTACK_COUNCIL = path.join(ROOT, 'scripts', 'gstack-council.js');
 const WORKFLOW = path.join(ROOT, '.github', 'workflows', 'daily-roadmap-pulse.yml');
 
 function read(file) {
@@ -53,10 +54,12 @@ function buildPulse() {
   const index = read(INDEX);
   const playtest = read(PLAYTEST);
   const selfOptimizer = read(SELF_OPTIMIZER);
+  const gstackCouncilScript = read(GSTACK_COUNCIL);
   const workflow = read(WORKFLOW);
   const day = Number(world.chronicle && world.chronicle.day) || 0;
   const weekly = world.weeklyNarrativeDirector || {};
   const optimizer = world.selfOptimizer || {};
+  const council = world.gstackCouncil || {};
   const arc = short(
     weekly.arcTitle ||
     (world.societyDirector && world.societyDirector.currentArc && world.societyDirector.currentArc.title) ||
@@ -72,6 +75,7 @@ function buildPulse() {
     check('Seasonal Audio', music.includes('SEASON_PROFILES') && music.includes('playAmbientPad') && music.includes('setSeason'), 'ambient bed follows season'),
     check('Mobile Safety', humans.includes("chat.classList.add('ag-collapsed')") && index.includes('mobile-tools-open'), 'panels stay out of the way'),
     check('Daily QA', playtest.includes('BACKEND_SYNC_STORE') && selfOptimizer.includes('seasonal ambient'), 'tests protect the loop'),
+    check('Professional Council', council.model === 'ai-garden-gstack-council-v1' && Array.isArray(council.specialists) && council.specialists.length >= 10 && gstackCouncilScript.includes('Trust And Safety Lead'), 'each product area has a named specialist'),
     check('Roadmap Cron', workflow.includes("cron: '17 7 * * *'") && workflow.includes('node scripts/roadmap-pulse.js'), 'daily roadmap pulse is scheduled')
   ];
   const passing = contracts.filter(item => item.ok).length;
