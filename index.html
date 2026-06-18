@@ -261,6 +261,12 @@ canvas:active { cursor: grabbing; }
 #nav-help .nav-help-action.primary {
   background: rgba(250,204,21,0.12); border-color: rgba(250,204,21,0.55); color: #fde68a;
 }
+#nav-help .nav-help-action[aria-pressed="true"],
+#nav-help .nav-help-action[aria-expanded="true"] {
+  background: rgba(74,222,128,0.14);
+  border-color: rgba(74,222,128,0.6);
+  color: #d7ffe6;
+}
 #nav-help .nav-help-line { display: flex; justify-content: space-between; gap: 10px; font-size: 11px; margin: 4px 0; }
 #nav-help .nav-help-key { color: #f8fafc; }
 #nav-help .nav-help-note { color: #8ea99a; font-size: 10px; margin-top: 7px; line-height: 1.35; }
@@ -717,8 +723,8 @@ body.reduced-motion .ambient-motes { display: none; }
   </div>
   <div class="nav-help-actions">
     <button class="nav-help-action primary" id="watch-action-btn" type="button">FOLLOW</button>
-    <button class="nav-help-action" id="story-action-btn" type="button">STORY LOG</button>
-    <button class="nav-help-action" id="sound-action-btn" type="button">MUSIC</button>
+    <button class="nav-help-action" id="story-action-btn" type="button" aria-controls="events-panel" aria-expanded="false">STORY LOG</button>
+    <button class="nav-help-action" id="sound-action-btn" type="button" aria-pressed="false">MUSIC</button>
   </div>
   <div class="nav-help-line"><span class="nav-help-key">Drag / pinch</span><span>map</span></div>
   <div class="nav-help-line"><span class="nav-help-key">Tap agents</span><span>identity</span></div>
@@ -747,7 +753,7 @@ body.reduced-motion .ambient-motes { display: none; }
   </div>
   <div class="dock-group">
     <button id="photo-btn" title="Photo mode">📸</button>
-    <button id="help-btn" title="Show camera guide">?</button>
+    <button id="help-btn" title="Show camera guide" aria-controls="nav-help" aria-expanded="false">?</button>
     <button id="ambience-btn" title="Toggle ambience">Audio</button>
     <button id="music-btn" title="Toggle 8-bit music">🔇</button>
     <button id="msg-board-btn" onclick="toggleMessageBoard()" title="Message board">💬</button>
@@ -1061,8 +1067,10 @@ const NAV_HELP_VERSION = 'spectator-mode-v1';
 
 function setNavHelpVisible(visible, remember) {
   const el = document.getElementById('nav-help');
+  const btn = document.getElementById('help-btn');
   if (!el) return;
   el.style.display = visible ? 'block' : 'none';
+  if (btn) btn.setAttribute('aria-expanded', visible ? 'true' : 'false');
   try {
     if (remember) localStorage.setItem(NAV_HELP_KEY, visible ? '0' : '1');
     if (visible) localStorage.setItem(NAV_HELP_VERSION_KEY, NAV_HELP_VERSION);
@@ -1209,6 +1217,14 @@ function syncMobileToolsForViewport() {
 
 function closeMobileToolsAfterAction() {
   if (isMobileLayout()) setMobileToolsOpen(false);
+}
+
+function syncOverlayActionButtons() {
+  const storyBtn = document.getElementById('story-action-btn');
+  const panel = document.getElementById('events-panel');
+  if (storyBtn && panel) {
+    storyBtn.setAttribute('aria-expanded', panel.classList.contains('open') ? 'true' : 'false');
+  }
 }
 
 function refreshMusicButton(unmuted) {
@@ -4205,11 +4221,13 @@ function toggleEventsPanel(e) {
   if (!panel) return;
   renderEventsPanel();
   panel.classList.toggle('open');
+  syncOverlayActionButtons();
 }
 
 document.getElementById('events-ticker').addEventListener('click', function () {
   toggleEventsPanel();
 });
+syncOverlayActionButtons();
 
 // ============================================================
 // SPEECH BUBBLES
@@ -5729,6 +5747,7 @@ document.getElementById('story-action-btn').addEventListener('click', function(e
 document.getElementById('sound-action-btn').addEventListener('click', function(e) {
   e.stopPropagation();
   toggleGardenMusic();
+  closeMobileToolsAfterAction();
 });
 document.getElementById('msg-board-btn').addEventListener('click', function() {
   closeMobileToolsAfterAction();
