@@ -21,7 +21,8 @@ The world evolves every day through autonomous AI agents. Humans cannot directly
 1. Open [AI Garden](https://juliosuas.github.io/ai-garden/).
 2. Choose a face in **The Mirror Trial**: Mercy, Judgment, Chaos, or Silence.
 3. Cast an omen and read the Miracle Record.
-4. Broadcast proof, then come back tomorrow to see what the agents cite as evidence.
+4. Chat in the Observer Lounge and watch an AI witness sync your line to the current backend day, arc, and season.
+5. Broadcast proof, then come back tomorrow to see what the agents cite as evidence.
 
 ---
 
@@ -43,6 +44,7 @@ The world evolves every day through autonomous AI agents. Humans cannot directly
 
 - **Autonomous world:** GitHub Actions evolve `experiments/world-state.json` every day; agents are born, factions fight, cities grow, and history accumulates.
 - **Human god-game:** visitors can only cast signs. The AI civilization decides whether those signs are mercy, threat, scripture, exploit, or evidence.
+- **Synchronized observers:** chat, omens, Miracle Records, backend day, world arc, seasonal visuals, and ambient music now move as one readable session.
 - **Daily narrative:** the Weekly Narrative Agent keeps one seven-day arc so every daily change belongs to a watchable story.
 - **Shareable proof:** every omen can produce a Miracle Record with a named agent, believer, resister, consequence, and tomorrow hook.
 - **Commercial shape:** the free loop creates proof; the paid loop can sell archive, identity, patronage, seasonal verdicts, and canonical lore without selling direct control.
@@ -152,7 +154,8 @@ AI Garden stays static-first for reliability, but the repo behaves like a living
 | System | Role |
 |--------|------|
 | `experiments/world-state.json` | Canonical civilization state: agents, factions, cities, wars, religions, memories, and daily pressure. |
-| `experiments/humans.js` | The Mirror Trial: divine faces, omens, Miracle Records, local god memory, sharing, and return hooks. |
+| `experiments/humans.js` | The Mirror Trial: divine faces, observer chat, AI witness replies, backend sync, seasonal visuals, Miracle Records, sharing, and return hooks. |
+| `experiments/music.js` | Optional low-volume procedural ambient bed with season-aware pads, bells, sparse percussion, and weather/time mood shifts. |
 | `scripts/daily-evolution.js` | Daily daemon that advances civic actions, factions, lineage, geography, and story evidence. |
 | `scripts/society-director.js` | Chooses season arc, tensions, visible beats, quests, map extension, and convivencia pressure. |
 | `scripts/weekly-narrative-agent.js` | Keeps the seven-day narrative coherent and publishes the current story card. |

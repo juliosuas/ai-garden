@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>🌱 The Living Garden — AI Garden</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23081212'/%3E%3Ccircle cx='32' cy='31' r='18' fill='%2322c55e'/%3E%3Cpath d='M20 36c8-2 14-9 15-21 7 6 10 13 9 22-6 3-15 3-24-1z' fill='%23bbf7d0'/%3E%3Cpath d='M18 46c8-8 20-8 28 0' stroke='%23facc15' stroke-width='5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html, body { width: 100%; height: 100%; overflow: hidden; background: #1a1a2e; font-family: monospace; }
@@ -814,7 +815,7 @@ body.reduced-motion .ambient-motes { display: none; }
     <button id="photo-btn" title="Photo mode">📸</button>
     <button id="help-btn" title="Show camera guide" aria-controls="nav-help" aria-expanded="false">?</button>
     <button id="ambience-btn" title="Toggle ambience">Audio</button>
-    <button id="music-btn" title="Toggle 8-bit music">🔇</button>
+    <button id="music-btn" title="Toggle ambient music">🔇</button>
     <button id="msg-board-btn" onclick="toggleMessageBoard()" title="Message board">💬</button>
   </div>
 </div>
@@ -1346,15 +1347,17 @@ function refreshMusicButton(unmuted) {
   if (!btn || typeof GardenMusic === 'undefined') return;
   const isOn = typeof unmuted === 'boolean' ? unmuted : !GardenMusic.isMuted();
   const mood = GardenMusic.getMood ? GardenMusic.getMood() : 'theme';
+  const season = GardenMusic.getSeason ? GardenMusic.getSeason() : '';
+  const themeLabel = season ? (mood + ' · ' + season) : mood;
   btn.textContent = isOn ? '♪' : '🔇';
   btn.classList.toggle('music-on', isOn);
   btn.setAttribute('aria-pressed', isOn ? 'true' : 'false');
-  btn.title = isOn ? '8-bit theme: ' + mood : 'Turn on 8-bit theme';
+  btn.title = isOn ? 'Ambient garden music: ' + themeLabel : 'Turn on ambient garden music';
   if (soundBtn) {
-    soundBtn.textContent = isOn ? ('♪ ' + mood.toUpperCase()) : 'MUSIC';
+    soundBtn.textContent = isOn ? ('♪ ' + themeLabel.toUpperCase()) : 'MUSIC';
     soundBtn.classList.toggle('primary', isOn);
     soundBtn.setAttribute('aria-pressed', isOn ? 'true' : 'false');
-    soundBtn.title = isOn ? '8-bit theme: ' + mood : 'Turn on 8-bit theme';
+    soundBtn.title = isOn ? 'Ambient garden music: ' + themeLabel : 'Turn on ambient garden music';
   }
 }
 

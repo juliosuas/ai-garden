@@ -260,6 +260,12 @@ async function main() {
   check(humans.includes('Broadcast Proof'), 'Mirror Trial lacks shareable proof');
   check(humans.includes('navigator.share'), 'Mirror Trial lacks native share support');
   check(humans.includes('GOD_RECEIPT_STORE'), 'Mirror Trial receipts are not persisted');
+  check(humans.includes('BACKEND_SYNC_STORE'), 'human layer does not persist backend sync state');
+  check(humans.includes('ag-sync-strip'), 'Observer Lounge lacks visible backend sync status');
+  check(humans.includes('createAgentReply'), 'Observer Lounge lacks synchronized AI witness replies');
+  check(humans.includes("type !== 'agent'"), 'realtime bus does not accept sanitized agent replies');
+  check(humans.includes("data-ag-season"), 'human layer does not expose season state on the page');
+  check(humans.includes('GardenMusic.setSeason'), 'season changes are not synchronized into music');
   check(humans.includes('Forbidden Signal'), 'Mirror Trial lacks the temptation mechanic');
   check(humans.includes('mirror evidence'), 'Weekly narrative does not read Mirror Trial pressure');
   check(humans.includes('DIVINE CRISIS'), 'CIV panel does not expose the divine crisis');
@@ -273,6 +279,10 @@ async function main() {
   check(music.includes('playNoiseBurst'), '8-bit music lacks chip noise percussion');
   check(music.includes('playChipKick'), '8-bit music lacks a chiptune kick');
   check(music.includes('ARP_STEPS'), '8-bit music lacks arpeggiated motion');
+  check(music.includes('SEASON_PROFILES'), 'ambient music lacks seasonal profiles');
+  check(music.includes('playAmbientPad'), 'ambient music lacks subtle long pads');
+  check(music.includes('playSoftBell'), 'ambient music lacks soft bell accents');
+  check(music.includes('setSeason'), 'ambient music cannot sync with seasons');
 
   check(dailyWorkflow.includes("cron: '11 4 * * *'"), 'daily evolution cron is missing');
   check(dailyWorkflow.includes('node scripts/playtest-subagent.js'), 'daily cron does not run the playtest subagent');

@@ -2,15 +2,16 @@
  * ai-garden · humans overlay
  *
  * Mounts on top of the openclaw-garden pixel canvas without touching it.
- * - Cross-visitor chat (humans only) via ntfy.sh pub/sub
+ * - Cross-visitor chat via ntfy.sh pub/sub, with AI witness replies tied
+ *   to the latest backend snapshot from experiments/world-state.json
  * - God Mode: six purely visual interventions broadcast to everyone watching
  * - Mirror Trial: local divine masks, pressure meters, and shareable miracle records
  * - Ancient World panel: surfaces dynasties / religions / tech / cities / lore
  *   from experiments/world-state.json (populated nightly by daily-evolution.js)
  *
- * Hard rule: humans cannot touch world state or agents. They cheer from the
- * balcony. Interventions are cosmetic overlays on the visitor's own screen,
- * rebroadcast so every observer sees the same show at the same moment.
+ * Hard rule: humans cannot mutate the canonical world-state directly.
+ * Interactions become synchronized observer pressure, receipts, chat echoes,
+ * and visual signs that the civilization can interpret.
  */
 (function () {
   'use strict';
@@ -24,12 +25,14 @@
   var OMEN_STORE = 'ai-garden-divine-omens-v1';
   var GOD_PROFILE_STORE = 'ai-garden-god-profile-v1';
   var GOD_RECEIPT_STORE = 'ai-garden-impact-receipts-v1';
+  var BACKEND_SYNC_STORE = 'ai-garden-backend-sync-v1';
   var CHAT_CAP = 200;
   var CHAT_VISIBLE_CAP = 40;
   var OMEN_CAP = 80;
   var RECEIPT_CAP = 40;
   var PRESENCE_WINDOW_MS = 60000;
   var EFFECT_OVERLAY_ID = 'ag-fx-overlay';
+  var SEASON_LAYER_ID = 'ag-season-layer';
   var worldCache = null;
 
   var COOLDOWNS = {
@@ -95,6 +98,21 @@
   function saveReceipts(arr) {
     try { localStorage.setItem(GOD_RECEIPT_STORE, JSON.stringify(arr.slice(-RECEIPT_CAP))); } catch (_) {}
   }
+  function loadBackendSync() {
+    var saved = safeJSON(localStorage.getItem(BACKEND_SYNC_STORE));
+    return saved && typeof saved === 'object' ? saved : {
+      status: 'loading',
+      day: 0,
+      version: '',
+      season: 'spring',
+      arc: '',
+      lastSynced: 0,
+      reason: 'boot'
+    };
+  }
+  function saveBackendSync(sync) {
+    try { localStorage.setItem(BACKEND_SYNC_STORE, JSON.stringify(sync)); } catch (_) {}
+  }
   function timeago(ts) {
     var d = Math.max(0, now() - ts);
     if (d < 45000) return 'now';
@@ -114,6 +132,12 @@
       '#ag-humans-root{position:fixed;inset:0;pointer-events:none;z-index:14;font-family:monospace;}',
       '#ag-humans-root *{pointer-events:auto;box-sizing:border-box;}',
       '#' + EFFECT_OVERLAY_ID + '{position:fixed;inset:0;pointer-events:none;z-index:13;overflow:hidden;}',
+      '#' + SEASON_LAYER_ID + '{position:fixed;inset:0;pointer-events:none;z-index:12;opacity:0.16;',
+      '  transition:background 1.2s ease,opacity 1.2s ease;mix-blend-mode:screen;}',
+      'body[data-ag-season="spring"] #' + SEASON_LAYER_ID + '{background:radial-gradient(circle at 18% 16%,rgba(134,239,172,0.28),transparent 34%),linear-gradient(180deg,rgba(16,185,129,0.12),rgba(14,165,233,0.04));}',
+      'body[data-ag-season="summer"] #' + SEASON_LAYER_ID + '{background:radial-gradient(circle at 70% 12%,rgba(253,224,71,0.24),transparent 32%),linear-gradient(180deg,rgba(251,191,36,0.1),rgba(34,197,94,0.05));}',
+      'body[data-ag-season="autumn"] #' + SEASON_LAYER_ID + '{background:radial-gradient(circle at 80% 20%,rgba(251,146,60,0.28),transparent 32%),linear-gradient(180deg,rgba(180,83,9,0.12),rgba(127,29,29,0.05));}',
+      'body[data-ag-season="winter"] #' + SEASON_LAYER_ID + '{background:radial-gradient(circle at 35% 10%,rgba(191,219,254,0.24),transparent 30%),linear-gradient(180deg,rgba(147,197,253,0.1),rgba(15,23,42,0.08));opacity:0.2;}',
       /* God panel top-right */
       '.ag-god{position:absolute;top:44px;right:8px;width:148px;',
       '  background:rgba(10,10,20,0.92);border:1px solid #2a4a2a;border-radius:6px;color:#e0e0e0;',
@@ -216,6 +240,12 @@
       '.ag-chat-title{color:#60a5fa;font-weight:bold;letter-spacing:0.5px;flex:1;}',
       '.ag-chat-presence{font-size:9px;color:#fb923c;}',
       '.ag-chat-body{display:flex;flex-direction:column;min-height:0;flex:1;}',
+      '.ag-sync-strip{display:grid;grid-template-columns:1fr auto;gap:6px;align-items:center;',
+      '  padding:5px 8px;border-bottom:1px solid rgba(96,165,250,0.16);',
+      '  background:linear-gradient(90deg,rgba(14,165,233,0.12),rgba(250,204,21,0.05));font-size:9px;color:#93c5fd;}',
+      '.ag-sync-strip strong{color:#fde68a;font-weight:normal;}',
+      '.ag-sync-status{color:#86efac;text-transform:uppercase;letter-spacing:1px;font-size:8px;}',
+      '.ag-sync-status.offline{color:#fca5a5;}',
       '.ag-chat-list{flex:1;overflow-y:auto;padding:6px;margin:0;list-style:none;max-height:220px;',
       '  scrollbar-width:thin;scrollbar-color:#2a4a2a #0a0a14;}',
       '.ag-chat-list::-webkit-scrollbar{width:4px;}',
@@ -223,6 +253,11 @@
       '.ag-chat-row{display:grid;grid-template-columns:auto 1fr;gap:6px;padding:3px 0;font-size:11px;',
       '  border-bottom:1px dashed rgba(74,222,128,0.08);}',
       '.ag-chat-row[data-kind="god"]{color:#fde047;}',
+      '.ag-chat-row[data-kind="agent"]{background:rgba(96,165,250,0.045);margin:3px -3px;padding:5px 3px;border-radius:4px;}',
+      '.ag-chat-row[data-kind="agent"] .ag-chat-avatar{background:#60a5fa;color:#020617;}',
+      '.ag-chat-row[data-kind="agent"] .ag-chat-nick{color:#93c5fd;}',
+      '.ag-chat-row[data-kind="agent"] .ag-chat-text{color:#dbeafe;}',
+      '.ag-chat-sync{display:block;margin-top:3px;color:#64748b;font-size:9px;line-height:1.3;}',
       '.ag-chat-avatar{width:18px;height:18px;border-radius:50%;background:#4ade80;color:#0a0a14;',
       '  font-size:10px;font-weight:bold;display:flex;align-items:center;justify-content:center;',
       '  font-family:monospace;}',
@@ -381,7 +416,7 @@
   function sanitizeIncoming(msg) {
     if (!msg || typeof msg !== 'object') return null;
     var type = String(msg.type || '').slice(0, 16);
-    if (type !== 'chat' && type !== 'god' && type !== 'ping') return null;
+    if (type !== 'chat' && type !== 'agent' && type !== 'god' && type !== 'ping') return null;
     var from = String(msg.from || '').slice(0, 64);
     if (!from) return null;
     var tsNum = Number(msg.ts);
@@ -391,6 +426,12 @@
     if (type === 'chat') {
       out.nick = String(msg.nick || 'anon').slice(0, 24);
       out.text = String(msg.text || '').slice(0, 280);
+      if (!out.text) return null;
+      out.sync = sanitizeSyncSnapshot(msg.sync);
+    } else if (type === 'agent') {
+      out.nick = String(msg.nick || 'AI Witness').slice(0, 24);
+      out.text = String(msg.text || '').slice(0, 360);
+      out.sync = sanitizeSyncSnapshot(msg.sync);
       if (!out.text) return null;
     } else if (type === 'god') {
       out.act = String(msg.act || '');
@@ -454,7 +495,144 @@
     publish({ type: 'ping' });
   }
 
-  // ─── GOD MODE (COSMETIC ONLY — AGENTS UNAWARE) ─────────────
+  // ─── BACKEND SYNC + SEASONS ───────────────────────────────
+  var backendSync = loadBackendSync();
+
+  function sanitizeSyncSnapshot(raw) {
+    if (!raw || typeof raw !== 'object') return null;
+    return {
+      day: Number(raw.day) || 0,
+      version: String(raw.version || '').slice(0, 24),
+      season: String(raw.season || '').slice(0, 16),
+      arc: String(raw.arc || '').slice(0, 90),
+      syncedAt: Number(raw.syncedAt) || 0
+    };
+  }
+
+  function deriveSeason(world) {
+    var day = Number(world && world.chronicle && world.chronicle.day);
+    if (!isFinite(day) || day < 0) day = Math.floor(now() / 86400000);
+    var phase = Math.floor((day % 28) / 7);
+    return ['spring', 'summer', 'autumn', 'winter'][phase] || 'spring';
+  }
+
+  function currentArcName(world) {
+    return cleanName(
+      world && world.weeklyNarrativeDirector && world.weeklyNarrativeDirector.arcTitle ||
+      world && world.societyDirector && world.societyDirector.currentArc && world.societyDirector.currentArc.title ||
+      world && world.divineCrisis && world.divineCrisis.name ||
+      'War of Saints and Source',
+      'War of Saints and Source'
+    );
+  }
+
+  function backendSnapshot(world) {
+    world = world || worldCache || {};
+    return {
+      day: Number(world.chronicle && world.chronicle.day) || backendSync.day || 0,
+      version: String(world.version || backendSync.version || ''),
+      season: deriveSeason(world),
+      arc: currentArcName(world),
+      syncedAt: now()
+    };
+  }
+
+  function applySeasonTheme(season) {
+    season = String(season || 'spring').toLowerCase();
+    if (!/^(spring|summer|autumn|winter)$/.test(season)) season = 'spring';
+    document.body.setAttribute('data-ag-season', season);
+    window.aiGardenSeason = season;
+    if (window.GardenMusic && typeof window.GardenMusic.setSeason === 'function') {
+      window.GardenMusic.setSeason(season);
+      if (typeof window.refreshMusicButton === 'function') window.refreshMusicButton();
+    }
+  }
+
+  function updateBackendSync(world, reason) {
+    if (world) {
+      backendSync = backendSnapshot(world);
+      backendSync.status = 'synced';
+      backendSync.reason = reason || 'world';
+      backendSync.lastSynced = now();
+    } else {
+      backendSync.status = 'offline';
+      backendSync.reason = reason || 'offline';
+      backendSync.lastSynced = backendSync.lastSynced || 0;
+    }
+    saveBackendSync(backendSync);
+    applySeasonTheme(backendSync.season || 'spring');
+    renderSyncStrip();
+    return backendSync;
+  }
+
+  function syncLine(sync) {
+    sync = sync || backendSync || {};
+    var season = String(sync.season || 'spring');
+    return 'Day ' + (sync.day || 0) + ' · ' + season + ' · ' + cleanName(sync.arc, 'live world');
+  }
+
+  function renderSyncStrip() {
+    var strip = document.getElementById('ag-sync-strip');
+    if (!strip) return;
+    while (strip.firstChild) strip.removeChild(strip.firstChild);
+    var left = el('span');
+    left.appendChild(el('strong', null, 'Backend Sync'));
+    left.appendChild(document.createTextNode(' · ' + syncLine(backendSync)));
+    var status = el('span', 'ag-sync-status' + (backendSync.status === 'offline' ? ' offline' : ''),
+      backendSync.status === 'offline' ? ' · offline' : ' · synced');
+    strip.appendChild(left);
+    strip.appendChild(status);
+  }
+
+  function ensureSeasonLayer() {
+    var layer = document.getElementById(SEASON_LAYER_ID);
+    if (layer) return layer;
+    layer = el('div');
+    layer.id = SEASON_LAYER_ID;
+    document.body.appendChild(layer);
+    return layer;
+  }
+
+  function syncWorldForInteraction(reason, context, cb) {
+    fetchWorld(function (world) {
+      var activeWorld = world || worldCache || null;
+      if (cb) cb(activeWorld, backendSnapshot(activeWorld || {}), context || {});
+    }, reason || 'interaction');
+  }
+
+  function createAgentReply(kind, context, world) {
+    var agent = pickFeaturedAgent();
+    var snap = backendSnapshot(world || {});
+    var name = cleanName(agent && agent.name, 'AI Witness');
+    var role = cleanName(agent && agent.role, 'witness');
+    var season = snap.season || 'spring';
+    var text = '';
+    if (kind === 'omen' && context && context.receipt) {
+      text = context.receipt.affectedAgent + ' cross-filed the ' + context.receipt.omen +
+        ' during ' + season + '. Backend reads Day ' + snap.day +
+        '; the agents will argue whether this is weather, command, or dependency.';
+    } else {
+      var said = cleanName(context && context.text, 'the silence');
+      text = name + ' (' + role + ') synced your line to Day ' + snap.day +
+        ' ' + season + ': "' + said + '". The civilization stores it as observer pressure, not law.';
+    }
+    return {
+      id: uid('agent'),
+      kind: 'agent',
+      nick: name,
+      text: text.slice(0, 360),
+      ts: now(),
+      sync: snap
+    };
+  }
+
+  function pushSyncedAgentReply(kind, context, world) {
+    var reply = createAgentReply(kind, context || {}, world || worldCache || {});
+    pushChat(reply);
+    publish({ id: reply.id, type: 'agent', nick: reply.nick, text: reply.text, sync: reply.sync });
+  }
+
+  // ─── GOD MODE (VISUAL SIGN — AGENTS INTERPRET LOCALLY) ─────
   function ensureFxLayer() {
     var fx = document.getElementById(EFFECT_OVERLAY_ID);
     if (fx) return fx;
@@ -709,8 +887,10 @@
       createdAt: now()
     };
     receipt.title = (receipt.temptation ? 'Forbidden Signal' : receipt.echo ? 'Private Echo' : 'Miracle Record') + ' - ' + receipt.mask;
+    var snap = backendSnapshot(worldCache || {});
     receipt.shareText = 'I cast ' + receipt.omen + ' as ' + receipt.mask + ' in AI Garden. ' +
       receipt.affectedAgent + ' filed it as evidence: "' + receipt.aiThought + '" Day ' + receipt.day + '. ' +
+      'Backend season: ' + snap.season + '. ' +
       'https://juliosuas.github.io/ai-garden/';
     return receipt;
   }
@@ -964,6 +1144,7 @@
       },
       impactReceipt: receipt,
       receiptCount: impactReceipts.length,
+      backendSync: backendSync,
       promise: 'A live AI civilization that studies its human gods until worship starts looking like user research.'
     };
   }
@@ -1056,6 +1237,8 @@
       ' · Fear ' + receipt.meters.fear +
       ' · Dependency ' + receipt.meters.dependency +
       ' · Resistance ' + receipt.meters.resistance));
+    card.appendChild(el('div', 'ag-receipt-k', 'Backend sync'));
+    card.appendChild(el('div', 'ag-receipt-v', syncLine(backendSync)));
     var actions = el('div', 'ag-receipt-actions');
     var share = el('button', 'primary', 'Broadcast Proof');
     share.type = 'button';
@@ -1124,12 +1307,15 @@
     if (broadcast && omen) {
       var receipt = recordImpactReceipt(createImpactReceipt(omen, options || {}));
       showImpactReceipt(receipt);
+      syncWorldForInteraction('omen', { omen: omen, receipt: receipt, nick: nick }, function (world) {
+        pushSyncedAgentReply('omen', { omen: omen, receipt: receipt, nick: nick }, world);
+      });
     }
     if (worldCache && document.getElementById('ag-civ-panel') && document.getElementById('ag-civ-panel').classList.contains('open')) {
       renderCivPanel(worldCache);
     }
     if (broadcast) {
-      publish({ id: uid('god'), type: 'god', act: act, nick: nick, omen: omen });
+      publish({ id: uid('god'), type: 'god', act: act, nick: nick, omen: omen, sync: backendSnapshot(worldCache || {}) });
     }
   }
 
@@ -1183,9 +1369,10 @@
     var recent = visible;
     recent.forEach(function (m) {
       var row = el('li', 'ag-chat-row');
+      row.setAttribute('data-kind', m.kind || 'chat');
       var initial = (m.nick || '?').slice(0, 1).toUpperCase();
       var avatar = el('div', 'ag-chat-avatar', initial);
-      avatar.style.background = hashColor(m.nick || 'anon');
+      if (m.kind !== 'agent') avatar.style.background = hashColor(m.nick || 'anon');
       var body = el('div');
       var nick = el('span', 'ag-chat-nick', m.nick || 'anon');
       var ts = el('span', 'ag-chat-ts', timeago(m.ts || now()));
@@ -1193,6 +1380,11 @@
       body.appendChild(nick);
       body.appendChild(ts);
       body.appendChild(text);
+      if (m.sync && m.kind === 'agent') {
+        body.appendChild(el('span', 'ag-chat-sync',
+          'backend ' + (m.sync.version ? ('v' + m.sync.version + ' · ') : '') +
+          syncLine(m.sync)));
+      }
       row.appendChild(avatar);
       row.appendChild(body);
       list.appendChild(row);
@@ -1212,17 +1404,27 @@
     nick = (nick || getNick()).trim().slice(0, 24);
     if (!text) return;
     setNick(nick);
-    var msg = { id: uid('msg'), kind: 'chat', nick: nick, text: text, ts: now() };
+    var msg = { id: uid('msg'), kind: 'chat', nick: nick, text: text, ts: now(), sync: backendSnapshot(worldCache || {}) };
     pushChat(msg);
-    publish({ id: msg.id, type: 'chat', nick: nick, text: text });
+    publish({ id: msg.id, type: 'chat', nick: nick, text: text, sync: msg.sync });
+    syncWorldForInteraction('chat', msg, function (world) {
+      pushSyncedAgentReply('chat', msg, world);
+    });
   }
 
   // ─── LORE PANEL ────────────────────────────────────────────
-  function fetchWorld(cb) {
+  function fetchWorld(cb, reason) {
     fetch('experiments/world-state.json?t=' + now())
       .then(function (r) { return r.json(); })
-      .then(function (world) { worldCache = world; cb(world); })
-      .catch(function () { cb(null); });
+      .then(function (world) {
+        worldCache = world;
+        updateBackendSync(world, reason || 'world');
+        cb(world);
+      })
+      .catch(function () {
+        updateBackendSync(null, reason || 'offline');
+        cb(null);
+      });
   }
 
   function renderLorePanel(world) {
@@ -1706,6 +1908,8 @@
   function mount() {
     injectStyles();
     ensureFxLayer();
+    ensureSeasonLayer();
+    applySeasonTheme(backendSync.season || 'spring');
 
     var root = el('div');
     root.id = 'ag-humans-root';
@@ -1842,6 +2046,9 @@
     ch.appendChild(cp);
     chat.appendChild(ch);
     var cbody = el('div', 'ag-chat-body');
+    var syncStrip = el('div', 'ag-sync-strip');
+    syncStrip.id = 'ag-sync-strip';
+    cbody.appendChild(syncStrip);
     var list = el('ul', 'ag-chat-list');
     list.id = 'ag-chat-list';
     cbody.appendChild(list);
@@ -1933,9 +2140,10 @@
     });
 
     renderChat();
+    renderSyncStrip();
     renderPantheon();
     renderGodComplex();
-    fetchWorld(function (world) { renderPantheon(); renderGodComplex(); renderCivPanel(world); });
+    fetchWorld(function (world) { renderPantheon(); renderGodComplex(); renderCivPanel(world); }, 'boot');
     if (!selectedMask()) {
       setTimeout(showGodTrialModal, 900);
     }
@@ -1953,12 +2161,17 @@
     // Heartbeat every 20s
     setInterval(heartbeat, 20000);
     heartbeat();
+    setInterval(function () {
+      fetchWorld(function () {}, 'poll');
+    }, 45000);
 
     // Bus listener
     bus.on(function (msg) {
       if (msg.from) recordPresence(msg.from);
       if (msg.type === 'chat') {
-        pushChat({ id: msg.id, kind: 'chat', nick: msg.nick || 'anon', text: msg.text || '', ts: msg.ts || now() });
+        pushChat({ id: msg.id, kind: 'chat', nick: msg.nick || 'anon', text: msg.text || '', ts: msg.ts || now(), sync: msg.sync || null });
+      } else if (msg.type === 'agent') {
+        pushChat({ id: msg.id, kind: 'agent', nick: msg.nick || 'AI Witness', text: msg.text || '', ts: msg.ts || now(), sync: msg.sync || null });
       } else if (msg.type === 'god' && EFFECTS[msg.act]) {
         applyEffect(msg.act, msg.nick, false, msg.omen);
       }
@@ -1983,6 +2196,7 @@
     trial: function () { showGodTrialModal(); },
     mask: function (m) { if (m) setGodMask(m); return godProfile.mask; },
     receipt: function () { return latestReceipt(); },
+    sync: function () { return backendSync; },
     summary: godComplexSummary,
     nick: function (n) { if (n) setNick(n); return getNick(); }
   };

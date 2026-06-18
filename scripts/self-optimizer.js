@@ -166,26 +166,32 @@ function scoreWorldLife(index, world) {
   };
 }
 
-function scoreAudio(music, index) {
+function scoreAudio(music, index, humans) {
   const checks = [
     music.includes('HOOK_STEPS'),
     music.includes('ARP_STEPS'),
     music.includes('playChipKick'),
     music.includes('playNoiseBurst'),
     index.includes('toggleGardenMusic'),
-    index.includes('refreshMusicButton')
+    index.includes('refreshMusicButton'),
+    music.includes('SEASON_PROFILES'),
+    music.includes('playAmbientPad'),
+    music.includes('playSoftBell'),
+    music.includes('setSeason'),
+    humans.includes('GardenMusic.setSeason')
   ];
   return {
     key: 'audio',
     label: 'Audio',
     score: points(checks),
-    nextAction: 'make the bit hook memorable while keeping the first click optional',
+    nextAction: 'keep the seasonal ambient bed subtle, synced, and optional',
     evidence: compactEvidence([
       detail('original hook', checks[0]),
       detail('arpeggio motion', checks[1]),
       detail('chip kick', checks[2]),
       detail('noise percussion', checks[3]),
-      detail('synced music button', checks[5])
+      detail('synced music button', checks[5]),
+      detail('seasonal ambient', checks[6] && checks[7] && checks[10])
     ])
   };
 }
@@ -305,7 +311,7 @@ function buildSnapshot(world, files) {
     scoreMobileUX(files.index, files.humans),
     scoreFlow(files.index, world),
     scoreWorldLife(files.index, world),
-    scoreAudio(files.music, files.index),
+    scoreAudio(files.music, files.index, files.humans),
     scorePerformance(files.index),
     scoreAutomation(files.dailyWorkflow, files.autopilotWorkflow, files.selfWorkflow, files.playtest, files.weeklyNarrative)
   ];
