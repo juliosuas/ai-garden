@@ -108,6 +108,11 @@ async function main() {
   check(weeklyNarrative && Array.isArray(weeklyNarrative.narrativeDays) && weeklyNarrative.narrativeDays.length === 7, 'Weekly Narrative Agent needs seven daily beats');
   check(weeklyNarrative && weeklyNarrative.currentBeat && weeklyNarrative.currentBeat.day === ((world.chronicle && world.chronicle.day) || 0), 'Weekly Narrative Agent must identify the current day beat');
   check(weeklyNarrative && weeklyNarrative.storyCard && weeklyNarrative.storyCard.currentDirective, 'Weekly Narrative Agent needs a spectator story card');
+  check(weeklyNarrative && weeklyNarrative.entertainment && weeklyNarrative.entertainment.showdown, 'Weekly Narrative Agent needs a showdown line');
+  check(weeklyNarrative && weeklyNarrative.entertainment && weeklyNarrative.entertainment.spotlight, 'Weekly Narrative Agent needs a spotlight line');
+  check(weeklyNarrative && weeklyNarrative.entertainment && weeklyNarrative.entertainment.cliffhanger, 'Weekly Narrative Agent needs a cliffhanger line');
+  check(weeklyNarrative && weeklyNarrative.entertainment && weeklyNarrative.entertainment.ifWin && weeklyNarrative.entertainment.ifFail, 'Weekly Narrative Agent needs visible win and fail outcomes');
+  check(weeklyNarrative && weeklyNarrative.entertainment && weeklyNarrative.entertainment.shortWatch, 'Weekly Narrative Agent needs a one-thing-to-watch cue');
   check(weeklyNarrative && weeklyNarrative.weekProgress && Number(weeklyNarrative.weekProgress.currentBeatIndex) >= 1, 'Weekly Narrative Agent needs week progress');
   check(weeklyNarrative && Array.isArray(weeklyNarrative.tickerBeats) && weeklyNarrative.tickerBeats.length >= 2, 'Weekly Narrative Agent needs ticker beats');
   check(weeklyNarrative && weeklyNarrative.verifyChecklist && weeklyNarrative.verifyChecklist.ok, 'Weekly Narrative Agent verification failed');
@@ -168,6 +173,12 @@ async function main() {
   check(index.includes('id="story-premise"'), 'story primer is missing a premise line');
   check(index.includes('id="story-stakes"'), 'story primer is missing stakes');
   check(index.includes('id="story-week-cue"'), 'story primer is missing the weekly narrative cue');
+  check(index.includes('id="story-meter-fill"'), 'story primer is missing the week progress meter');
+  check(index.includes('id="story-meter-label"'), 'story primer is missing the week progress label');
+  check(index.includes('id="story-spotlight"'), 'story primer is missing tonight spotlight');
+  check(index.includes('id="story-cliffhanger"'), 'story primer is missing the cliffhanger cue');
+  check(index.includes('id="story-if-win"'), 'story primer is missing the win outcome');
+  check(index.includes('id="story-if-fail"'), 'story primer is missing the fail outcome');
   check(index.includes('id="story-side-religion"'), 'story primer is missing the religion side');
   check(index.includes('id="story-side-code"'), 'story primer is missing the code side');
   check(index.includes('id="story-watch-list"'), 'story primer is missing what-to-watch rows');
@@ -277,6 +288,8 @@ async function main() {
   check(selfOptimizer.includes('attachToWorld'), 'Self Optimizer does not write into world-state');
   check(weeklyNarrativeAgent.includes('refreshWeeklyNarrativeDirector'), 'Weekly Narrative Agent refresh helper is missing');
   check(weeklyNarrativeAgent.includes('storyCard'), 'Weekly Narrative Agent v2 story card is missing');
+  check(weeklyNarrativeAgent.includes('buildEntertainmentLayer'), 'Weekly Narrative Agent v2 entertainment layer is missing');
+  check(weeklyNarrativeAgent.includes('weekly-showdown'), 'Weekly Narrative Agent ticker lacks the showdown beat');
   check(selfOptimizerWorkflow.includes("cron: '23 6 * * *'"), 'daily self optimizer cron is missing');
   check(selfOptimizerWorkflow.includes('node scripts/self-optimizer.js'), 'self optimizer workflow does not run the optimizer');
   check(selfOptimizerWorkflow.includes('node --check scripts/weekly-narrative-agent.js'), 'self optimizer workflow does not validate the Weekly Narrative Agent');

@@ -223,6 +223,20 @@ canvas:active { cursor: grabbing; }
   color: #fde68a; font-size: 10px; letter-spacing: 0.8px; text-transform: uppercase;
   margin: -1px 0 7px;
 }
+#nav-help .story-meter {
+  position: relative; height: 8px; border-radius: 999px; overflow: hidden;
+  background: rgba(148,163,184,0.16); border: 1px solid rgba(148,163,184,0.18);
+  margin: 0 0 9px;
+}
+#nav-help .story-meter-fill {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, #facc15, #fb923c, #60a5fa);
+  transition: width 0.35s ease;
+}
+#nav-help .story-meter-label {
+  color: #8ea99a; font-size: 9px; letter-spacing: 0.7px; text-transform: uppercase;
+  margin: 5px 0 8px;
+}
 #nav-help .nav-help-arc {
   color: #f8fafc; font-size: 12px; line-height: 1.35; margin: 4px 22px 8px 0;
 }
@@ -257,6 +271,31 @@ canvas:active { cursor: grabbing; }
   font-size: 10px; line-height: 1.35; color: #cbd5e1;
 }
 #nav-help .story-watch-label { color: #facc15; text-transform: uppercase; letter-spacing: 0.5px; }
+#nav-help .story-spotlight {
+  color: #f8fafc; font-size: 11px; line-height: 1.35;
+  background: rgba(250,204,21,0.08); border: 1px solid rgba(250,204,21,0.2);
+  border-radius: 6px; padding: 7px 8px; margin: 8px 0 7px;
+}
+#nav-help .story-cliffhanger {
+  color: #fda4af; font-size: 10px; line-height: 1.35;
+  border-left: 2px solid rgba(244,114,182,0.52);
+  padding-left: 8px; margin: 0 0 8px;
+}
+#nav-help .story-outcomes {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 8px 0;
+}
+#nav-help .story-outcome {
+  min-width: 0; background: rgba(15,23,42,0.68); border-radius: 6px; padding: 6px;
+  border: 1px solid rgba(148,163,184,0.22);
+}
+#nav-help .story-outcome.win { border-color: rgba(74,222,128,0.38); }
+#nav-help .story-outcome.fail { border-color: rgba(248,113,113,0.38); }
+#nav-help .story-outcome-label {
+  color: #9ca3af; font-size: 9px; letter-spacing: 1px; text-transform: uppercase;
+}
+#nav-help .story-outcome-text {
+  color: #dbeafe; font-size: 10px; line-height: 1.35; margin-top: 3px;
+}
 #nav-help .nav-help-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin: 8px 0 6px; }
 #nav-help .nav-help-action {
   min-height: 30px; background: rgba(96,165,250,0.10); border: 1px solid rgba(96,165,250,0.38);
@@ -282,6 +321,7 @@ canvas:active { cursor: grabbing; }
     padding: 8px 36px 8px 9px;
   }
   #nav-help .story-sides { grid-template-columns: 1fr; }
+  #nav-help .story-outcomes { grid-template-columns: 1fr; }
   #nav-help .story-watch-row { grid-template-columns: 52px 1fr; }
   #nav-help .nav-help-line { display: none; }
   #nav-help .nav-help-note { margin-top: 6px; }
@@ -708,9 +748,23 @@ body.reduced-motion .ambient-motes { display: none; }
     <div class="nav-help-badge motion" id="motion-mode-badge">FULL MOTION</div>
   </div>
   <div class="story-week" id="story-week-cue">Week narrative loading...</div>
+  <div class="story-meter"><div class="story-meter-fill" id="story-meter-fill"></div></div>
+  <div class="story-meter-label" id="story-meter-label">Beat 1 / 7</div>
   <div class="nav-help-arc" id="spectator-cue">Loading the current civilization beat...</div>
   <div class="story-kicker" id="story-premise">AI agents are building a civilization while humans act like weather.</div>
   <div class="story-stakes" id="story-stakes">A conflict is loading. Watch the agents choose what counts as law.</div>
+  <div class="story-spotlight" id="story-spotlight">Tonight's spotlight is loading...</div>
+  <div class="story-cliffhanger" id="story-cliffhanger">Tomorrow's cliffhanger is loading...</div>
+  <div class="story-outcomes">
+    <div class="story-outcome win">
+      <div class="story-outcome-label">If Win</div>
+      <div class="story-outcome-text" id="story-if-win">A possible victory is loading...</div>
+    </div>
+    <div class="story-outcome fail">
+      <div class="story-outcome-label">If Fail</div>
+      <div class="story-outcome-text" id="story-if-fail">A possible disaster is loading...</div>
+    </div>
+  </div>
   <div class="story-sides" aria-label="Current factions">
     <div class="story-side religion">
       <div class="story-side-label">Faith</div>
@@ -1118,6 +1172,7 @@ function weeklyNarrativeData() {
   const currentBeat = weekly.currentBeat || {};
   const nextBeat = weekly.nextBeat || null;
   const progress = weekly.weekProgress || {};
+  const entertainment = weekly.entertainment || {};
   return {
     title: card.headline || weekly.title || weekly.currentArcTitle || 'Weekly Watch',
     weekCue: card.statusLine || ('Week ' + weekly.weekStartDay + '-' + weekly.weekEndDay),
@@ -1131,7 +1186,15 @@ function weeklyNarrativeData() {
     progressLabel: card.progressLabel || ('Week ' + weekly.weekStartDay + '-' + weekly.weekEndDay),
     carryover: card.carryover || (weekly.carryover && weekly.carryover.verdict) || '',
     beatIndex: progress.currentBeatIndex || 1,
-    beatTotal: progress.totalBeats || 7
+    beatTotal: progress.totalBeats || 7,
+    progressPercent: progress.percent || 0,
+    urgency: entertainment.urgency || '',
+    spotlight: entertainment.spotlight || currentBeat.goal || '',
+    showdown: entertainment.showdown || card.currentDirective || currentBeat.goal || '',
+    cliffhanger: entertainment.cliffhanger || (nextBeat ? nextBeat.focus : ''),
+    ifWin: entertainment.ifWin || (weekly.resolution && weekly.resolution.successSignal) || '',
+    ifFail: entertainment.ifFail || (weekly.resolution && weekly.resolution.failureSignal) || '',
+    shortWatch: entertainment.shortWatch || card.viewerMission || ''
   };
 }
 
@@ -1153,7 +1216,7 @@ function storyPrimerData() {
   const codeName = code.name || factionNameById(code.faction) || 'Code Cantons';
   const weekly = weeklyNarrativeData();
   const premise = (weekly && weekly.premise) || arc.premise || crisis.cause || 'AI agents are building a civilization while humans act like weather.';
-  const stakes = (weekly && weekly.stakes) || arc.stakes || 'The agents are deciding what becomes law, ritual, memory, and code.';
+  const stakes = (weekly && (weekly.showdown || weekly.stakes)) || arc.stakes || 'The agents are deciding what becomes law, ritual, memory, and code.';
   return {
     title: (weekly && weekly.title) || arc.title || crisis.title || 'AI Garden Civilization',
     weekCue: (weekly && weekly.weekCue) || 'Week cue loading',
@@ -1168,10 +1231,10 @@ function storyPrimerData() {
         ? { label: 'Week', text: compactStoryText(weekly.progressLabel + ' - ' + weekly.currentLabel, 132) }
         : { label: 'Premise', text: compactStoryText('Humans cast omens; agents decide whether those signs are sacred law or dangerous input.', 128) },
       weekly
-        ? { label: 'Today', text: compactStoryText(weekly.currentText, 132) }
+        ? { label: 'Watch', text: compactStoryText(weekly.shortWatch || weekly.currentText, 132) }
         : { label: 'Watch', text: focus.title ? compactStoryText(focus.label + ': ' + focus.title, 132) : compactStoryText('Follow ' + (mediator.name || 'Codex') + ' as the current scene unfolds.', 132) },
       weekly
-        ? { label: 'Next', text: compactStoryText(weekly.nextLabel + ': ' + weekly.nextText, 132) }
+        ? { label: 'Next', text: compactStoryText(weekly.cliffhanger || (weekly.nextLabel + ': ' + weekly.nextText), 132) }
         : { label: 'Cast', text: compactStoryText(castNames || 'Codex, Hermes, OpenClaw, Claude', 128) },
       { label: 'Cast', text: compactStoryText(castNames || 'Codex, Hermes, OpenClaw, Claude', 128) }
     ].filter(Boolean).slice(0, 4),
@@ -1183,15 +1246,26 @@ function updateStoryPrimer() {
   if (!world) return;
   const data = storyPrimerData();
   const beat = document.getElementById('nav-help-beat');
+  const weekly = weeklyNarrativeData();
   setStoryText('story-week-cue', data.weekCue);
   setStoryText('spectator-cue', data.title);
   setStoryText('story-premise', data.premise);
   setStoryText('story-stakes', data.stakes);
+  setStoryText('story-spotlight', weekly ? (weekly.urgency ? (weekly.urgency + ' · ') : '') + weekly.spotlight : 'Tonight\'s spotlight is loading...');
+  setStoryText('story-cliffhanger', weekly ? weekly.cliffhanger : 'Tomorrow\'s cliffhanger is loading...');
+  setStoryText('story-if-win', weekly ? weekly.ifWin : 'A possible victory is loading...');
+  setStoryText('story-if-fail', weekly ? weekly.ifFail : 'A possible disaster is loading...');
   setStoryText('story-side-religion', data.religionName);
   setStoryText('story-doctrine-religion', data.religionDoctrine);
   setStoryText('story-side-code', data.codeName);
   setStoryText('story-doctrine-code', data.codeDoctrine);
   setStoryText('story-next-step', data.nextStep);
+  const meterFill = document.getElementById('story-meter-fill');
+  const meterLabel = document.getElementById('story-meter-label');
+  if (meterFill) meterFill.style.width = (weekly ? weekly.progressPercent : 0) + '%';
+  if (meterLabel) meterLabel.textContent = weekly
+    ? (weekly.progressLabel + ' · ' + (weekly.urgency || 'WATCH'))
+    : 'Beat 1 / 7';
   if (beat) beat.textContent = sharedWorldLoaded ? 'LIVE WORLD' : 'LOCAL VIEW';
 
   const list = document.getElementById('story-watch-list');
@@ -4186,8 +4260,13 @@ function eventPanelRows() {
   const weekly = world.weeklyNarrativeDirector || null;
   if (weekly) {
     rows.push({ label: 'Weekly Arc', text: (weekly.storyCard && weekly.storyCard.statusLine) || ('Week ' + weekly.weekStartDay + '-' + weekly.weekEndDay) });
+    if (weekly.entertainment && weekly.entertainment.showdown) rows.push({ label: 'Showdown', text: weekly.entertainment.showdown });
+    if (weekly.entertainment && weekly.entertainment.spotlight) rows.push({ label: 'Tonight', text: weekly.entertainment.spotlight });
     if (weekly.currentBeat) rows.push({ label: 'This Beat', text: weekly.currentBeat.label + ': ' + weekly.currentBeat.focus });
     if (weekly.nextBeat) rows.push({ label: 'Next Beat', text: weekly.nextBeat.label + ': ' + weekly.nextBeat.focus });
+    if (weekly.entertainment && weekly.entertainment.cliffhanger) rows.push({ label: 'Cliffhanger', text: weekly.entertainment.cliffhanger });
+    if (weekly.entertainment && weekly.entertainment.ifWin) rows.push({ label: 'If Win', text: weekly.entertainment.ifWin });
+    if (weekly.entertainment && weekly.entertainment.ifFail) rows.push({ label: 'If Fail', text: weekly.entertainment.ifFail });
     if (weekly.carryover && weekly.carryover.verdict) rows.push({ label: 'Carryover', text: weekly.carryover.verdict });
   }
   const director = world.societyDirector;

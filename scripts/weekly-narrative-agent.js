@@ -294,6 +294,31 @@ function buildStoryCard(plan) {
   };
 }
 
+function buildEntertainmentLayer(plan) {
+  const beat = plan.currentBeat || {};
+  const nextBeat = plan.nextBeat || null;
+  const names = Array.isArray(beat.protagonists) && beat.protagonists.length ? beat.protagonists : (plan.protagonists || []);
+  const lead = names[0] || 'Codex';
+  const support = names[1] || 'Claude';
+  const urgency = plan.weekProgress && plan.weekProgress.phase === 'climax'
+    ? 'SHOWDOWN'
+    : plan.weekProgress && plan.weekProgress.phase === 'reversal'
+      ? 'TWIST'
+      : plan.weekProgress && plan.weekProgress.phase === 'verdict'
+        ? 'VERDICT'
+        : 'BUILD';
+
+  return {
+    urgency,
+    spotlight: short(lead + ' and ' + support + ' now carry ' + (beat.label || 'the current beat') + '.', 140),
+    showdown: short(beat.goal || plan.stakes || 'The week still needs a public answer.', 150),
+    cliffhanger: short(nextBeat ? (nextBeat.label + ' follows: ' + nextBeat.focus) : (plan.resolution && plan.resolution.likelyOutcome) || 'The next answer is almost public.', 150),
+    ifWin: short(plan.resolution && plan.resolution.successSignal || 'The week lands a visible answer.', 140),
+    ifFail: short(plan.resolution && plan.resolution.failureSignal || 'The conflict hardens into a worse week.', 140),
+    shortWatch: short('If you only watch one thing: ' + lead + ' inside ' + (beat.label || 'this beat') + '.', 140)
+  };
+}
+
 function buildTickerBeats(plan) {
   const beats = [
     {
@@ -305,6 +330,11 @@ function buildTickerBeats(plan) {
       type: 'weekly-mission',
       label: 'MISSION',
       text: plan.storyCard.currentDirective
+    },
+    {
+      type: 'weekly-showdown',
+      label: plan.entertainment && plan.entertainment.urgency || 'SHOW',
+      text: plan.entertainment && plan.entertainment.showdown || plan.entertainment && plan.entertainment.spotlight || plan.storyCard.summary
     }
   ];
   if (plan.nextBeat) {
@@ -380,6 +410,7 @@ function buildWeeklyNarrativeDirector(world, rng) {
   };
 
   plan.storyCard = buildStoryCard(plan);
+  plan.entertainment = buildEntertainmentLayer(plan);
   plan.tickerBeats = buildTickerBeats(plan);
   plan.verifyChecklist = buildVerifyChecklist(plan);
   return plan;

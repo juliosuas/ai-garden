@@ -104,6 +104,9 @@ function scoreFlow(index, world) {
     index.includes('toggleEventsPanel'),
     index.includes('weeklyNarrativeData'),
     index.includes('id="story-week-cue"'),
+    index.includes('id="story-meter-fill"'),
+    index.includes('id="story-spotlight"'),
+    index.includes('id="story-cliffhanger"'),
     index.includes('updateSpectatorCamera'),
     index.includes('focusNextFeaturedAgent'),
     index.includes('minZoomForViewport'),
@@ -121,9 +124,11 @@ function scoreFlow(index, world) {
       detail('hover pause', checks[2]),
       detail('event details panel', checks[3]),
       detail('weekly cue', checks[5]),
-      detail('spectator camera', checks[6]),
-      detail('featured-agent jump', checks[7]),
-      detail('dynamic zoom minimum', checks[8])
+      detail('week meter', checks[6]),
+      detail('story spotlight', checks[7]),
+      detail('spectator camera', checks[9]),
+      detail('featured-agent jump', checks[10]),
+      detail('dynamic zoom minimum', checks[11])
     ])
   };
 }
@@ -224,7 +229,10 @@ function scoreAutomation(dailyWorkflow, autopilotWorkflow, selfWorkflow, playtes
     selfWorkflow.includes('git pull --rebase origin main'),
     playtest.includes('SELF_OPTIMIZER'),
     playtest.includes('Weekly Narrative Agent'),
-    weeklyNarrative.includes('storyCard')
+    playtest.includes('story-spotlight'),
+    weeklyNarrative.includes('storyCard'),
+    weeklyNarrative.includes('buildEntertainmentLayer'),
+    weeklyNarrative.includes('weekly-showdown')
   ];
   return {
     key: 'automation',
@@ -237,7 +245,8 @@ function scoreAutomation(dailyWorkflow, autopilotWorkflow, selfWorkflow, playtes
       detail('weekly syntax check', checks[2]),
       detail('autopilot PRs', checks[4]),
       detail('self-optimizer cron', checks[7]),
-      detail('weekly narrative contract', checks[11])
+      detail('weekly narrative contract', checks[12]),
+      detail('showmanship contract', checks[13])
     ])
   };
 }
