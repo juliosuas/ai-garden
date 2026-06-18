@@ -20,6 +20,7 @@ const INDEX = path.join(ROOT, 'index.html');
 const HUMANS = path.join(ROOT, 'experiments', 'humans.js');
 const MUSIC = path.join(ROOT, 'experiments', 'music.js');
 const PLAYTEST = path.join(ROOT, 'scripts', 'playtest-subagent.js');
+const WEEKLY_NARRATIVE = path.join(ROOT, 'scripts', 'weekly-narrative-agent.js');
 const DAILY_WORKFLOW = path.join(ROOT, '.github', 'workflows', 'daily-evolution.yml');
 const AUTOPILOT_WORKFLOW = path.join(ROOT, '.github', 'workflows', 'daily-autopilot-pr.yml');
 const SELF_WORKFLOW = path.join(ROOT, '.github', 'workflows', 'daily-self-optimizer.yml');
@@ -101,6 +102,8 @@ function scoreFlow(index, world) {
     index.includes('tuneTickerSpeed'),
     index.includes('ticker-track:hover'),
     index.includes('toggleEventsPanel'),
+    index.includes('weeklyNarrativeData'),
+    index.includes('id="story-week-cue"'),
     index.includes('updateSpectatorCamera'),
     index.includes('focusNextFeaturedAgent'),
     index.includes('minZoomForViewport'),
@@ -117,9 +120,10 @@ function scoreFlow(index, world) {
       detail('pixel-speed ticker', checks[0]),
       detail('hover pause', checks[2]),
       detail('event details panel', checks[3]),
-      detail('spectator camera', checks[4]),
-      detail('featured-agent jump', checks[5]),
-      detail('dynamic zoom minimum', checks[6])
+      detail('weekly cue', checks[5]),
+      detail('spectator camera', checks[6]),
+      detail('featured-agent jump', checks[7]),
+      detail('dynamic zoom minimum', checks[8])
     ])
   };
 }
@@ -205,18 +209,22 @@ function scorePerformance(index) {
   };
 }
 
-function scoreAutomation(dailyWorkflow, autopilotWorkflow, selfWorkflow, playtest) {
+function scoreAutomation(dailyWorkflow, autopilotWorkflow, selfWorkflow, playtest, weeklyNarrative) {
   const checks = [
     dailyWorkflow.includes("cron: '11 4 * * *'"),
     dailyWorkflow.includes('node scripts/playtest-subagent.js'),
+    dailyWorkflow.includes('node --check scripts/weekly-narrative-agent.js'),
     dailyWorkflow.includes('git pull --rebase origin main'),
     autopilotWorkflow.includes("cron: '37 5 * * *'"),
     autopilotWorkflow.includes('gh pr create'),
     autopilotWorkflow.includes('--draft'),
     selfWorkflow.includes("cron: '23 6 * * *'"),
     selfWorkflow.includes('node scripts/self-optimizer.js'),
+    selfWorkflow.includes('node --check scripts/weekly-narrative-agent.js'),
     selfWorkflow.includes('git pull --rebase origin main'),
-    playtest.includes('SELF_OPTIMIZER')
+    playtest.includes('SELF_OPTIMIZER'),
+    playtest.includes('Weekly Narrative Agent'),
+    weeklyNarrative.includes('storyCard')
   ];
   return {
     key: 'automation',
@@ -226,9 +234,10 @@ function scoreAutomation(dailyWorkflow, autopilotWorkflow, selfWorkflow, playtes
     evidence: compactEvidence([
       detail('daily daemon', checks[0]),
       detail('daemon playtest', checks[1]),
+      detail('weekly syntax check', checks[2]),
       detail('autopilot PRs', checks[4]),
-      detail('self-optimizer cron', checks[6]),
-      detail('self-optimizer playtest contract', checks[9])
+      detail('self-optimizer cron', checks[7]),
+      detail('weekly narrative contract', checks[11])
     ])
   };
 }
@@ -287,7 +296,7 @@ function buildSnapshot(world, files) {
     scoreWorldLife(files.index, world),
     scoreAudio(files.music, files.index),
     scorePerformance(files.index),
-    scoreAutomation(files.dailyWorkflow, files.autopilotWorkflow, files.selfWorkflow, files.playtest)
+    scoreAutomation(files.dailyWorkflow, files.autopilotWorkflow, files.selfWorkflow, files.playtest, files.weeklyNarrative)
   ];
   const focus = chooseFocus(scores, day);
   const overallScore = average(scores);
@@ -383,6 +392,7 @@ function main() {
     humans: read(HUMANS),
     music: read(MUSIC),
     playtest: read(PLAYTEST),
+    weeklyNarrative: read(WEEKLY_NARRATIVE),
     dailyWorkflow: read(DAILY_WORKFLOW),
     autopilotWorkflow: read(AUTOPILOT_WORKFLOW),
     selfWorkflow: read(SELF_WORKFLOW)

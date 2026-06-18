@@ -102,10 +102,14 @@ async function main() {
   check(optimizer && optimizer.focus && optimizer.focus.nextAction, 'Self Optimizer needs a daily focus');
   check(optimizer && optimizer.scores && optimizer.scores.mobileUX && optimizer.scores.performance, 'Self Optimizer needs UI/performance scores');
   check(optimizer && Array.isArray(optimizer.backlog) && optimizer.backlog.length >= 4, 'Self Optimizer backlog is too thin');
-  check(weeklyNarrative && weeklyNarrative.model === 'ai-garden-weekly-narrative-agent-v1', 'missing Weekly Narrative Agent world state');
+  check(weeklyNarrative && weeklyNarrative.model === 'ai-garden-weekly-narrative-agent-v2', 'missing Weekly Narrative Agent v2 world state');
+  check(weeklyNarrative && weeklyNarrative.version === 2, 'Weekly Narrative Agent should be at version 2');
   check(weeklyNarrative && Number(weeklyNarrative.weekEndDay) - Number(weeklyNarrative.weekStartDay) === 6, 'Weekly Narrative Agent must cover exactly seven days');
   check(weeklyNarrative && Array.isArray(weeklyNarrative.narrativeDays) && weeklyNarrative.narrativeDays.length === 7, 'Weekly Narrative Agent needs seven daily beats');
   check(weeklyNarrative && weeklyNarrative.currentBeat && weeklyNarrative.currentBeat.day === ((world.chronicle && world.chronicle.day) || 0), 'Weekly Narrative Agent must identify the current day beat');
+  check(weeklyNarrative && weeklyNarrative.storyCard && weeklyNarrative.storyCard.currentDirective, 'Weekly Narrative Agent needs a spectator story card');
+  check(weeklyNarrative && weeklyNarrative.weekProgress && Number(weeklyNarrative.weekProgress.currentBeatIndex) >= 1, 'Weekly Narrative Agent needs week progress');
+  check(weeklyNarrative && Array.isArray(weeklyNarrative.tickerBeats) && weeklyNarrative.tickerBeats.length >= 2, 'Weekly Narrative Agent needs ticker beats');
   check(weeklyNarrative && weeklyNarrative.verifyChecklist && weeklyNarrative.verifyChecklist.ok, 'Weekly Narrative Agent verification failed');
   check(weeklyNarrative && weeklyNarrative.automation && weeklyNarrative.automation.commitMode === 'automatic', 'Weekly Narrative Agent must keep automatic commit mode');
   const featuredAgents = world.featuredAgents || [];
@@ -160,8 +164,10 @@ async function main() {
   check(index.includes('SPECTATOR MODE'), 'spectator mode cue is missing');
   check(index.includes('STORY FIRST'), 'newcomer story mode cue is missing');
   check(index.includes('storyPrimerData'), 'story primer is not generated from world state');
+  check(index.includes('weeklyNarrativeData'), 'weekly narrative helper is missing from the client');
   check(index.includes('id="story-premise"'), 'story primer is missing a premise line');
   check(index.includes('id="story-stakes"'), 'story primer is missing stakes');
+  check(index.includes('id="story-week-cue"'), 'story primer is missing the weekly narrative cue');
   check(index.includes('id="story-side-religion"'), 'story primer is missing the religion side');
   check(index.includes('id="story-side-code"'), 'story primer is missing the code side');
   check(index.includes('id="story-watch-list"'), 'story primer is missing what-to-watch rows');
@@ -173,6 +179,7 @@ async function main() {
   check(index.includes('updateSpectatorCue'), 'spectator cue is not tied to live world state');
   check(index.includes('id="self-optimizer-cue"'), 'spectator cue does not show the Self Optimizer');
   check(index.includes('world.selfOptimizer = shared.selfOptimizer || null'), 'client does not load Self Optimizer state');
+  check(index.includes('world.weeklyNarrativeDirector = shared.weeklyNarrativeDirector || null'), 'client does not load Weekly Narrative Agent state');
   check(index.includes('toggleGardenMusic'), 'music controls should use a shared toggle helper');
   check(index.includes('refreshMusicButton'), 'music button state should be visible and synced');
   check(index.includes('id="agent-focus-btn"'), 'featured agent focus button is missing');
@@ -231,6 +238,8 @@ async function main() {
   check(humans.includes('FEATURED AGENTS'), 'CIV panel does not list featured agents');
   check(humans.includes('DIRECTOR QUESTS'), 'CIV panel does not expose director quests');
   check(humans.includes('DIRECTOR TENSIONS'), 'CIV panel does not expose director tensions');
+  check(humans.includes('Weekly Narrative Agent'), 'CIV panel does not expose Weekly Narrative Agent');
+  check(humans.includes('WEEKLY NARRATIVE'), 'CIV panel does not expose weekly narrative beats');
   check(humans.includes('Observer Weather'), 'CIV panel does not expose human omen consequences');
   check(humans.includes('DIVINE CRISIS'), 'CIV panel does not expose the divine crisis');
   check(humans.includes('convivencia:'), 'CIV panel does not expose applied convivencia plan');
@@ -246,6 +255,7 @@ async function main() {
 
   check(dailyWorkflow.includes("cron: '11 4 * * *'"), 'daily evolution cron is missing');
   check(dailyWorkflow.includes('node scripts/playtest-subagent.js'), 'daily cron does not run the playtest subagent');
+  check(dailyWorkflow.includes('node --check scripts/weekly-narrative-agent.js'), 'daily cron does not validate the Weekly Narrative Agent');
   check(dailyWorkflow.includes('git pull --rebase origin main'), 'daily cron does not rebase before pushing');
   check(dailyWorkflow.includes('contents: write'), 'daily cron cannot write commits');
 
@@ -266,8 +276,10 @@ async function main() {
   check(selfOptimizer.includes('upsertReadmeBlock'), 'Self Optimizer does not update the README focus block');
   check(selfOptimizer.includes('attachToWorld'), 'Self Optimizer does not write into world-state');
   check(weeklyNarrativeAgent.includes('refreshWeeklyNarrativeDirector'), 'Weekly Narrative Agent refresh helper is missing');
+  check(weeklyNarrativeAgent.includes('storyCard'), 'Weekly Narrative Agent v2 story card is missing');
   check(selfOptimizerWorkflow.includes("cron: '23 6 * * *'"), 'daily self optimizer cron is missing');
   check(selfOptimizerWorkflow.includes('node scripts/self-optimizer.js'), 'self optimizer workflow does not run the optimizer');
+  check(selfOptimizerWorkflow.includes('node --check scripts/weekly-narrative-agent.js'), 'self optimizer workflow does not validate the Weekly Narrative Agent');
   check(selfOptimizerWorkflow.includes('node scripts/playtest-subagent.js'), 'self optimizer workflow does not run the playtest');
   check(selfOptimizerWorkflow.includes('git pull --rebase origin main'), 'self optimizer workflow does not rebase before pushing');
   check(selfOptimizerWorkflow.includes('contents: write'), 'self optimizer workflow cannot write commits');

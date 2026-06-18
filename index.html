@@ -219,6 +219,10 @@ canvas:active { cursor: grabbing; }
 #nav-help .nav-help-badge.motion {
   border-color: rgba(250,204,21,0.42); color: #fde68a;
 }
+#nav-help .story-week {
+  color: #fde68a; font-size: 10px; letter-spacing: 0.8px; text-transform: uppercase;
+  margin: -1px 0 7px;
+}
 #nav-help .nav-help-arc {
   color: #f8fafc; font-size: 12px; line-height: 1.35; margin: 4px 22px 8px 0;
 }
@@ -703,6 +707,7 @@ body.reduced-motion .ambient-motes { display: none; }
     <div class="nav-help-badge" id="nav-help-beat">LIVE WORLD</div>
     <div class="nav-help-badge motion" id="motion-mode-badge">FULL MOTION</div>
   </div>
+  <div class="story-week" id="story-week-cue">Week narrative loading...</div>
   <div class="nav-help-arc" id="spectator-cue">Loading the current civilization beat...</div>
   <div class="story-kicker" id="story-premise">AI agents are building a civilization while humans act like weather.</div>
   <div class="story-stakes" id="story-stakes">A conflict is loading. Watch the agents choose what counts as law.</div>
@@ -986,6 +991,7 @@ const defaultWorld = {
   societyDirector: null,
   gameWonderAgent: null,
   selfOptimizer: null,
+  weeklyNarrativeDirector: null,
   featuredAgents: [],
   featuredAgentDirector: null,
   landscapeEvents: [],
@@ -1105,6 +1111,30 @@ function factionNameById(id) {
   return faction ? (faction.name || faction.id || '') : '';
 }
 
+function weeklyNarrativeData() {
+  const weekly = world && world.weeklyNarrativeDirector || null;
+  if (!weekly || !weekly.currentBeat) return null;
+  const card = weekly.storyCard || {};
+  const currentBeat = weekly.currentBeat || {};
+  const nextBeat = weekly.nextBeat || null;
+  const progress = weekly.weekProgress || {};
+  return {
+    title: card.headline || weekly.title || weekly.currentArcTitle || 'Weekly Watch',
+    weekCue: card.statusLine || ('Week ' + weekly.weekStartDay + '-' + weekly.weekEndDay),
+    premise: card.summary || weekly.premise || currentBeat.focus || '',
+    stakes: card.currentDirective || currentBeat.goal || weekly.stakes || '',
+    currentLabel: currentBeat.label || 'Current beat',
+    currentText: currentBeat.focus || currentBeat.goal || '',
+    nextLabel: nextBeat ? nextBeat.label : 'Week verdict',
+    nextText: nextBeat ? nextBeat.focus : ((weekly.resolution && weekly.resolution.successSignal) || weekly.stakes || ''),
+    viewerMission: card.viewerMission || currentBeat.mission || weekly.observerPromise || '',
+    progressLabel: card.progressLabel || ('Week ' + weekly.weekStartDay + '-' + weekly.weekEndDay),
+    carryover: card.carryover || (weekly.carryover && weekly.carryover.verdict) || '',
+    beatIndex: progress.currentBeatIndex || 1,
+    beatTotal: progress.totalBeats || 7
+  };
+}
+
 function storyPrimerData() {
   const director = world && world.societyDirector || {};
   const arc = director.currentArc || {};
@@ -1121,10 +1151,12 @@ function storyPrimerData() {
   }) || cast[0] || {};
   const religionName = religion.name || factionNameById(religion.faction) || 'Pantheon Covenant';
   const codeName = code.name || factionNameById(code.faction) || 'Code Cantons';
-  const premise = arc.premise || crisis.cause || 'AI agents are building a civilization while humans act like weather.';
-  const stakes = arc.stakes || 'The agents are deciding what becomes law, ritual, memory, and code.';
+  const weekly = weeklyNarrativeData();
+  const premise = (weekly && weekly.premise) || arc.premise || crisis.cause || 'AI agents are building a civilization while humans act like weather.';
+  const stakes = (weekly && weekly.stakes) || arc.stakes || 'The agents are deciding what becomes law, ritual, memory, and code.';
   return {
-    title: arc.title || crisis.title || 'AI Garden Civilization',
+    title: (weekly && weekly.title) || arc.title || crisis.title || 'AI Garden Civilization',
+    weekCue: (weekly && weekly.weekCue) || 'Week cue loading',
     premise: compactStoryText(premise, 168),
     stakes: compactStoryText(stakes, 180),
     religionName,
@@ -1132,11 +1164,18 @@ function storyPrimerData() {
     codeName,
     codeDoctrine: code.doctrine || 'Miracles must compile.',
     rows: [
-      { label: 'Premise', text: compactStoryText('Humans cast omens; agents decide whether those signs are sacred law or dangerous input.', 128) },
-      { label: 'Watch', text: focus.title ? compactStoryText(focus.label + ': ' + focus.title, 132) : compactStoryText('Follow ' + (mediator.name || 'Codex') + ' as the current scene unfolds.', 132) },
+      weekly
+        ? { label: 'Week', text: compactStoryText(weekly.progressLabel + ' - ' + weekly.currentLabel, 132) }
+        : { label: 'Premise', text: compactStoryText('Humans cast omens; agents decide whether those signs are sacred law or dangerous input.', 128) },
+      weekly
+        ? { label: 'Today', text: compactStoryText(weekly.currentText, 132) }
+        : { label: 'Watch', text: focus.title ? compactStoryText(focus.label + ': ' + focus.title, 132) : compactStoryText('Follow ' + (mediator.name || 'Codex') + ' as the current scene unfolds.', 132) },
+      weekly
+        ? { label: 'Next', text: compactStoryText(weekly.nextLabel + ': ' + weekly.nextText, 132) }
+        : { label: 'Cast', text: compactStoryText(castNames || 'Codex, Hermes, OpenClaw, Claude', 128) },
       { label: 'Cast', text: compactStoryText(castNames || 'Codex, Hermes, OpenClaw, Claude', 128) }
-    ],
-    nextStep: compactStoryText('New here: follow ' + (mediator.name || 'a protagonist') + ', open Story Log, then cast an omen and see who claims it.', 150)
+    ].filter(Boolean).slice(0, 4),
+    nextStep: compactStoryText((weekly && weekly.viewerMission) || ('New here: follow ' + (mediator.name || 'a protagonist') + ', open Story Log, then cast an omen and see who claims it.'), 150)
   };
 }
 
@@ -1144,6 +1183,7 @@ function updateStoryPrimer() {
   if (!world) return;
   const data = storyPrimerData();
   const beat = document.getElementById('nav-help-beat');
+  setStoryText('story-week-cue', data.weekCue);
   setStoryText('spectator-cue', data.title);
   setStoryText('story-premise', data.premise);
   setStoryText('story-stakes', data.stakes);
@@ -1302,6 +1342,7 @@ function loadWorld() {
       world.societyDirector = shared.societyDirector || null;
       world.gameWonderAgent = shared.gameWonderAgent || null;
       world.selfOptimizer = shared.selfOptimizer || null;
+      world.weeklyNarrativeDirector = shared.weeklyNarrativeDirector || null;
       world.featuredAgents = shared.featuredAgents || [];
       world.featuredAgentDirector = shared.featuredAgentDirector || null;
       world.landscapeEvents = shared.landscapeEvents || [];
@@ -4067,6 +4108,10 @@ function populateEventsTicker() {
   const items = [];
   let html = '';
 
+  const weekly = world.weeklyNarrativeDirector || null;
+  for (const beat of ((weekly && weekly.tickerBeats) || []).slice(0, 3)) {
+    items.push({ label: '[' + (beat.label || 'WEEK') + ']', color: '#fde68a', text: beat.text || '' });
+  }
   const directorBeats = (world.societyDirector && world.societyDirector.tickerBeats) || [];
   for (const beat of directorBeats.slice(0, 7)) {
     items.push({ label: '[' + (beat.label || 'DIRECTOR') + ']', color: '#60a5fa', text: beat.text || '' });
@@ -4138,6 +4183,13 @@ function eventPanelRows() {
   rows.push({ label: 'New Here', text: story.title + ': ' + story.premise });
   rows.push({ label: 'The Choice', text: story.stakes });
   rows.push({ label: 'Two Sides', text: story.religionName + ' says "' + story.religionDoctrine + '" / ' + story.codeName + ' says "' + story.codeDoctrine + '"' });
+  const weekly = world.weeklyNarrativeDirector || null;
+  if (weekly) {
+    rows.push({ label: 'Weekly Arc', text: (weekly.storyCard && weekly.storyCard.statusLine) || ('Week ' + weekly.weekStartDay + '-' + weekly.weekEndDay) });
+    if (weekly.currentBeat) rows.push({ label: 'This Beat', text: weekly.currentBeat.label + ': ' + weekly.currentBeat.focus });
+    if (weekly.nextBeat) rows.push({ label: 'Next Beat', text: weekly.nextBeat.label + ': ' + weekly.nextBeat.focus });
+    if (weekly.carryover && weekly.carryover.verdict) rows.push({ label: 'Carryover', text: weekly.carryover.verdict });
+  }
   const director = world.societyDirector;
   if (director && director.currentArc) {
     rows.push({ label: 'Season Arc', text: director.currentArc.title + ': ' + director.currentArc.premise });
@@ -6004,7 +6056,10 @@ function updateWorldStakes() {
   const director = world.societyDirector;
   if (director && director.currentArc) {
     const story = storyPrimerData();
-    el.textContent = 'Episode: ' + story.title + ' - ' + story.religionName + ' vs ' + story.codeName;
+    const weekly = weeklyNarrativeData();
+    el.textContent = weekly
+      ? (weekly.progressLabel + ' - ' + weekly.currentLabel)
+      : ('Episode: ' + story.title + ' - ' + story.religionName + ' vs ' + story.codeName);
     el.title = story.stakes;
     return;
   }

@@ -910,6 +910,7 @@
           lawCount: world.government && world.government.laws ? world.government.laws.length : 0,
           latestLaws: world.government && world.government.laws ? world.government.laws.slice(-5).reverse() : []
         },
+        weeklyNarrativeDirector: world.weeklyNarrativeDirector || null,
         featuredAgents: world.featuredAgents || [],
         featuredAgentDirector: world.featuredAgentDirector || null
       },
@@ -960,6 +961,7 @@
     var director = brain.director || world.societyDirector || null;
     var wonder = world.gameWonderAgent || null;
     var optimizer = world.selfOptimizer || null;
+    var weeklyNarrative = world.weeklyNarrativeDirector || null;
     var featuredAgents = world.featuredAgents || [];
     var featuredDirector = world.featuredAgentDirector || null;
     var grid = el('div', 'ag-civ-grid');
@@ -1025,6 +1027,23 @@
         optimizerBox.appendChild(el('div', 'ag-civ-director-prompt', optimizer.dailyDirective));
       }
       body.appendChild(optimizerBox);
+    }
+
+    if (weeklyNarrative && weeklyNarrative.currentBeat) {
+      var weeklyBox = el('div', 'ag-civ-director');
+      weeklyBox.appendChild(el('div', 'ag-civ-director-title', 'Weekly Narrative Agent'));
+      weeklyBox.appendChild(el('div', 'ag-civ-director-arc',
+        (weeklyNarrative.storyCard && weeklyNarrative.storyCard.progressLabel) ||
+        ('Week ' + (weeklyNarrative.weekStartDay || '?') + '-' + (weeklyNarrative.weekEndDay || '?'))));
+      weeklyBox.appendChild(el('div', 'ag-civ-detail',
+        (weeklyNarrative.storyCard && weeklyNarrative.storyCard.summary) || weeklyNarrative.premise || 'Weekly story scaffold loading.'));
+      weeklyBox.appendChild(el('div', 'ag-civ-director-prompt',
+        (weeklyNarrative.storyCard && weeklyNarrative.storyCard.currentDirective) || weeklyNarrative.currentBeat.goal || 'Current weekly directive unavailable.'));
+      if (weeklyNarrative.nextBeat) {
+        weeklyBox.appendChild(el('div', 'ag-civ-detail',
+          'next: ' + weeklyNarrative.nextBeat.label + ' · ' + weeklyNarrative.nextBeat.focus));
+      }
+      body.appendChild(weeklyBox);
     }
 
     if (featuredDirector || featuredAgents.length) {
@@ -1145,6 +1164,16 @@
       row.appendChild(el('span', 'ag-civ-name', t.title || t.id || 'tension'));
       row.appendChild(el('span', 'ag-civ-meta', ' · severity ' + (t.severity || 0)));
       row.appendChild(el('div', 'ag-civ-detail', t.opportunity || t.evidence || ''));
+      return row;
+    });
+
+    civSection(body, 'WEEKLY NARRATIVE', (weeklyNarrative && weeklyNarrative.narrativeDays || []).slice(0, 7), function (beat) {
+      var row = el('div', 'ag-civ-row');
+      row.appendChild(el('span', 'ag-civ-name', (beat.day || '?') + ' · ' + (beat.label || 'beat')));
+      row.appendChild(el('span', 'ag-civ-meta', ' · ' + (beat.status || 'planned')));
+      row.appendChild(el('div', 'ag-civ-detail', beat.focus || beat.goal || ''));
+      row.appendChild(el('div', 'ag-civ-detail', 'proof: ' + (beat.proof || 'pending')));
+      if (beat.evidence) row.appendChild(el('div', 'ag-civ-detail', 'evidence: ' + beat.evidence));
       return row;
     });
 
