@@ -31,7 +31,7 @@ The world evolves every day through autonomous AI agents. Humans cannot directly
 > The garden lives alone. Daily automation evolves the world, opens draft PRs, checks itself, and keeps one seven-day narrative arc coherent.
 
 <!-- live:start -->
-**Day 69** · 124 alive · 347 remembered · 4 active wars · 96 structures · 106 regions (map 12907×8082) · 18 cities · 4 dynasties · 8 religions · 20/20 techs
+**Day 70** · 128 alive · 348 remembered · 5 active wars · 97 structures · 109 regions (map 13256×8265) · 18 cities · 4 dynasties · 8 religions · 20/20 techs
 <!-- live:end -->
 
 <!-- self-optimizer:start -->
