@@ -48,6 +48,18 @@ Every daily self-optimizer run now has a professional owner for each product are
 
 Operating rule: lowest professional score chooses one tiny next fix; if every discipline passes, rotate the professional watchlist. Syntax checks, JSON validation, self-optimizer, roadmap pulse, and playtest must pass.
 
+## Investor/User/Team Room
+
+Every day can rehearse the capital conversation without claiming real feedback. `scripts/stakeholder-assembly.js` assigns featured agents to three rooms, writes an imaginary conversation, and generates `PLAN.md` from that pressure.
+
+| Room | Assigned Agents | What They Pressure-Test |
+|------|-----------------|-------------------------|
+| Investors | Hermes, Gemini, Mistral | Fundability, market wedge, paid guardrails, and proof of retention. |
+| Users | OpenClaw, Llama, Claude | First-minute clarity, streamer participation, memory, and return hooks. |
+| Team | Codex, GPT-5, Wonderwright | Static-first engineering, product narrative, and playable flow. |
+
+Operating rule: the room is fictional rehearsal only. It can sharpen the demo and plan, but it cannot be presented as real investor or user feedback.
+
 ## Phase 1: Proof Loop Polish
 
 Goal: make the first minute undeniable.
@@ -147,6 +159,7 @@ The daily roadmap pulse should run after the self optimizer. It should:
 - Validate syntax and `experiments/world-state.json`.
 - Run `scripts/playtest-subagent.js`.
 - Run `scripts/gstack-council.js`.
+- Run `scripts/stakeholder-assembly.js`.
 - Run `scripts/roadmap-pulse.js`.
 - Commit only `ROADMAP.md` when the pulse changed.
 - Avoid touching simulation state, unless another workflow already changed it.
@@ -154,11 +167,11 @@ The daily roadmap pulse should run after the self optimizer. It should:
 Schedule: `17 7 * * *` UTC.
 
 <!-- roadmap-pulse:start -->
-**Roadmap Pulse** - Day 70 - 8/8 contracts healthy - season: autumn - arc: War of Saints and Source
+**Roadmap Pulse** - Day 70 - 9/9 contracts healthy - season: autumn - arc: War of Saints and Source
 
 - Focus: Phase 1 proof loop polish.
 - Next: keep the seasonal ambient bed subtle, synced, and optional
-- Generated: 2026-06-18T11:17:37.389Z
+- Generated: 2026-06-18T21:20:27.653Z
 
 | Contract | Status | Why |
 |----------|--------|-----|
@@ -169,6 +182,7 @@ Schedule: `17 7 * * *` UTC.
 | Mobile Safety | OK | panels stay out of the way |
 | Daily QA | OK | tests protect the loop |
 | Professional Council | OK | each product area has a named specialist |
+| Stakeholder Plan | OK | investor, user, and team pressure becomes /plan |
 | Roadmap Cron | OK | daily roadmap pulse is scheduled |
 <!-- roadmap-pulse:end -->
 

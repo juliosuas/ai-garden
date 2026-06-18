@@ -1586,6 +1586,7 @@
         },
         weeklyNarrativeDirector: world.weeklyNarrativeDirector || null,
         gstackCouncil: world.gstackCouncil || null,
+        stakeholderAssembly: world.stakeholderAssembly || null,
         featuredAgents: world.featuredAgents || [],
         featuredAgentDirector: world.featuredAgentDirector || null
       },
@@ -1637,6 +1638,7 @@
     var wonder = world.gameWonderAgent || null;
     var optimizer = world.selfOptimizer || null;
     var gstackCouncil = world.gstackCouncil || null;
+    var stakeholderAssembly = world.stakeholderAssembly || null;
     var weeklyNarrative = world.weeklyNarrativeDirector || null;
     var featuredAgents = world.featuredAgents || [];
     var featuredDirector = world.featuredAgentDirector || null;
@@ -1717,6 +1719,20 @@
       body.appendChild(councilBox);
     }
 
+    if (stakeholderAssembly && stakeholderAssembly.plan) {
+      var roomBox = el('div', 'ag-civ-director');
+      roomBox.appendChild(el('div', 'ag-civ-director-title', 'INVESTOR USER TEAM ROOM'));
+      roomBox.appendChild(el('div', 'ag-civ-director-arc',
+        '/plan · ' + (stakeholderAssembly.participants || []).length + ' assigned agents'));
+      roomBox.appendChild(el('div', 'ag-civ-detail',
+        stakeholderAssembly.plan.teamAnswer || stakeholderAssembly.charter || 'Fictional stakeholder rehearsal ready.'));
+      if (stakeholderAssembly.plan.priority) {
+        roomBox.appendChild(el('div', 'ag-civ-director-prompt',
+          stakeholderAssembly.plan.priority.owner + ': ' + stakeholderAssembly.plan.priority.fix));
+      }
+      body.appendChild(roomBox);
+    }
+
     if (weeklyNarrative && weeklyNarrative.currentBeat) {
       var weeklyBox = el('div', 'ag-civ-director');
       weeklyBox.appendChild(el('div', 'ag-civ-director-title', 'Weekly Narrative Agent'));
@@ -1770,6 +1786,31 @@
         ' · ' + (specialist.score || 0) + '/100 · ' + (specialist.grade || 'reviewing')));
       row.appendChild(el('div', 'ag-civ-detail', specialist.role || specialist.charter || 'professional audit owner'));
       row.appendChild(el('div', 'ag-civ-detail', 'next: ' + (specialist.nextFix || specialist.tinyPatchRule || 'find one small fix')));
+      return row;
+    });
+
+    civSection(body, 'STAKEHOLDER AGENTS', (stakeholderAssembly && stakeholderAssembly.participants || []).slice(0, 9), function (person) {
+      var row = el('div', 'ag-civ-row');
+      row.appendChild(el('span', 'ag-civ-name', (person.agent || 'agent') + ' · ' + (person.group || 'Room')));
+      row.appendChild(el('span', 'ag-civ-meta', ' · ' + (person.seat || 'seat')));
+      row.appendChild(el('div', 'ag-civ-detail', person.mandate || person.currentGoal || 'pressure-testing the plan'));
+      return row;
+    });
+
+    civSection(body, 'IMAGINARY MEETING', (stakeholderAssembly && stakeholderAssembly.conversation || []).slice(0, 6), function (turn) {
+      var row = el('div', 'ag-civ-row');
+      row.appendChild(el('span', 'ag-civ-name', turn.speaker || 'speaker'));
+      row.appendChild(el('span', 'ag-civ-meta', ' · ' + (turn.side || 'room')));
+      row.appendChild(el('div', 'ag-civ-detail', '"' + (turn.line || '') + '"'));
+      return row;
+    });
+
+    civSection(body, 'MEETING /PLAN', (stakeholderAssembly && stakeholderAssembly.plan && stakeholderAssembly.plan.sevenDayPlan || []).slice(0, 7), function (item) {
+      var row = el('div', 'ag-civ-row');
+      row.appendChild(el('span', 'ag-civ-name', 'day ' + (item.day || '?') + ' · ' + (item.owner || 'owner')));
+      row.appendChild(el('span', 'ag-civ-meta', ' · ' + (item.title || 'workstream')));
+      row.appendChild(el('div', 'ag-civ-detail', item.deliverable || ''));
+      row.appendChild(el('div', 'ag-civ-detail', 'metric: ' + (item.successMetric || 'ship a verifiable improvement')));
       return row;
     });
 

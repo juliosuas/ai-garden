@@ -113,6 +113,12 @@ function short(text, limit = 150) {
   return clean.slice(0, limit - 1).trimEnd() + '.';
 }
 
+function sentence(text) {
+  const clean = String(text || '').trim();
+  if (!clean) return '';
+  return /[.!?]$/.test(clean) ? clean : clean + '.';
+}
+
 function points(checks) {
   const total = Math.max(1, checks.length);
   return Math.round((checks.filter(item => item.ok).length / total) * 100);
@@ -279,7 +285,7 @@ function attachToWorld(world, council) {
   world.events = Array.isArray(world.events) ? world.events : [];
   const eventId = council.id;
   const description = 'GStack Professional Council picked ' +
-    council.priority.title + ': ' + council.priority.nextFix + '.';
+    council.priority.title + ': ' + sentence(council.priority.nextFix);
   const existing = world.events.find(event => event && event.id === eventId);
   if (existing) {
     existing.timestamp = council.generatedAt;

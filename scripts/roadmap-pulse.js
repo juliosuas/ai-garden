@@ -15,12 +15,14 @@ const path = require('path');
 const ROOT = path.join(__dirname, '..');
 const ROADMAP = path.join(ROOT, 'ROADMAP.md');
 const WORLD = path.join(ROOT, 'experiments', 'world-state.json');
+const PLAN = path.join(ROOT, 'PLAN.md');
 const HUMANS = path.join(ROOT, 'experiments', 'humans.js');
 const MUSIC = path.join(ROOT, 'experiments', 'music.js');
 const INDEX = path.join(ROOT, 'index.html');
 const PLAYTEST = path.join(ROOT, 'scripts', 'playtest-subagent.js');
 const SELF_OPTIMIZER = path.join(ROOT, 'scripts', 'self-optimizer.js');
 const GSTACK_COUNCIL = path.join(ROOT, 'scripts', 'gstack-council.js');
+const STAKEHOLDER_ASSEMBLY = path.join(ROOT, 'scripts', 'stakeholder-assembly.js');
 const WORKFLOW = path.join(ROOT, '.github', 'workflows', 'daily-roadmap-pulse.yml');
 
 function read(file) {
@@ -49,17 +51,20 @@ function seasonForDay(day) {
 function buildPulse() {
   const roadmap = read(ROADMAP);
   const world = JSON.parse(read(WORLD));
+  const plan = read(PLAN);
   const humans = read(HUMANS);
   const music = read(MUSIC);
   const index = read(INDEX);
   const playtest = read(PLAYTEST);
   const selfOptimizer = read(SELF_OPTIMIZER);
   const gstackCouncilScript = read(GSTACK_COUNCIL);
+  const stakeholderAssemblyScript = read(STAKEHOLDER_ASSEMBLY);
   const workflow = read(WORKFLOW);
   const day = Number(world.chronicle && world.chronicle.day) || 0;
   const weekly = world.weeklyNarrativeDirector || {};
   const optimizer = world.selfOptimizer || {};
   const council = world.gstackCouncil || {};
+  const assembly = world.stakeholderAssembly || {};
   const arc = short(
     weekly.arcTitle ||
     (world.societyDirector && world.societyDirector.currentArc && world.societyDirector.currentArc.title) ||
@@ -76,6 +81,7 @@ function buildPulse() {
     check('Mobile Safety', humans.includes("chat.classList.add('ag-collapsed')") && index.includes('mobile-tools-open'), 'panels stay out of the way'),
     check('Daily QA', playtest.includes('BACKEND_SYNC_STORE') && selfOptimizer.includes('seasonal ambient'), 'tests protect the loop'),
     check('Professional Council', council.model === 'ai-garden-gstack-council-v1' && Array.isArray(council.specialists) && council.specialists.length >= 10 && gstackCouncilScript.includes('Trust And Safety Lead'), 'each product area has a named specialist'),
+    check('Stakeholder Plan', assembly.model === 'ai-garden-stakeholder-assembly-v1' && plan.includes('/plan - Investor Room') && stakeholderAssemblyScript.includes('Fictional rehearsal'), 'investor, user, and team pressure becomes /plan'),
     check('Roadmap Cron', workflow.includes("cron: '17 7 * * *'") && workflow.includes('node scripts/roadmap-pulse.js'), 'daily roadmap pulse is scheduled')
   ];
   const passing = contracts.filter(item => item.ok).length;

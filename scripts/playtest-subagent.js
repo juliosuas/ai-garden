@@ -16,6 +16,7 @@ const ROOT = path.join(__dirname, '..');
 const WORLD = path.join(ROOT, 'experiments', 'world-state.json');
 const INDEX = path.join(ROOT, 'index.html');
 const HUMANS = path.join(ROOT, 'experiments', 'humans.js');
+const PLAN = path.join(ROOT, 'PLAN.md');
 const DAILY_WORKFLOW = path.join(ROOT, '.github', 'workflows', 'daily-evolution.yml');
 const AUTOPILOT_WORKFLOW = path.join(ROOT, '.github', 'workflows', 'daily-autopilot-pr.yml');
 const SELF_OPTIMIZER_WORKFLOW = path.join(ROOT, '.github', 'workflows', 'daily-self-optimizer.yml');
@@ -25,6 +26,7 @@ const DAILY_EVOLUTION = path.join(ROOT, 'scripts', 'daily-evolution.js');
 const SELF_OPTIMIZER = path.join(ROOT, 'scripts', 'self-optimizer.js');
 const ROADMAP_PULSE = path.join(ROOT, 'scripts', 'roadmap-pulse.js');
 const GSTACK_COUNCIL = path.join(ROOT, 'scripts', 'gstack-council.js');
+const STAKEHOLDER_ASSEMBLY = path.join(ROOT, 'scripts', 'stakeholder-assembly.js');
 const GAME_WONDER_AGENT = path.join(ROOT, 'scripts', 'game-wonder-agent.js');
 const FEATURED_AGENTS_SCRIPT = path.join(ROOT, 'scripts', 'featured-agents.js');
 const WEEKLY_NARRATIVE_AGENT = path.join(ROOT, 'scripts', 'weekly-narrative-agent.js');
@@ -65,6 +67,7 @@ async function main() {
   const world = JSON.parse(read(WORLD));
   const index = read(INDEX);
   const humans = read(HUMANS);
+  const plan = read(PLAN);
   const dailyWorkflow = read(DAILY_WORKFLOW);
   const autopilotWorkflow = read(AUTOPILOT_WORKFLOW);
   const selfOptimizerWorkflow = read(SELF_OPTIMIZER_WORKFLOW);
@@ -74,6 +77,7 @@ async function main() {
   const selfOptimizer = read(SELF_OPTIMIZER);
   const roadmapPulse = read(ROADMAP_PULSE);
   const gstackCouncilScript = read(GSTACK_COUNCIL);
+  const stakeholderAssemblyScript = read(STAKEHOLDER_ASSEMBLY);
   const gameWonderAgent = read(GAME_WONDER_AGENT);
   const featuredAgentsScript = read(FEATURED_AGENTS_SCRIPT);
   const weeklyNarrativeAgent = read(WEEKLY_NARRATIVE_AGENT);
@@ -88,6 +92,7 @@ async function main() {
   const divineWar = (world.wars || []).find(war => war.id === 'war-divine-omens');
   const weeklyNarrative = world.weeklyNarrativeDirector || null;
   const gstackCouncil = world.gstackCouncil || null;
+  const stakeholderAssembly = world.stakeholderAssembly || null;
 
   check(world.civilizationBrain && world.civilizationBrain.summary, 'missing civilizationBrain summary');
   check(Array.isArray(world.agentActions) && world.agentActions.length >= 12, 'agent action ledger is too thin');
@@ -117,6 +122,13 @@ async function main() {
   check(gstackCouncil && gstackCouncil.gstackLoop && gstackCouncil.gstackLoop.verify, 'GStack Professional Council needs observe/diagnose/prioritize/apply/verify loop');
   check(gstackCouncil && gstackCouncil.verifyChecklist && gstackCouncil.verifyChecklist.ok, 'GStack Professional Council verification failed');
   check(gstackCouncilScript.includes('Product Lead') && gstackCouncilScript.includes('Performance Engineer'), 'GStack Council script lacks professional roles');
+  check(stakeholderAssembly && stakeholderAssembly.model === 'ai-garden-stakeholder-assembly-v1', 'missing Stakeholder Assembly');
+  check(stakeholderAssembly && Array.isArray(stakeholderAssembly.participants) && stakeholderAssembly.participants.length >= 9, 'Stakeholder Assembly needs investor, user, and team agents');
+  check(stakeholderAssembly && Array.isArray(stakeholderAssembly.conversation) && stakeholderAssembly.conversation.length >= 6, 'Stakeholder Assembly needs an imaginary conversation');
+  check(stakeholderAssembly && stakeholderAssembly.plan && stakeholderAssembly.plan.command === '/plan', 'Stakeholder Assembly needs a /plan output');
+  check(stakeholderAssembly && stakeholderAssembly.plan && Array.isArray(stakeholderAssembly.plan.sevenDayPlan) && stakeholderAssembly.plan.sevenDayPlan.length === 7, 'Stakeholder Assembly needs a seven-day /plan');
+  check(stakeholderAssembly && stakeholderAssembly.verifyChecklist && stakeholderAssembly.verifyChecklist.ok, 'Stakeholder Assembly verification failed');
+  check(stakeholderAssemblyScript.includes('Investor/User/Team Room') && stakeholderAssemblyScript.includes('Fictional rehearsal'), 'Stakeholder Assembly script must label the fictional room');
   check(weeklyNarrative && weeklyNarrative.model === 'ai-garden-weekly-narrative-agent-v2', 'missing Weekly Narrative Agent v2 world state');
   check(weeklyNarrative && weeklyNarrative.version === 2, 'Weekly Narrative Agent should be at version 2');
   check(weeklyNarrative && Number(weeklyNarrative.weekEndDay) - Number(weeklyNarrative.weekStartDay) === 6, 'Weekly Narrative Agent must cover exactly seven days');
@@ -210,6 +222,8 @@ async function main() {
   check(index.includes('world.weeklyNarrativeDirector = shared.weeklyNarrativeDirector || null'), 'client does not load Weekly Narrative Agent state');
   check(index.includes('world.gstackCouncil = shared.gstackCouncil || null'), 'client does not load GStack Professional Council state');
   check(index.includes('GStack Professional Council'), 'client does not expose GStack Professional Council');
+  check(index.includes('world.stakeholderAssembly = shared.stakeholderAssembly || null'), 'client does not load Stakeholder Assembly state');
+  check(index.includes('/plan Room'), 'client does not expose the /plan room');
   check(index.includes('toggleGardenMusic'), 'music controls should use a shared toggle helper');
   check(index.includes('refreshMusicButton'), 'music button state should be visible and synced');
   check(index.includes('id="agent-focus-btn"'), 'featured agent focus button is missing');
@@ -265,6 +279,10 @@ async function main() {
   check(humans.includes('Self Optimizer'), 'CIV panel does not expose Self Optimizer');
   check(humans.includes('GStack Professional Council'), 'CIV panel does not expose GStack Professional Council');
   check(humans.includes('GSTACK SPECIALISTS'), 'CIV panel does not list GStack specialists');
+  check(humans.includes('INVESTOR USER TEAM ROOM'), 'CIV panel does not expose the stakeholder room');
+  check(humans.includes('STAKEHOLDER AGENTS'), 'CIV panel does not list stakeholder agents');
+  check(humans.includes('IMAGINARY MEETING'), 'CIV panel does not expose the imaginary meeting');
+  check(humans.includes('MEETING /PLAN'), 'CIV panel does not expose the meeting /plan');
   check(humans.includes('GAME WONDER ADVICE'), 'CIV panel does not expose Game Wonder Agent advice');
   check(humans.includes('REAL AGENT CAST'), 'CIV panel does not expose the real agent cast');
   check(humans.includes('FEATURED AGENTS'), 'CIV panel does not list featured agents');
@@ -304,10 +322,14 @@ async function main() {
   check(music.includes('setSeason'), 'ambient music cannot sync with seasons');
   check(roadmap.includes('North Star'), 'ROADMAP is missing the product north star');
   check(roadmap.includes('GStack Professional Council'), 'ROADMAP is missing the professional council contract');
+  check(plan.includes('/plan - Investor Room'), 'PLAN.md is missing the investor room /plan');
+  check(plan.includes('Imaginary Conversation'), 'PLAN.md is missing the imaginary conversation');
+  check(plan.includes('Seven-Day /plan'), 'PLAN.md is missing the seven-day plan');
   check(roadmap.includes('Daily Roadmap Cron'), 'ROADMAP is missing the daily cron contract');
   check(roadmap.includes('roadmap-pulse:start'), 'ROADMAP is missing the pulse block');
   check(roadmapPulse.includes('Roadmap Pulse'), 'roadmap pulse script is missing its contract');
   check(roadmapPulse.includes('Professional Council'), 'roadmap pulse does not audit the professional council');
+  check(roadmapPulse.includes('Stakeholder Plan'), 'roadmap pulse does not audit the stakeholder plan');
   check(roadmapPulse.includes('BACKEND_SYNC_STORE'), 'roadmap pulse does not audit backend sync');
   check(roadmapPulse.includes('SEASON_PROFILES'), 'roadmap pulse does not audit seasonal audio');
   check(roadmapWorkflow.includes("cron: '17 7 * * *'"), 'daily roadmap pulse cron is missing');
@@ -335,6 +357,7 @@ async function main() {
   check(selfOptimizer.includes('scoreMobileUX'), 'Self Optimizer does not score mobile UX');
   check(selfOptimizer.includes('scorePerformance'), 'Self Optimizer does not score performance');
   check(selfOptimizer.includes('gstackCouncil'), 'Self Optimizer does not score GStack Council automation');
+  check(selfOptimizer.includes('stakeholderAssembly'), 'Self Optimizer does not score stakeholder assembly automation');
   check(selfOptimizer.includes('upsertReadmeBlock'), 'Self Optimizer does not update the README focus block');
   check(selfOptimizer.includes('attachToWorld'), 'Self Optimizer does not write into world-state');
   check(weeklyNarrativeAgent.includes('refreshWeeklyNarrativeDirector'), 'Weekly Narrative Agent refresh helper is missing');
@@ -345,8 +368,11 @@ async function main() {
   check(selfOptimizerWorkflow.includes("cron: '23 6 * * *'"), 'daily self optimizer cron is missing');
   check(selfOptimizerWorkflow.includes('node scripts/self-optimizer.js'), 'self optimizer workflow does not run the optimizer');
   check(selfOptimizerWorkflow.includes('node scripts/gstack-council.js'), 'self optimizer workflow does not run the GStack Council');
+  check(selfOptimizerWorkflow.includes('node scripts/stakeholder-assembly.js'), 'self optimizer workflow does not run the Stakeholder Assembly');
   check(selfOptimizerWorkflow.includes('node --check scripts/weekly-narrative-agent.js'), 'self optimizer workflow does not validate the Weekly Narrative Agent');
   check(selfOptimizerWorkflow.includes('node --check scripts/gstack-council.js'), 'self optimizer workflow does not validate the GStack Council');
+  check(selfOptimizerWorkflow.includes('node --check scripts/stakeholder-assembly.js'), 'self optimizer workflow does not validate the Stakeholder Assembly');
+  check(selfOptimizerWorkflow.includes('PLAN.md'), 'self optimizer workflow does not commit PLAN.md');
   check(selfOptimizerWorkflow.includes('node scripts/playtest-subagent.js'), 'self optimizer workflow does not run the playtest');
   check(selfOptimizerWorkflow.includes('git pull --rebase origin main'), 'self optimizer workflow does not rebase before pushing');
   check(selfOptimizerWorkflow.includes('contents: write'), 'self optimizer workflow cannot write commits');

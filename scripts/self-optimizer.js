@@ -16,6 +16,7 @@ const path = require('path');
 const ROOT = path.join(__dirname, '..');
 const WORLD = path.join(ROOT, 'experiments', 'world-state.json');
 const README = path.join(ROOT, 'README.md');
+const PLAN = path.join(ROOT, 'PLAN.md');
 const INDEX = path.join(ROOT, 'index.html');
 const HUMANS = path.join(ROOT, 'experiments', 'humans.js');
 const MUSIC = path.join(ROOT, 'experiments', 'music.js');
@@ -23,6 +24,7 @@ const PLAYTEST = path.join(ROOT, 'scripts', 'playtest-subagent.js');
 const WEEKLY_NARRATIVE = path.join(ROOT, 'scripts', 'weekly-narrative-agent.js');
 const ROADMAP_PULSE = path.join(ROOT, 'scripts', 'roadmap-pulse.js');
 const GSTACK_COUNCIL = path.join(ROOT, 'scripts', 'gstack-council.js');
+const STAKEHOLDER_ASSEMBLY = path.join(ROOT, 'scripts', 'stakeholder-assembly.js');
 const DAILY_WORKFLOW = path.join(ROOT, '.github', 'workflows', 'daily-evolution.yml');
 const AUTOPILOT_WORKFLOW = path.join(ROOT, '.github', 'workflows', 'daily-autopilot-pr.yml');
 const SELF_WORKFLOW = path.join(ROOT, '.github', 'workflows', 'daily-self-optimizer.yml');
@@ -225,7 +227,7 @@ function scorePerformance(index) {
   };
 }
 
-function scoreAutomation(dailyWorkflow, autopilotWorkflow, selfWorkflow, roadmapWorkflow, playtest, weeklyNarrative, roadmapPulse, gstackCouncil) {
+function scoreAutomation(dailyWorkflow, autopilotWorkflow, selfWorkflow, roadmapWorkflow, playtest, weeklyNarrative, roadmapPulse, gstackCouncil, stakeholderAssembly, plan) {
   const checks = [
     dailyWorkflow.includes("cron: '11 4 * * *'"),
     dailyWorkflow.includes('node scripts/playtest-subagent.js'),
@@ -237,9 +239,12 @@ function scoreAutomation(dailyWorkflow, autopilotWorkflow, selfWorkflow, roadmap
     selfWorkflow.includes("cron: '23 6 * * *'"),
     selfWorkflow.includes('node scripts/self-optimizer.js'),
     selfWorkflow.includes('node scripts/gstack-council.js'),
+    selfWorkflow.includes('node scripts/stakeholder-assembly.js'),
     selfWorkflow.includes('node --check scripts/weekly-narrative-agent.js'),
     selfWorkflow.includes('node --check scripts/roadmap-pulse.js'),
     selfWorkflow.includes('node --check scripts/gstack-council.js'),
+    selfWorkflow.includes('node --check scripts/stakeholder-assembly.js'),
+    selfWorkflow.includes('PLAN.md'),
     selfWorkflow.includes('git pull --rebase origin main'),
     roadmapWorkflow.includes("cron: '17 7 * * *'"),
     roadmapWorkflow.includes('node scripts/roadmap-pulse.js'),
@@ -247,8 +252,10 @@ function scoreAutomation(dailyWorkflow, autopilotWorkflow, selfWorkflow, roadmap
     roadmapPulse.includes('Roadmap Pulse'),
     roadmapPulse.includes('BACKEND_SYNC_STORE'),
     roadmapPulse.includes('Professional Council'),
+    roadmapPulse.includes('Stakeholder Plan'),
     playtest.includes('SELF_OPTIMIZER'),
     playtest.includes('GSTACK_COUNCIL'),
+    playtest.includes('STAKEHOLDER_ASSEMBLY'),
     playtest.includes('Weekly Narrative Agent'),
     playtest.includes('story-spotlight'),
     weeklyNarrative.includes('storyCard'),
@@ -256,7 +263,10 @@ function scoreAutomation(dailyWorkflow, autopilotWorkflow, selfWorkflow, roadmap
     weeklyNarrative.includes('weekly-showdown'),
     gstackCouncil.includes('GStack Professional Council'),
     gstackCouncil.includes('Product Lead'),
-    gstackCouncil.includes('Trust And Safety Lead')
+    gstackCouncil.includes('Trust And Safety Lead'),
+    stakeholderAssembly.includes('Investor/User/Team Room'),
+    stakeholderAssembly.includes('Seven-Day /plan'),
+    plan.includes('/plan - Investor Room')
   ];
   return {
     key: 'automation',
@@ -270,9 +280,10 @@ function scoreAutomation(dailyWorkflow, autopilotWorkflow, selfWorkflow, roadmap
       detail('autopilot PRs', checks[4]),
       detail('self-optimizer cron', checks[7]),
       detail('professional council', checks[9]),
-      detail('roadmap pulse cron', checks[14]),
-      detail('roadmap syntax check', checks[11]),
-      detail('weekly narrative contract', checks[24])
+      detail('stakeholder assembly', checks[10]),
+      detail('roadmap pulse cron', checks[17]),
+      detail('roadmap syntax check', checks[12]),
+      detail('weekly narrative contract', checks[29])
     ])
   };
 }
@@ -339,7 +350,9 @@ function buildSnapshot(world, files) {
       files.playtest,
       files.weeklyNarrative,
       files.roadmapPulse,
-      files.gstackCouncil
+      files.gstackCouncil,
+      files.stakeholderAssembly,
+      files.plan
     )
   ];
   const focus = chooseFocus(scores, day);
@@ -439,6 +452,8 @@ function main() {
     weeklyNarrative: read(WEEKLY_NARRATIVE),
     roadmapPulse: read(ROADMAP_PULSE),
     gstackCouncil: read(GSTACK_COUNCIL),
+    stakeholderAssembly: read(STAKEHOLDER_ASSEMBLY),
+    plan: read(PLAN),
     dailyWorkflow: read(DAILY_WORKFLOW),
     autopilotWorkflow: read(AUTOPILOT_WORKFLOW),
     selfWorkflow: read(SELF_WORKFLOW),

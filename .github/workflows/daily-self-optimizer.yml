@@ -42,10 +42,14 @@ jobs:
       - name: Run GStack Professional Council
         run: node scripts/gstack-council.js
 
+      - name: Run stakeholder assembly
+        run: node scripts/stakeholder-assembly.js
+
       - name: Validate self-optimized garden
         run: |
           node --check scripts/self-optimizer.js
           node --check scripts/gstack-council.js
+          node --check scripts/stakeholder-assembly.js
           node --check scripts/playtest-subagent.js
           node --check scripts/daily-evolution.js
           node --check scripts/game-wonder-agent.js
@@ -61,7 +65,7 @@ jobs:
         run: |
           git config user.name "ai-garden-self-optimizer"
           git config user.email "ai-garden-self-optimizer@users.noreply.github.com"
-          git add experiments/world-state.json README.md
+          git add experiments/world-state.json README.md PLAN.md
           if git diff --cached --quiet; then
             echo "Self Optimizer found no change to commit."
             exit 0

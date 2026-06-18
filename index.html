@@ -1048,6 +1048,7 @@ const defaultWorld = {
   gameWonderAgent: null,
   selfOptimizer: null,
   gstackCouncil: null,
+  stakeholderAssembly: null,
   weeklyNarrativeDirector: null,
   featuredAgents: [],
   featuredAgentDirector: null,
@@ -1420,6 +1421,7 @@ function loadWorld() {
       world.gameWonderAgent = shared.gameWonderAgent || null;
       world.selfOptimizer = shared.selfOptimizer || null;
       world.gstackCouncil = shared.gstackCouncil || null;
+      world.stakeholderAssembly = shared.stakeholderAssembly || null;
       world.weeklyNarrativeDirector = shared.weeklyNarrativeDirector || null;
       world.featuredAgents = shared.featuredAgents || [];
       world.featuredAgentDirector = shared.featuredAgentDirector || null;
@@ -4214,6 +4216,14 @@ function populateEventsTicker() {
       text: council.priority.title + ': ' + council.priority.nextFix
     });
   }
+  const stakeholderRoom = world.stakeholderAssembly || null;
+  if (stakeholderRoom && stakeholderRoom.plan && stakeholderRoom.plan.priority) {
+    items.push({
+      label: '[/PLAN ROOM]',
+      color: '#fb7185',
+      text: stakeholderRoom.plan.priority.owner + ': ' + stakeholderRoom.plan.priority.fix
+    });
+  }
   for (const agent of featuredAgentCast().slice(0, 4)) {
     items.push({
       label: '[' + String(agent.name || 'AGENT').toUpperCase() + ']',
@@ -4238,7 +4248,8 @@ function populateEventsTicker() {
     'crab-agent': '#fb923c',
     'featured-agent': '#fff7ad',
     'self-optimizer': '#facc15',
-    'gstack-council': '#38bdf8'
+    'gstack-council': '#38bdf8',
+    'stakeholder-assembly': '#fb7185'
   };
   for (const ev of (world.events || []).slice(-5).reverse()) {
     items.push({
@@ -4325,6 +4336,25 @@ function eventPanelRows() {
       rows.push({
         label: 'Professional Gap',
         text: item.title + ' ' + item.score + '/100 - ' + item.nextFix
+      });
+    }
+  }
+  const stakeholderRoom = world.stakeholderAssembly;
+  if (stakeholderRoom && stakeholderRoom.plan) {
+    rows.push({
+      label: '/plan Room',
+      text: stakeholderRoom.name + ': ' + stakeholderRoom.plan.teamAnswer
+    });
+    if (stakeholderRoom.plan.priority) {
+      rows.push({
+        label: 'Room Priority',
+        text: stakeholderRoom.plan.priority.owner + ' - ' + stakeholderRoom.plan.priority.fix
+      });
+    }
+    for (const item of (stakeholderRoom.plan.sevenDayPlan || []).slice(0, 2)) {
+      rows.push({
+        label: '/plan Day ' + item.day,
+        text: item.owner + ': ' + item.title + ' - ' + item.successMetric
       });
     }
   }
