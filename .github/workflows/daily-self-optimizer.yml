@@ -46,6 +46,7 @@ jobs:
           node --check scripts/daily-evolution.js
           node --check scripts/game-wonder-agent.js
           node --check scripts/weekly-narrative-agent.js
+          node --check scripts/roadmap-pulse.js
           jq empty experiments/world-state.json
           node scripts/playtest-subagent.js
 

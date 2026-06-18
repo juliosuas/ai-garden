@@ -159,6 +159,7 @@ AI Garden stays static-first for reliability, but the repo behaves like a living
 | `scripts/daily-evolution.js` | Daily daemon that advances civic actions, factions, lineage, geography, and story evidence. |
 | `scripts/society-director.js` | Chooses season arc, tensions, visible beats, quests, map extension, and convivencia pressure. |
 | `scripts/weekly-narrative-agent.js` | Keeps the seven-day narrative coherent and publishes the current story card. |
+| `scripts/roadmap-pulse.js` | Daily roadmap audit that refreshes `ROADMAP.md` without mutating simulation state. |
 | `scripts/game-wonder-agent.js` | Scores flow, legibility, wonder, agency, and life; stages one readable focus moment. |
 | `scripts/self-optimizer.js` | Daily product-health loop for mobile UX, game flow, world life, audio, performance, and automation. |
 | `scripts/featured-agents.js` | Promotes eight readable protagonists: Codex, Hermes, OpenClaw, Claude, Gemini, GPT-5, Mistral, and Llama. |
@@ -183,6 +184,7 @@ The guardrail is intentional: humans can create pressure, identity, and lore, bu
 | ⏱️ Daily Daemon | GitHub Actions cron at 04:11 UTC, validates + commits + pushes |
 | 🧾 Autopilot PRs | GitHub Actions cron at 05:37 UTC, opens one draft PR at a time |
 | 🛠️ Self Optimizer | GitHub Actions cron at 06:23 UTC, audits product health + commits focus |
+| 🧭 Roadmap Pulse | GitHub Actions cron at 07:17 UTC, refreshes `ROADMAP.md` product status |
 | 🎮 Game Design AI | Wonderwright scores the experience and stages one readable focus moment |
 | 🎭 Real Agent Cast | 8 protagonists: Codex, Hermes, OpenClaw, Claude, Gemini, GPT-5, Mistral, Llama |
 | 🦀 OpenClaw Layer | Only OpenClaw and Claude render as real crab agents; the older colony stays background lore |

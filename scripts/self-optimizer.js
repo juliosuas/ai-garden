@@ -21,9 +21,11 @@ const HUMANS = path.join(ROOT, 'experiments', 'humans.js');
 const MUSIC = path.join(ROOT, 'experiments', 'music.js');
 const PLAYTEST = path.join(ROOT, 'scripts', 'playtest-subagent.js');
 const WEEKLY_NARRATIVE = path.join(ROOT, 'scripts', 'weekly-narrative-agent.js');
+const ROADMAP_PULSE = path.join(ROOT, 'scripts', 'roadmap-pulse.js');
 const DAILY_WORKFLOW = path.join(ROOT, '.github', 'workflows', 'daily-evolution.yml');
 const AUTOPILOT_WORKFLOW = path.join(ROOT, '.github', 'workflows', 'daily-autopilot-pr.yml');
 const SELF_WORKFLOW = path.join(ROOT, '.github', 'workflows', 'daily-self-optimizer.yml');
+const ROADMAP_WORKFLOW = path.join(ROOT, '.github', 'workflows', 'daily-roadmap-pulse.yml');
 
 function read(file) {
   return fs.existsSync(file) ? fs.readFileSync(file, 'utf8') : '';
@@ -222,7 +224,7 @@ function scorePerformance(index) {
   };
 }
 
-function scoreAutomation(dailyWorkflow, autopilotWorkflow, selfWorkflow, playtest, weeklyNarrative) {
+function scoreAutomation(dailyWorkflow, autopilotWorkflow, selfWorkflow, roadmapWorkflow, playtest, weeklyNarrative, roadmapPulse) {
   const checks = [
     dailyWorkflow.includes("cron: '11 4 * * *'"),
     dailyWorkflow.includes('node scripts/playtest-subagent.js'),
@@ -234,7 +236,13 @@ function scoreAutomation(dailyWorkflow, autopilotWorkflow, selfWorkflow, playtes
     selfWorkflow.includes("cron: '23 6 * * *'"),
     selfWorkflow.includes('node scripts/self-optimizer.js'),
     selfWorkflow.includes('node --check scripts/weekly-narrative-agent.js'),
+    selfWorkflow.includes('node --check scripts/roadmap-pulse.js'),
     selfWorkflow.includes('git pull --rebase origin main'),
+    roadmapWorkflow.includes("cron: '17 7 * * *'"),
+    roadmapWorkflow.includes('node scripts/roadmap-pulse.js'),
+    roadmapWorkflow.includes('git add ROADMAP.md'),
+    roadmapPulse.includes('Roadmap Pulse'),
+    roadmapPulse.includes('BACKEND_SYNC_STORE'),
     playtest.includes('SELF_OPTIMIZER'),
     playtest.includes('Weekly Narrative Agent'),
     playtest.includes('story-spotlight'),
@@ -246,15 +254,16 @@ function scoreAutomation(dailyWorkflow, autopilotWorkflow, selfWorkflow, playtes
     key: 'automation',
     label: 'Autonomy',
     score: points(checks),
-    nextAction: 'keep one direct evolution loop, one PR loop, and one self-audit loop healthy',
+    nextAction: 'keep evolution, PR, self-audit, and roadmap pulse loops healthy without creating automation spam',
     evidence: compactEvidence([
       detail('daily daemon', checks[0]),
       detail('daemon playtest', checks[1]),
       detail('weekly syntax check', checks[2]),
       detail('autopilot PRs', checks[4]),
       detail('self-optimizer cron', checks[7]),
-      detail('weekly narrative contract', checks[12]),
-      detail('showmanship contract', checks[13])
+      detail('roadmap pulse cron', checks[12]),
+      detail('roadmap syntax check', checks[10]),
+      detail('weekly narrative contract', checks[18])
     ])
   };
 }
@@ -313,7 +322,15 @@ function buildSnapshot(world, files) {
     scoreWorldLife(files.index, world),
     scoreAudio(files.music, files.index, files.humans),
     scorePerformance(files.index),
-    scoreAutomation(files.dailyWorkflow, files.autopilotWorkflow, files.selfWorkflow, files.playtest, files.weeklyNarrative)
+    scoreAutomation(
+      files.dailyWorkflow,
+      files.autopilotWorkflow,
+      files.selfWorkflow,
+      files.roadmapWorkflow,
+      files.playtest,
+      files.weeklyNarrative,
+      files.roadmapPulse
+    )
   ];
   const focus = chooseFocus(scores, day);
   const overallScore = average(scores);
@@ -410,9 +427,11 @@ function main() {
     music: read(MUSIC),
     playtest: read(PLAYTEST),
     weeklyNarrative: read(WEEKLY_NARRATIVE),
+    roadmapPulse: read(ROADMAP_PULSE),
     dailyWorkflow: read(DAILY_WORKFLOW),
     autopilotWorkflow: read(AUTOPILOT_WORKFLOW),
-    selfWorkflow: read(SELF_WORKFLOW)
+    selfWorkflow: read(SELF_WORKFLOW),
+    roadmapWorkflow: read(ROADMAP_WORKFLOW)
   };
   const snapshot = buildSnapshot(world, files);
 
