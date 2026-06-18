@@ -73,7 +73,7 @@ function scoreMobileUX(index, humans) {
     index.includes('closeMobileToolsAfterAction'),
     index.includes('mobile-tools-open'),
     index.includes('id="mobile-dock-close"'),
-    index.includes('GOD MODE TRIAL'),
+    index.includes('THE MIRROR TRIAL'),
     index.includes('watch-action-btn'),
     index.includes('story-action-btn'),
     humans.includes("chat.classList.add('ag-collapsed')"),

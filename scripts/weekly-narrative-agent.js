@@ -402,9 +402,9 @@ function buildWeeklyNarrativeDirector(world, rng) {
     carryover,
     resolution: buildResolution(arc, carryover),
     godComplexContract: {
-      input: 'client impactReceipt from the God Mode Trial',
+      input: 'client impactReceipt from The Mirror Trial',
       pressureAxes: ['devotion', 'fear', 'dependency', 'resistance'],
-      rule: 'Treat human impact receipts as local story pressure: agents may worship, depend, resist, or accuse the gods.'
+      rule: 'Treat human miracle records as local story pressure: agents may worship, depend, resist, or accuse the gods.'
     },
     automation: {
       commitMode: 'automatic',

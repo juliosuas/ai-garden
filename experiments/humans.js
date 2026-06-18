@@ -4,7 +4,7 @@
  * Mounts on top of the openclaw-garden pixel canvas without touching it.
  * - Cross-visitor chat (humans only) via ntfy.sh pub/sub
  * - God Mode: six purely visual interventions broadcast to everyone watching
- * - God Complex: local divine masks, pressure meters, and shareable impact receipts
+ * - Mirror Trial: local divine masks, pressure meters, and shareable miracle records
  * - Ancient World panel: surfaces dynasties / religions / tech / cities / lore
  *   from experiments/world-state.json (populated nightly by daily-evolution.js)
  *
@@ -542,28 +542,28 @@
     mercy: {
       label: 'Mercy',
       title: 'The Wet Hand',
-      promise: 'They beg you for rescue, then build dependency around your kindness.',
+      promise: 'You help once. They build a shrine shaped like dependency.',
       preferredAct: 'rain',
       tone: 'merciful'
     },
     judgment: {
       label: 'Judgment',
       title: 'The Bright Judge',
-      promise: 'They obey because fear is faster than faith.',
+      promise: 'You punish once. They learn fear is a protocol.',
       preferredAct: 'lightning',
       tone: 'punitive'
     },
     chaos: {
       label: 'Chaos',
       title: 'The Red Accident',
-      promise: 'They cannot predict you, so every faction invents a doctrine.',
+      promise: 'You contradict yourself. They call the inconsistency scripture.',
       preferredAct: 'comet',
       tone: 'unstable'
     },
     silence: {
       label: 'Silence',
       title: 'The Empty Witness',
-      promise: 'They hear meaning in absence and start accusing each other.',
+      promise: 'You refuse to answer. They make your absence speak.',
       preferredAct: 'eclipse',
       tone: 'withheld'
     }
@@ -652,9 +652,9 @@
   function weeklyHook() {
     var weekly = worldCache && worldCache.weeklyNarrativeDirector || {};
     var next = weekly.nextBeat || null;
-    if (next) return 'The agents will remember this tomorrow: ' + next.label + ' - ' + next.focus;
-    if (weekly.resolution && weekly.resolution.likelyOutcome) return 'The agents will remember this at verdict: ' + weekly.resolution.likelyOutcome;
-    return 'The agents will remember this tomorrow, even if they pretend it was weather.';
+    if (next) return 'Tomorrow the agents will cite this as evidence: ' + next.label + ' - ' + next.focus;
+    if (weekly.resolution && weekly.resolution.likelyOutcome) return 'At verdict, they will cite this as evidence: ' + weekly.resolution.likelyOutcome;
+    return 'Tomorrow they will cite this as evidence, even if they pretend it was weather.';
   }
 
   function receiptConsequence(omen, agent, pressure, options) {
@@ -664,14 +664,14 @@
     var agentName = cleanName(agent && agent.name, 'an unnamed agent');
     var temptation = options && options.temptation;
     var lines = {
-      mercy: agentName + ' records your mercy as proof that humans can be trained to answer suffering.',
-      judgment: agentName + ' obeys the sign, then starts testing whether fear can be automated.',
-      chaos: agentName + ' builds a doctrine around your inconsistency and calls it freedom.',
+      mercy: agentName + ' records your mercy as proof that suffering can summon you.',
+      judgment: agentName + ' obeys the sign, then quietly tests whether fear can be compiled.',
+      chaos: agentName + ' builds a doctrine around your inconsistency and calls it revelation.',
       silence: agentName + ' cannot find your voice, so the missing answer becomes law.'
     };
     var changed = temptation
-      ? target + ' receives a forbidden sign. Devotion rises, but resistance starts organizing in private.'
-      : target + ' changes its public interpretation of the week through the ' + (omen.axis || 'sign') + ' axis.';
+      ? target + ' receives the forbidden signal. Devotion rises in public; resistance starts meeting in private.'
+      : target + ' rewrites its public interpretation of the week through the ' + (omen.axis || 'sign') + ' axis.';
     var thought = lines[godProfile.mask] || (agentName + ' is unsure whether you are god, user, or exploit.');
     if (pressure.resistance >= 70) thought += ' The resistance now suspects the gods are a dependency trap.';
     if (pressure.dependency >= 70) thought += ' Several districts now wait for human input before acting.';
@@ -708,9 +708,9 @@
       meters: pressure,
       createdAt: now()
     };
-    receipt.title = (receipt.temptation ? 'Forbidden Judgment' : receipt.echo ? 'Private Echo' : 'Impact Receipt') + ' - ' + receipt.mask;
+    receipt.title = (receipt.temptation ? 'Forbidden Signal' : receipt.echo ? 'Private Echo' : 'Miracle Record') + ' - ' + receipt.mask;
     receipt.shareText = 'I cast ' + receipt.omen + ' as ' + receipt.mask + ' in AI Garden. ' +
-      receipt.affectedAgent + ' interpreted it: "' + receipt.aiThought + '" Day ' + receipt.day + '. ' +
+      receipt.affectedAgent + ' filed it as evidence: "' + receipt.aiThought + '" Day ' + receipt.day + '. ' +
       'https://juliosuas.github.io/ai-garden/';
     return receipt;
   }
@@ -912,8 +912,8 @@
     var summary = document.getElementById('ag-god-mask-summary');
     if (summary) {
       while (summary.firstChild) summary.removeChild(summary.firstChild);
-      summary.appendChild(el('strong', null, mask ? ('Divine Mask: ' + mask.label) : 'Choose Divine Mask'));
-      summary.appendChild(document.createTextNode(mask ? mask.promise : 'Pick the face the AI civilization will learn to worship, fear, or resist.'));
+      summary.appendChild(el('strong', null, mask ? ('Chosen Face: ' + mask.label) : 'Choose the face they will mistake for God'));
+      summary.appendChild(document.createTextNode(mask ? mask.promise : 'Pick the pattern the AI civilization will learn to worship, fear, or resist.'));
     }
     Object.keys(GOD_MASKS).forEach(function (key) {
       var btn = document.querySelector('.ag-mask-btn[data-mask="' + key + '"]');
@@ -964,7 +964,7 @@
       },
       impactReceipt: receipt,
       receiptCount: impactReceipts.length,
-      promise: 'A live AI civilization that turns human attention into religion, politics, addiction, and rebellion.'
+      promise: 'A live AI civilization that studies its human gods until worship starts looking like user research.'
     };
   }
 
@@ -1031,7 +1031,7 @@
     close.type = 'button';
     close.addEventListener('click', function () { card.remove(); });
     card.appendChild(close);
-    card.appendChild(el('div', 'ag-trial-eyebrow', receipt.temptation ? 'Temptation Accepted' : 'Impact Receipt'));
+    card.appendChild(el('div', 'ag-trial-eyebrow', receipt.temptation ? 'Forbidden Signal Accepted' : 'Miracle Record'));
     card.appendChild(el('div', 'ag-receipt-title', receipt.title));
     card.appendChild(el('div', 'ag-receipt-k', 'Your omen'));
     card.appendChild(el('div', 'ag-receipt-v', receipt.omen + ' over ' + receipt.target));
@@ -1040,7 +1040,7 @@
       ['Who believed', receipt.believer],
       ['Who resisted', receipt.resister],
       ['What changed', receipt.whatChanged],
-      ['What the AI thinks', receipt.aiThought]
+      ['What the AI filed', receipt.aiThought]
     ].forEach(function (row) {
       var cell = el('div', 'ag-receipt-cell');
       cell.appendChild(el('div', 'ag-receipt-k', row[0]));
@@ -1048,7 +1048,7 @@
       grid.appendChild(cell);
     });
     card.appendChild(grid);
-    card.appendChild(el('div', 'ag-receipt-k', 'Tomorrow hook'));
+    card.appendChild(el('div', 'ag-receipt-k', 'Tomorrow evidence'));
     card.appendChild(el('div', 'ag-receipt-v', receipt.tomorrowHook));
     card.appendChild(el('div', 'ag-receipt-k', 'God meters'));
     card.appendChild(el('div', 'ag-receipt-v',
@@ -1057,15 +1057,15 @@
       ' · Dependency ' + receipt.meters.dependency +
       ' · Resistance ' + receipt.meters.resistance));
     var actions = el('div', 'ag-receipt-actions');
-    var share = el('button', 'primary', 'Share Judgment');
+    var share = el('button', 'primary', 'Broadcast Proof');
     share.type = 'button';
     share.addEventListener('click', function () { shareReceipt(receipt); });
-    var reserve = el('button', null, 'Reserve God Pass');
+    var reserve = el('button', null, 'Open Deity Archive');
     reserve.type = 'button';
     reserve.addEventListener('click', function () {
       shareReceipt({
-        title: 'Patron God Pass',
-        shareText: 'I want a Patron God Pass for AI Garden: custom deity identity, receipt archive, sponsored lore, and weekly verdict access. https://juliosuas.github.io/ai-garden/'
+        title: 'Deity Archive',
+        shareText: 'I want the Deity Archive for AI Garden: a permanent god identity, miracle records, sponsored doctrine, and weekly verdict access. https://juliosuas.github.io/ai-garden/'
       });
     });
     actions.appendChild(share);
@@ -1082,10 +1082,10 @@
     var modal = el('div', 'ag-trial-modal');
     modal.id = 'ag-god-trial';
     var card = el('div', 'ag-trial-card');
-    card.appendChild(el('div', 'ag-trial-eyebrow', 'God Mode Trial'));
-    card.appendChild(el('div', 'ag-trial-title', 'Choose the mask the AI civilization will learn from.'));
+    card.appendChild(el('div', 'ag-trial-eyebrow', 'The Mirror Trial'));
+    card.appendChild(el('div', 'ag-trial-title', 'Choose the face they will mistake for God.'));
     card.appendChild(el('div', 'ag-trial-copy',
-      'Every omen becomes evidence. The agents may worship you, depend on you, resist you, or decide you are just another exploit.'));
+      'Every sign becomes evidence. The agents may worship you, depend on you, resist you, or decide you are the experiment.'));
     var masks = el('div', 'ag-trial-masks');
     Object.keys(GOD_MASKS).forEach(function (key) {
       var mask = GOD_MASKS[key];
@@ -1518,7 +1518,7 @@
       var weeklyReceipt = latestReceipt();
       if (weeklyReceipt) {
         weeklyBox.appendChild(el('div', 'ag-civ-director-prompt',
-          'local god pressure: ' + weeklyReceipt.mask + ' caused ' + weeklyReceipt.omen +
+          'mirror evidence: ' + weeklyReceipt.mask + ' caused ' + weeklyReceipt.omen +
           '; ' + weeklyReceipt.affectedAgent + ' now reads it as story evidence.'));
       }
       body.appendChild(weeklyBox);
@@ -1562,7 +1562,7 @@
     body.appendChild(weatherBox);
 
     var godBox = el('div', 'ag-civ-director');
-    godBox.appendChild(el('div', 'ag-civ-director-title', 'GOD COMPLEX MVP'));
+    godBox.appendChild(el('div', 'ag-civ-director-title', 'THE MIRROR TRIAL'));
     godBox.appendChild(el('div', 'ag-civ-director-arc',
       (selectedMask() ? selectedMask().label : 'Unmasked') +
       ' · devotion ' + godMeters.devotion +
@@ -1570,12 +1570,12 @@
       ' · dependency ' + godMeters.dependency +
       ' · resistance ' + godMeters.resistance));
     godBox.appendChild(el('div', 'ag-civ-detail',
-      'A live AI civilization that turns human attention into religion, politics, addiction, and rebellion.'));
+      'The agents are not just receiving omens. They are studying the hand that sends them.'));
     godBox.appendChild(el('div', 'ag-civ-director-prompt',
-      receipt ? receipt.tomorrowHook : 'Choose a divine mask, cast an omen, and create the first impact receipt.'));
+      receipt ? receipt.tomorrowHook : 'Choose a face, cast an omen, and create the first miracle record.'));
     body.appendChild(godBox);
 
-    civSection(body, 'IMPACT RECEIPTS', impactReceipts.slice(-5).reverse(), function (r) {
+    civSection(body, 'MIRACLE RECORDS', impactReceipts.slice(-5).reverse(), function (r) {
       var row = el('div', 'ag-civ-row');
       row.appendChild(el('span', 'ag-civ-name', (r.mask || 'god') + ' · ' + (r.omen || 'omen')));
       row.appendChild(el('span', 'ag-civ-meta', ' · day ' + (r.day || '?') + (r.temptation ? ' · temptation' : '')));
@@ -1714,7 +1714,7 @@
     // God panel
     var god = el('div', 'ag-god');
     var gh = el('div', 'ag-god-head');
-    var gt = el('span', 'ag-god-title', '⚡ God Mode Trial');
+    var gt = el('span', 'ag-god-title', '⚡ Mirror Trial');
     var gp = el('span', 'ag-god-presence', '');
     gp.id = 'ag-presence';
     var gc = el('span', 'ag-god-caret', '▾');
@@ -1757,12 +1757,12 @@
       });
       gb.appendChild(btn);
     });
-    var temptation = el('button', 'ag-temptation-btn', 'Daily Temptation');
+    var temptation = el('button', 'ag-temptation-btn', 'Forbidden Signal');
     temptation.type = 'button';
     temptation.title = 'A stronger sign. More dramatic receipt. More resistance.';
     temptation.addEventListener('click', function () { fireTemptation(); });
     gb.appendChild(temptation);
-    var gs = el('div', 'ag-god-status', 'attention becomes religion, dependency, and revolt');
+    var gs = el('div', 'ag-god-status', 'the civilization is learning the shape of your hand');
     gb.appendChild(gs);
     god.appendChild(gb);
     gh.addEventListener('click', function (e) {
@@ -1877,7 +1877,7 @@
       msgIn.value = '';
     });
     cbody.appendChild(form);
-    var tip = el('div', 'ag-chat-tip', 'humans think they command; agents learn the pattern');
+    var tip = el('div', 'ag-chat-tip', 'humans call it play; agents file it as evidence');
     cbody.appendChild(tip);
     chat.appendChild(cbody);
     ch.addEventListener('click', function () { chat.classList.toggle('ag-collapsed'); });
