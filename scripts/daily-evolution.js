@@ -25,6 +25,7 @@ const { refreshCivilizationVisuals } = require('./civilization-visuals');
 const { maintainDivineWar } = require('./divine-war');
 const { refreshGameWonderAgent } = require('./game-wonder-agent');
 const { applyFeaturedAgentsToWorld } = require('./featured-agents');
+const { refreshWeeklyNarrativeDirector } = require('./weekly-narrative-agent');
 
 const WORLD  = path.join(__dirname, '..', 'experiments', 'world-state.json');
 const README = path.join(__dirname, '..', 'README.md');
@@ -806,6 +807,7 @@ normalizeWorldLanguage(world);
 refreshCivilization(world, rng, { addDailyActions: true, actionCount: between(3, 5) });
 refreshSocietyDirector(world, rng, { addDirectorEvent: true });
 applySocietyDirectorPlan(world, rng, { extendMap: true, addPublicEvents: true });
+refreshWeeklyNarrativeDirector(world, rng);
 refreshCivilization(world, rng);
 refreshCivilizationVisuals(world, rng, { addDailyCrabAction: true });
 refreshGameWonderAgent(world, rng, { applyAdvice: true });

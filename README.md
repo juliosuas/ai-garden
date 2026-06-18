@@ -152,6 +152,8 @@ The new Civilization Brain keeps a static-site version of the GStack/GBrain idea
 
 The **Society Director AI** in `scripts/society-director.js` decides the current season arc, tensions, quests, visible beats, and next evolution rules. During daily evolution it now applies a plan: one visible map extension, one landscape mood/change, and one convivencia beat between citizens or factions. `scripts/playtest-subagent.js` acts as a fast QA subagent for the spectator loop: ticker sanity, CIV panel content, society depth, and local availability.
 
+The **Weekly Narrative Agent** in `scripts/weekly-narrative-agent.js` wraps the current society arc into a seven-day watch: opening signal, side choice, public proof, reversal, omen pressure, terms of resolution, and week verdict. The daily daemon refreshes that plan before every automatic commit, and the playtest subagent fails if the repo loses its week-long narrative scaffold.
+
 The **Game Wonder Agent** in `scripts/game-wonder-agent.js` is assigned to this game as a design specialist. It scores flow, legibility, wonder, agency, and life; chooses one camera-worthy focus moment; writes recommendations back into `world-state.json`; and applies them through ticker beats, CIV panel advice, spectator-camera targets, and a subtle pixel highlight on the canvas. Its job is to keep AI Garden becoming more watchable, not just bigger.
 
 The **Self Optimizer** in `scripts/self-optimizer.js` is the daily product-health loop. It scores mobile UX, game flow, world life, audio, performance, and automation; publishes the weakest or rotating focus into `world-state.json`; exposes that focus in the spectator UI and CIV panel; and lets future agents work from a small, testable directive instead of guessing.

@@ -24,6 +24,7 @@ const DAILY_EVOLUTION = path.join(ROOT, 'scripts', 'daily-evolution.js');
 const SELF_OPTIMIZER = path.join(ROOT, 'scripts', 'self-optimizer.js');
 const GAME_WONDER_AGENT = path.join(ROOT, 'scripts', 'game-wonder-agent.js');
 const FEATURED_AGENTS_SCRIPT = path.join(ROOT, 'scripts', 'featured-agents.js');
+const WEEKLY_NARRATIVE_AGENT = path.join(ROOT, 'scripts', 'weekly-narrative-agent.js');
 const MUSIC = path.join(ROOT, 'experiments', 'music.js');
 
 const failures = [];
@@ -68,6 +69,7 @@ async function main() {
   const selfOptimizer = read(SELF_OPTIMIZER);
   const gameWonderAgent = read(GAME_WONDER_AGENT);
   const featuredAgentsScript = read(FEATURED_AGENTS_SCRIPT);
+  const weeklyNarrativeAgent = read(WEEKLY_NARRATIVE_AGENT);
   const music = read(MUSIC);
   const landmarkBlock = index.match(/const OPEN_WORLD_LANDMARKS = \[([\s\S]*?)\];/);
   const landmarkCount = landmarkBlock ? (landmarkBlock[1].match(/\bid:/g) || []).length : 0;
@@ -76,6 +78,7 @@ async function main() {
   const settlementTypes = new Set(settlementSites.map(site => site.type));
   const divineCrisis = world.divineCrisis || null;
   const divineWar = (world.wars || []).find(war => war.id === 'war-divine-omens');
+  const weeklyNarrative = world.weeklyNarrativeDirector || null;
 
   check(world.civilizationBrain && world.civilizationBrain.summary, 'missing civilizationBrain summary');
   check(Array.isArray(world.agentActions) && world.agentActions.length >= 12, 'agent action ledger is too thin');
@@ -99,6 +102,12 @@ async function main() {
   check(optimizer && optimizer.focus && optimizer.focus.nextAction, 'Self Optimizer needs a daily focus');
   check(optimizer && optimizer.scores && optimizer.scores.mobileUX && optimizer.scores.performance, 'Self Optimizer needs UI/performance scores');
   check(optimizer && Array.isArray(optimizer.backlog) && optimizer.backlog.length >= 4, 'Self Optimizer backlog is too thin');
+  check(weeklyNarrative && weeklyNarrative.model === 'ai-garden-weekly-narrative-agent-v1', 'missing Weekly Narrative Agent world state');
+  check(weeklyNarrative && Number(weeklyNarrative.weekEndDay) - Number(weeklyNarrative.weekStartDay) === 6, 'Weekly Narrative Agent must cover exactly seven days');
+  check(weeklyNarrative && Array.isArray(weeklyNarrative.narrativeDays) && weeklyNarrative.narrativeDays.length === 7, 'Weekly Narrative Agent needs seven daily beats');
+  check(weeklyNarrative && weeklyNarrative.currentBeat && weeklyNarrative.currentBeat.day === ((world.chronicle && world.chronicle.day) || 0), 'Weekly Narrative Agent must identify the current day beat');
+  check(weeklyNarrative && weeklyNarrative.verifyChecklist && weeklyNarrative.verifyChecklist.ok, 'Weekly Narrative Agent verification failed');
+  check(weeklyNarrative && weeklyNarrative.automation && weeklyNarrative.automation.commitMode === 'automatic', 'Weekly Narrative Agent must keep automatic commit mode');
   const featuredAgents = world.featuredAgents || [];
   const featuredNames = new Set(featuredAgents.map(agent => agent.name));
   for (const name of ['Codex', 'Hermes', 'OpenClaw', 'Claude', 'Gemini', 'GPT-5', 'Mistral', 'Llama']) {
@@ -256,6 +265,7 @@ async function main() {
   check(selfOptimizer.includes('scorePerformance'), 'Self Optimizer does not score performance');
   check(selfOptimizer.includes('upsertReadmeBlock'), 'Self Optimizer does not update the README focus block');
   check(selfOptimizer.includes('attachToWorld'), 'Self Optimizer does not write into world-state');
+  check(weeklyNarrativeAgent.includes('refreshWeeklyNarrativeDirector'), 'Weekly Narrative Agent refresh helper is missing');
   check(selfOptimizerWorkflow.includes("cron: '23 6 * * *'"), 'daily self optimizer cron is missing');
   check(selfOptimizerWorkflow.includes('node scripts/self-optimizer.js'), 'self optimizer workflow does not run the optimizer');
   check(selfOptimizerWorkflow.includes('node scripts/playtest-subagent.js'), 'self optimizer workflow does not run the playtest');
@@ -276,6 +286,9 @@ async function main() {
   await checkLocalUrl(url);
 
   if (director && director.currentArc) note(`arc: ${director.currentArc.title}`);
+  if (weeklyNarrative && weeklyNarrative.weekStartDay && weeklyNarrative.weekEndDay) {
+    note(`weekly narrative: days ${weeklyNarrative.weekStartDay}-${weeklyNarrative.weekEndDay}`);
+  }
   if (director && director.metrics) {
     note(`pressure: instability ${director.metrics.instability}, novelty ${director.metrics.novelty}, legibility ${director.metrics.legibility}`);
   }
