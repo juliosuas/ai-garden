@@ -1106,9 +1106,13 @@ const PHILOSOPHER_QUOTES = [
 function loadLocalPrefs() {
   try {
     const saved = localStorage.getItem(SAVE_KEY);
-    if (saved) return JSON.parse(saved);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (typeof parsed.musicMuted !== 'boolean') parsed.musicMuted = true;
+      return parsed;
+    }
   } catch(e) {}
-  return { localVisits: 0, totalTimeSpent: 0, camX: null, camY: null };
+  return { localVisits: 0, totalTimeSpent: 0, camX: null, camY: null, musicMuted: true };
 }
 
 function saveLocalPrefs() {
@@ -1118,6 +1122,7 @@ function saveLocalPrefs() {
       totalTimeSpent: localPrefs.totalTimeSpent,
       camX: camX,
       camY: camY,
+      musicMuted: localPrefs.musicMuted !== false,
     };
     localStorage.setItem(SAVE_KEY, JSON.stringify(prefs));
   } catch(e) {}
@@ -1363,9 +1368,41 @@ function refreshMusicButton(unmuted) {
   }
 }
 
+function restoreGardenMusicPreference() {
+  if (typeof GardenMusic === 'undefined') return;
+  if (localPrefs.musicMuted !== false) {
+    refreshMusicButton(false);
+    return;
+  }
+  const detachRestoreHandlers = function() {
+    window.removeEventListener('pointerdown', restoreOnGesture);
+    window.removeEventListener('keydown', restoreOnGesture);
+  };
+  const restoreOnGesture = function(event) {
+    const target = event && event.target && event.target.closest ? event.target.closest('#music-btn, #sound-action-btn') : null;
+    if (target) return;
+    if (localPrefs.musicMuted !== false || !GardenMusic.isMuted()) {
+      detachRestoreHandlers();
+      return;
+    }
+    const restored = GardenMusic.toggleMute();
+    refreshMusicButton(restored);
+    detachRestoreHandlers();
+  };
+  window.addEventListener('pointerdown', restoreOnGesture);
+  window.addEventListener('keydown', restoreOnGesture);
+  refreshMusicButton(false);
+  const btn = document.getElementById('music-btn');
+  const soundBtn = document.getElementById('sound-action-btn');
+  if (btn) btn.title = 'Tap once to restore your saved ambient music';
+  if (soundBtn) soundBtn.title = 'Tap once to restore your saved ambient music';
+}
+
 function toggleGardenMusic() {
   if (typeof GardenMusic === 'undefined') return false;
   const unmuted = GardenMusic.toggleMute();
+  localPrefs.musicMuted = !unmuted;
+  saveLocalPrefs();
   refreshMusicButton(unmuted);
   return unmuted;
 }
@@ -6466,7 +6503,7 @@ document.getElementById('music-btn').addEventListener('click', function(e) {
 // Start music system (muted by default — user clicks to unmute)
 if (typeof GardenMusic !== 'undefined') {
   GardenMusic.start();
-  refreshMusicButton(false);
+  restoreGardenMusicPreference();
 }
 
 // === DAY/NIGHT CYCLE (real-time based) ===

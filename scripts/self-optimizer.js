@@ -179,11 +179,14 @@ function scoreAudio(music, index, humans) {
     music.includes('playNoiseBurst'),
     index.includes('toggleGardenMusic'),
     index.includes('refreshMusicButton'),
+    index.includes('musicMuted'),
+    index.includes('restoreGardenMusicPreference'),
     music.includes('SEASON_PROFILES'),
     music.includes('playAmbientPad'),
     music.includes('playSoftBell'),
     music.includes('setSeason'),
-    humans.includes('GardenMusic.setSeason')
+    humans.includes('GardenMusic.setSeason'),
+    music.includes('visibilitychange')
   ];
   return {
     key: 'audio',
@@ -196,7 +199,9 @@ function scoreAudio(music, index, humans) {
       detail('chip kick', checks[2]),
       detail('noise percussion', checks[3]),
       detail('synced music button', checks[5]),
-      detail('seasonal ambient', checks[6] && checks[7] && checks[10])
+      detail('saved music preference', checks[6] && checks[7]),
+      detail('seasonal ambient', checks[8] && checks[9] && checks[12]),
+      detail('hidden-tab pause', checks[13])
     ])
   };
 }

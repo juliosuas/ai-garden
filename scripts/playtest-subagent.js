@@ -320,6 +320,9 @@ async function main() {
   check(music.includes('playAmbientPad'), 'ambient music lacks subtle long pads');
   check(music.includes('playSoftBell'), 'ambient music lacks soft bell accents');
   check(music.includes('setSeason'), 'ambient music cannot sync with seasons');
+  check(music.includes('visibilitychange'), 'ambient music should pause when the tab is hidden');
+  check(index.includes('musicMuted'), 'music preference should persist in local prefs');
+  check(index.includes('restoreGardenMusicPreference'), 'music preference should be restorable after reload');
   check(roadmap.includes('North Star'), 'ROADMAP is missing the product north star');
   check(roadmap.includes('GStack Professional Council'), 'ROADMAP is missing the professional council contract');
   check(plan.includes('/plan - Investor Room'), 'PLAN.md is missing the investor room /plan');

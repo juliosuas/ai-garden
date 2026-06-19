@@ -16,6 +16,7 @@ const GardenMusic = (function() {
   let nextNoteTime = 0;
   let schedulerTimer = null;
   let moodTimer = null;
+  let hiddenSuspend = false;
   let activeOscillators = [];
 
   // A minor-ish chip scale. The hook is original to AI Garden.
@@ -473,12 +474,47 @@ const GardenMusic = (function() {
     }
   }
 
+  function handleVisibilityChange() {
+    if (!audioCtx || !playing) return;
+    if (document.hidden) {
+      hiddenSuspend = true;
+      if (schedulerTimer) {
+        clearTimeout(schedulerTimer);
+        schedulerTimer = null;
+      }
+      if (masterGain) {
+        masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
+        masterGain.gain.setValueAtTime(masterGain.gain.value, audioCtx.currentTime);
+        masterGain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.2);
+      }
+      if (audioCtx.state === 'running') {
+        audioCtx.suspend().catch(function() {});
+      }
+      return;
+    }
+
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume().catch(function() {});
+    }
+    if (hiddenSuspend) {
+      hiddenSuspend = false;
+      nextNoteTime = audioCtx.currentTime + 0.1;
+      if (!schedulerTimer) scheduler();
+    }
+    if (!muted && masterGain) {
+      masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
+      masterGain.gain.setValueAtTime(masterGain.gain.value, audioCtx.currentTime);
+      masterGain.gain.linearRampToValueAtTime(volume, audioCtx.currentTime + 0.35);
+    }
+  }
+
   // Public API
   return {
     start: function() {
       init();
       if (audioCtx.state === 'suspended') audioCtx.resume();
       playing = true;
+      hiddenSuspend = false;
       currentMood = detectMood();
       nextNoteTime = audioCtx.currentTime + 0.1;
       melodySeed = Date.now() % 2147483647;
@@ -486,6 +522,10 @@ const GardenMusic = (function() {
       if (!schedulerTimer) scheduler();
       // Check mood transitions every 30 seconds
       if (!moodTimer) moodTimer = setInterval(checkMoodTransition, 30000);
+      if (typeof document !== 'undefined' && !this._visibilityBound) {
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+        this._visibilityBound = true;
+      }
 
       if (!muted) {
         masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
@@ -504,6 +544,7 @@ const GardenMusic = (function() {
         clearInterval(moodTimer);
         moodTimer = null;
       }
+      hiddenSuspend = false;
       if (masterGain) {
         masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
         masterGain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.3);
