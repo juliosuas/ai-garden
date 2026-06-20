@@ -186,7 +186,8 @@ function scoreAudio(music, index, humans) {
     music.includes('playSoftBell'),
     music.includes('setSeason'),
     humans.includes('GardenMusic.setSeason'),
-    music.includes('visibilitychange')
+    music.includes('visibilitychange'),
+    music.includes('MAX_MASTER_VOLUME')
   ];
   return {
     key: 'audio',
@@ -201,7 +202,8 @@ function scoreAudio(music, index, humans) {
       detail('synced music button', checks[5]),
       detail('saved music preference', checks[6] && checks[7]),
       detail('seasonal ambient', checks[8] && checks[9] && checks[12]),
-      detail('hidden-tab pause', checks[13])
+      detail('hidden-tab pause', checks[13]),
+      detail('capped master volume', checks[14])
     ])
   };
 }

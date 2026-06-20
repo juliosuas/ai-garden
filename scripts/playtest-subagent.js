@@ -321,6 +321,7 @@ async function main() {
   check(music.includes('playSoftBell'), 'ambient music lacks soft bell accents');
   check(music.includes('setSeason'), 'ambient music cannot sync with seasons');
   check(music.includes('visibilitychange'), 'ambient music should pause when the tab is hidden');
+  check(music.includes('MAX_MASTER_VOLUME'), 'ambient music should cap master volume for subtle playback');
   check(index.includes('musicMuted'), 'music preference should persist in local prefs');
   check(index.includes('restoreGardenMusicPreference'), 'music preference should be restorable after reload');
   check(roadmap.includes('North Star'), 'ROADMAP is missing the product north star');

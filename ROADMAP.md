@@ -171,14 +171,14 @@ Schedule: `17 7 * * *` UTC.
 
 - Focus: Phase 1 proof loop polish.
 - Next: keep evolution, PR, self-audit, and roadmap pulse loops healthy without creating automation spam
-- Generated: 2026-06-19T11:41:46.480Z
+- Generated: 2026-06-20T06:14:27.988Z
 
 | Contract | Status | Why |
 |----------|--------|-----|
 | Mirror Trial | OK | first action produces proof |
 | Observer Lounge | OK | chat produces an AI witness reply |
 | Backend Sync | OK | human actions show day, arc, and season |
-| Seasonal Audio | OK | ambient bed follows season |
+| Seasonal Audio | OK | ambient bed follows season and stays subtle |
 | Mobile Safety | OK | panels stay out of the way |
 | Daily QA | OK | tests protect the loop |
 | Professional Council | OK | each product area has a named specialist |

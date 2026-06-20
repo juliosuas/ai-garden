@@ -10,7 +10,9 @@ const GardenMusic = (function() {
   let masterGain = null;
   let playing = false;
   let muted = true;
-  let volume = 0.12;
+  const DEFAULT_MASTER_VOLUME = 0.12;
+  const MAX_MASTER_VOLUME = 0.16;
+  let volume = DEFAULT_MASTER_VOLUME;
   let currentMood = 'dawn';
   let currentSeason = 'spring';
   let nextNoteTime = 0;
@@ -18,7 +20,6 @@ const GardenMusic = (function() {
   let moodTimer = null;
   let hiddenSuspend = false;
   let activeOscillators = [];
-
   // A minor-ish chip scale. The hook is original to AI Garden.
   const ROOT_A3 = 220;
   const CHIP_SCALE = [0, 3, 5, 7, 10, 12, 15, 17, 19, 22, 24, 27];
@@ -557,7 +558,7 @@ const GardenMusic = (function() {
     },
 
     setVolume: function(v) {
-      volume = Math.max(0, Math.min(1, v));
+      volume = Math.max(0, Math.min(MAX_MASTER_VOLUME, v));
       if (masterGain && !muted && playing) {
         masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
         masterGain.gain.linearRampToValueAtTime(volume, audioCtx.currentTime + 0.1);
