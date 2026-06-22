@@ -901,6 +901,8 @@ let followingMascot = null;
 let cameraState = 'FREE';
 let userControlledCamera = false;
 let scenicCameraIndex = 0;
+const SPECTATOR_CAMERA_HOLD_FRAMES = 1080;
+const REDUCED_MOTION_CAMERA_HOLD_FRAMES = 1800;
 
 // Drag-to-pan state
 let dragStartX = 0, dragStartY = 0;     // screen coords at mousedown
@@ -5751,7 +5753,7 @@ function scenicCameraPoints() {
 function updateSpectatorCamera(viewW, viewH) {
   const points = scenicCameraPoints();
   if (!points.length) return;
-  const focusInterval = prefersReducedMotion ? 1320 : 780;
+  const focusInterval = prefersReducedMotion ? REDUCED_MOTION_CAMERA_HOLD_FRAMES : SPECTATOR_CAMERA_HOLD_FRAMES;
   if (frameCount % focusInterval === 1) scenicCameraIndex = (scenicCameraIndex + 1) % points.length;
   const target = points[scenicCameraIndex % points.length];
   const targetCamX = clampValue(target.x - viewW / 2, 0, Math.max(0, WORLD_W - viewW));
