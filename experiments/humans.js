@@ -150,9 +150,11 @@
       '.ag-collapsed .ag-god-body,.ag-collapsed .ag-chat-body{display:none;}',
       '.ag-god-presence{font-size:9px;color:#fb923c;margin-left:4px;}',
       '.ag-god-body{padding:6px;display:grid;grid-template-columns:repeat(3,1fr);gap:4px;}',
-      '.ag-god-btn{padding:6px 2px;background:rgba(0,0,0,0.35);border:1px solid rgba(74,222,128,0.15);',
-      '  border-radius:4px;color:#fff;font-size:14px;cursor:pointer;transition:all 0.15s ease;font-family:monospace;',
-      '  position:relative;}',
+      '.ag-god-btn{min-height:40px;padding:5px 2px 4px;background:rgba(0,0,0,0.35);border:1px solid rgba(74,222,128,0.15);',
+      '  border-radius:4px;color:#fff;cursor:pointer;transition:all 0.15s ease;font-family:monospace;',
+      '  position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;}',
+      '.ag-god-icon{font-size:14px;line-height:1;}',
+      '.ag-god-btn-label{font-size:7px;line-height:1;color:#cbd5e1;text-transform:uppercase;max-width:100%;overflow:hidden;text-overflow:ellipsis;}',
       '.ag-god-btn:hover{background:rgba(74,222,128,0.15);border-color:#4ade80;transform:translateY(-1px);}',
       '.ag-god-btn.wait{opacity:0.35;pointer-events:none;filter:grayscale(0.8);}',
       '.ag-god-btn.wait::after{content:attr(data-cd)"s";position:absolute;bottom:-1px;right:-1px;',
@@ -370,6 +372,8 @@
       '@media (max-width:640px){',
       '  .ag-chat{right:8px;bottom:52px;width:min(300px,calc(100vw - 16px));max-height:260px;}',
       '  .ag-god{width:132px;}',
+      '  .ag-god-btn{min-height:38px;}',
+      '  .ag-god-btn-label{font-size:6.5px;}',
       '  .ag-pantheon{top:44px;right:148px;width:calc(100vw - 164px);max-width:240px;}',
       '  .ag-omen-ledger{display:none;}',
       '  .ag-civ-grid{grid-template-columns:1fr 1fr;}',
@@ -2007,7 +2011,9 @@
       btn.setAttribute('type', 'button');
       btn.setAttribute('data-act', k);
       btn.setAttribute('title', EFFECTS[k].label + ' · ' + Math.round((COOLDOWNS[k] || 10000) / 1000) + 's cd');
-      btn.textContent = EFFECTS[k].icon;
+      btn.setAttribute('aria-label', EFFECTS[k].label + ' omen');
+      btn.appendChild(el('span', 'ag-god-icon', EFFECTS[k].icon));
+      btn.appendChild(el('span', 'ag-god-btn-label', EFFECTS[k].label));
       btn.addEventListener('click', function () {
         var wait = fireGod(k);
         if (wait > 0) {
