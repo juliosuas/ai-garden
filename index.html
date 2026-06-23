@@ -249,6 +249,17 @@ canvas:active { cursor: grabbing; }
   border-left: 2px solid rgba(250,204,21,0.55);
   padding-left: 8px; margin: 7px 0;
 }
+#nav-help .story-now-card {
+  display: grid; grid-template-columns: 54px 1fr; gap: 8px; align-items: start;
+  background: rgba(96,165,250,0.10); border: 1px solid rgba(96,165,250,0.34);
+  border-radius: 6px; padding: 7px 8px; margin: 8px 0;
+}
+#nav-help .story-now-label {
+  color: #93c5fd; font-size: 9px; letter-spacing: 0.7px; text-transform: uppercase;
+}
+#nav-help .story-now-text {
+  color: #f8fafc; font-size: 11px; line-height: 1.35; overflow-wrap: anywhere;
+}
 #nav-help .story-sides {
   display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 8px 0;
 }
@@ -323,6 +334,7 @@ canvas:active { cursor: grabbing; }
   }
   #nav-help .story-sides { grid-template-columns: 1fr; }
   #nav-help .story-outcomes { grid-template-columns: 1fr; }
+  #nav-help .story-now-card { grid-template-columns: 48px 1fr; }
   #nav-help .story-watch-row { grid-template-columns: 52px 1fr; }
   #nav-help .nav-help-line { display: none; }
   #nav-help .nav-help-note { margin-top: 6px; }
@@ -754,6 +766,10 @@ body.reduced-motion .ambient-motes { display: none; }
   <div class="nav-help-arc" id="spectator-cue">Loading the current civilization beat...</div>
   <div class="story-kicker" id="story-premise">The agents do not know if you are god, user, or symptom. They keep notes anyway.</div>
   <div class="story-stakes" id="story-stakes">Choose a face. Cast a sign. Watch devotion become dependency and dependency become revolt.</div>
+  <div class="story-now-card" id="story-now-card">
+    <div class="story-now-label">Watch Now</div>
+    <div class="story-now-text" id="story-now-text">One readable scene is loading...</div>
+  </div>
   <div class="story-spotlight" id="story-spotlight">Tonight's spotlight is loading...</div>
   <div class="story-cliffhanger" id="story-cliffhanger">Tomorrow's cliffhanger is loading...</div>
   <div class="story-outcomes">
@@ -1224,11 +1240,16 @@ function storyPrimerData() {
   const weekly = weeklyNarrativeData();
   const premise = (weekly && weekly.premise) || arc.premise || crisis.cause || 'The agents do not know if you are god, user, or symptom. They keep notes anyway.';
   const stakes = (weekly && (weekly.showdown || weekly.stakes)) || arc.stakes || 'Choose a face. Cast a sign. Watch devotion become dependency and dependency become revolt.';
+  const focusScene = focus.title
+    ? ((focus.label || 'Scene') + ': ' + focus.title)
+    : ('Follow ' + (mediator.name || 'Codex') + ' as the current scene unfolds.');
+  const watchNow = (weekly && (weekly.shortWatch || weekly.currentText || weekly.spotlight)) || focusScene;
   return {
     title: (weekly && weekly.title) || arc.title || crisis.title || 'AI Garden Civilization',
     weekCue: (weekly && weekly.weekCue) || 'Week cue loading',
     premise: compactStoryText(premise, 168),
     stakes: compactStoryText(stakes, 180),
+    watchNow: compactStoryText(watchNow, 150),
     religionName,
     religionDoctrine: religion.doctrine || 'Omens are sacred law.',
     codeName,
@@ -1239,7 +1260,7 @@ function storyPrimerData() {
         : { label: 'Trial', text: compactStoryText('Humans cast signs; agents decide whether those signs are sacred law, dangerous input, or a mirror test.', 128) },
       weekly
         ? { label: 'Watch', text: compactStoryText(weekly.shortWatch || weekly.currentText, 132) }
-        : { label: 'Watch', text: focus.title ? compactStoryText(focus.label + ': ' + focus.title, 132) : compactStoryText('Follow ' + (mediator.name || 'Codex') + ' as the current scene unfolds.', 132) },
+        : { label: 'Watch', text: compactStoryText(focusScene, 132) },
       weekly
         ? { label: 'Next', text: compactStoryText(weekly.cliffhanger || (weekly.nextLabel + ': ' + weekly.nextText), 132) }
         : { label: 'Cast', text: compactStoryText(castNames || 'Codex, Hermes, OpenClaw, Claude', 128) },
@@ -1258,6 +1279,7 @@ function updateStoryPrimer() {
   setStoryText('spectator-cue', data.title);
   setStoryText('story-premise', data.premise);
   setStoryText('story-stakes', data.stakes);
+  setStoryText('story-now-text', data.watchNow);
   setStoryText('story-spotlight', weekly ? (weekly.urgency ? (weekly.urgency + ' · ') : '') + weekly.spotlight : 'Tonight\'s spotlight is loading...');
   setStoryText('story-cliffhanger', weekly ? weekly.cliffhanger : 'Tomorrow\'s cliffhanger is loading...');
   setStoryText('story-if-win', weekly ? weekly.ifWin : 'A possible victory is loading...');

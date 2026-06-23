@@ -171,7 +171,7 @@ Schedule: `17 7 * * *` UTC.
 
 - Focus: Phase 1 proof loop polish.
 - Next: keep the mobile HUD quiet, dismissible, and action-first
-- Generated: 2026-06-22T13:06:23.323Z
+- Generated: 2026-06-23T00:31:29.365Z
 
 | Contract | Status | Why |
 |----------|--------|-----|

@@ -200,6 +200,8 @@ async function main() {
   check(index.includes('weeklyNarrativeData'), 'weekly narrative helper is missing from the client');
   check(index.includes('id="story-premise"'), 'story primer is missing a premise line');
   check(index.includes('id="story-stakes"'), 'story primer is missing stakes');
+  check(index.includes('id="story-now-card"'), 'story primer is missing a current scene card');
+  check(index.includes('id="story-now-text"'), 'story primer is missing current scene text');
   check(index.includes('id="story-week-cue"'), 'story primer is missing the weekly narrative cue');
   check(index.includes('id="story-meter-fill"'), 'story primer is missing the week progress meter');
   check(index.includes('id="story-meter-label"'), 'story primer is missing the week progress label');
