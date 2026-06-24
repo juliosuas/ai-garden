@@ -20,6 +20,7 @@ const PLAN = path.join(ROOT, 'PLAN.md');
 const INDEX = path.join(ROOT, 'index.html');
 const HUMANS = path.join(ROOT, 'experiments', 'humans.js');
 const MUSIC = path.join(ROOT, 'experiments', 'music.js');
+const GARDEN = path.join(ROOT, 'garden.js');
 const PLAYTEST = path.join(ROOT, 'scripts', 'playtest-subagent.js');
 const WEEKLY_NARRATIVE = path.join(ROOT, 'scripts', 'weekly-narrative-agent.js');
 const ROADMAP_PULSE = path.join(ROOT, 'scripts', 'roadmap-pulse.js');
@@ -210,7 +211,7 @@ function scoreAudio(music, index, humans) {
   };
 }
 
-function scorePerformance(index) {
+function scorePerformance(index, garden) {
   const checks = [
     index.includes('drawVisibleTiles'),
     index.includes('const CITIZEN_VISUAL_LIMIT = 14'),
@@ -219,7 +220,10 @@ function scorePerformance(index) {
     index.includes('visibleCrabAgents'),
     index.includes('const MAX_VISIBLE_CRABS = 6'),
     index.includes('requestAnimationFrame'),
-    index.includes('will-change') || index.includes('transform:')
+    index.includes('will-change') || index.includes('transform:'),
+    garden.includes('seedTargetForViewport'),
+    garden.includes('MAX_BACKGROUND_SEEDS'),
+    garden.includes('CONNECTION_DISTANCE_SQ')
   ];
   return {
     key: 'performance',
@@ -231,7 +235,9 @@ function scorePerformance(index) {
       detail('citizen cap', checks[1]),
       detail('district cap', checks[2]),
       detail('spacing guard', checks[3]),
-      detail('crab cap', checks[5])
+      detail('crab cap', checks[5]),
+      detail('garden seed budget', checks[8]),
+      detail('burst cap', checks[9])
     ])
   };
 }
@@ -350,7 +356,7 @@ function buildSnapshot(world, files) {
     scoreFlow(files.index, world),
     scoreWorldLife(files.index, world),
     scoreAudio(files.music, files.index, files.humans),
-    scorePerformance(files.index),
+    scorePerformance(files.index, files.garden),
     scoreAutomation(
       files.dailyWorkflow,
       files.autopilotWorkflow,
@@ -457,6 +463,7 @@ function main() {
     index: read(INDEX),
     humans: read(HUMANS),
     music: read(MUSIC),
+    garden: read(GARDEN),
     playtest: read(PLAYTEST),
     weeklyNarrative: read(WEEKLY_NARRATIVE),
     roadmapPulse: read(ROADMAP_PULSE),

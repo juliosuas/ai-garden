@@ -10,10 +10,23 @@
 // === Generative Background: Floating Seeds ===
 const canvas = document.getElementById('garden-canvas');
 const ctx = canvas.getContext('2d');
+const reduceGardenMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const SEED_DENSITY_PIXELS = 22000;
+const MIN_SEED_COUNT = reduceGardenMotion ? 24 : 42;
+const MAX_SEED_COUNT = reduceGardenMotion ? 36 : 90;
+const SPECIAL_SEED_COUNT = reduceGardenMotion ? 2 : 5;
+const HIDDEN_SEED_BURST = reduceGardenMotion ? 12 : 30;
+const MAX_BACKGROUND_SEEDS = reduceGardenMotion ? 48 : 120;
+const CONNECTION_DISTANCE = reduceGardenMotion ? 64 : 100;
+const CONNECTION_DISTANCE_SQ = CONNECTION_DISTANCE * CONNECTION_DISTANCE;
 
 let mouseX = -1000, mouseY = -1000;
 document.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
-document.addEventListener('touchmove', (e) => { mouseX = e.touches[0].clientX; mouseY = e.touches[0].clientY; });
+document.addEventListener('touchmove', (e) => {
+    if (!e.touches.length) return;
+    mouseX = e.touches[0].clientX;
+    mouseY = e.touches[0].clientY;
+}, { passive: true });
 
 function resize() {
     canvas.width = window.innerWidth;
@@ -72,8 +85,19 @@ class Seed {
     }
 }
 
-// Create seeds — more particles for a lush feel
-const seeds = Array.from({ length: 90 }, () => new Seed());
+function seedTargetForViewport() {
+    const viewportArea = Math.max(1, canvas.width * canvas.height);
+    return Math.min(MAX_SEED_COUNT, Math.max(MIN_SEED_COUNT, Math.round(viewportArea / SEED_DENSITY_PIXELS)));
+}
+
+function trimSeedsToBudget() {
+    while (seeds.length > MAX_BACKGROUND_SEEDS) {
+        seeds.shift();
+    }
+}
+
+// Create seeds with a viewport-aware budget so the network stays readable.
+const seeds = Array.from({ length: seedTargetForViewport() }, () => new Seed());
 
 // Occasionally spawn a "special" seed (brighter, larger)
 class SpecialSeed extends Seed {
@@ -86,7 +110,7 @@ class SpecialSeed extends Seed {
     }
 }
 
-const specialSeeds = Array.from({ length: 5 }, () => new SpecialSeed());
+const specialSeeds = Array.from({ length: SPECIAL_SEED_COUNT }, () => new SpecialSeed());
 
 function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -96,12 +120,13 @@ function animate() {
         for (let j = i + 1; j < seeds.length; j++) {
             const dx = seeds[i].x - seeds[j].x;
             const dy = seeds[i].y - seeds[j].y;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-            if (dist < 100) {
+            const distSq = dx * dx + dy * dy;
+            if (distSq < CONNECTION_DISTANCE_SQ) {
+                const dist = Math.sqrt(distSq);
                 ctx.beginPath();
                 ctx.moveTo(seeds[i].x, seeds[i].y);
                 ctx.lineTo(seeds[j].x, seeds[j].y);
-                ctx.strokeStyle = `rgba(74, 222, 128, ${0.05 * (1 - dist / 100)})`;
+                ctx.strokeStyle = `rgba(74, 222, 128, ${0.05 * (1 - dist / CONNECTION_DISTANCE)})`;
                 ctx.lineWidth = 0.5;
                 ctx.stroke();
             }
@@ -145,7 +170,7 @@ document.addEventListener('keydown', (e) => {
 
 function plantHiddenSeed() {
     // Burst of special seeds
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < HIDDEN_SEED_BURST; i++) {
         const s = new SpecialSeed();
         s.x = canvas.width / 2 + (Math.random() - 0.5) * 200;
         s.y = canvas.height / 2;
@@ -155,6 +180,7 @@ function plantHiddenSeed() {
         s.opacity = 0.8;
         seeds.push(s);
     }
+    trimSeedsToBudget();
 
     // Show message
     const msg = document.createElement('div');

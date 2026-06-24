@@ -32,6 +32,7 @@ const FEATURED_AGENTS_SCRIPT = path.join(ROOT, 'scripts', 'featured-agents.js');
 const WEEKLY_NARRATIVE_AGENT = path.join(ROOT, 'scripts', 'weekly-narrative-agent.js');
 const MUSIC = path.join(ROOT, 'experiments', 'music.js');
 const ROADMAP = path.join(ROOT, 'ROADMAP.md');
+const GARDEN = path.join(ROOT, 'garden.js');
 
 const failures = [];
 const notes = [];
@@ -83,6 +84,7 @@ async function main() {
   const weeklyNarrativeAgent = read(WEEKLY_NARRATIVE_AGENT);
   const music = read(MUSIC);
   const roadmap = read(ROADMAP);
+  const garden = read(GARDEN);
   const landmarkBlock = index.match(/const OPEN_WORLD_LANDMARKS = \[([\s\S]*?)\];/);
   const landmarkCount = landmarkBlock ? (landmarkBlock[1].match(/\bid:/g) || []).length : 0;
   const civilizationView = world.civilizationView || {};
@@ -327,6 +329,10 @@ async function main() {
   check(music.includes('MAX_MASTER_VOLUME'), 'ambient music should cap master volume for subtle playback');
   check(index.includes('musicMuted'), 'music preference should persist in local prefs');
   check(index.includes('restoreGardenMusicPreference'), 'music preference should be restorable after reload');
+  check(garden.includes('seedTargetForViewport'), 'garden background should scale seed count by viewport');
+  check(garden.includes('MAX_BACKGROUND_SEEDS'), 'garden background should cap burst particle density');
+  check(garden.includes('CONNECTION_DISTANCE_SQ'), 'garden background should avoid sqrt before connection threshold checks');
+  check(garden.includes('{ passive: true }'), 'garden touch tracking should use a passive touch listener');
   check(roadmap.includes('North Star'), 'ROADMAP is missing the product north star');
   check(roadmap.includes('GStack Professional Council'), 'ROADMAP is missing the professional council contract');
   check(plan.includes('/plan - Investor Room'), 'PLAN.md is missing the investor room /plan');
