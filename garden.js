@@ -99,6 +99,13 @@ function trimSeedsToBudget() {
 // Create seeds with a viewport-aware budget so the network stays readable.
 const seeds = Array.from({ length: seedTargetForViewport() }, () => new Seed());
 
+function syncSeedsToViewportBudget() {
+    const target = seedTargetForViewport();
+    while (seeds.length < target) seeds.push(new Seed());
+    while (seeds.length > target) seeds.shift();
+}
+window.addEventListener('resize', syncSeedsToViewportBudget);
+
 // Occasionally spawn a "special" seed (brighter, larger)
 class SpecialSeed extends Seed {
     reset() {

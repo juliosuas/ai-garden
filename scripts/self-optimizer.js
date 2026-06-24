@@ -222,6 +222,7 @@ function scorePerformance(index, garden) {
     index.includes('requestAnimationFrame'),
     index.includes('will-change') || index.includes('transform:'),
     garden.includes('seedTargetForViewport'),
+    garden.includes('syncSeedsToViewportBudget'),
     garden.includes('MAX_BACKGROUND_SEEDS'),
     garden.includes('CONNECTION_DISTANCE_SQ')
   ];
@@ -237,7 +238,8 @@ function scorePerformance(index, garden) {
       detail('spacing guard', checks[3]),
       detail('crab cap', checks[5]),
       detail('garden seed budget', checks[8]),
-      detail('burst cap', checks[9])
+      detail('resize seed budget', checks[9]),
+      detail('burst cap', checks[10])
     ])
   };
 }

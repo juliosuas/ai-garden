@@ -330,6 +330,7 @@ async function main() {
   check(index.includes('musicMuted'), 'music preference should persist in local prefs');
   check(index.includes('restoreGardenMusicPreference'), 'music preference should be restorable after reload');
   check(garden.includes('seedTargetForViewport'), 'garden background should scale seed count by viewport');
+  check(garden.includes('syncSeedsToViewportBudget'), 'garden background should rebalance seed count after viewport resize');
   check(garden.includes('MAX_BACKGROUND_SEEDS'), 'garden background should cap burst particle density');
   check(garden.includes('CONNECTION_DISTANCE_SQ'), 'garden background should avoid sqrt before connection threshold checks');
   check(garden.includes('{ passive: true }'), 'garden touch tracking should use a passive touch listener');
