@@ -193,6 +193,7 @@ async function main() {
   check(index.includes('closeMobileToolsAfterAction'), 'mobile tools drawer should close after single-action controls');
   check(index.includes('mobile-tools-open'), 'mobile UI lacks a body state for keeping panels out of the way');
   check(index.includes('id="mobile-dock-close"'), 'mobile tools drawer lacks an explicit close button');
+  check(index.includes('body.mobile-tools-open #nav-help'), 'mobile tools drawer should hide the story primer while open');
   check(index.includes('id="nav-help"'), 'camera/navigation help panel is missing');
   check(index.includes('THE MIRROR TRIAL'), 'The Mirror Trial cue is missing');
   check(index.includes('STORY FIRST'), 'newcomer story mode cue is missing');

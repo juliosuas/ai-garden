@@ -171,7 +171,8 @@ function reviewFor(specialist, files, world) {
       check('collapsed chat', files.humans.includes("chat.classList.add('ag-collapsed')"), 'collapse chat by default on mobile'),
       check('post-action close', files.index.includes('closeMobileToolsAfterAction'), 'close mobile drawer after single actions'),
       check('dynamic zoom', files.index.includes('minZoomForViewport'), 'restore dynamic zoom minimum'),
-      check('chat avoidance', files.humans.includes('body.mobile-tools-open .ag-chat'), 'prevent chat from blocking mobile tools')
+      check('chat avoidance', files.humans.includes('body.mobile-tools-open .ag-chat'), 'prevent chat from blocking mobile tools'),
+      check('primer avoidance', files.index.includes('body.mobile-tools-open #nav-help'), 'hide the story primer while mobile tools are open')
     ],
     narrative: [
       check('weekly v2', weekly && weekly.version === 2, 'restore Weekly Narrative Agent v2'),
