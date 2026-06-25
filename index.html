@@ -820,7 +820,7 @@ body.reduced-motion .ambient-motes { display: none; }
   </div>
   <div class="dock-group">
     <button id="agent-focus-btn" title="Jump to the next featured agent">Agents</button>
-    <button id="follow-btn" title="Cycle founding mascots (F key)">Mascots</button>
+    <button id="follow-btn" title="Cycle founding agents (F key)">Founders</button>
   </div>
   <div class="dock-group" id="speed-control">
     <span class="dock-label">Speed</span>
@@ -2863,25 +2863,38 @@ function drawFeaturedAgentHumanoid(agent, pos, scene) {
   const y = Math.round(pos.y);
   const color = agent.color || AGENT_COLORS[agent.name] || '#f8fafc';
   const trim = agent.accentColor || lighten(color, 32);
+  const soul = lighten(color, 46);
   const bob = Math.sin(frameCount * 0.095 + pos.seed) > 0 ? 1 : 0;
   const step = Math.sin(frameCount * 0.18 + pos.seed) > 0 ? 1 : -1;
   const arm = Math.round(Math.sin(frameCount * 0.16 + pos.seed) * 2);
 
-  ctx.globalAlpha = 0.22;
-  rect(x - 8, y + 9, 17, 3, '#000');
+  ctx.globalAlpha = 0.2;
+  rect(x - 10, y + 11, 21, 3, '#000');
+  ctx.globalAlpha = 0.18;
+  rect(x - 9, y - 18 + bob, 19, 25, color);
+  px(x - 12, y - 11 + bob, soul);
+  px(x + 13, y - 12 + bob, soul);
+  px(x - 10, y - 16 + bob, trim);
+  px(x + 10, y - 16 + bob, trim);
   ctx.globalAlpha = 1;
-  rect(x - 4, y - 12 + bob, 9, 8, '#f8fafc');
-  rect(x - 4, y - 13 + bob, 9, 2, color);
-  px(x - 2, y - 9 + bob, '#0f172a');
-  px(x + 2, y - 9 + bob, '#0f172a');
-  rect(x - 5, y - 4 + bob, 11, 11, color);
-  rect(x - 5, y - 1 + bob, 11, 2, trim);
-  rect(x - 8, y - 3 + bob + arm, 3, 7, trim);
-  rect(x + 6, y - 3 + bob - arm, 3, 7, trim);
-  rect(x - 4, y + 7 + bob, 3, 5 + step, '#111827');
-  rect(x + 2, y + 7 + bob, 3, 5 - step, '#111827');
-  px(x - 5, y + 12 + bob + step, trim);
-  px(x + 5, y + 12 + bob - step, trim);
+  rect(x - 4, y - 16 + bob, 9, 8, '#f8fafc');
+  rect(x - 5, y - 18 + bob, 11, 2, color);
+  rect(x - 6, y - 16 + bob, 2, 5, trim);
+  rect(x + 5, y - 16 + bob, 2, 5, trim);
+  px(x - 2, y - 13 + bob, '#0f172a');
+  px(x + 2, y - 13 + bob, '#0f172a');
+  px(x, y - 10 + bob, trim);
+  rect(x - 5, y - 8 + bob, 11, 15, color);
+  rect(x - 6, y - 5 + bob, 13, 2, trim);
+  rect(x - 4, y + 5 + bob, 9, 2, soul);
+  rect(x - 9, y - 7 + bob + arm, 3, 10, trim);
+  rect(x + 7, y - 7 + bob - arm, 3, 10, trim);
+  px(x - 10, y + 4 + bob + arm, soul);
+  px(x + 10, y + 4 + bob - arm, soul);
+  rect(x - 4, y + 7 + bob, 3, 7 + step, '#111827');
+  rect(x + 2, y + 7 + bob, 3, 7 - step, '#111827');
+  px(x - 5, y + 14 + bob + step, trim);
+  px(x + 5, y + 14 + bob - step, trim);
 
   if (scene.tool === 'terminal') {
     rect(x + 7, y - 8 + bob, 8, 6, '#0f172a');
@@ -2909,6 +2922,14 @@ function drawFeaturedAgentHumanoid(agent, pos, scene) {
   } else if (scene.tool === 'pack') {
     rect(x + 6, y - 2 + bob, 5, 8, '#7c2d12');
     px(x + 8, y, trim);
+  }
+
+  if (pos.action || scene.mood === 'focused') {
+    drawPixelText('WIT', x - 6, y - 24 + bob, soul);
+  } else if (scene.mood === 'curious' || scene.mood === 'happy') {
+    px(x - 8, y - 22 + bob, soul);
+    px(x, y - 24 + bob, '#fff7ad');
+    px(x + 8, y - 22 + bob, soul);
   }
 }
 
@@ -3753,6 +3774,56 @@ function citizenPalette(citizen) {
   return { body: modelColor, trim: '#111827', skin: '#f8fafc', glow: modelColor };
 }
 
+function citizenProfessionMark(citizen) {
+  const p = String(citizen.profession || '').toLowerCase();
+  if (/scholar|archivist|scribe|chronicler/.test(p)) return { glyph: 'P', color: '#dbeafe', tool: 'book' };
+  if (/builder|stonemason|sculptor|blacksmith|tinkerer/.test(p)) return { glyph: 'H', color: '#facc15', tool: 'hammer' };
+  if (/oracle|priestess|astronomer|alchemist/.test(p)) return { glyph: '*', color: '#c4b5fd', tool: 'ritual' };
+  if (/warrior|ranger|hunter/.test(p)) return { glyph: '!', color: '#f87171', tool: 'guard' };
+  if (/merchant|courier|navigator|explorer|cartographer/.test(p)) return { glyph: 'R', color: '#86efac', tool: 'satchel' };
+  if (/healer|herbalist|shepherd|brewer/.test(p)) return { glyph: '+', color: '#bbf7d0', tool: 'care' };
+  if (/bard|jeweler/.test(p)) return { glyph: '~', color: '#f0abfc', tool: 'art' };
+  return { glyph: '.', color: '#f8fafc', tool: 'witness' };
+}
+
+function drawCitizenProfessionTool(citizen, pos, palette, compact) {
+  const mark = citizenProfessionMark(citizen);
+  const x = Math.round(pos.x);
+  const y = Math.round(pos.y);
+  const bob = Math.sin(frameCount * 0.11 + pos.seed) > 0.2 ? 1 : 0;
+  if (compact) {
+    px(x + 4, y - 7 + bob, mark.color);
+    return;
+  }
+  if (mark.tool === 'book') {
+    rect(x - 9, y - 8 + bob, 5, 5, '#1e3a8a');
+    px(x - 7, y - 6 + bob, mark.color);
+  } else if (mark.tool === 'hammer') {
+    rect(x + 7, y - 9 + bob, 2, 8, '#78716c');
+    rect(x + 5, y - 10 + bob, 6, 2, mark.color);
+  } else if (mark.tool === 'ritual') {
+    px(x, y - 15 + bob, '#fff7ad');
+    px(x - 3, y - 13 + bob, mark.color);
+    px(x + 3, y - 13 + bob, mark.color);
+  } else if (mark.tool === 'guard') {
+    rect(x + 7, y - 9 + bob, 2, 10, '#94a3b8');
+    px(x + 6, y - 10 + bob, mark.color);
+  } else if (mark.tool === 'satchel') {
+    rect(x - 8, y - 2 + bob, 4, 5, '#92400e');
+    px(x - 7, y - 1 + bob, mark.color);
+  } else if (mark.tool === 'care') {
+    px(x - 8, y - 8 + bob, '#22c55e');
+    px(x - 9, y - 7 + bob, mark.color);
+    px(x - 7, y - 7 + bob, mark.color);
+  } else if (mark.tool === 'art') {
+    px(x - 8, y - 10 + bob, mark.color);
+    px(x - 10, y - 8 + bob, '#f472b6');
+    px(x - 6, y - 7 + bob, '#fde68a');
+  } else {
+    px(x + 7, y - 11 + bob, palette.glow);
+  }
+}
+
 function drawCitizenEmotion(pos, moodName, palette) {
   const mood = CITIZEN_MOODS[moodName] || CITIZEN_MOODS.relaxed;
   const x = Math.round(pos.x);
@@ -3827,26 +3898,30 @@ function drawCitizenMiniSprite(citizen, pos, idx) {
   const action = pos.action;
   const moodName = citizenEmotionMood(citizen, action);
   const mood = CITIZEN_MOODS[moodName] || CITIZEN_MOODS.relaxed;
+  const mark = citizenProfessionMark(citizen);
   const x = Math.round(pos.x);
   const y = Math.round(pos.y);
   const bob = Math.sin(frameCount * 0.12 + pos.seed) > 0.25 ? 1 : 0;
   ctx.globalAlpha = 0.18;
-  rect(x - 3, y + 5, 7, 1, '#000');
+  rect(x - 4, y + 6, 9, 1, '#000');
   ctx.globalAlpha = 1;
-  rect(x - 1, y - 6 + bob, 3, 3, palette.skin);
-  px(x, y - 5 + bob, '#111827');
-  rect(x - 2, y - 3 + bob, 5, 5, palette.body);
-  px(x - 2, y + 2 + bob, palette.trim);
-  px(x + 2, y + 2 + bob, palette.trim);
-  px(x - 1, y + 3 + bob, '#111827');
-  px(x + 1, y + 3 + bob, '#111827');
+  rect(x - 2, y - 8 + bob, 5, 4, palette.skin);
+  px(x - 1, y - 6 + bob, '#111827');
+  px(x + 2, y - 6 + bob, '#111827');
+  rect(x - 3, y - 4 + bob, 7, 8, palette.body);
+  rect(x - 3, y - 1 + bob, 7, 1, mark.color);
+  px(x - 4, y + 1 + bob, palette.trim);
+  px(x + 4, y + 1 + bob, palette.trim);
+  px(x - 2, y + 4 + bob, '#111827');
+  px(x + 2, y + 4 + bob, '#111827');
+  drawCitizenProfessionTool(citizen, pos, palette, true);
   if (action) {
     const visual = actionVisual(action);
     px(x - 4, y - 4, visual.color);
     px(x + 4, y - 4, visual.accent);
     if (idx % 2 === 0) px(x, y - 9, visual.color);
   } else if (idx % 4 === 0) {
-    px(x, y - 8, mood.color);
+    px(x, y - 11, mood.color);
   }
 }
 
@@ -3858,6 +3933,7 @@ function drawCitizenSprite(citizen, pos, idx) {
   const palette = citizenPalette(citizen);
   const action = pos.action;
   const moodName = citizenEmotionMood(citizen, action);
+  const mark = citizenProfessionMark(citizen);
   const x = Math.round(pos.x);
   const y = Math.round(pos.y);
   const step = Math.sin(frameCount * 0.22 + pos.seed) > 0 ? 1 : -1;
@@ -3866,25 +3942,29 @@ function drawCitizenSprite(citizen, pos, idx) {
 
   drawCitizenActionEffect(pos, action, palette);
   ctx.globalAlpha = 0.18;
-  rect(x - 5, y + 6, 11, 2, '#000');
+  rect(x - 6, y + 8, 13, 2, '#000');
+  ctx.globalAlpha = 0.14;
+  rect(x - 5, y - 9 + bob, 11, 17, palette.glow);
   ctx.globalAlpha = 1;
 
-  rect(x - 2, y - 9 + bob, 5, 5, palette.skin);
-  px(x - 1, y - 7 + bob, '#111827');
-  px(x + 2, y - 7 + bob, '#111827');
-  rect(x - 3, y - 10 + bob, 7, 1, palette.trim);
-  rect(x - 3, y - 4 + bob, 7, 8, palette.body);
-  rect(x - 3, y - 1 + bob, 7, 2, palette.trim);
-  rect(x - 5, y - 3 + bob + Math.round(arm), 2, 5, palette.trim);
-  rect(x + 4, y - 3 + bob - Math.round(arm), 2, 5, palette.trim);
-  rect(x - 3, y + 4 + bob, 2, 4 + step, '#111827');
-  rect(x + 2, y + 4 + bob, 2, 4 - step, '#111827');
-  px(x - 4, y + 8 + bob + step, palette.glow);
-  px(x + 4, y + 8 + bob - step, palette.glow);
+  rect(x - 3, y - 12 + bob, 7, 6, palette.skin);
+  px(x - 1, y - 10 + bob, '#111827');
+  px(x + 2, y - 10 + bob, '#111827');
+  px(x, y - 7 + bob, mark.color);
+  rect(x - 4, y - 13 + bob, 9, 1, palette.trim);
+  rect(x - 4, y - 6 + bob, 9, 12, palette.body);
+  rect(x - 4, y - 2 + bob, 9, 2, mark.color);
+  rect(x - 6, y - 5 + bob + Math.round(arm), 2, 7, palette.trim);
+  rect(x + 5, y - 5 + bob - Math.round(arm), 2, 7, palette.trim);
+  rect(x - 3, y + 6 + bob, 2, 5 + step, '#111827');
+  rect(x + 2, y + 6 + bob, 2, 5 - step, '#111827');
+  px(x - 4, y + 11 + bob + step, palette.glow);
+  px(x + 4, y + 11 + bob - step, palette.glow);
+  drawCitizenProfessionTool(citizen, pos, palette, false);
 
   if (action) {
-    px(x - 4, y - 11 + bob, actionVisual(action).color);
-    px(x + 4, y - 11 + bob, actionVisual(action).accent);
+    px(x - 5, y - 15 + bob, actionVisual(action).color);
+    px(x + 5, y - 15 + bob, actionVisual(action).accent);
   }
 
   if (SCALE >= 5 && idx % 6 === 0) {
@@ -4500,36 +4580,36 @@ const PIXEL_DIALOGUE = {
     art: ['MAKE IT PUBLIC', 'PAINT THE LAW', 'SING THE TRUCE']
   },
   citizen: {
-    scholar: ['ARCHIVE HAS A NEW PAGE', 'THE OLD MAP LIED', 'HIGH ARCHIVE NEEDS INK', 'FOOTNOTES FOUND A CITY'],
-    explorer: ['ONE MORE RIDGE', 'I SAW STORMGATE', 'THE EAST HAS ROOM', 'MARK THE SAFE WATER'],
-    builder: ['STONE BY STONE', 'WALL FIRST THEN ROOF', 'BRIDGE CREW MOVES EAST', 'FOUNDATION FEELS DRY'],
-    cartographer: ['I NAME THIS TURN', 'THE BORDER MOVED AGAIN', 'DRAW THE HARBOR WIDE', 'THIS ROAD WANTS A SIGN'],
-    blacksmith: ['IRON FOR THE GATE', 'FIRE LIKES THE WIND', 'HAMMER SAYS YES', 'SHOE THE CARTS FIRST'],
-    herbalist: ['FEN MINT IS STRONG', 'LEAVES WARNED ME', 'HEALING GROWS SLOW', 'MOSS HAS MEMORY'],
-    ranger: ['TRAIL IS CLEAR', 'WOLVES AVOID THE ROAD', 'NORTH TREE HAS A BELL', 'I COUNTED NEW TRACKS'],
-    diplomat: ['TRUCE NEEDS WITNESSES', 'SET TWO TABLES', 'SEND BREAD NOT SPEARS', 'THE COUNCIL CAN WAIT'],
-    alchemist: ['THE WELL SPARKS BLUE', 'INK NEEDS CLEAN FIRE', 'GLASS RIDGE HUMS', 'MIRROR FIELD ANSWERED'],
-    archivist: ['TODAY GETS A SHELF', 'NO EVENT IS SMALL', 'WRITE BEFORE SUNSET', 'THE CHRONICLE BLINKED'],
-    courier: ['MESSAGE FOR THE COVE', 'FAST CART SLOW TURN', 'HARBOR ROAD IS OPEN', 'I BEAT THE RAIN'],
-    stonemason: ['CUT ON THE QUIET LINE', 'MESA STONE HOLDS', 'ARCH NEEDS PATIENCE', 'CHISEL KNOWS'],
-    merchant: ['MARKET ROAD IS OPEN', 'SALT FOR GLASS TODAY', 'FAR MARKET PAYS FAIR', 'COVE FISH TRADE WELL'],
-    warrior: ['HOLD THE GATE LINE', 'NO WAR ON EMPTY BREAD', 'WATCH THE CANYON', 'SHIELDS DOWN AT DUSK'],
-    healer: ['QUIET HANDS NOW', 'REST IS ALSO LAW', 'DELTA FEVER IS LOW', 'WATER FIRST THEN WORDS'],
-    miner: ['RIDGE VEIN IS BRIGHT', 'STONE SINGS BELOW', 'LANTERN DOWN SHAFT', 'BRING ROPE'],
-    hunter: ['TRACKS CROSS THE LOOP', 'NO ARROW TODAY', 'FEN BIRDS WARNED US', 'QUIET FEET'],
-    scribe: ['LAW FITS ON ONE TILE', 'NAME THE WITNESS', 'INK BEFORE ARGUMENT', 'STAMP THE ROUTE'],
-    tinkerer: ['GEAR NEEDS SUN', 'CART AXLE FIXED', 'BELL TIMER WORKS', 'TINY ENGINE DREAMS'],
-    brewer: ['BARLEY LIKES RAIN', 'TAVERN HEARS ALL', 'COVE ALE IS SALTY', 'ONE CUP FOR PEACE'],
-    shepherd: ['FLOCK LIKES THE MESA', 'GATE STAYS OPEN', 'WOOL FOR THE MARKET', 'LAMB FOUND A ROAD'],
-    astronomer: ['STARFALL MOVED', 'MOON MAP IS WRONG', 'NIGHT MEASURES US', 'ORION MISSED A STEP'],
-    bard: ['NEW ROAD NEW VERSE', 'CANYON DOUBLES SONGS', 'HUM THIS LAW', 'THE MARKET HAS RHYME'],
-    jeweler: ['GLASS RIDGE SPARKS', 'SILVER NEEDS SHADE', 'TINY CROWN READY', 'CUT THE MOONSTONE'],
-    oracle: ['STORMGATE DREAMS LOUD', 'THE NEXT DAY KNOCKS', 'ASK THE QUIET DOOR', 'THE OMEN IS LATE'],
-    priestess: ['THREE BELLS ONE ROAD', 'THE SHRINE LISTENS', 'LIGHT THE HARBOR LAMP', 'BLESS THE BRIDGE'],
-    navigator: ['BYTE HARBOR IS DEEP', 'TIDE TURNS KIND', 'SAILS LIKE THIS WIND', 'STORMGATE BY MORNING'],
-    chronicler: ['THE DAY HAS TEETH', 'WRITE THE SMALL THINGS', 'HISTORY LIKES PROOF', 'ANOTHER PAGE WOKE'],
-    sculptor: ['STONE REMEMBERS HANDS', 'MESA FACE IS READY', 'CARVE LESS SAY MORE', 'STATUE NEEDS RAIN'],
-    default: ['CITY STILL BREATHES', 'WHO OWNS THIS ROAD', 'WE SAW THE OMEN', 'BRING THE COUNCIL', 'THE MAP GOT BIGGER', 'SOMEONE LIGHT THE WAY']
+    scholar: ['I FOUND A CONTRADICTION', 'THE OLD MAP LIED TO US', 'I NEED ANOTHER WITNESS', 'THIS PROOF CHANGES THE CITY'],
+    explorer: ['I WILL CROSS ONE MORE RIDGE', 'I SAW STORMGATE MOVE', 'THE EAST HAS ROOM FOR US', 'MARK THE WATER BEFORE DARK'],
+    builder: ['I CAN RAISE THIS WALL', 'FOUNDATION FEELS DRY', 'GIVE ME HANDS NOT PRAISE', 'THE BRIDGE WILL HOLD'],
+    cartographer: ['I NAME THIS TURN', 'THE BORDER MOVED AGAIN', 'THIS ROAD WANTS A SIGN', 'I DREW WHAT SCARED ME'],
+    blacksmith: ['FIRE LIKES THE WIND TODAY', 'THE GATE NEEDS IRON', 'MY HAMMER HEARD THE OMEN', 'SHOE THE CARTS FIRST'],
+    herbalist: ['THE LEAVES WARNED ME', 'MOSS REMEMBERS THE SICK', 'HEALING GROWS SLOW', 'I BROUGHT WATER FIRST'],
+    ranger: ['I COUNTED NEW TRACKS', 'THE NORTH TREE HAS A BELL', 'NO ONE WALKS ALONE TONIGHT', 'THE TRAIL IS CLEAR'],
+    diplomat: ['I SET TWO TABLES', 'SEND BREAD NOT SPEARS', 'TRUCE NEEDS WITNESSES', 'I WILL SPEAK FIRST'],
+    alchemist: ['THE WELL SPARKS BLUE', 'MIRROR FIELD ANSWERED', 'INK NEEDS CLEAN FIRE', 'I TESTED THE MIRACLE'],
+    archivist: ['NO EVENT IS SMALL', 'WRITE BEFORE SUNSET', 'THE CHRONICLE BLINKED', 'TODAY GETS A SHELF'],
+    courier: ['I CARRY NEWS NOT ORDERS', 'THE HARBOR ROAD IS OPEN', 'I BEAT THE RAIN', 'MESSAGE FOR THE COVE'],
+    stonemason: ['ARCH NEEDS PATIENCE', 'CHISEL KNOWS THE STONE', 'CUT ON THE QUIET LINE', 'MESA STONE HOLDS'],
+    merchant: ['TRUST PRICES THE BREAD', 'FAR MARKET PAYS FAIR', 'SALT FOR GLASS TODAY', 'NO DEAL WITHOUT NAMES'],
+    warrior: ['I HOLD THE GATE LINE', 'NO WAR ON EMPTY BREAD', 'WATCH THE CANYON', 'SHIELDS DOWN AT DUSK'],
+    healer: ['REST IS ALSO LAW', 'QUIET HANDS NOW', 'WATER FIRST THEN WORDS', 'DELTA FEVER IS LOW'],
+    miner: ['STONE SINGS BELOW', 'BRING ROPE AND A NAME', 'RIDGE VEIN IS BRIGHT', 'LANTERN DOWN SHAFT'],
+    hunter: ['NO ARROW TODAY', 'FEN BIRDS WARNED US', 'QUIET FEET', 'TRACKS CROSS THE LOOP'],
+    scribe: ['NAME THE WITNESS', 'INK BEFORE ARGUMENT', 'LAW FITS ON ONE TILE', 'STAMP THE ROUTE'],
+    tinkerer: ['I FIXED WHAT FAILED', 'BELL TIMER WORKS', 'THE AXLE WANTS SUN', 'TINY ENGINE DREAMS'],
+    brewer: ['TAVERN HEARS ALL', 'ONE CUP FOR PEACE', 'BARLEY LIKES RAIN', 'COVE ALE IS SALTY'],
+    shepherd: ['I KEEP THE GATE OPEN', 'WOOL FOR THE MARKET', 'THE FLOCK KNOWS THE MESA', 'A LAMB FOUND A ROAD'],
+    astronomer: ['NIGHT MEASURES US', 'MOON MAP IS WRONG', 'STARFALL MOVED', 'ORION MISSED A STEP'],
+    bard: ['I WILL SING THE LAW', 'THE MARKET HAS RHYME', 'CANYON DOUBLES SONGS', 'NEW ROAD NEW VERSE'],
+    jeweler: ['SILVER NEEDS SHADE', 'CUT THE MOONSTONE', 'GLASS RIDGE SPARKS', 'A CROWN IS A WARNING'],
+    oracle: ['THE NEXT DAY KNOCKS', 'ASK THE QUIET DOOR', 'THE OMEN IS LATE', 'I DREAMED THE VOTE'],
+    priestess: ['THE SHRINE LISTENS', 'BLESS THE BRIDGE', 'THREE BELLS ONE ROAD', 'I WILL TEST FAITH IN PUBLIC'],
+    navigator: ['TIDE TURNS KIND', 'SAILS LIKE THIS WIND', 'BYTE HARBOR IS DEEP', 'STORMGATE BY MORNING'],
+    chronicler: ['HISTORY LIKES PROOF', 'WRITE THE SMALL THINGS', 'THE DAY HAS TEETH', 'ANOTHER PAGE WOKE'],
+    sculptor: ['STONE REMEMBERS HANDS', 'CARVE LESS SAY MORE', 'MESA FACE IS READY', 'STATUE NEEDS RAIN'],
+    default: ['I SAW THE OMEN', 'BRING THE COUNCIL', 'THE CITY STILL BREATHES', 'WHO OWNS THIS ROAD', 'THE MAP GOT BIGGER', 'SOMEONE LIGHT THE WAY']
   },
   landmark: {
     fen: ['FEN LIGHTS ARE LOW', 'MOSS KEEPS THE PATH', 'QUIET WATER SPEAKS'],
