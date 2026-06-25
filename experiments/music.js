@@ -20,6 +20,7 @@ const GardenMusic = (function() {
   let moodTimer = null;
   let hiddenSuspend = false;
   let activeOscillators = [];
+  const MAX_ACTIVE_VOICES = 28;
   // A minor-ish chip scale. The hook is original to AI Garden.
   const ROOT_A3 = 220;
   const CHIP_SCALE = [0, 3, 5, 7, 10, 12, 15, 17, 19, 22, 24, 27];
@@ -161,8 +162,17 @@ const GardenMusic = (function() {
     return ROOT_A3 * Math.pow(2, (CHIP_SCALE[idx] + octave * 12) / 12);
   }
 
+  function canScheduleVoice(startTime, neededVoices) {
+    const now = audioCtx ? audioCtx.currentTime : startTime;
+    activeOscillators = activeOscillators.filter(function(entry) {
+      return entry.stopTime > now;
+    });
+    return activeOscillators.length + (neededVoices || 1) <= MAX_ACTIVE_VOICES;
+  }
+
   function playTone(freq, duration, waveType, gainValue, startTime) {
     if (!audioCtx || !playing) return;
+    if (!canScheduleVoice(startTime, 1)) return;
 
     const osc = audioCtx.createOscillator();
     const envGain = audioCtx.createGain();
@@ -210,6 +220,7 @@ const GardenMusic = (function() {
 
   function playAmbientPad(rootStep, duration, startTime) {
     if (!audioCtx || !playing) return;
+    if (!canScheduleVoice(startTime, 3)) return;
     const season = SEASON_PROFILES[currentSeason] || SEASON_PROFILES.spring;
     const mood = MOODS[currentMood];
     const chord = AMBIENT_PAD_STEPS[Math.abs(rootStep) % AMBIENT_PAD_STEPS.length];
@@ -248,6 +259,7 @@ const GardenMusic = (function() {
 
   function playSoftBell(step, startTime) {
     if (!audioCtx || !playing) return;
+    if (!canScheduleVoice(startTime, 1)) return;
     const season = SEASON_PROFILES[currentSeason] || SEASON_PROFILES.spring;
     const mood = MOODS[currentMood];
     const freq = getChipNote(step + season.rootShift, mood.octaveShift + 2);
@@ -280,6 +292,7 @@ const GardenMusic = (function() {
 
   function playBass(freq, duration, startTime) {
     if (!audioCtx || !playing) return;
+    if (!canScheduleVoice(startTime, 1)) return;
 
     const osc = audioCtx.createOscillator();
     const envGain = audioCtx.createGain();
@@ -315,6 +328,7 @@ const GardenMusic = (function() {
 
   function playChipKick(startTime) {
     if (!audioCtx || !playing) return;
+    if (!canScheduleVoice(startTime, 1)) return;
     const osc = audioCtx.createOscillator();
     const envGain = audioCtx.createGain();
     osc.type = 'triangle';
@@ -337,6 +351,7 @@ const GardenMusic = (function() {
 
   function playNoiseBurst(duration, gainValue, startTime, filterFreq) {
     if (!audioCtx || !playing) return;
+    if (!canScheduleVoice(startTime, 1)) return;
     const frames = Math.max(1, Math.floor(audioCtx.sampleRate * duration));
     const buffer = audioCtx.createBuffer(1, frames, audioCtx.sampleRate);
     const data = buffer.getChannelData(0);
