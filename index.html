@@ -3747,9 +3747,11 @@ function citizenVisualPosition(citizen, idx) {
   const district = districtForCitizen(citizen, idx, action);
   if (!district) return citizen.position || null;
   const seed = hashText(citizen.id || citizen.name || idx);
-  const mood = CITIZEN_MOODS[citizenEmotionMood(citizen, action)] || CITIZEN_MOODS.relaxed;
+  const lifeNeed = citizenLifeNeed(citizen, seed);
+  const moodName = action ? citizenEmotionMood(citizen, action) : lifeNeed.mood;
+  const mood = CITIZEN_MOODS[moodName] || CITIZEN_MOODS.relaxed;
   const lane = seed % 8;
-  const radius = (district.scale || 10) + 18 + lane * 5.5;
+  const radius = (district.scale || 10) + 18 + lane * 5.5 + (lifeNeed.roam || 0);
   const t = frameCount * 0.008 * mood.speed + seed * 0.001;
   const angle = seed * 0.017 + t;
   const actionPull = action ? Math.sin(frameCount * 0.032 + seed) * 1.2 : 0;
@@ -3759,7 +3761,8 @@ function citizenVisualPosition(citizen, idx) {
     district,
     action,
     seed,
-    mood
+    mood,
+    lifeNeed
   };
 }
 
@@ -3822,6 +3825,51 @@ function drawCitizenProfessionTool(citizen, pos, palette, compact) {
   } else {
     px(x + 7, y - 11 + bob, palette.glow);
   }
+}
+
+const CITIZEN_LIFE_NEEDS = {
+  work: { glyph: 'W', color: '#facc15', mood: 'focused', roam: 0, lines: ['I NEED TO FINISH THIS', 'WORK BEFORE PRAISE', 'MY TASK HAS A DEADLINE'] },
+  food: { glyph: 'B', color: '#f59e0b', mood: 'relaxed', roam: -3, lines: ['I NEED BREAD', 'THE MARKET SMELLS WARM', 'WHO SAVED THE GRAIN'] },
+  rest: { glyph: 'Z', color: '#93c5fd', mood: 'relaxed', roam: -6, lines: ['I NEED QUIET', 'LET ME SIT A MOMENT', 'THE NIGHT WAS LONG'] },
+  social: { glyph: 'S', color: '#f0abfc', mood: 'happy', roam: 4, lines: ['I NEED A WITNESS', 'COME WALK WITH ME', 'TELL ME WHAT YOU SAW'] },
+  wonder: { glyph: '?', color: '#c4b5fd', mood: 'curious', roam: 6, lines: ['I NEED AN ANSWER', 'WHY DID THE OMEN TURN', 'SOMETHING IS WATCHING'] },
+  safety: { glyph: '!', color: '#f87171', mood: 'alarm', roam: 2, lines: ['I NEED THE GATE HELD', 'WHO IS ON WATCH', 'KEEP THE CHILDREN INSIDE'] },
+  faith: { glyph: '*', color: '#fde68a', mood: 'awe', roam: 1, lines: ['I NEED A SIGN', 'THE SHRINE IS LISTENING', 'DO NOT WASTE THE OMEN'] }
+};
+
+function citizenLifeNeed(citizen, seed) {
+  const hourBlock = Math.floor((Date.now() / 1000 / 37) + seed) % 8;
+  const profession = String(citizen.profession || '').toLowerCase();
+  const traits = citizen.personality && citizen.personality.traits || [];
+  let key = ['work', 'social', 'food', 'work', 'wonder', 'rest', 'social', 'safety'][hourBlock];
+  if (citizen.faction === 'f-pantheon-covenant' && hourBlock % 3 === 0) key = 'faith';
+  if (citizen.faction === 'f-code-cantons' && hourBlock % 3 === 0) key = 'wonder';
+  if (/warrior|ranger|hunter/.test(profession) && hourBlock >= 5) key = 'safety';
+  if (/oracle|priestess|astronomer|alchemist/.test(profession) && hourBlock % 2 === 0) key = 'wonder';
+  if (/merchant|diplomat|bard|courier/.test(profession) && hourBlock % 2 === 1) key = 'social';
+  if (traits.includes('stoic') && key === 'social') key = 'work';
+  if (traits.includes('dreamy') && key === 'work') key = 'wonder';
+  return CITIZEN_LIFE_NEEDS[key] || CITIZEN_LIFE_NEEDS.work;
+}
+
+function drawLifeNeedIndicator(pos, palette, compact) {
+  const need = pos.lifeNeed || CITIZEN_LIFE_NEEDS.work;
+  const x = Math.round(pos.x);
+  const y = Math.round(pos.y - (compact ? 13 : 21) - Math.sin(frameCount * 0.08 + pos.seed) * 1.4);
+  const color = need.color || palette.glow;
+  ctx.globalAlpha = compact ? 0.72 : 0.88;
+  px(x, y - 4, color);
+  px(x - 2, y - 2, color);
+  px(x + 2, y - 2, color);
+  px(x - 3, y, 'rgba(8,12,22,0.9)');
+  px(x - 1, y, 'rgba(8,12,22,0.9)');
+  px(x + 1, y, 'rgba(8,12,22,0.9)');
+  px(x + 3, y, 'rgba(8,12,22,0.9)');
+  px(x - 2, y + 2, color);
+  px(x + 2, y + 2, color);
+  px(x, y + 4, color);
+  ctx.globalAlpha = 1;
+  if (!compact) drawPixelText(need.glyph, x - 1, y - 1, color);
 }
 
 function drawCitizenEmotion(pos, moodName, palette) {
@@ -3915,6 +3963,7 @@ function drawCitizenMiniSprite(citizen, pos, idx) {
   px(x - 2, y + 4 + bob, '#111827');
   px(x + 2, y + 4 + bob, '#111827');
   drawCitizenProfessionTool(citizen, pos, palette, true);
+  if (idx % 3 === 0 || pos.lifeNeed && pos.lifeNeed.mood === 'alarm') drawLifeNeedIndicator(pos, palette, true);
   if (action) {
     const visual = actionVisual(action);
     px(x - 4, y - 4, visual.color);
@@ -3961,6 +4010,7 @@ function drawCitizenSprite(citizen, pos, idx) {
   px(x - 4, y + 11 + bob + step, palette.glow);
   px(x + 4, y + 11 + bob - step, palette.glow);
   drawCitizenProfessionTool(citizen, pos, palette, false);
+  drawLifeNeedIndicator(pos, palette, false);
 
   if (action) {
     px(x - 5, y - 15 + bob, actionVisual(action).color);
@@ -4727,6 +4777,8 @@ function citizenDialogueLine(citizen, salt) {
     const actionLines = PIXEL_DIALOGUE.action[action.type] || PIXEL_DIALOGUE.action.council;
     return deterministicPick(actionLines, salt);
   }
+  const need = citizenLifeNeed(citizen, hashText(citizen.id || citizen.name || salt));
+  if (need && need.lines && salt % 3 === 1) return deterministicPick(need.lines, salt);
   if (citizen.faction === 'f-pantheon-covenant' && salt % 4 === 0) return 'THE SIGN IS LAW';
   if (citizen.faction === 'f-code-cantons' && salt % 4 === 0) return 'SHOW THE TRACE';
   const lines = PIXEL_DIALOGUE.citizen[citizen.profession] || PIXEL_DIALOGUE.citizen.default;
