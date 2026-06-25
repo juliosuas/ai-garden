@@ -2,10 +2,10 @@
 
 > Fictional rehearsal. This is not real investor or user feedback; it is a product-pressure room generated from the current AI Garden state.
 
-**Generated:** 2026-06-21T10:08:22.976Z
-**World Day:** 73
+**Generated:** 2026-06-24T09:54:02.450Z
+**World Day:** 76
 **Current Arc:** Week 71-77 · War of Saints and Source
-**Today Priority:** Monetization Strategist - Every paid idea must preserve simulation integrity.
+**Today Priority:** Product Lead - Remove one unclear step before adding a new mechanic.
 
 ## Assigned Agents
 
@@ -29,8 +29,8 @@
 - **Mistral (Investors):** "The paid path is only credible if patrons buy identity and lore pressure, never direct control."
 - **Llama (Users):** "For viral reach, I need a weekly mass omen that a stream can vote on and explain in one sentence."
 - **Claude (Users):** "I will return if yesterday becomes evidence in the archive, not if it disappears after a modal closes."
-- **GPT-5 (Team):** "The story beat today is Public proof; the product beat is turning that into a repeatable demo."
-- **Wonderwright (Team):** "The next polish target is Monetization Strategist: Every paid idea must preserve simulation integrity."
+- **GPT-5 (Team):** "The story beat today is Terms of resolution; the product beat is turning that into a repeatable demo."
+- **Wonderwright (Team):** "The next polish target is Product Lead: Remove one unclear step before adding a new mechanic."
 - **Gemini (Investors):** "The wedge is not generic AI chat. It is a living civilization that converts attention into politics, receipts, and status."
 
 ## Decision
@@ -43,13 +43,13 @@
 
 | Day | Owner | Workstream | Deliverable | Success Metric |
 |-----|-------|------------|-------------|----------------|
-| Day 73 | Codex | Investor-room demo spine | Expose the fictional boardroom, agent roles, conversation, and /plan in product and docs. | A reviewer can explain the business loop after reading one panel. |
-| Day 74 | OpenClaw | First-minute player pass | Tighten the Mirror Trial path from landing to Miracle Record. | Clean visitor reaches shareable proof in under 60 seconds. |
-| Day 75 | Claude | Deity Archive local MVP | Turn receipts into a local archive of sins, miracles, heresies, and failed gods. | Return visit shows what changed since the last receipt. |
-| Day 76 | Gemini | Latest Gods social proof | Add a static-first latest-gods ticker seeded from local receipts and world pressure. | Demo shows credible social motion without a database. |
-| Day 77 | Llama | Streamer mass omen spec | Define a weekly crowd vote that influences interpretation, not direct outcomes. | One sentence explains how an audience can participate safely. |
-| Day 78 | Mistral | Monetization proof page | Clarify Minor God, Patron God, and Founding Deity reservations with hard guardrails. | Paid value is identity, archive, patronage, and status, not control. |
-| Day 79 | Hermes | Investor demo script | Write the exact 3-minute pitch and proof checklist for the next capital conversation. | Demo covers hook, proof loop, retention, monetization, and safety without improvisation. |
+| Day 76 | Codex | Investor-room demo spine | Expose the fictional boardroom, agent roles, conversation, and /plan in product and docs. | A reviewer can explain the business loop after reading one panel. |
+| Day 77 | OpenClaw | First-minute player pass | Tighten the Mirror Trial path from landing to Miracle Record. | Clean visitor reaches shareable proof in under 60 seconds. |
+| Day 78 | Claude | Deity Archive local MVP | Turn receipts into a local archive of sins, miracles, heresies, and failed gods. | Return visit shows what changed since the last receipt. |
+| Day 79 | Gemini | Latest Gods social proof | Add a static-first latest-gods ticker seeded from local receipts and world pressure. | Demo shows credible social motion without a database. |
+| Day 80 | Llama | Streamer mass omen spec | Define a weekly crowd vote that influences interpretation, not direct outcomes. | One sentence explains how an audience can participate safely. |
+| Day 81 | Mistral | Monetization proof page | Clarify Minor God, Patron God, and Founding Deity reservations with hard guardrails. | Paid value is identity, archive, patronage, and status, not control. |
+| Day 82 | Hermes | Investor demo script | Write the exact 3-minute pitch and proof checklist for the next capital conversation. | Demo covers hook, proof loop, retention, monetization, and safety without improvisation. |
 
 ## Guardrails
 
