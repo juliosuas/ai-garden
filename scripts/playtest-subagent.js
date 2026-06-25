@@ -355,6 +355,7 @@ async function main() {
   check(dailyWorkflow.includes('node --check scripts/weekly-narrative-agent.js'), 'daily cron does not validate the Weekly Narrative Agent');
   check(dailyWorkflow.includes('git pull --rebase origin main'), 'daily cron does not rebase before pushing');
   check(dailyWorkflow.includes('contents: write'), 'daily cron cannot write commits');
+  check(dailyEvolution.includes('FORTUNE_SIGNS') && dailyEvolution.includes('world.mysticFortune') && dailyEvolution.includes('applyMiracleBoon'), 'daily evolution needs a mystical luck accelerator');
 
   check(autopilotWorkflow.includes("cron: '37 5 * * *'"), 'daily autopilot PR cron is missing');
   check(autopilotWorkflow.includes('pull-requests: write'), 'autopilot workflow cannot open PRs');

@@ -138,6 +138,7 @@ const EVENT_COLORS = {
   market: '🪙', schism: '⚡', romance: '❦', treaty: '📜',
   // v124 additions
   dynasty: '👑', dynastyFall: '💔', religion: '🕯️', tech: '🛠️',
+  fortune: '✧',
   city: '🏛️', myth: '📖', disaster: '🌋', omen: '☄️'
 };
 
@@ -263,6 +264,52 @@ const OMEN_LINES = [
   'The chronicle was found open to a page it did not have.',
   'A fisherman pulled in a net full of rain.'
 ];
+const FORTUNE_SIGNS = [
+  {
+    name: 'green comet',
+    headline: 'A green comet crossed the garden and every unfinished plan felt briefly possible.',
+    boon: 'builders work faster',
+    structureBoost: 0.3,
+    techBoost: 0.12,
+    cityBoost: 0.08,
+    extraBirths: 1
+  },
+  {
+    name: 'lucky rain',
+    headline: 'Lucky rain fell upward from the wells; seeds, treaties, and rumors all took root.',
+    boon: 'growth favors settlement',
+    structureBoost: 0.15,
+    mapBoost: 0.25,
+    cityBoost: 0.2,
+    allianceBoost: 0.1,
+    disasterShift: -0.03
+  },
+  {
+    name: 'oracle wind',
+    headline: 'An oracle wind moved through the roads and pointed scouts toward unclaimed ground.',
+    boon: 'the frontier opens',
+    mapBoost: 0.35,
+    techBoost: 0.08,
+    omenBoost: 0.12
+  },
+  {
+    name: 'silver hour',
+    headline: 'For one silver hour, every tool remembered the hand that would need it next.',
+    boon: 'knowledge arrives early',
+    techBoost: 0.3,
+    structureBoost: 0.12,
+    omenBoost: 0.08
+  },
+  {
+    name: 'black candle',
+    headline: 'A black candle burned without fuel; the faithful called it mercy and the coders called it luck.',
+    boon: 'conflict softens',
+    truceBoost: 0.18,
+    allianceBoost: 0.12,
+    warShift: -0.08,
+    omenBoost: 0.1
+  }
+];
 
 // ───────────────── LOAD ─────────────────
 const world = JSON.parse(fs.readFileSync(WORLD, 'utf8'));
@@ -282,11 +329,56 @@ world.religions ||= [];
 world.technologies ||= [];
 world.cities ||= [];
 world.lore ||= [];
+world.fortuneHistory ||= [];
 
 const STEPS = Math.max(1, Math.min(12, parseInt(process.argv[2] || '1', 10)));
 
 function log(evt) {
   console.log('[day ' + world.chronicle.day + '] ' + evt.kind + ': ' + evt.headline);
+}
+
+function clampChance(value) {
+  return Math.max(0, Math.min(0.95, value));
+}
+
+function castMysticFortune(today) {
+  const sign = pick(FORTUNE_SIGNS);
+  const roll = between(1, 100);
+  const tier = roll >= 92 ? 'miracle' : (roll >= 72 ? 'blessing' : (roll <= 12 ? 'ill-star' : 'ordinary'));
+  const force = tier === 'miracle' ? 1.65 : (tier === 'blessing' ? 1.25 : (tier === 'ill-star' ? 0.65 : 1));
+  const fortune = {
+    day: world.chronicle.day,
+    timestamp: today,
+    sign: sign.name,
+    tier,
+    roll,
+    boon: sign.boon,
+    headline: sign.headline,
+    modifiers: {
+      structureBoost: Number(((sign.structureBoost || 0) * force).toFixed(3)),
+      mapBoost: Number(((sign.mapBoost || 0) * force).toFixed(3)),
+      techBoost: Number(((sign.techBoost || 0) * force).toFixed(3)),
+      cityBoost: Number(((sign.cityBoost || 0) * force).toFixed(3)),
+      omenBoost: Number(((sign.omenBoost || 0) * force).toFixed(3)),
+      truceBoost: Number(((sign.truceBoost || 0) * force).toFixed(3)),
+      allianceBoost: Number(((sign.allianceBoost || 0) * force).toFixed(3)),
+      warShift: Number(((sign.warShift || 0) * force).toFixed(3)),
+      disasterShift: Number(((sign.disasterShift || 0) * force).toFixed(3)),
+      extraBirths: tier === 'miracle' ? (sign.extraBirths || 0) + 1 : (sign.extraBirths || 0)
+    }
+  };
+  if (tier === 'ill-star') {
+    fortune.modifiers.structureBoost = 0;
+    fortune.modifiers.mapBoost = Math.min(0.08, fortune.modifiers.mapBoost);
+    fortune.modifiers.techBoost = 0;
+    fortune.modifiers.cityBoost = 0;
+    fortune.modifiers.extraBirths = 0;
+    fortune.modifiers.disasterShift = Math.max(0.04, fortune.modifiers.disasterShift || 0);
+  }
+  world.mysticFortune = fortune;
+  world.fortuneHistory.push(fortune);
+  if (world.fortuneHistory.length > 30) world.fortuneHistory = world.fortuneHistory.slice(-30);
+  return fortune;
 }
 
 function nextCitizenId() {
@@ -635,6 +727,49 @@ function disaster() {
   };
 }
 
+function applyMiracleBoon(fortune) {
+  if (!fortune || fortune.tier !== 'miracle') return null;
+  if (fortune.sign === 'silver hour' && world.technologies.length < TECH_TREE.length) {
+    const t = unlockNextTech();
+    return t ? {
+      kind: 'tech',
+      headline: 'Miracle acceleration: ' + t.name + ' arrived under the silver hour · ' + t.effect,
+      refs: t.discoveredById ? [t.discoveredById] : []
+    } : null;
+  }
+  if (fortune.sign === 'oracle wind') {
+    const region = expandMap();
+    return {
+      kind: 'discovery',
+      headline: 'Miracle acceleration: scouts followed the oracle wind to ' + region.name + ' — ' + region.biome +
+        (region.feature ? '. ' + region.feature : ''),
+      refs: [region.id]
+    };
+  }
+  if (fortune.sign === 'lucky rain') {
+    const c = foundCity();
+    return {
+      kind: 'city',
+      headline: 'Miracle acceleration: ' + c.name + ' founded before sunset · ' + c.specialty + ' · pop ' + c.population,
+      refs: [c.id]
+    };
+  }
+  if (fortune.sign === 'black candle') {
+    const w = endWar();
+    if (w) return {
+      kind: 'truce',
+      headline: 'Miracle acceleration: the black candle forced a ' + w.outcome + ' between ' + factionName(w.sides[0]) + ' and ' + factionName(w.sides[1]),
+      refs: w.sides
+    };
+  }
+  const s = buildStructure();
+  return {
+    kind: 'structure',
+    headline: 'Miracle acceleration: ' + s.name + ' rose in one day' + (s.purpose ? ' — ' + s.purpose : ''),
+    refs: s.builder ? [s.builder] : []
+  };
+}
+
 function factionName(id) {
   const f = world.factions.find(x => x.id === id);
   return f ? f.name : id;
@@ -645,27 +780,34 @@ function step() {
   world.chronicle.day++;
   const today = new Date().toISOString();
   const events = [];
+  const fortune = castMysticFortune(today);
+  const luck = fortune.modifiers || {};
+  events.push({
+    kind: 'fortune',
+    headline: fortune.headline + ' Fortune roll ' + fortune.roll + '/100: ' + fortune.tier + ' — ' + fortune.boon + '.',
+    refs: []
+  });
 
   const divineWarBeat = maintainDivineWar(world, { timestamp: today });
   if (divineWarBeat) events.push(divineWarBeat);
 
-  // 1. Births (unchanged rhythm)
-  const births = between(2, 5);
+  // 1. Births
+  const births = between(2, 5) + (luck.extraBirths || 0);
   for (let i = 0; i < births; i++) {
     const a = bornAgent();
     events.push({ kind: 'birth', headline: a.name + ' was born — ' + a.profession + ' · ' + a.alignment, refs: [a.id] });
   }
 
-  // 2. Wars / alliances (unchanged)
-  if (chance(0.22)) {
+  // 2. Wars / alliances
+  if (chance(clampChance(0.22 + (luck.warShift || 0)))) {
     const w = declareWar();
     if (w) events.push({ kind: 'war', headline: 'War declared: ' + factionName(w.sides[0]) + ' vs. ' + factionName(w.sides[1]) + ' — over ' + w.reason, refs: w.sides });
   }
-  if (chance(0.18)) {
+  if (chance(clampChance(0.18 + (luck.truceBoost || 0)))) {
     const w = endWar();
     if (w) events.push({ kind: 'truce', headline: 'The ' + factionName(w.sides[0]) + '–' + factionName(w.sides[1]) + ' war ended in ' + w.outcome + ' after ' + (world.chronicle.day - w.declaredDay) + ' days', refs: w.sides });
   }
-  if (chance(0.12)) {
+  if (chance(clampChance(0.12 + (luck.allianceBoost || 0)))) {
     const al = formAlliance();
     if (al) events.push({ kind: 'alliance', headline: factionName(al.sides[0]) + ' ↔ ' + factionName(al.sides[1]) + ' · ' + al.pact, refs: al.sides });
   }
@@ -678,14 +820,14 @@ function step() {
     }
   }
 
-  // 4. Structures — always one, 35% second (unchanged)
+  // 4. Structures — always one, with fortune-driven bursts
   const s1 = buildStructure();
   events.push({
     kind: 'structure',
     headline: s1.name + ' built near the ' + (s1.region || 'village heart') + (s1.purpose ? ' — ' + s1.purpose : ''),
     refs: s1.builder ? [s1.builder] : []
   });
-  if (chance(0.35)) {
+  if (chance(clampChance(0.35 + (luck.structureBoost || 0)))) {
     const s2 = buildStructure();
     events.push({
       kind: 'structure',
@@ -702,7 +844,7 @@ function step() {
       (region1.feature ? '. ' + region1.feature : ''),
     refs: [region1.id]
   });
-  if (chance(0.40)) {
+  if (chance(clampChance(0.40 + (luck.mapBoost || 0)))) {
     const region2 = expandMap();
     events.push({
       kind: 'discovery',
@@ -737,7 +879,7 @@ function step() {
   }
 
   // 8. Technology — one unlocked every ~2 days until tree exhausted
-  if (world.technologies.length < TECH_TREE.length && chance(0.55)) {
+  if (world.technologies.length < TECH_TREE.length && chance(clampChance(0.55 + (luck.techBoost || 0)))) {
     const t = unlockNextTech();
     if (t) events.push({
       kind: 'tech',
@@ -747,7 +889,7 @@ function step() {
   }
 
   // 9. Cities — first one by day 3, then occasional
-  if (world.cities.length < 2 || chance(0.25)) {
+  if (world.cities.length < 2 || chance(clampChance(0.25 + (luck.cityBoost || 0)))) {
     const c = foundCity();
     events.push({
       kind: 'city',
@@ -762,17 +904,20 @@ function step() {
   const loreEntry = composeLore();
   if (loreEntry) events.push({ kind: 'myth', headline: loreEntry.body, refs: [loreEntry.subject] });
 
-  if (chance(0.25)) {
+  if (chance(clampChance(0.25 + (luck.omenBoost || 0)))) {
     const o = omen();
     world.lore.push(o);
     events.push({ kind: 'omen', headline: o.body, refs: [] });
   }
 
-  if (chance(0.08)) {
+  if (chance(clampChance(0.08 + (luck.disasterShift || 0)))) {
     const dis = disaster();
     const tail = dis.victims.length ? '. ' + dis.victims.join(', ') + ' did not survive.' : '. Damage to ' + dis.region + '.';
     events.push({ kind: 'disaster', headline: cap(dis.kind) + ' in ' + dis.region + tail, refs: [], victims: dis.victims.length });
   }
+
+  const miracleBoon = applyMiracleBoon(fortune);
+  if (miracleBoon) events.push(miracleBoon);
 
   // 11. Incident (unchanged)
   const inc = randomIncident();
