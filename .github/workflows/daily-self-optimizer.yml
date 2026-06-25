@@ -56,6 +56,7 @@ jobs:
           node --check scripts/weekly-narrative-agent.js
           node --check scripts/roadmap-pulse.js
           jq empty experiments/world-state.json
+          node scripts/validate-world-state.js
           node scripts/playtest-subagent.js
 
       - name: Commit and push self-optimizer state

@@ -87,6 +87,7 @@ jobs:
           node --check scripts/playtest-subagent.js
           node --check scripts/autopilot-pr-summary.js
           jq empty experiments/world-state.json
+          node scripts/validate-world-state.js
           node scripts/playtest-subagent.js
 
       - name: Prepare PR summary
