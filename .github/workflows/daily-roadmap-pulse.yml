@@ -45,6 +45,7 @@ jobs:
           node --check scripts/self-optimizer.js
           node --check scripts/weekly-narrative-agent.js
           jq empty experiments/world-state.json
+          node scripts/validate-world-state.js
           node scripts/playtest-subagent.js
 
       - name: Commit roadmap pulse
