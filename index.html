@@ -1399,28 +1399,11 @@ function restoreGardenMusicPreference() {
     refreshMusicButton(false);
     return;
   }
-  const detachRestoreHandlers = function() {
-    window.removeEventListener('pointerdown', restoreOnGesture);
-    window.removeEventListener('keydown', restoreOnGesture);
-  };
-  const restoreOnGesture = function(event) {
-    const target = event && event.target && event.target.closest ? event.target.closest('#music-btn, #sound-action-btn') : null;
-    if (target) return;
-    if (localPrefs.musicMuted !== false || !GardenMusic.isMuted()) {
-      detachRestoreHandlers();
-      return;
-    }
-    const restored = GardenMusic.toggleMute();
-    refreshMusicButton(restored);
-    detachRestoreHandlers();
-  };
-  window.addEventListener('pointerdown', restoreOnGesture);
-  window.addEventListener('keydown', restoreOnGesture);
   refreshMusicButton(false);
   const btn = document.getElementById('music-btn');
   const soundBtn = document.getElementById('sound-action-btn');
-  if (btn) btn.title = 'Tap once to restore your saved ambient music';
-  if (soundBtn) soundBtn.title = 'Tap once to restore your saved ambient music';
+  if (btn) btn.title = 'Audio was on last visit. Press to restore ambient music.';
+  if (soundBtn) soundBtn.title = 'Audio was on last visit. Press to restore ambient music.';
 }
 
 function toggleGardenMusic() {
