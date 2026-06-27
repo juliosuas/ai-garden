@@ -3635,6 +3635,8 @@ const ACTION_VISUALS = {
   defense: { color: '#ef4444', accent: '#fca5a5', label: 'GUARD', mood: 'alarm' },
   research: { color: '#60a5fa', accent: '#a78bfa', label: 'DEBUG', mood: 'focused' },
   art: { color: '#f472b6', accent: '#f0abfc', label: 'ART', mood: 'happy' },
+  civic: { color: '#fde68a', accent: '#38bdf8', label: 'CIVIC', mood: 'focused' },
+  roadwork: { color: '#c8a86a', accent: '#facc15', label: 'ROAD', mood: 'focused' },
   ritualWar: { color: '#facc15', accent: '#ef4444', label: 'OMEN', mood: 'awe' },
   codeWar: { color: '#38bdf8', accent: '#60a5fa', label: 'TRACE', mood: 'focused' }
 };
@@ -4015,12 +4017,19 @@ function actionAnchor(action, idx) {
   const districts = view && Array.isArray(view.districts) ? view.districts : [];
   if (!districts.length) return null;
   const target = String(action.target || '').toLowerCase();
+  const districtId = String(action.districtId || '').toLowerCase();
+  const districtName = String(action.district || '').toLowerCase();
   const direct = districts.find(function(d) {
-    return target && (
+    const id = String(d.id || '').toLowerCase();
+    const name = String(d.name || '').toLowerCase();
+    const region = String(d.region || '').toLowerCase();
+    return (districtId && id === districtId) ||
+      (districtName && (name === districtName || region === districtName)) ||
+      (target && (
       String(d.name || '').toLowerCase() === target ||
       String(d.region || '').toLowerCase() === target ||
       target.includes(String(d.name || '').toLowerCase())
-    );
+    ));
   });
   if (direct) return direct;
   if (action.actor === 'f-pantheon-covenant' || action.faction === 'f-pantheon-covenant') return districts[1 % districts.length];
@@ -4064,6 +4073,8 @@ function drawAgentActionBeacons() {
     }
     return !featuredNames.size && !String(action.actor || '').startsWith('citizen-');
   }).slice(-6);
+  const latestCivicAction = getCivilizationView() && getCivilizationView().latestAction;
+  if (latestCivicAction && latestCivicAction.headline) actions.push(latestCivicAction);
   for (let i = 0; i < actions.length; i++) {
     const action = actions[i];
     if (String(action.actor || '').startsWith('citizen-') && i < actions.length - 5) continue;
