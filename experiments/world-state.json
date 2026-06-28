@@ -32361,6 +32361,27 @@
       ],
       "timestamp": "2026-06-28T07:55:50.662Z",
       "outcome": "Camera guidance, ticker beats, and canvas highlight now favor the most readable live scene."
+    },
+    {
+      "id": "self-optimizer-day-80",
+      "type": "self-optimizer",
+      "day": 80,
+      "timestamp": "2026-06-28T09:38:47.094Z",
+      "description": "Self Optimizer chose Mobile UX: keep the mobile HUD quiet, dismissible, and action-first."
+    },
+    {
+      "id": "gstack-council-day-80",
+      "type": "gstack-council",
+      "day": 80,
+      "timestamp": "2026-06-28T09:38:47.183Z",
+      "description": "GStack Professional Council picked Audio Director: If audio competes with reading, lower density first."
+    },
+    {
+      "id": "stakeholder-assembly-day-80",
+      "type": "stakeholder-assembly",
+      "day": 80,
+      "timestamp": "2026-06-28T09:38:47.256Z",
+      "description": "Investor/User/Team Room produced /plan: Audio Director - If audio competes with reading, lower density first.."
     }
   ],
   "chronicle": {
@@ -41182,27 +41203,27 @@
     }
   },
   "selfOptimizer": {
-    "id": "self-optimizer-day-79",
+    "id": "self-optimizer-day-80",
     "name": "Self Optimizer",
     "model": "ai-garden-self-optimizer-v1",
     "charter": "Audit the whole spectator game every day and choose one small, safe improvement for the next agent.",
-    "day": 79,
-    "generatedAt": "2026-06-27T09:08:26.175Z",
-    "sourceCommit": "87250c3e1068c117f8000aa87139ec0608cad762",
+    "day": 80,
+    "generatedAt": "2026-06-28T09:38:47.094Z",
+    "sourceCommit": "78567dc96510dc9b298adff6ec03138e0b74d092",
     "overallScore": 100,
     "focus": {
-      "key": "flow",
-      "label": "Game Flow",
+      "key": "mobileUX",
+      "label": "Mobile UX",
       "score": 100,
-      "nextAction": "slow the spectacle into one readable scene at a time",
+      "nextAction": "keep the mobile HUD quiet, dismissible, and action-first",
       "why": "Lowest or rotating priority based on UI, mobile, audio, performance, automation, and living-world checks.",
       "evidence": [
-        "pixel-speed ticker",
-        "hover pause",
-        "event details panel",
-        "weekly cue",
-        "week meter",
-        "story spotlight"
+        "drawer toggle",
+        "programmatic close",
+        "post-action close",
+        "body drawer state",
+        "explicit close button",
+        "story primer tucked away"
       ]
     },
     "scores": {
@@ -41372,8 +41393,8 @@
       "run playtest-subagent before committing",
       "prefer small patches that future agents can understand"
     ],
-    "dailyDirective": "Next agent: slow the spectacle into one readable scene at a time. Keep the world alive, but make the player understand what to watch.",
-    "signature": "3bac3c41",
+    "dailyDirective": "Next agent: keep the mobile HUD quiet, dismissible, and action-first. Keep the world alive, but make the player understand what to watch.",
+    "signature": "7cbb98b",
     "history": [
       {
         "day": 68,
@@ -41458,6 +41479,13 @@
         "overallScore": 100,
         "focus": "Game Flow",
         "nextAction": "slow the spectacle into one readable scene at a time"
+      },
+      {
+        "day": 80,
+        "generatedAt": "2026-06-28T09:38:47.094Z",
+        "overallScore": 100,
+        "focus": "Mobile UX",
+        "nextAction": "keep the mobile HUD quiet, dismissible, and action-first"
       }
     ]
   },
@@ -41794,20 +41822,20 @@
     ]
   },
   "gstackCouncil": {
-    "id": "gstack-council-day-79",
+    "id": "gstack-council-day-80",
     "name": "GStack Professional Council",
     "model": "ai-garden-gstack-council-v1",
-    "day": 79,
-    "generatedAt": "2026-06-27T09:08:26.264Z",
+    "day": 80,
+    "generatedAt": "2026-06-28T09:38:47.183Z",
     "charter": "Use professional specialists to make every small product flaw visible, prioritized, and testable.",
     "perfectionBar": "No vague polish: every discipline must name evidence, a gap, and one tiny next fix.",
     "overallScore": 100,
     "priority": {
-      "discipline": "ux",
-      "title": "UX Director",
+      "discipline": "audio",
+      "title": "Audio Director",
       "score": 100,
-      "nextFix": "Prefer one strong cue over three competing panels.",
-      "tinyPatchRule": "Prefer one strong cue over three competing panels."
+      "nextFix": "If audio competes with reading, lower density first.",
+      "tinyPatchRule": "If audio competes with reading, lower density first."
     },
     "specialists": [
       {
@@ -42089,11 +42117,11 @@
     }
   },
   "stakeholderAssembly": {
-    "id": "stakeholder-assembly-day-79",
+    "id": "stakeholder-assembly-day-80",
     "name": "Investor/User/Team Room",
     "model": "ai-garden-stakeholder-assembly-v1",
-    "day": 79,
-    "generatedAt": "2026-06-27T09:08:26.333Z",
+    "day": 80,
+    "generatedAt": "2026-06-28T09:38:47.256Z",
     "fictional": true,
     "charter": "Run a fictional investor, user, and team meeting, then convert the pressure into /plan.",
     "participants": [
@@ -42213,12 +42241,12 @@
       {
         "speaker": "GPT-5",
         "side": "Team",
-        "line": "The story beat today is Choose sides; the product beat is turning that into a repeatable demo."
+        "line": "The story beat today is Public proof; the product beat is turning that into a repeatable demo."
       },
       {
         "speaker": "Wonderwright",
         "side": "Team",
-        "line": "The next polish target is UX Director: Prefer one strong cue over three competing panels."
+        "line": "The next polish target is Audio Director: If audio competes with reading, lower density first."
       },
       {
         "speaker": "Gemini",
@@ -42235,54 +42263,54 @@
       "teamAnswer": "Ship static-first proof, archive memory, social proof, and a reservation path before backend or checkout.",
       "currentArc": "Week 78-84 · War of Saints and Source",
       "priority": {
-        "owner": "UX Director",
-        "fix": "Prefer one strong cue over three competing panels."
+        "owner": "Audio Director",
+        "fix": "If audio competes with reading, lower density first."
       },
       "sevenDayPlan": [
         {
-          "day": 79,
+          "day": 80,
           "owner": "Codex",
           "title": "Investor-room demo spine",
           "deliverable": "Expose the fictional boardroom, agent roles, conversation, and /plan in product and docs.",
           "successMetric": "A reviewer can explain the business loop after reading one panel."
         },
         {
-          "day": 80,
+          "day": 81,
           "owner": "OpenClaw",
           "title": "First-minute player pass",
           "deliverable": "Tighten the Mirror Trial path from landing to Miracle Record.",
           "successMetric": "Clean visitor reaches shareable proof in under 60 seconds."
         },
         {
-          "day": 81,
+          "day": 82,
           "owner": "Claude",
           "title": "Deity Archive local MVP",
           "deliverable": "Turn receipts into a local archive of sins, miracles, heresies, and failed gods.",
           "successMetric": "Return visit shows what changed since the last receipt."
         },
         {
-          "day": 82,
+          "day": 83,
           "owner": "Gemini",
           "title": "Latest Gods social proof",
           "deliverable": "Add a static-first latest-gods ticker seeded from local receipts and world pressure.",
           "successMetric": "Demo shows credible social motion without a database."
         },
         {
-          "day": 83,
+          "day": 84,
           "owner": "Llama",
           "title": "Streamer mass omen spec",
           "deliverable": "Define a weekly crowd vote that influences interpretation, not direct outcomes.",
           "successMetric": "One sentence explains how an audience can participate safely."
         },
         {
-          "day": 84,
+          "day": 85,
           "owner": "Mistral",
           "title": "Monetization proof page",
           "deliverable": "Clarify Minor God, Patron God, and Founding Deity reservations with hard guardrails.",
           "successMetric": "Paid value is identity, archive, patronage, and status, not control."
         },
         {
-          "day": 85,
+          "day": 86,
           "owner": "Hermes",
           "title": "Investor demo script",
           "deliverable": "Write the exact 3-minute pitch and proof checklist for the next capital conversation.",
