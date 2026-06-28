@@ -4757,6 +4757,56 @@ function citizenVoiceColor(citizen) {
   return '#f8fafc';
 }
 
+function civicPulseAnchor(event, fallbackIdx) {
+  const view = getCivilizationView();
+  const districts = view && Array.isArray(view.districts) ? view.districts : [];
+  if (!districts.length) return null;
+  const regionId = String(event.region || event.regionId || '').toLowerCase();
+  const regionName = String(event.regionName || event.region || '').toLowerCase();
+  const direct = districts.find(function(district) {
+    const dRegionId = String(district.regionId || '').toLowerCase();
+    const dRegionName = String(district.region || district.name || '').toLowerCase();
+    return (regionId && dRegionId === regionId) ||
+      (regionName && (dRegionName === regionName || dRegionName.includes(regionName) || regionName.includes(dRegionName)));
+  });
+  if (direct) return direct;
+  const seed = hashText(event.id || event.headline || event.visibleChange || fallbackIdx);
+  return districts[seed % districts.length];
+}
+
+function civicPulseText(event) {
+  const form = String(event.form || '').trim();
+  if (form) return compactTickerText('PUBLIC WORK: ' + form, 46);
+  const change = String(event.visibleChange || event.mood || event.headline || '').trim();
+  if (change) return compactTickerText(change, 52);
+  const consequence = String(event.consequence || event.whyItMatters || '').trim();
+  return consequence ? compactTickerText(consequence, 52) : 'PUBLIC WORK CONTINUES';
+}
+
+function civicPulseDialogueSources() {
+  const events = []
+    .concat((world.landscapeEvents || []).slice(-2))
+    .concat((world.convivenciaEvents || []).slice(-2));
+  const sources = [];
+  for (let i = 0; i < events.length; i++) {
+    const event = events[i];
+    const anchor = civicPulseAnchor(event, i);
+    if (!anchor) continue;
+    const x = anchor.x + ((hashText(event.id || i) % 17) - 8);
+    const y = anchor.y - (anchor.scale || 12) - 12 - (i % 2) * 7;
+    if (!pointVisible(x, y, 32)) continue;
+    sources.push({
+      id: 'civic-' + (event.id || i),
+      x: x,
+      y: y,
+      color: event.form ? '#facc15' : (anchor.color || '#93c5fd'),
+      text: civicPulseText(event)
+    });
+    if (sources.length >= 2) break;
+  }
+  return sources;
+}
+
 function crabDialogueLine(crab, salt) {
   const action = latestCrabAction(crab);
   if (action && salt % 5 === 0) return action.type + ' DONE';
@@ -4832,6 +4882,8 @@ function ambientDialogueSources() {
       text: crabDialogueLine(crab, Math.floor(frameCount / 120 + pos.x + pos.y))
     });
   }
+
+  sources.push.apply(sources, civicPulseDialogueSources());
 
   const citizenCandidates = [];
   const citizens = (world.citizens || []).filter(function(c) { return c.alive; });
