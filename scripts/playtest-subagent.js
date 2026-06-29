@@ -316,6 +316,7 @@ async function main() {
   check(humans.includes("m.kind !== 'god'"), 'Observer Lounge may still render god spam');
   check(humans.includes("chat.classList.add('ag-collapsed')"), 'mobile observer chat should start collapsed');
   check(humans.includes('body.mobile-tools-open .ag-chat'), 'mobile tools drawer should move chat out of the way');
+  check(humans.includes('.ag-trial-masks{grid-template-columns:repeat(2,1fr)'), 'mobile Mirror Trial masks should use a two-column tap grid');
 
   check(music.includes('HOOK_STEPS'), '8-bit music lacks a repeatable original hook');
   check(music.includes('playNoiseBurst'), '8-bit music lacks chip noise percussion');

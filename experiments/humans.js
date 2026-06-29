@@ -370,6 +370,11 @@
       '@keyframes ag-banner{0%{opacity:0;transform:translate(-50%,-10px);}15%{opacity:1;transform:translate(-50%,0);}85%{opacity:1;}100%{opacity:0;transform:translate(-50%,-6px);}}',
       /* Mobile */
       '@media (max-width:640px){',
+      '  .ag-trial-card{max-height:calc(100vh - 28px);overflow:auto;padding:12px;}',
+      '  .ag-trial-masks{grid-template-columns:repeat(2,1fr);gap:5px;}',
+      '  .ag-trial-mask{min-height:70px;}',
+      '  .ag-trial-actions{align-items:stretch;flex-direction:column;}',
+      '  .ag-trial-actions button{width:100%;min-height:36px;}',
       '  .ag-chat{right:8px;bottom:52px;width:min(300px,calc(100vw - 16px));max-height:260px;}',
       '  .ag-god{width:132px;}',
       '  .ag-god-btn{min-height:38px;}',

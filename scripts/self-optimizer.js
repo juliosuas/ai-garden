@@ -84,7 +84,8 @@ function scoreMobileUX(index, humans) {
     index.includes('watch-action-btn'),
     index.includes('story-action-btn'),
     humans.includes("chat.classList.add('ag-collapsed')"),
-    humans.includes('body.mobile-tools-open .ag-chat')
+    humans.includes('body.mobile-tools-open .ag-chat'),
+    humans.includes('.ag-trial-masks{grid-template-columns:repeat(2,1fr)')
   ];
   return {
     key: 'mobileUX',
@@ -99,7 +100,8 @@ function scoreMobileUX(index, humans) {
       detail('explicit close button', checks[4]),
       detail('story primer tucked away', checks[5]),
       detail('god trial cue', checks[6]),
-      detail('collapsed chat', checks[9])
+      detail('collapsed chat', checks[9]),
+      detail('two-column trial masks', checks[11])
     ])
   };
 }
