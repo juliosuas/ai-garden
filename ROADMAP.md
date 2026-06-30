@@ -183,7 +183,7 @@ Schedule: `17 7 * * *` UTC.
 | Daily QA | OK | tests protect the loop |
 | Professional Council | OK | each product area has a named specialist |
 | Stakeholder Plan | OK | investor, user, and team pressure becomes /plan |
-| Roadmap Cron | OK | daily roadmap pulse is scheduled |
+| Roadmap Cron | OK | daily roadmap pulse is scheduled and rehearses upstream rooms |
 <!-- roadmap-pulse:end -->
 
 ## Operator Rule

@@ -82,7 +82,11 @@ function buildPulse() {
     check('Daily QA', playtest.includes('BACKEND_SYNC_STORE') && selfOptimizer.includes('seasonal ambient'), 'tests protect the loop'),
     check('Professional Council', council.model === 'ai-garden-gstack-council-v1' && Array.isArray(council.specialists) && council.specialists.length >= 10 && gstackCouncilScript.includes('Trust And Safety Lead'), 'each product area has a named specialist'),
     check('Stakeholder Plan', assembly.model === 'ai-garden-stakeholder-assembly-v1' && plan.includes('/plan - Investor Room') && stakeholderAssemblyScript.includes('Fictional rehearsal'), 'investor, user, and team pressure becomes /plan'),
-    check('Roadmap Cron', workflow.includes("cron: '17 7 * * *'") && workflow.includes('node scripts/roadmap-pulse.js'), 'daily roadmap pulse is scheduled')
+    check('Roadmap Cron', workflow.includes("cron: '17 7 * * *'") &&
+      workflow.includes('node scripts/gstack-council.js') &&
+      workflow.includes('node scripts/stakeholder-assembly.js') &&
+      workflow.includes('git checkout -- experiments/world-state.json PLAN.md') &&
+      workflow.includes('node scripts/roadmap-pulse.js'), 'daily roadmap pulse is scheduled and rehearses upstream rooms')
   ];
   const passing = contracts.filter(item => item.ok).length;
   const next = optimizer.focus && optimizer.focus.nextAction

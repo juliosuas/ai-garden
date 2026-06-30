@@ -35,12 +35,20 @@ jobs:
         with:
           node-version: '24'
 
+      - name: Rehearse council and stakeholder inputs
+        run: |
+          node scripts/gstack-council.js
+          node scripts/stakeholder-assembly.js
+          git checkout -- experiments/world-state.json PLAN.md
+
       - name: Refresh roadmap pulse
         run: node scripts/roadmap-pulse.js
 
       - name: Validate roadmap pulse
         run: |
           node --check scripts/roadmap-pulse.js
+          node --check scripts/gstack-council.js
+          node --check scripts/stakeholder-assembly.js
           node --check scripts/playtest-subagent.js
           node --check scripts/self-optimizer.js
           node --check scripts/weekly-narrative-agent.js

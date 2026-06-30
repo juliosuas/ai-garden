@@ -348,6 +348,9 @@ async function main() {
   check(roadmapPulse.includes('BACKEND_SYNC_STORE'), 'roadmap pulse does not audit backend sync');
   check(roadmapPulse.includes('SEASON_PROFILES'), 'roadmap pulse does not audit seasonal audio');
   check(roadmapWorkflow.includes("cron: '17 7 * * *'"), 'daily roadmap pulse cron is missing');
+  check(roadmapWorkflow.includes('node scripts/gstack-council.js'), 'daily roadmap pulse workflow does not rehearse the GStack Council');
+  check(roadmapWorkflow.includes('node scripts/stakeholder-assembly.js'), 'daily roadmap pulse workflow does not rehearse the Stakeholder Assembly');
+  check(roadmapWorkflow.includes('git checkout -- experiments/world-state.json PLAN.md'), 'daily roadmap pulse workflow should restore generated rehearsal files before committing ROADMAP only');
   check(roadmapWorkflow.includes('node scripts/roadmap-pulse.js'), 'daily roadmap pulse workflow does not run the pulse script');
   check(roadmapWorkflow.includes('git add ROADMAP.md'), 'daily roadmap pulse should only commit ROADMAP.md');
 
