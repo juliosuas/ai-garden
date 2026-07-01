@@ -6141,8 +6141,14 @@ function setZoom(newScale) {
   clampCamera();
 }
 
-document.getElementById('zoom-in').addEventListener('click', function() { setZoom(SCALE + 1); });
-document.getElementById('zoom-out').addEventListener('click', function() { setZoom(SCALE - 1); });
+document.getElementById('zoom-in').addEventListener('click', function() {
+  setZoom(SCALE + 1);
+  closeMobileToolsAfterAction();
+});
+document.getElementById('zoom-out').addEventListener('click', function() {
+  setZoom(SCALE - 1);
+  closeMobileToolsAfterAction();
+});
 document.getElementById('agent-focus-btn').addEventListener('click', function(e) {
   e.stopPropagation();
   focusNextFeaturedAgent();

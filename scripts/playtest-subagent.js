@@ -193,6 +193,7 @@ async function main() {
   check(index.includes('id="mobile-menu-toggle"'), 'mobile tools menu button is missing');
   check(index.includes('setMobileToolsOpen'), 'mobile tools drawer cannot be closed programmatically');
   check(index.includes('closeMobileToolsAfterAction'), 'mobile tools drawer should close after single-action controls');
+  check(index.includes('setZoom(SCALE + 1);\n  closeMobileToolsAfterAction();') && index.includes('setZoom(SCALE - 1);\n  closeMobileToolsAfterAction();'), 'mobile zoom buttons should close the tools drawer after one tap');
   check(index.includes('mobile-tools-open'), 'mobile UI lacks a body state for keeping panels out of the way');
   check(index.includes('id="mobile-dock-close"'), 'mobile tools drawer lacks an explicit close button');
   check(index.includes('body.mobile-tools-open #nav-help'), 'mobile tools drawer should hide the story primer while open');

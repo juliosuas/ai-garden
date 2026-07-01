@@ -80,6 +80,7 @@ function scoreMobileUX(index, humans) {
     index.includes('mobile-tools-open'),
     index.includes('id="mobile-dock-close"'),
     index.includes('body.mobile-tools-open #nav-help'),
+    index.includes('setZoom(SCALE + 1);\n  closeMobileToolsAfterAction();') && index.includes('setZoom(SCALE - 1);\n  closeMobileToolsAfterAction();'),
     index.includes('THE MIRROR TRIAL'),
     index.includes('watch-action-btn'),
     index.includes('story-action-btn'),
@@ -99,9 +100,10 @@ function scoreMobileUX(index, humans) {
       detail('body drawer state', checks[3]),
       detail('explicit close button', checks[4]),
       detail('story primer tucked away', checks[5]),
-      detail('god trial cue', checks[6]),
-      detail('collapsed chat', checks[9]),
-      detail('two-column trial masks', checks[11])
+      detail('zoom closes drawer', checks[6]),
+      detail('god trial cue', checks[7]),
+      detail('collapsed chat', checks[10]),
+      detail('two-column trial masks', checks[12])
     ])
   };
 }
