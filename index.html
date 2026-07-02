@@ -1365,6 +1365,14 @@ function closeMobileToolsAfterAction() {
   if (isMobileLayout()) setMobileToolsOpen(false);
 }
 
+function dismissMobileToolsFromOutside(e) {
+  const dock = document.getElementById('controls-dock');
+  const btn = document.getElementById('mobile-menu-toggle');
+  if (!isMobileLayout() || !dock || !dock.classList.contains('mobile-open')) return;
+  if (dock.contains(e.target) || btn.contains(e.target)) return;
+  setMobileToolsOpen(false);
+}
+
 function syncOverlayActionButtons() {
   const storyBtn = document.getElementById('story-action-btn');
   const panel = document.getElementById('events-panel');
@@ -6189,13 +6197,8 @@ document.getElementById('sound-action-btn').addEventListener('click', function(e
 document.getElementById('msg-board-btn').addEventListener('click', function() {
   closeMobileToolsAfterAction();
 });
-document.addEventListener('click', function(e) {
-  const dock = document.getElementById('controls-dock');
-  const btn = document.getElementById('mobile-menu-toggle');
-  if (!isMobileLayout() || !dock || !dock.classList.contains('mobile-open')) return;
-  if (dock.contains(e.target) || btn.contains(e.target)) return;
-  setMobileToolsOpen(false);
-});
+document.addEventListener('click', dismissMobileToolsFromOutside);
+document.addEventListener('touchstart', dismissMobileToolsFromOutside, { passive: true });
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') setMobileToolsOpen(false);
 });
