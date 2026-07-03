@@ -82,6 +82,7 @@ function scoreMobileUX(index, humans) {
     index.includes('body.mobile-tools-open #nav-help'),
     index.includes('setZoom(SCALE + 1);\n  closeMobileToolsAfterAction();') && index.includes('setZoom(SCALE - 1);\n  closeMobileToolsAfterAction();'),
     index.includes('dismissMobileToolsFromOutside') && index.includes("document.addEventListener('touchstart', dismissMobileToolsFromOutside, { passive: true })"),
+    index.includes('aria-label="Open tools"') && index.includes("btn.setAttribute('aria-label', shouldOpen ? 'Close tools' : 'Open tools')"),
     index.includes('THE MIRROR TRIAL'),
     index.includes('watch-action-btn'),
     index.includes('story-action-btn'),
@@ -103,9 +104,10 @@ function scoreMobileUX(index, humans) {
       detail('story primer tucked away', checks[5]),
       detail('zoom closes drawer', checks[6]),
       detail('touch outside dismiss', checks[7]),
-      detail('god trial cue', checks[8]),
-      detail('collapsed chat', checks[11]),
-      detail('two-column trial masks', checks[13])
+      detail('accessible tools state', checks[8]),
+      detail('god trial cue', checks[9]),
+      detail('collapsed chat', checks[12]),
+      detail('two-column trial masks', checks[14])
     ])
   };
 }

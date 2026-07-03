@@ -809,7 +809,7 @@ body.reduced-motion .ambient-motes { display: none; }
   <div class="nav-help-self" id="self-optimizer-cue">Self Optimizer checks UX, flow, audio, and performance daily.</div>
 </div>
 
-<button id="mobile-menu-toggle" type="button" aria-controls="controls-dock" aria-expanded="false" title="Open tools">TOOLS</button>
+<button id="mobile-menu-toggle" type="button" aria-controls="controls-dock" aria-expanded="false" aria-label="Open tools" title="Open tools">TOOLS</button>
 <div id="controls-dock">
   <div class="mobile-dock-head"><span>TOOLS</span><button id="mobile-dock-close" type="button" aria-label="Close tools">×</button></div>
   <div class="dock-group" id="zoom-controls">
@@ -1348,6 +1348,7 @@ function setMobileToolsOpen(open) {
   dock.classList.toggle('mobile-open', shouldOpen);
   document.body.classList.toggle('mobile-tools-open', shouldOpen);
   btn.setAttribute('aria-expanded', shouldOpen ? 'true' : 'false');
+  btn.setAttribute('aria-label', shouldOpen ? 'Close tools' : 'Open tools');
   btn.textContent = shouldOpen ? '×' : 'TOOLS';
   btn.title = shouldOpen ? 'Close tools' : 'Open tools';
 }
