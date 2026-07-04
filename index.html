@@ -1340,11 +1340,20 @@ function isMobileLayout() {
   return window.matchMedia && window.matchMedia('(max-width: 760px)').matches;
 }
 
+function quietCanvasPopoversForMobileTools() {
+  ['object-popup', 'plant-tooltip', 'info-panel', 'follow-indicator'].forEach(function(id) {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
+  objectPopupVisible = false;
+}
+
 function setMobileToolsOpen(open) {
   const dock = document.getElementById('controls-dock');
   const btn = document.getElementById('mobile-menu-toggle');
   if (!dock || !btn) return;
   const shouldOpen = !!open && isMobileLayout();
+  if (shouldOpen) quietCanvasPopoversForMobileTools();
   dock.classList.toggle('mobile-open', shouldOpen);
   document.body.classList.toggle('mobile-tools-open', shouldOpen);
   btn.setAttribute('aria-expanded', shouldOpen ? 'true' : 'false');

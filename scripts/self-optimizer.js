@@ -93,7 +93,10 @@ function scoreMobileUX(index, humans) {
       index.includes('aria-label="Zoom in"') &&
       index.includes('aria-label="Photo mode"') &&
       index.includes('aria-label="Toggle ambient music"') &&
-      index.includes('aria-label="Message board"')
+      index.includes('aria-label="Message board"'),
+    index.includes('quietCanvasPopoversForMobileTools') &&
+      index.includes("['object-popup', 'plant-tooltip', 'info-panel', 'follow-indicator']") &&
+      index.includes('if (shouldOpen) quietCanvasPopoversForMobileTools();')
   ];
   return {
     key: 'mobileUX',
@@ -113,7 +116,8 @@ function scoreMobileUX(index, humans) {
       detail('god trial cue', checks[9]),
       detail('collapsed chat', checks[12]),
       detail('two-column trial masks', checks[14]),
-      detail('named icon controls', checks[15])
+      detail('named icon controls', checks[15]),
+      detail('drawer clears canvas popovers', checks[16])
     ])
   };
 }
