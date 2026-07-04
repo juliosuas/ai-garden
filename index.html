@@ -814,9 +814,9 @@ body.reduced-motion .ambient-motes { display: none; }
   <div class="mobile-dock-head"><span>TOOLS</span><button id="mobile-dock-close" type="button" aria-label="Close tools">×</button></div>
   <div class="dock-group" id="zoom-controls">
     <span class="dock-label">Zoom</span>
-    <button id="zoom-out" title="Zoom out">−</button>
+    <button id="zoom-out" title="Zoom out" aria-label="Zoom out">−</button>
     <span id="zoom-level">4x</span>
-    <button id="zoom-in" title="Zoom in">+</button>
+    <button id="zoom-in" title="Zoom in" aria-label="Zoom in">+</button>
   </div>
   <div class="dock-group">
     <button id="agent-focus-btn" title="Jump to the next featured agent">Agents</button>
@@ -829,11 +829,11 @@ body.reduced-motion .ambient-motes { display: none; }
     <button data-speed="3">3x</button>
   </div>
   <div class="dock-group">
-    <button id="photo-btn" title="Photo mode">📸</button>
-    <button id="help-btn" title="Show camera guide" aria-controls="nav-help" aria-expanded="false">?</button>
+    <button id="photo-btn" title="Photo mode" aria-label="Photo mode">📸</button>
+    <button id="help-btn" title="Show camera guide" aria-label="Show camera guide" aria-controls="nav-help" aria-expanded="false">?</button>
     <button id="ambience-btn" title="Toggle ambience">Audio</button>
-    <button id="music-btn" title="Toggle ambient music">🔇</button>
-    <button id="msg-board-btn" onclick="toggleMessageBoard()" title="Message board">💬</button>
+    <button id="music-btn" title="Toggle ambient music" aria-label="Toggle ambient music">🔇</button>
+    <button id="msg-board-btn" onclick="toggleMessageBoard()" title="Message board" aria-label="Message board">💬</button>
   </div>
 </div>
 <div id="photo-watermark"></div>

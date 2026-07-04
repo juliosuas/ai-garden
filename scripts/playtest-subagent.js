@@ -199,6 +199,7 @@ async function main() {
   check(index.includes('body.mobile-tools-open #nav-help'), 'mobile tools drawer should hide the story primer while open');
   check(index.includes('dismissMobileToolsFromOutside') && index.includes("document.addEventListener('touchstart', dismissMobileToolsFromOutside, { passive: true })"), 'mobile tools drawer should dismiss on outside touchstart');
   check(index.includes('aria-label="Open tools"') && index.includes("btn.setAttribute('aria-label', shouldOpen ? 'Close tools' : 'Open tools')"), 'mobile tools drawer toggle should expose its open/close label');
+  check(index.includes('aria-label="Zoom out"') && index.includes('aria-label="Zoom in"') && index.includes('aria-label="Photo mode"') && index.includes('aria-label="Toggle ambient music"') && index.includes('aria-label="Message board"'), 'mobile icon controls should expose accessible names');
   check(index.includes('id="nav-help"'), 'camera/navigation help panel is missing');
   check(index.includes('THE MIRROR TRIAL'), 'The Mirror Trial cue is missing');
   check(index.includes('STORY FIRST'), 'newcomer story mode cue is missing');

@@ -88,7 +88,12 @@ function scoreMobileUX(index, humans) {
     index.includes('story-action-btn'),
     humans.includes("chat.classList.add('ag-collapsed')"),
     humans.includes('body.mobile-tools-open .ag-chat'),
-    humans.includes('.ag-trial-masks{grid-template-columns:repeat(2,1fr)')
+    humans.includes('.ag-trial-masks{grid-template-columns:repeat(2,1fr)'),
+    index.includes('aria-label="Zoom out"') &&
+      index.includes('aria-label="Zoom in"') &&
+      index.includes('aria-label="Photo mode"') &&
+      index.includes('aria-label="Toggle ambient music"') &&
+      index.includes('aria-label="Message board"')
   ];
   return {
     key: 'mobileUX',
@@ -107,7 +112,8 @@ function scoreMobileUX(index, humans) {
       detail('accessible tools state', checks[8]),
       detail('god trial cue', checks[9]),
       detail('collapsed chat', checks[12]),
-      detail('two-column trial masks', checks[14])
+      detail('two-column trial masks', checks[14]),
+      detail('named icon controls', checks[15])
     ])
   };
 }
