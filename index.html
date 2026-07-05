@@ -2480,6 +2480,26 @@ function drawCivilizationRoad(from, to, road) {
   ctx.lineWidth = 1;
 }
 
+function visibleCivilizationBounds(pad) {
+  const margin = Number.isFinite(Number(pad)) ? Number(pad) : 64;
+  return {
+    left: camX - margin,
+    right: camX + screenW / SCALE + margin,
+    top: camY - margin,
+    bottom: camY + screenH / SCALE + margin
+  };
+}
+
+function boxInCivilizationBounds(x, y, w, h, bounds) {
+  return x + w >= bounds.left && x <= bounds.right && y + h >= bounds.top && y <= bounds.bottom;
+}
+
+function lineInCivilizationBounds(from, to, bounds) {
+  const x = Math.min(from.x, to.x);
+  const y = Math.min(from.y, to.y);
+  return boxInCivilizationBounds(x, y, Math.abs(from.x - to.x), Math.abs(from.y - to.y), bounds);
+}
+
 function drawFrontierCell(cell) {
   const pulse = cell.plannedBy ? Math.sin(frameCount * 0.04 + cell.x) * 0.08 + 0.18 : 0.10;
   ctx.globalAlpha = pulse;
@@ -2617,12 +2637,17 @@ function drawPrimitiveWork(site) {
 function drawCivilizationProjection() {
   const view = getCivilizationView();
   if (!view) return;
+  const bounds = visibleCivilizationBounds(72);
   const districtById = {};
   for (const district of view.districts) districtById[district.id] = district;
-  for (const cell of (view.frontierCells || [])) drawFrontierCell(cell);
+  for (const cell of (view.frontierCells || [])) {
+    if (!boxInCivilizationBounds(cell.x, cell.y, cell.w, cell.h, bounds)) continue;
+    drawFrontierCell(cell);
+  }
   for (const road of (view.roads || [])) {
     const from = districtById[road.from];
     const to = districtById[road.to];
+    if (from && to && !lineInCivilizationBounds(from, to, bounds)) continue;
     if (from && to) drawCivilizationRoad(from, to, road);
   }
   const sites = (view.settlementSites || []).slice().sort(function(a, b) { return a.y - b.y; });
@@ -2632,7 +2657,11 @@ function drawCivilizationProjection() {
   }
   const districts = view.districts.slice().sort(function(a, b) { return a.y - b.y; });
   const labels = visibleDistrictLabels(view.districts);
-  for (const district of districts) drawDistrict(district, labels.has(district.id));
+  for (const district of districts) {
+    const size = district.scale || 10;
+    if (!boxInCivilizationBounds(district.x - size / 2 - 10, district.y - size / 2 - 22, size + 20, size + 34, bounds)) continue;
+    drawDistrict(district, labels.has(district.id));
+  }
 }
 
 function crabPosition(crab) {

@@ -243,7 +243,10 @@ function scorePerformance(index, garden) {
     garden.includes('seedTargetForViewport'),
     garden.includes('syncSeedsToViewportBudget'),
     garden.includes('MAX_BACKGROUND_SEEDS'),
-    garden.includes('CONNECTION_DISTANCE_SQ')
+    garden.includes('CONNECTION_DISTANCE_SQ'),
+    index.includes('visibleCivilizationBounds'),
+    index.includes('boxInCivilizationBounds'),
+    index.includes('lineInCivilizationBounds')
   ];
   return {
     key: 'performance',
@@ -258,7 +261,8 @@ function scorePerformance(index, garden) {
       detail('crab cap', checks[5]),
       detail('garden seed budget', checks[8]),
       detail('resize seed budget', checks[9]),
-      detail('burst cap', checks[10])
+      detail('burst cap', checks[10]),
+      detail('civilization viewport culling', checks[12] && checks[13] && checks[14])
     ])
   };
 }

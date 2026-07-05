@@ -257,6 +257,7 @@ async function main() {
   check(index.includes('const WORLD_H = 1728'), 'open-world height should be 1728');
   check(landmarkCount >= 14, 'expanded open-world needs at least 14 named landmarks');
   check(index.includes('drawVisibleTiles'), 'expanded map is not using viewport tile rendering');
+  check(index.includes('visibleCivilizationBounds') && index.includes('boxInCivilizationBounds') && index.includes('lineInCivilizationBounds'), 'civilization projection lacks viewport culling helpers');
   check(index.includes('updateSpectatorCamera'), 'spectator camera touring is missing');
   check(index.includes('<canvas id="minimap" width="176" height="132"></canvas>'), 'expanded map minimap is too small');
   check(index.includes('drawPrimitiveWork'), 'canvas does not draw first-camp construction sprites');
