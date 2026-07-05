@@ -810,7 +810,7 @@ body.reduced-motion .ambient-motes { display: none; }
 </div>
 
 <button id="mobile-menu-toggle" type="button" aria-controls="controls-dock" aria-expanded="false" aria-label="Open tools" title="Open tools">TOOLS</button>
-<div id="controls-dock">
+<div id="controls-dock" role="group" aria-label="Garden tools">
   <div class="mobile-dock-head"><span>TOOLS</span><button id="mobile-dock-close" type="button" aria-label="Close tools">×</button></div>
   <div class="dock-group" id="zoom-controls">
     <span class="dock-label">Zoom</span>
@@ -1353,13 +1353,23 @@ function setMobileToolsOpen(open) {
   const btn = document.getElementById('mobile-menu-toggle');
   if (!dock || !btn) return;
   const shouldOpen = !!open && isMobileLayout();
+  const focusWasInDock = dock.contains(document.activeElement);
   if (shouldOpen) quietCanvasPopoversForMobileTools();
   dock.classList.toggle('mobile-open', shouldOpen);
   document.body.classList.toggle('mobile-tools-open', shouldOpen);
+  dock.setAttribute('aria-hidden', !shouldOpen && isMobileLayout() ? 'true' : 'false');
   btn.setAttribute('aria-expanded', shouldOpen ? 'true' : 'false');
   btn.setAttribute('aria-label', shouldOpen ? 'Close tools' : 'Open tools');
   btn.textContent = shouldOpen ? '×' : 'TOOLS';
   btn.title = shouldOpen ? 'Close tools' : 'Open tools';
+  if (shouldOpen) {
+    const closeBtn = document.getElementById('mobile-dock-close');
+    if (closeBtn && typeof closeBtn.focus === 'function') {
+      window.setTimeout(function() { closeBtn.focus({ preventScroll: true }); }, 0);
+    }
+  } else if (focusWasInDock && typeof btn.focus === 'function') {
+    btn.focus({ preventScroll: true });
+  }
 }
 
 function toggleMobileTools() {
