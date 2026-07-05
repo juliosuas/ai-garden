@@ -70,5 +70,4 @@ jobs:
           fi
           DAY=$(node -e "console.log(require('./experiments/world-state.json').chronicle?.day || 0)")
           git commit -m "Roadmap Pulse - Day ${DAY}" -m "Automated roadmap audit by ai-garden-roadmap-pulse." -m "Triggered by: ${EVENT_NAME}" -m "Run: ${RUN_ID}"
-          git pull --rebase origin main
-          git push
+          bash scripts/agentic-main-push.sh

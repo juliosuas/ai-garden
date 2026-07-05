@@ -74,5 +74,4 @@ jobs:
           DAY=$(node -e "console.log(require('./experiments/world-state.json').selfOptimizer?.day || 0)")
           FOCUS=$(node -e "console.log(require('./experiments/world-state.json').selfOptimizer?.focus?.label || 'Experience')")
           git commit -m "Self Optimizer - Day ${DAY} - ${FOCUS}" -m "Automated product-health audit by ai-garden-self-optimizer." -m "Triggered by: ${EVENT_NAME}" -m "Run: ${RUN_ID}"
-          git pull --rebase origin main
-          git push
+          bash scripts/agentic-main-push.sh

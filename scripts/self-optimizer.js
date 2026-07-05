@@ -24,6 +24,7 @@ const GARDEN = path.join(ROOT, 'garden.js');
 const PLAYTEST = path.join(ROOT, 'scripts', 'playtest-subagent.js');
 const WEEKLY_NARRATIVE = path.join(ROOT, 'scripts', 'weekly-narrative-agent.js');
 const ROADMAP_PULSE = path.join(ROOT, 'scripts', 'roadmap-pulse.js');
+const AGENTIC_MAIN_PUSH = path.join(ROOT, 'scripts', 'agentic-main-push.sh');
 const GSTACK_COUNCIL = path.join(ROOT, 'scripts', 'gstack-council.js');
 const STAKEHOLDER_ASSEMBLY = path.join(ROOT, 'scripts', 'stakeholder-assembly.js');
 const DAILY_WORKFLOW = path.join(ROOT, '.github', 'workflows', 'daily-evolution.yml');
@@ -262,12 +263,12 @@ function scorePerformance(index, garden) {
   };
 }
 
-function scoreAutomation(dailyWorkflow, autopilotWorkflow, selfWorkflow, roadmapWorkflow, playtest, weeklyNarrative, roadmapPulse, gstackCouncil, stakeholderAssembly, plan) {
+function scoreAutomation(dailyWorkflow, autopilotWorkflow, selfWorkflow, roadmapWorkflow, playtest, weeklyNarrative, roadmapPulse, agenticMainPush, gstackCouncil, stakeholderAssembly, plan) {
   const checks = [
     dailyWorkflow.includes("cron: '11 4 * * *'"),
     dailyWorkflow.includes('node scripts/playtest-subagent.js'),
     dailyWorkflow.includes('node --check scripts/weekly-narrative-agent.js'),
-    dailyWorkflow.includes('git pull --rebase origin main'),
+    dailyWorkflow.includes('bash scripts/agentic-main-push.sh'),
     autopilotWorkflow.includes("cron: '37 5 * * *'"),
     autopilotWorkflow.includes('gh pr create'),
     autopilotWorkflow.includes('--draft'),
@@ -280,10 +281,12 @@ function scoreAutomation(dailyWorkflow, autopilotWorkflow, selfWorkflow, roadmap
     selfWorkflow.includes('node --check scripts/gstack-council.js'),
     selfWorkflow.includes('node --check scripts/stakeholder-assembly.js'),
     selfWorkflow.includes('PLAN.md'),
-    selfWorkflow.includes('git pull --rebase origin main'),
+    selfWorkflow.includes('bash scripts/agentic-main-push.sh'),
     roadmapWorkflow.includes("cron: '17 7 * * *'"),
     roadmapWorkflow.includes('node scripts/roadmap-pulse.js'),
     roadmapWorkflow.includes('git add ROADMAP.md'),
+    roadmapWorkflow.includes('bash scripts/agentic-main-push.sh'),
+    agenticMainPush.includes('git pull --rebase origin main') && agenticMainPush.includes('git push') && agenticMainPush.includes('AGENTIC_PUSH_ATTEMPTS'),
     roadmapPulse.includes('Roadmap Pulse'),
     roadmapPulse.includes('BACKEND_SYNC_STORE'),
     roadmapPulse.includes('Professional Council'),
@@ -318,7 +321,8 @@ function scoreAutomation(dailyWorkflow, autopilotWorkflow, selfWorkflow, roadmap
       detail('stakeholder assembly', checks[10]),
       detail('roadmap pulse cron', checks[17]),
       detail('roadmap syntax check', checks[12]),
-      detail('weekly narrative contract', checks[29])
+      detail('agentic push retry', checks[20]),
+      detail('weekly narrative contract', checks[31])
     ])
   };
 }
@@ -385,6 +389,7 @@ function buildSnapshot(world, files) {
       files.playtest,
       files.weeklyNarrative,
       files.roadmapPulse,
+      files.agenticMainPush,
       files.gstackCouncil,
       files.stakeholderAssembly,
       files.plan
@@ -487,6 +492,7 @@ function main() {
     playtest: read(PLAYTEST),
     weeklyNarrative: read(WEEKLY_NARRATIVE),
     roadmapPulse: read(ROADMAP_PULSE),
+    agenticMainPush: read(AGENTIC_MAIN_PUSH),
     gstackCouncil: read(GSTACK_COUNCIL),
     stakeholderAssembly: read(STAKEHOLDER_ASSEMBLY),
     plan: read(PLAN),

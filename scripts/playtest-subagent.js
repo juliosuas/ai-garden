@@ -25,6 +25,7 @@ const AUTOPILOT_SUMMARY = path.join(ROOT, 'scripts', 'autopilot-pr-summary.js');
 const DAILY_EVOLUTION = path.join(ROOT, 'scripts', 'daily-evolution.js');
 const SELF_OPTIMIZER = path.join(ROOT, 'scripts', 'self-optimizer.js');
 const ROADMAP_PULSE = path.join(ROOT, 'scripts', 'roadmap-pulse.js');
+const AGENTIC_MAIN_PUSH = path.join(ROOT, 'scripts', 'agentic-main-push.sh');
 const GSTACK_COUNCIL = path.join(ROOT, 'scripts', 'gstack-council.js');
 const STAKEHOLDER_ASSEMBLY = path.join(ROOT, 'scripts', 'stakeholder-assembly.js');
 const GAME_WONDER_AGENT = path.join(ROOT, 'scripts', 'game-wonder-agent.js');
@@ -77,6 +78,7 @@ async function main() {
   const dailyEvolution = read(DAILY_EVOLUTION);
   const selfOptimizer = read(SELF_OPTIMIZER);
   const roadmapPulse = read(ROADMAP_PULSE);
+  const agenticMainPush = read(AGENTIC_MAIN_PUSH);
   const gstackCouncilScript = read(GSTACK_COUNCIL);
   const stakeholderAssemblyScript = read(STAKEHOLDER_ASSEMBLY);
   const gameWonderAgent = read(GAME_WONDER_AGENT);
@@ -359,11 +361,12 @@ async function main() {
   check(roadmapWorkflow.includes('git checkout -- experiments/world-state.json PLAN.md'), 'daily roadmap pulse workflow should restore generated rehearsal files before committing ROADMAP only');
   check(roadmapWorkflow.includes('node scripts/roadmap-pulse.js'), 'daily roadmap pulse workflow does not run the pulse script');
   check(roadmapWorkflow.includes('git add ROADMAP.md'), 'daily roadmap pulse should only commit ROADMAP.md');
+  check(roadmapWorkflow.includes('bash scripts/agentic-main-push.sh'), 'daily roadmap pulse should use retrying agentic main push');
 
   check(dailyWorkflow.includes("cron: '11 4 * * *'"), 'daily evolution cron is missing');
   check(dailyWorkflow.includes('node scripts/playtest-subagent.js'), 'daily cron does not run the playtest subagent');
   check(dailyWorkflow.includes('node --check scripts/weekly-narrative-agent.js'), 'daily cron does not validate the Weekly Narrative Agent');
-  check(dailyWorkflow.includes('git pull --rebase origin main'), 'daily cron does not rebase before pushing');
+  check(dailyWorkflow.includes('bash scripts/agentic-main-push.sh'), 'daily cron does not use retrying agentic main push');
   check(dailyWorkflow.includes('contents: write'), 'daily cron cannot write commits');
   check(dailyEvolution.includes('FORTUNE_SIGNS') && dailyEvolution.includes('world.mysticFortune') && dailyEvolution.includes('applyMiracleBoon'), 'daily evolution needs a mystical luck accelerator');
 
@@ -399,8 +402,9 @@ async function main() {
   check(selfOptimizerWorkflow.includes('node --check scripts/stakeholder-assembly.js'), 'self optimizer workflow does not validate the Stakeholder Assembly');
   check(selfOptimizerWorkflow.includes('PLAN.md'), 'self optimizer workflow does not commit PLAN.md');
   check(selfOptimizerWorkflow.includes('node scripts/playtest-subagent.js'), 'self optimizer workflow does not run the playtest');
-  check(selfOptimizerWorkflow.includes('git pull --rebase origin main'), 'self optimizer workflow does not rebase before pushing');
+  check(selfOptimizerWorkflow.includes('bash scripts/agentic-main-push.sh'), 'self optimizer workflow does not use retrying agentic main push');
   check(selfOptimizerWorkflow.includes('contents: write'), 'self optimizer workflow cannot write commits');
+  check(agenticMainPush.includes('git pull --rebase origin main') && agenticMainPush.includes('git push') && agenticMainPush.includes('AGENTIC_PUSH_ATTEMPTS'), 'agentic main push helper should retry rebase and push');
 
   check(dailyEvolution.includes('FIRST_WORKS'), 'daily evolution does not generate first-civilization works');
   check(dailyEvolution.includes('FIRST_WORK_PURPOSES'), 'daily evolution does not explain why first-camp works matter');
