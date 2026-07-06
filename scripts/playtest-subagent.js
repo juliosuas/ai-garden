@@ -339,6 +339,7 @@ async function main() {
   check(music.includes('setSeason'), 'ambient music cannot sync with seasons');
   check(music.includes('visibilitychange'), 'ambient music should pause when the tab is hidden');
   check(music.includes('MAX_MASTER_VOLUME'), 'ambient music should cap master volume for subtle playback');
+  check(music.includes('INPUT_DUCK_VOLUME') && music.includes('focusin') && music.includes('focusout'), 'ambient music should duck while humans type');
   check(index.includes('musicMuted'), 'music preference should persist in local prefs');
   check(index.includes('restoreGardenMusicPreference'), 'music preference should be restorable after reload');
   check(garden.includes('seedTargetForViewport'), 'garden background should scale seed count by viewport');

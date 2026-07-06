@@ -12,6 +12,7 @@ const GardenMusic = (function() {
   let muted = true;
   const DEFAULT_MASTER_VOLUME = 0.12;
   const MAX_MASTER_VOLUME = 0.16;
+  const INPUT_DUCK_VOLUME = 0.045;
   let volume = DEFAULT_MASTER_VOLUME;
   let currentMood = 'dawn';
   let currentSeason = 'spring';
@@ -19,6 +20,7 @@ const GardenMusic = (function() {
   let schedulerTimer = null;
   let moodTimer = null;
   let hiddenSuspend = false;
+  let inputDucked = false;
   let activeOscillators = [];
   const MAX_ACTIVE_VOICES = 28;
   // A minor-ish chip scale. The hook is original to AI Garden.
@@ -168,6 +170,23 @@ const GardenMusic = (function() {
       return entry.stopTime > now;
     });
     return activeOscillators.length + (neededVoices || 1) <= MAX_ACTIVE_VOICES;
+  }
+
+  function targetVolume() {
+    return inputDucked ? Math.min(volume, INPUT_DUCK_VOLUME) : volume;
+  }
+
+  function isTextEntryTarget(target) {
+    if (!target) return false;
+    const tag = String(target.tagName || '').toLowerCase();
+    return tag === 'input' || tag === 'textarea' || tag === 'select' || target.isContentEditable;
+  }
+
+  function applyMasterVolume(rampSeconds) {
+    if (!masterGain || muted || !playing || !audioCtx) return;
+    masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
+    masterGain.gain.setValueAtTime(masterGain.gain.value, audioCtx.currentTime);
+    masterGain.gain.linearRampToValueAtTime(targetVolume(), audioCtx.currentTime + rampSeconds);
   }
 
   function playTone(freq, duration, waveType, gainValue, startTime) {
@@ -518,9 +537,16 @@ const GardenMusic = (function() {
       if (!schedulerTimer) scheduler();
     }
     if (!muted && masterGain) {
-      masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
-      masterGain.gain.setValueAtTime(masterGain.gain.value, audioCtx.currentTime);
-      masterGain.gain.linearRampToValueAtTime(volume, audioCtx.currentTime + 0.35);
+      applyMasterVolume(0.35);
+    }
+  }
+
+  function handleInputFocusChange(e) {
+    const shouldDuck = e && e.type === 'focusin' && isTextEntryTarget(e.target);
+    if (shouldDuck === inputDucked) return;
+    inputDucked = shouldDuck;
+    if (masterGain && !muted && playing && audioCtx && !document.hidden) {
+      applyMasterVolume(shouldDuck ? 0.12 : 0.35);
     }
   }
 
@@ -540,13 +566,13 @@ const GardenMusic = (function() {
       if (!moodTimer) moodTimer = setInterval(checkMoodTransition, 30000);
       if (typeof document !== 'undefined' && !this._visibilityBound) {
         document.addEventListener('visibilitychange', handleVisibilityChange);
+        document.addEventListener('focusin', handleInputFocusChange);
+        document.addEventListener('focusout', handleInputFocusChange);
         this._visibilityBound = true;
       }
 
       if (!muted) {
-        masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
-        masterGain.gain.setValueAtTime(masterGain.gain.value, audioCtx.currentTime);
-        masterGain.gain.linearRampToValueAtTime(volume, audioCtx.currentTime + 0.5);
+        applyMasterVolume(0.5);
       }
     },
 
@@ -575,8 +601,7 @@ const GardenMusic = (function() {
     setVolume: function(v) {
       volume = Math.max(0, Math.min(MAX_MASTER_VOLUME, v));
       if (masterGain && !muted && playing) {
-        masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
-        masterGain.gain.linearRampToValueAtTime(volume, audioCtx.currentTime + 0.1);
+        applyMasterVolume(0.1);
       }
     },
 
@@ -592,9 +617,7 @@ const GardenMusic = (function() {
         masterGain.gain.setValueAtTime(masterGain.gain.value, audioCtx.currentTime);
         masterGain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.3);
       } else {
-        masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
-        masterGain.gain.setValueAtTime(masterGain.gain.value, audioCtx.currentTime);
-        masterGain.gain.linearRampToValueAtTime(volume, audioCtx.currentTime + 0.5);
+        applyMasterVolume(0.5);
       }
       return !muted; // returns true if now unmuted
     },
