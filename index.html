@@ -2638,8 +2638,15 @@ function drawCivilizationProjection() {
   const view = getCivilizationView();
   if (!view) return;
   const bounds = visibleCivilizationBounds(72);
-  const districtById = {};
-  for (const district of view.districts) districtById[district.id] = district;
+  const districtById = Object.create(null);
+  const visibleDistricts = [];
+  for (const district of view.districts) {
+    districtById[district.id] = district;
+    const size = district.scale || 10;
+    if (boxInCivilizationBounds(district.x - size / 2 - 10, district.y - size / 2 - 22, size + 20, size + 34, bounds)) {
+      visibleDistricts.push(district);
+    }
+  }
   for (const cell of (view.frontierCells || [])) {
     if (!boxInCivilizationBounds(cell.x, cell.y, cell.w, cell.h, bounds)) continue;
     drawFrontierCell(cell);
@@ -2650,16 +2657,15 @@ function drawCivilizationProjection() {
     if (from && to && !lineInCivilizationBounds(from, to, bounds)) continue;
     if (from && to) drawCivilizationRoad(from, to, road);
   }
-  const sites = (view.settlementSites || []).slice().sort(function(a, b) { return a.y - b.y; });
+  const sites = (view.settlementSites || []).filter(function(site) {
+    return pointVisible(site.x, site.y, 24);
+  }).sort(function(a, b) { return a.y - b.y; });
   for (const site of sites) {
-    if (!pointVisible(site.x, site.y, 24)) continue;
     drawPrimitiveWork(site);
   }
-  const districts = view.districts.slice().sort(function(a, b) { return a.y - b.y; });
-  const labels = visibleDistrictLabels(view.districts);
+  const districts = visibleDistricts.sort(function(a, b) { return a.y - b.y; });
+  const labels = visibleDistrictLabels(visibleDistricts);
   for (const district of districts) {
-    const size = district.scale || 10;
-    if (!boxInCivilizationBounds(district.x - size / 2 - 10, district.y - size / 2 - 22, size + 20, size + 34, bounds)) continue;
     drawDistrict(district, labels.has(district.id));
   }
 }

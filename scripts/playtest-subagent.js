@@ -258,6 +258,8 @@ async function main() {
   check(landmarkCount >= 14, 'expanded open-world needs at least 14 named landmarks');
   check(index.includes('drawVisibleTiles'), 'expanded map is not using viewport tile rendering');
   check(index.includes('visibleCivilizationBounds') && index.includes('boxInCivilizationBounds') && index.includes('lineInCivilizationBounds'), 'civilization projection lacks viewport culling helpers');
+  check(index.includes('const visibleDistricts = []') && index.includes('visibleDistrictLabels(visibleDistricts)'), 'civilization projection should label only visible districts');
+  check(index.includes('view.settlementSites || []).filter(function(site)') && index.includes('return pointVisible(site.x, site.y, 24);'), 'civilization projection should filter visible work sites before sorting');
   check(index.includes('updateSpectatorCamera'), 'spectator camera touring is missing');
   check(index.includes('<canvas id="minimap" width="176" height="132"></canvas>'), 'expanded map minimap is too small');
   check(index.includes('drawPrimitiveWork'), 'canvas does not draw first-camp construction sprites');
