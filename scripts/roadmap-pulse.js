@@ -77,7 +77,15 @@ function buildPulse() {
     check('Mirror Trial', humans.includes('Choose the face they will mistake for God') && humans.includes('Miracle Record'), 'first action produces proof'),
     check('Observer Lounge', humans.includes('ag-chat') && humans.includes('createAgentReply'), 'chat produces an AI witness reply'),
     check('Backend Sync', humans.includes('BACKEND_SYNC_STORE') && humans.includes('ag-sync-strip'), 'human actions show day, arc, and season'),
-    check('Seasonal Audio', music.includes('SEASON_PROFILES') && music.includes('playAmbientPad') && music.includes('setSeason') && music.includes('MAX_MASTER_VOLUME'), 'ambient bed follows season and stays subtle'),
+    check('Seasonal Audio',
+      music.includes('SEASON_PROFILES') &&
+      music.includes('playAmbientPad') &&
+      music.includes('setSeason') &&
+      music.includes('MAX_MASTER_VOLUME') &&
+      music.includes('INPUT_DUCK_VOLUME') &&
+      music.includes('visibilitychange') &&
+      music.includes('MAX_ACTIVE_VOICES'),
+      'ambient bed follows season and stays subtle'),
     check('Mobile Safety', humans.includes("chat.classList.add('ag-collapsed')") && index.includes('mobile-tools-open'), 'panels stay out of the way'),
     check('Daily QA', playtest.includes('BACKEND_SYNC_STORE') && selfOptimizer.includes('seasonal ambient'), 'tests protect the loop'),
     check('Professional Council', council.model === 'ai-garden-gstack-council-v1' && Array.isArray(council.specialists) && council.specialists.length >= 10 && gstackCouncilScript.includes('Trust And Safety Lead'), 'each product area has a named specialist'),

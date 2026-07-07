@@ -210,7 +210,8 @@ function scoreAudio(music, index, humans) {
     humans.includes('GardenMusic.setSeason'),
     music.includes('visibilitychange'),
     music.includes('MAX_MASTER_VOLUME'),
-    music.includes('INPUT_DUCK_VOLUME') && music.includes('focusin') && music.includes('focusout')
+    music.includes('INPUT_DUCK_VOLUME') && music.includes('focusin') && music.includes('focusout'),
+    music.includes('MAX_ACTIVE_VOICES') && music.includes('canScheduleVoice')
   ];
   return {
     key: 'audio',
@@ -227,7 +228,8 @@ function scoreAudio(music, index, humans) {
       detail('seasonal ambient', checks[8] && checks[9] && checks[12]),
       detail('hidden-tab pause', checks[13]),
       detail('capped master volume', checks[14]),
-      detail('text-entry ducking', checks[15])
+      detail('text-entry ducking', checks[15]),
+      detail('voice density cap', checks[16])
     ])
   };
 }
