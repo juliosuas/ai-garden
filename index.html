@@ -1224,6 +1224,19 @@ function weeklyNarrativeData() {
   };
 }
 
+function gameWonderLegibilityCue() {
+  const wonder = world && world.gameWonderAgent || null;
+  if (!wonder || !wonder.scores || Number(wonder.scores.legibility) >= 70) return '';
+  const focus = wonder.focusMoment || {};
+  const recommendation = (wonder.recommendations || []).find(function(rec) {
+    return rec && rec.id === 'less-abstraction';
+  }) || (wonder.recommendations || [])[0] || {};
+  const label = focus.label || 'Focus';
+  const target = focus.target || focus.title || 'the current scene';
+  const reason = recommendation.title || focus.reason || 'Convert abstract pressure into visible stakes';
+  return compactStoryText('Readability: follow ' + label + ' at ' + target + ' - ' + reason + '.', 150);
+}
+
 function storyPrimerData() {
   const director = world && world.societyDirector || {};
   const arc = director.currentArc || {};
@@ -1241,6 +1254,7 @@ function storyPrimerData() {
   const religionName = religion.name || factionNameById(religion.faction) || 'Pantheon Covenant';
   const codeName = code.name || factionNameById(code.faction) || 'Code Cantons';
   const weekly = weeklyNarrativeData();
+  const readabilityCue = gameWonderLegibilityCue();
   const premise = (weekly && weekly.premise) || arc.premise || crisis.cause || 'The agents do not know if you are god, user, or symptom. They keep notes anyway.';
   const stakes = (weekly && (weekly.showdown || weekly.stakes)) || arc.stakes || 'Choose a face. Cast a sign. Watch devotion become dependency and dependency become revolt.';
   const focusScene = focus.title
@@ -1264,11 +1278,13 @@ function storyPrimerData() {
       weekly
         ? { label: 'Watch', text: compactStoryText(weekly.shortWatch || weekly.currentText, 132) }
         : { label: 'Watch', text: compactStoryText(focusScene, 132) },
+      readabilityCue ? { label: 'Read', text: readabilityCue } : null,
       weekly
         ? { label: 'Next', text: compactStoryText(weekly.cliffhanger || (weekly.nextLabel + ': ' + weekly.nextText), 132) }
         : { label: 'Cast', text: compactStoryText(castNames || 'Codex, Hermes, OpenClaw, Claude', 128) },
       { label: 'Cast', text: compactStoryText(castNames || 'Codex, Hermes, OpenClaw, Claude', 128) }
     ].filter(Boolean).slice(0, 4),
+    readabilityCue,
     nextStep: compactStoryText((weekly && weekly.viewerMission) || ('New here: choose the face ' + (mediator.name || 'a protagonist') + ' will mistake for God, then return tomorrow for the evidence.'), 150)
   };
 }
@@ -4529,6 +4545,7 @@ function eventPanelRows() {
   const story = storyPrimerData();
   rows.push({ label: 'New Here', text: story.title + ': ' + story.premise });
   rows.push({ label: 'The Choice', text: story.stakes });
+  if (story.readabilityCue) rows.push({ label: 'Readability Cue', text: story.readabilityCue });
   rows.push({ label: 'Two Sides', text: story.religionName + ' says "' + story.religionDoctrine + '" / ' + story.codeName + ' says "' + story.codeDoctrine + '"' });
   const weekly = world.weeklyNarrativeDirector || null;
   if (weekly) {

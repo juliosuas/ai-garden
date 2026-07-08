@@ -214,6 +214,7 @@ async function main() {
   check(index.includes('THE MIRROR TRIAL'), 'The Mirror Trial cue is missing');
   check(index.includes('STORY FIRST'), 'newcomer story mode cue is missing');
   check(index.includes('storyPrimerData'), 'story primer is not generated from world state');
+  check(index.includes('gameWonderLegibilityCue') && index.includes("Number(wonder.scores.legibility) >= 70"), 'story primer should expose Wonderwright low-legibility cues');
   check(index.includes('weeklyNarrativeData'), 'weekly narrative helper is missing from the client');
   check(index.includes('id="story-premise"'), 'story primer is missing a premise line');
   check(index.includes('id="story-stakes"'), 'story primer is missing stakes');
@@ -231,6 +232,7 @@ async function main() {
   check(index.includes('id="story-watch-list"'), 'story primer is missing what-to-watch rows');
   check(index.includes('STORY LOG'), 'events panel should read as a story log for newcomers');
   check(index.includes('New Here'), 'story log lacks a newcomer summary row');
+  check(index.includes('Readability Cue'), 'story log lacks a Wonderwright readability cue');
   check(index.includes('Two Sides'), 'story log lacks a faction summary row');
   check(index.includes('id="watch-action-btn"'), 'spectator cue lacks a watch action');
   check(index.includes('AIGardenHumans.trial'), 'trial CTA does not open the divine mask flow');
