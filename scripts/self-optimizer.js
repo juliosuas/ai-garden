@@ -69,6 +69,12 @@ function detail(name, ok) {
   return ok ? name : null;
 }
 
+function before(text, first, second) {
+  const firstIndex = text.indexOf(first);
+  const secondIndex = text.indexOf(second);
+  return firstIndex >= 0 && secondIndex >= 0 && firstIndex < secondIndex;
+}
+
 function compactEvidence(items) {
   return items.filter(Boolean).slice(0, 6);
 }
@@ -294,9 +300,12 @@ function scoreAutomation(dailyWorkflow, autopilotWorkflow, selfWorkflow, roadmap
     roadmapWorkflow.includes('node scripts/roadmap-pulse.js'),
     roadmapWorkflow.includes('git add ROADMAP.md'),
     roadmapWorkflow.includes('bash scripts/agentic-main-push.sh'),
+    before(roadmapWorkflow, 'node scripts/gstack-council.js', 'node scripts/roadmap-pulse.js') &&
+      before(roadmapWorkflow, 'node scripts/stakeholder-assembly.js', 'node scripts/roadmap-pulse.js'),
     agenticMainPush.includes('git pull --rebase origin main') && agenticMainPush.includes('git push') && agenticMainPush.includes('AGENTIC_PUSH_ATTEMPTS'),
     roadmapPulse.includes('Roadmap Pulse'),
     roadmapPulse.includes('BACKEND_SYNC_STORE'),
+    roadmapPulse.includes('before(workflow'),
     roadmapPulse.includes('Professional Council'),
     roadmapPulse.includes('Stakeholder Plan'),
     playtest.includes('SELF_OPTIMIZER'),
@@ -329,8 +338,9 @@ function scoreAutomation(dailyWorkflow, autopilotWorkflow, selfWorkflow, roadmap
       detail('stakeholder assembly', checks[10]),
       detail('roadmap pulse cron', checks[17]),
       detail('roadmap syntax check', checks[12]),
-      detail('agentic push retry', checks[20]),
-      detail('weekly narrative contract', checks[31])
+      detail('roadmap rehearsal order', checks[21]),
+      detail('agentic push retry', checks[22]),
+      detail('weekly narrative contract', checks[33])
     ])
   };
 }

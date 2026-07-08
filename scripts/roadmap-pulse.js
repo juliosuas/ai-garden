@@ -43,6 +43,12 @@ function check(label, ok, why) {
   return { label, ok: !!ok, why };
 }
 
+function before(text, first, second) {
+  const firstIndex = text.indexOf(first);
+  const secondIndex = text.indexOf(second);
+  return firstIndex >= 0 && secondIndex >= 0 && firstIndex < secondIndex;
+}
+
 function seasonForDay(day) {
   const seasons = ['spring', 'summer', 'autumn', 'winter'];
   return seasons[Math.floor((Number(day) || 0) % 28 / 7)] || 'spring';
@@ -94,6 +100,8 @@ function buildPulse() {
       workflow.includes('node scripts/gstack-council.js') &&
       workflow.includes('node scripts/stakeholder-assembly.js') &&
       workflow.includes('git checkout -- experiments/world-state.json PLAN.md') &&
+      before(workflow, 'node scripts/gstack-council.js', 'node scripts/roadmap-pulse.js') &&
+      before(workflow, 'node scripts/stakeholder-assembly.js', 'node scripts/roadmap-pulse.js') &&
       workflow.includes('node scripts/roadmap-pulse.js'), 'daily roadmap pulse is scheduled and rehearses upstream rooms')
   ];
   const passing = contracts.filter(item => item.ok).length;

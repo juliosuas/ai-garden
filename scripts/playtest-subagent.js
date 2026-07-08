@@ -50,6 +50,12 @@ function note(message) {
   notes.push(message);
 }
 
+function before(text, first, second) {
+  const firstIndex = text.indexOf(first);
+  const secondIndex = text.indexOf(second);
+  return firstIndex >= 0 && secondIndex >= 0 && firstIndex < secondIndex;
+}
+
 async function checkLocalUrl(url) {
   if (!url) return;
   try {
@@ -358,11 +364,14 @@ async function main() {
   check(roadmapPulse.includes('Roadmap Pulse'), 'roadmap pulse script is missing its contract');
   check(roadmapPulse.includes('Professional Council'), 'roadmap pulse does not audit the professional council');
   check(roadmapPulse.includes('Stakeholder Plan'), 'roadmap pulse does not audit the stakeholder plan');
+  check(roadmapPulse.includes('before(workflow'), 'roadmap pulse does not verify rehearsal order before refreshing');
   check(roadmapPulse.includes('BACKEND_SYNC_STORE'), 'roadmap pulse does not audit backend sync');
   check(roadmapPulse.includes('SEASON_PROFILES'), 'roadmap pulse does not audit seasonal audio');
   check(roadmapWorkflow.includes("cron: '17 7 * * *'"), 'daily roadmap pulse cron is missing');
   check(roadmapWorkflow.includes('node scripts/gstack-council.js'), 'daily roadmap pulse workflow does not rehearse the GStack Council');
   check(roadmapWorkflow.includes('node scripts/stakeholder-assembly.js'), 'daily roadmap pulse workflow does not rehearse the Stakeholder Assembly');
+  check(before(roadmapWorkflow, 'node scripts/gstack-council.js', 'node scripts/roadmap-pulse.js'), 'daily roadmap pulse should rehearse the GStack Council before refreshing the pulse');
+  check(before(roadmapWorkflow, 'node scripts/stakeholder-assembly.js', 'node scripts/roadmap-pulse.js'), 'daily roadmap pulse should rehearse the Stakeholder Assembly before refreshing the pulse');
   check(roadmapWorkflow.includes('git checkout -- experiments/world-state.json PLAN.md'), 'daily roadmap pulse workflow should restore generated rehearsal files before committing ROADMAP only');
   check(roadmapWorkflow.includes('node scripts/roadmap-pulse.js'), 'daily roadmap pulse workflow does not run the pulse script');
   check(roadmapWorkflow.includes('git add ROADMAP.md'), 'daily roadmap pulse should only commit ROADMAP.md');
