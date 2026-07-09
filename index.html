@@ -2648,6 +2648,25 @@ function drawPrimitiveWork(site) {
     rect(x - 4, y, 8, 6, color);
     px(x, y - 1, '#f8fafc');
   }
+  drawPrimitiveWorkers(site, x, y, color);
+}
+
+function drawPrimitiveWorkers(site, x, y, color) {
+  const seed = hashText(site.id || site.type || (x + ':' + y));
+  const workers = site.type === 'hearth-circle' || site.type === 'council-stones' ? 2 : 1;
+  for (let i = 0; i < workers; i++) {
+    const phase = frameCount * (0.045 + i * 0.011) + seed * 0.37 + i * 2.4;
+    const pxX = x + Math.round(Math.cos(phase) * (7 + i * 2));
+    const pxY = y + Math.round(Math.sin(phase * 0.8) * (4 + i));
+    if (!pointVisible(pxX, pxY, 6)) continue;
+    const bob = Math.sin(phase * 1.7) > 0 ? 0 : 1;
+    ctx.globalAlpha = 0.74;
+    rect(pxX - 1, pxY + 2, 3, 1, 'rgba(0,0,0,0.38)');
+    ctx.globalAlpha = 1;
+    px(pxX, pxY - bob, lighten(color, 28));
+    rect(pxX - 1, pxY + 1 - bob, 3, 2, i % 2 ? '#93c5fd' : '#f8fafc');
+    if ((frameCount + seed + i * 17) % 64 < 10) px(pxX + 2, pxY - 1 - bob, '#fff7ad');
+  }
 }
 
 function drawCivilizationProjection() {
