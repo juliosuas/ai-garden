@@ -300,6 +300,7 @@ function scoreAutomation(dailyWorkflow, autopilotWorkflow, selfWorkflow, roadmap
     roadmapWorkflow.includes('node scripts/roadmap-pulse.js'),
     roadmapWorkflow.includes('git add ROADMAP.md'),
     roadmapWorkflow.includes('bash scripts/agentic-main-push.sh'),
+    roadmapWorkflow.includes('contents: write'),
     before(roadmapWorkflow, 'node scripts/gstack-council.js', 'node scripts/roadmap-pulse.js') &&
       before(roadmapWorkflow, 'node scripts/stakeholder-assembly.js', 'node scripts/roadmap-pulse.js'),
     agenticMainPush.includes('git pull --rebase origin main') && agenticMainPush.includes('git push') && agenticMainPush.includes('AGENTIC_PUSH_ATTEMPTS'),
@@ -337,10 +338,11 @@ function scoreAutomation(dailyWorkflow, autopilotWorkflow, selfWorkflow, roadmap
       detail('professional council', checks[9]),
       detail('stakeholder assembly', checks[10]),
       detail('roadmap pulse cron', checks[17]),
+      detail('roadmap write permission', checks[21]),
       detail('roadmap syntax check', checks[12]),
-      detail('roadmap rehearsal order', checks[21]),
-      detail('agentic push retry', checks[22]),
-      detail('weekly narrative contract', checks[33])
+      detail('roadmap rehearsal order', checks[22]),
+      detail('agentic push retry', checks[23]),
+      detail('weekly narrative contract', checks[34])
     ])
   };
 }

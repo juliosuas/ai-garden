@@ -171,7 +171,7 @@ Schedule: `17 7 * * *` UTC.
 
 - Focus: Phase 1 proof loop polish.
 - Next: add motion, emotion, and civic work without increasing crowd density
-- Generated: 2026-07-08T09:37:12.343Z
+- Generated: 2026-07-09T02:48:26.635Z
 
 | Contract | Status | Why |
 |----------|--------|-----|
@@ -183,7 +183,7 @@ Schedule: `17 7 * * *` UTC.
 | Daily QA | OK | tests protect the loop |
 | Professional Council | OK | each product area has a named specialist |
 | Stakeholder Plan | OK | investor, user, and team pressure becomes /plan |
-| Roadmap Cron | OK | daily roadmap pulse is scheduled and rehearses upstream rooms |
+| Roadmap Cron | OK | daily roadmap pulse is scheduled and can commit ROADMAP.md |
 <!-- roadmap-pulse:end -->
 
 ## Operator Rule

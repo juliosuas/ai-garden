@@ -102,7 +102,8 @@ function buildPulse() {
       workflow.includes('git checkout -- experiments/world-state.json PLAN.md') &&
       before(workflow, 'node scripts/gstack-council.js', 'node scripts/roadmap-pulse.js') &&
       before(workflow, 'node scripts/stakeholder-assembly.js', 'node scripts/roadmap-pulse.js') &&
-      workflow.includes('node scripts/roadmap-pulse.js'), 'daily roadmap pulse is scheduled and rehearses upstream rooms')
+      workflow.includes('node scripts/roadmap-pulse.js') &&
+      workflow.includes('contents: write'), 'daily roadmap pulse is scheduled and can commit ROADMAP.md')
   ];
   const passing = contracts.filter(item => item.ok).length;
   const next = optimizer.focus && optimizer.focus.nextAction

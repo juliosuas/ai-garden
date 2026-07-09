@@ -378,6 +378,7 @@ async function main() {
   check(roadmapWorkflow.includes('node scripts/roadmap-pulse.js'), 'daily roadmap pulse workflow does not run the pulse script');
   check(roadmapWorkflow.includes('git add ROADMAP.md'), 'daily roadmap pulse should only commit ROADMAP.md');
   check(roadmapWorkflow.includes('bash scripts/agentic-main-push.sh'), 'daily roadmap pulse should use retrying agentic main push');
+  check(roadmapWorkflow.includes('contents: write'), 'daily roadmap pulse workflow cannot write ROADMAP commits');
 
   check(dailyWorkflow.includes("cron: '11 4 * * *'"), 'daily evolution cron is missing');
   check(dailyWorkflow.includes('node scripts/playtest-subagent.js'), 'daily cron does not run the playtest subagent');
