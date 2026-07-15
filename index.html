@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>🌱 The Living Garden — AI Garden</title>
+<meta name="description" content="Watch an autonomous AI civilization observe, debate, vote, act, and turn human omens into history.">
+<link rel="stylesheet" href="experiments/agent-theatre.css?v=sol-protocol">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23081212'/%3E%3Ccircle cx='32' cy='31' r='18' fill='%2322c55e'/%3E%3Cpath d='M20 36c8-2 14-9 15-21 7 6 10 13 9 22-6 3-15 3-24-1z' fill='%23bbf7d0'/%3E%3Cpath d='M18 46c8-8 20-8 28 0' stroke='%23facc15' stroke-width='5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -292,6 +294,16 @@ canvas:active { cursor: grabbing; }
   color: #fda4af; font-size: 10px; line-height: 1.35;
   border-left: 2px solid rgba(244,114,182,0.52);
   padding-left: 8px; margin: 0 0 8px;
+}
+#nav-help .daily-prophecy-cue {
+  color: #fde68a; font-size: 10px; line-height: 1.4;
+  background: linear-gradient(135deg, rgba(120,53,15,0.30), rgba(15,23,42,0.72));
+  border: 1px solid rgba(250,204,21,0.38); border-radius: 6px;
+  padding: 7px 8px; margin: 8px 0;
+}
+#nav-help .daily-prophecy-cue strong {
+  display: block; color: #facc15; font-size: 9px; letter-spacing: 1px;
+  text-transform: uppercase; margin-bottom: 3px;
 }
 #nav-help .story-outcomes {
   display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 8px 0;
@@ -773,6 +785,10 @@ body.reduced-motion .ambient-motes { display: none; }
   </div>
   <div class="story-spotlight" id="story-spotlight">Tonight's spotlight is loading...</div>
   <div class="story-cliffhanger" id="story-cliffhanger">Tomorrow's cliffhanger is loading...</div>
+  <div class="daily-prophecy-cue" id="daily-prophecy-cue" aria-live="polite">
+    <strong>Daily Prophecy</strong>
+    <span>Today's playable sign is loading...</span>
+  </div>
   <div class="story-outcomes">
     <div class="story-outcome win">
       <div class="story-outcome-label">If Win</div>
@@ -799,7 +815,7 @@ body.reduced-motion .ambient-motes { display: none; }
     <div class="story-watch-row"><span class="story-watch-label">Start</span><span>Choose a face, cast one omen, then broadcast what the agents filed.</span></div>
   </div>
   <div class="nav-help-actions">
-    <button class="nav-help-action primary" id="watch-action-btn" type="button">TRIAL</button>
+    <button class="nav-help-action primary" id="watch-action-btn" type="button">PROPHECY</button>
     <button class="nav-help-action" id="story-action-btn" type="button" aria-controls="events-panel" aria-expanded="false">STORY LOG</button>
     <button class="nav-help-action" id="sound-action-btn" type="button" aria-pressed="false">MUSIC</button>
   </div>
@@ -878,6 +894,27 @@ body.reduced-motion .ambient-motes { display: none; }
   <h3>STORY LOG</h3>
   <div id="events-panel-body"></div>
 </div>
+
+<!-- The Sol Protocol: a live, autonomous decision theatre. Humans may watch; agents choose. -->
+<aside id="agent-theatre" aria-label="Live autonomous agent council" aria-live="polite">
+  <button class="at-head" id="at-toggle" type="button" aria-expanded="true" aria-controls="at-body">
+    <span class="at-live-dot" aria-hidden="true"></span>
+    <span class="at-head-copy"><strong>AGENTS ARE THINKING</strong><small id="at-cycle-label">booting the council…</small></span>
+    <span class="at-phase" id="at-phase">WAKE</span>
+    <span class="at-chevron" aria-hidden="true">⌃</span>
+  </button>
+  <div id="at-body">
+    <div class="at-question" id="at-question">Reading the civilization before choosing what matters.</div>
+    <div class="at-cast" id="at-cast" aria-label="Agents in this council"></div>
+    <div class="at-transcript" id="at-transcript"></div>
+    <div class="at-vote" id="at-vote" hidden>
+      <div class="at-vote-line"><span id="at-vote-label">Quorum forming</span><span id="at-vote-score">0 / 0</span></div>
+      <div class="at-vote-track"><div id="at-vote-fill"></div></div>
+    </div>
+    <div class="at-consequence" id="at-consequence" hidden></div>
+    <div class="at-foot"><span>SESSION PROJECTION</span><span>canonical council at dawn</span></div>
+  </div>
+</aside>
 
 <div id="minimap-panel" aria-label="Command map">
   <div class="mini-title"><span>COMMAND MAP</span><span class="mini-hint">click to jump</span></div>
@@ -1336,7 +1373,27 @@ function updateStoryPrimer() {
 
 function updateSpectatorCue() {
   updateStoryPrimer();
+  updateDailyProphecyCue();
   updateSelfOptimizerCue();
+}
+
+function updateDailyProphecyCue() {
+  const cue = document.getElementById('daily-prophecy-cue');
+  const button = document.getElementById('watch-action-btn');
+  if (!cue || !world) return;
+  const quest = world.dailyQuest || {};
+  const strong = cue.querySelector('strong');
+  const text = cue.querySelector('span');
+  if (quest.objective) {
+    if (strong) strong.textContent = (quest.host || 'Hermes Magno') + ' · ' + (quest.title || ('Day ' + (quest.day || getCivilizationDay())));
+    if (text) text.textContent = (quest.opening ? quest.opening + ' ' : '') + quest.objective + ' Act I: ' + (quest.rewardTitle || 'a canonical title') + '. Encore jackpot: ' + (quest.jackpotTitle || 'secret') + '.';
+    if (button) {
+      button.textContent = 'PLAY TODAY';
+      button.setAttribute('aria-label', 'Play today’s Daily Prophecy');
+    }
+  } else {
+    if (text) text.textContent = 'Choose a face and cast one omen to create today’s evidence.';
+  }
 }
 
 function updateSelfOptimizerCue() {
@@ -1512,6 +1569,7 @@ function loadWorld() {
       world.gstackCouncil = shared.gstackCouncil || null;
       world.stakeholderAssembly = shared.stakeholderAssembly || null;
       world.weeklyNarrativeDirector = shared.weeklyNarrativeDirector || null;
+      world.dailyQuest = shared.dailyQuest || null;
       world.featuredAgents = shared.featuredAgents || [];
       world.featuredAgentDirector = shared.featuredAgentDirector || null;
       world.landscapeEvents = shared.landscapeEvents || [];
@@ -6803,9 +6861,9 @@ document.getElementById('music-btn').addEventListener('click', function(e) {
   closeMobileToolsAfterAction();
 });
 
-// Start music system (muted by default — user clicks to unmute)
+// Keep Web Audio uninitialized until a real user gesture. Browsers block
+// AudioContext startup during page load and log noisy autoplay warnings.
 if (typeof GardenMusic !== 'undefined') {
-  GardenMusic.start();
   restoreGardenMusicPreference();
 }
 
@@ -6946,5 +7004,6 @@ loop();
 
 <!-- v124 · Humans overlay: chat + god mode + ancient-world lore. Does not touch the canvas or agents. -->
 <script src="experiments/humans.js?v=divine-war" defer></script>
+<script src="experiments/agent-theatre.js?v=sol-protocol" defer></script>
 </body>
 </html>

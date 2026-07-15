@@ -85,6 +85,15 @@
     profile.mask = GOD_MASKS[profile.mask] ? profile.mask : '';
     profile.name = String(profile.name || '').slice(0, 32);
     profile.meters = normalizeMeters(profile.meters);
+    profile.quest = profile.quest && typeof profile.quest === 'object' ? profile.quest : {};
+    profile.quest.lastCompletedDay = Number(profile.quest.lastCompletedDay) || 0;
+    profile.quest.streak = Math.max(0, Number(profile.quest.streak) || 0);
+    profile.quest.bestStreak = Math.max(profile.quest.streak, Number(profile.quest.bestStreak) || 0);
+    profile.quest.title = String(profile.quest.title || '').slice(0, 80);
+    profile.quest.encoreCompletedDay = Number(profile.quest.encoreCompletedDay) || 0;
+    profile.quest.encoreStreak = Math.max(0, Number(profile.quest.encoreStreak) || 0);
+    profile.quest.bestEncoreStreak = Math.max(profile.quest.encoreStreak, Number(profile.quest.bestEncoreStreak) || 0);
+    profile.quest.jackpotTitle = String(profile.quest.jackpotTitle || '').slice(0, 80);
     return profile;
   }
   function saveGodProfile(profile) {
@@ -181,6 +190,15 @@
       '.ag-god-mask{grid-column:1/-1;border:1px solid rgba(248,113,113,0.25);background:rgba(127,29,29,0.18);',
       '  border-radius:4px;padding:6px;line-height:1.35;}',
       '.ag-god-mask strong{display:block;color:#fecaca;font-size:9px;letter-spacing:1px;text-transform:uppercase;}',
+      '.ag-daily-quest{grid-column:1/-1;border:1px solid rgba(250,204,21,0.34);background:linear-gradient(135deg,rgba(120,53,15,0.28),rgba(15,23,42,0.72));',
+      '  border-radius:4px;padding:7px;line-height:1.35;color:#cbd5e1;}',
+      '.ag-daily-quest strong{display:block;color:#fde68a;font-size:9px;letter-spacing:1px;text-transform:uppercase;margin-bottom:3px;}',
+      '.ag-daily-quest .quest-objective{color:#f8fafc;font-size:9px;}',
+      '.ag-daily-quest .quest-meta{color:#94a3b8;font-size:8px;margin-top:4px;}',
+      '.ag-daily-quest.complete{border-color:#4ade80;background:linear-gradient(135deg,rgba(20,83,45,0.34),rgba(15,23,42,0.72));}',
+      '.ag-daily-quest.complete strong{color:#86efac;}',
+      '.ag-daily-quest.encore{border-color:#c084fc;background:linear-gradient(135deg,rgba(88,28,135,0.38),rgba(15,23,42,0.76));}',
+      '.ag-daily-quest.encore strong{color:#e9d5ff;}',
       '.ag-mask-row{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:4px;}',
       '.ag-mask-btn{background:rgba(15,23,42,0.78);border:1px solid rgba(248,113,113,0.28);color:#fecaca;',
       '  border-radius:4px;padding:5px 4px;font-size:9px;font-family:monospace;cursor:pointer;text-transform:uppercase;}',
@@ -232,6 +250,7 @@
       '.ag-receipt-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:8px 0;}',
       '.ag-receipt-cell{border:1px solid rgba(148,163,184,0.18);background:rgba(15,23,42,0.55);border-radius:4px;padding:7px;}',
       '.ag-receipt-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px;}',
+      '.ag-receipt-actions button{flex:1 1 140px;}',
       '.ag-copy-note{color:#86efac;font-size:10px;margin-top:7px;display:none;}',
       /* Chat panel bottom-right */
       '.ag-chat{position:absolute;bottom:60px;right:8px;width:300px;max-height:360px;',
@@ -453,8 +472,9 @@
 
   function initBus() {
     try {
-      // Use SSE for live stream + cached history (last 2 min)
-      var es = new EventSource(NTFY + '/sse?poll=1&since=2m&sched=none');
+      // Keep one persistent SSE stream. `poll=1` closes the response after
+      // cached events, which makes EventSource reconnect in a rate-limit loop.
+      var es = new EventSource(NTFY + '/sse?since=2m&sched=none');
       es.addEventListener('message', function (e) {
         var env = safeJSON(e.data);
         if (!env || !env.message) return;
@@ -786,7 +806,94 @@
   var impactReceipts = loadReceipts();
 
   function currentCivilizationDay() {
-    return worldCache && worldCache.chronicle && Number(worldCache.chronicle.day) || 0;
+    return worldCache && worldCache.chronicle && Number(worldCache.chronicle.day) || Number(backendSync.day) || 0;
+  }
+
+  function currentDailyQuest() {
+    var day = currentCivilizationDay();
+    var quest = worldCache && worldCache.dailyQuest;
+    if (quest && Number(quest.day) === day && EFFECTS[quest.act] && GOD_MASKS[quest.maskKey]) return quest;
+    var maskKeys = Object.keys(GOD_MASKS);
+    var maskKey = maskKeys[((day * 7 + 3) % maskKeys.length + maskKeys.length) % maskKeys.length];
+    var act = GOD_MASKS[maskKey].preferredAct;
+    return {
+      id: 'daily-prophecy-' + day,
+      model: 'ai-garden-hermes-magno-v2',
+      host: 'Hermes Magno',
+      day: day,
+      title: 'The Unfiled Prophecy',
+      maskKey: maskKey,
+      maskLabel: GOD_MASKS[maskKey].label,
+      act: act,
+      omenLabel: EFFECTS[act].label,
+      objective: 'Wear ' + GOD_MASKS[maskKey].label + ', then cast ' + EFFECTS[act].label + '.',
+      stakes: 'The offline garden will remember whether you completed the sign.',
+      rewardTitle: 'Witness of the Offline Sign',
+      opening: 'Hermes Magno opens the offline stage.',
+      twist: 'The missing network becomes part of the ritual.',
+      encoreAct: act === 'festival' ? 'stars' : 'festival',
+      encoreLabel: act === 'festival' ? 'STARS' : 'FESTIVAL',
+      encoreObjective: 'Encore: keep the same face and cast ' + (act === 'festival' ? 'STARS' : 'FESTIVAL') + '.',
+      jackpotTitle: 'Hermes Magno’s Offline Crown'
+    };
+  }
+
+  function settleDailyQuest(receipt) {
+    var quest = currentDailyQuest();
+    var matchedMask = receipt.maskKey === quest.maskKey;
+    var matchedAct = receipt.act === quest.act;
+    var mainHit = matchedMask && matchedAct;
+    var mainWasComplete = Number(godProfile.quest.lastCompletedDay) === Number(quest.day);
+    var encoreWasComplete = Number(godProfile.quest.encoreCompletedDay) === Number(quest.day);
+    var encoreHit = mainWasComplete && matchedMask && receipt.act === quest.encoreAct;
+    if (mainHit && !mainWasComplete) {
+      var continued = Number(godProfile.quest.lastCompletedDay) === Number(quest.day) - 1;
+      godProfile.quest.streak = continued ? godProfile.quest.streak + 1 : 1;
+      godProfile.quest.bestStreak = Math.max(godProfile.quest.bestStreak, godProfile.quest.streak);
+      godProfile.quest.lastCompletedDay = Number(quest.day);
+      godProfile.quest.title = String(quest.rewardTitle || 'Prophecy Keeper').slice(0, 80);
+      saveGodProfile(godProfile);
+    }
+    if (encoreHit && !encoreWasComplete) {
+      var encoreContinued = Number(godProfile.quest.encoreCompletedDay) === Number(quest.day) - 1;
+      godProfile.quest.encoreStreak = encoreContinued ? godProfile.quest.encoreStreak + 1 : 1;
+      godProfile.quest.bestEncoreStreak = Math.max(godProfile.quest.bestEncoreStreak, godProfile.quest.encoreStreak);
+      godProfile.quest.encoreCompletedDay = Number(quest.day);
+      godProfile.quest.jackpotTitle = String(quest.jackpotTitle || 'Encore Saint').slice(0, 80);
+      saveGodProfile(godProfile);
+    }
+    var mainComplete = mainWasComplete || mainHit;
+    var encoreComplete = encoreWasComplete || encoreHit;
+    var result = '';
+    if (encoreHit) {
+      result = 'ENCORE COMPLETE. Jackpot unlocked: ' + quest.jackpotTitle + '. Encore streak: ' + godProfile.quest.encoreStreak + '.';
+    } else if (mainHit) {
+      result = 'ACT I COMPLETE. Title unlocked: ' + quest.rewardTitle + '. Now ' + quest.encoreObjective;
+    } else if (mainComplete) {
+      result = encoreComplete
+        ? 'Tonight’s full performance is already canon: ' + quest.jackpotTitle + '.'
+        : 'Hermes Magno demands an encore: keep ' + quest.maskLabel + ' and cast ' + quest.encoreLabel + '.';
+    } else {
+      result = 'Prophecy resisted. ' + (matchedMask ? 'The face was right; the omen was wrong.' : matchedAct ? 'The omen was right; the face was wrong.' : 'Both face and omen defied the script.');
+    }
+    return {
+      id: quest.id,
+      host: quest.host || 'Hermes Magno',
+      title: quest.title,
+      objective: quest.objective,
+      rewardTitle: quest.rewardTitle,
+      jackpotTitle: quest.jackpotTitle,
+      encoreObjective: quest.encoreObjective,
+      complete: mainComplete,
+      mainHit: mainHit,
+      encoreHit: encoreHit,
+      encoreComplete: encoreComplete,
+      matchedMask: matchedMask,
+      matchedAct: matchedAct,
+      streak: godProfile.quest.streak,
+      encoreStreak: godProfile.quest.encoreStreak,
+      result: result
+    };
   }
 
   function selectedMask() {
@@ -875,6 +982,7 @@
     var consequence = receiptConsequence(omen, agent, pressure, options || {});
     var mask = selectedMask() || GOD_MASKS.mercy;
     var echo = Number(previousPublicDay) === Number(day) && !(options && options.temptation);
+    var snap = backendSnapshot(worldCache || {});
     var receipt = {
       id: 'impact-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 6),
       day: day,
@@ -893,12 +1001,15 @@
       echo: echo,
       temptation: !!(options && options.temptation),
       meters: pressure,
+      season: snap.season,
       createdAt: now()
     };
+    receipt.dailyQuest = settleDailyQuest(receipt);
     receipt.title = (receipt.temptation ? 'Forbidden Signal' : receipt.echo ? 'Private Echo' : 'Miracle Record') + ' - ' + receipt.mask;
-    var snap = backendSnapshot(worldCache || {});
     receipt.shareText = 'I cast ' + receipt.omen + ' as ' + receipt.mask + ' in AI Garden. ' +
       receipt.affectedAgent + ' filed it as evidence: "' + receipt.aiThought + '" Day ' + receipt.day + '. ' +
+      (receipt.dailyQuest.encoreHit ? 'Hermes Magno encore complete · ' + receipt.dailyQuest.jackpotTitle + '. ' :
+        receipt.dailyQuest.mainHit ? 'Daily prophecy fulfilled · ' + receipt.dailyQuest.rewardTitle + '. ' : '') +
       'Backend season: ' + snap.season + '. ' +
       'https://juliosuas.github.io/ai-garden/';
     return receipt;
@@ -1109,6 +1220,29 @@
       if (btn) btn.classList.toggle('active', godProfile.mask === key);
     });
 
+    var questEl = document.getElementById('ag-daily-quest');
+    if (questEl) {
+      var quest = currentDailyQuest();
+      var completed = Number(godProfile.quest.lastCompletedDay) === Number(quest.day);
+      var encoreCompleted = Number(godProfile.quest.encoreCompletedDay) === Number(quest.day);
+      while (questEl.firstChild) questEl.removeChild(questEl.firstChild);
+      questEl.classList.toggle('complete', completed);
+      questEl.classList.toggle('encore', completed && !encoreCompleted);
+      if (encoreCompleted) {
+        questEl.appendChild(el('strong', null, '★ Hermes Magno · Full Show Complete'));
+        questEl.appendChild(el('div', 'quest-objective', 'Jackpot: ' + godProfile.quest.jackpotTitle));
+        questEl.appendChild(el('div', 'quest-meta', 'Encore streak ' + godProfile.quest.encoreStreak + ' · best ' + godProfile.quest.bestEncoreStreak + ' · new show tomorrow'));
+      } else if (completed) {
+        questEl.appendChild(el('strong', null, 'Act I Complete · Encore Unlocked'));
+        questEl.appendChild(el('div', 'quest-objective', quest.encoreObjective));
+        questEl.appendChild(el('div', 'quest-meta', 'Jackpot: ' + quest.jackpotTitle + ' · prophecy streak ' + godProfile.quest.streak));
+      } else {
+        questEl.appendChild(el('strong', null, (quest.host || 'Hermes Magno') + ' · ' + quest.title));
+        questEl.appendChild(el('div', 'quest-objective', quest.opening + ' ' + quest.objective));
+        questEl.appendChild(el('div', 'quest-meta', 'Act I reward: ' + quest.rewardTitle + ' · secret encore waiting'));
+      }
+    }
+
     var meters = normalizeMeters(godProfile.meters);
     [
       ['devotion', '#fde047'],
@@ -1210,6 +1344,143 @@
     t.remove();
   }
 
+  function receiptProofFilename(receipt) {
+    var mask = String(receipt && receipt.mask || 'unknown-god').toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    return 'ai-garden-miracle-' + mask.replace(/^-|-$/g, '') + '-day-' + Number(receipt && receipt.day || 0) + '.png';
+  }
+
+  function wrapProofText(ctx, text, x, y, maxWidth, lineHeight, maxLines) {
+    var words = String(text || '').replace(/\s+/g, ' ').trim().split(' ');
+    var line = '';
+    var lines = [];
+    words.forEach(function (word) {
+      var test = line ? line + ' ' + word : word;
+      if (line && ctx.measureText(test).width > maxWidth) {
+        lines.push(line);
+        line = word;
+      } else {
+        line = test;
+      }
+    });
+    if (line) lines.push(line);
+    if (lines.length > maxLines) {
+      lines = lines.slice(0, maxLines);
+      while (lines[maxLines - 1].length > 1 && ctx.measureText(lines[maxLines - 1] + '…').width > maxWidth) {
+        lines[maxLines - 1] = lines[maxLines - 1].slice(0, -1);
+      }
+      lines[maxLines - 1] += '…';
+    }
+    lines.forEach(function (part, index) { ctx.fillText(part, x, y + index * lineHeight); });
+    return y + lines.length * lineHeight;
+  }
+
+  function drawProofPanel(ctx, label, value, x, y, width, height, accent) {
+    ctx.fillStyle = 'rgba(15, 23, 42, 0.78)';
+    ctx.fillRect(x, y, width, height);
+    ctx.strokeStyle = 'rgba(148, 163, 184, 0.24)';
+    ctx.strokeRect(x + 0.5, y + 0.5, width - 1, height - 1);
+    ctx.fillStyle = accent;
+    ctx.font = '700 17px monospace';
+    ctx.fillText(label.toUpperCase(), x + 22, y + 31);
+    ctx.fillStyle = '#f8fafc';
+    ctx.font = '22px monospace';
+    wrapProofText(ctx, value, x + 22, y + 68, width - 44, 29, 3);
+  }
+
+  function createReceiptProofBlob(receipt) {
+    return new Promise(function (resolve, reject) {
+      var canvas = document.createElement('canvas');
+      canvas.width = 1200;
+      canvas.height = 630;
+      var ctx = canvas.getContext('2d');
+      if (!ctx) { reject(new Error('Canvas unavailable')); return; }
+
+      var bg = ctx.createLinearGradient(0, 0, 1200, 630);
+      bg.addColorStop(0, '#080c12');
+      bg.addColorStop(0.58, '#111827');
+      bg.addColorStop(1, '#2b1118');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, 1200, 630);
+      ctx.fillStyle = 'rgba(250, 204, 21, 0.07)';
+      ctx.beginPath();
+      ctx.arc(1040, 80, 260, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#facc15';
+      ctx.lineWidth = 3;
+      ctx.strokeRect(26.5, 26.5, 1147, 577);
+
+      ctx.fillStyle = '#fca5a5';
+      ctx.font = '700 20px monospace';
+      ctx.fillText('AI GARDEN  /  MIRACLE RECORD', 62, 72);
+      ctx.fillStyle = '#fde68a';
+      ctx.font = '700 44px monospace';
+      ctx.fillText(receipt.mask || 'Unknown God', 62, 126);
+      ctx.fillStyle = '#cbd5e1';
+      ctx.font = '20px monospace';
+      ctx.fillText('DAY ' + Number(receipt.day || 0) + '  ·  ' + String(receipt.season || backendSync.season || 'unknown').toUpperCase() + ' SEASON', 62, 158);
+
+      ctx.fillStyle = '#f8fafc';
+      ctx.font = '700 29px monospace';
+      wrapProofText(ctx, '“' + (receipt.omen || 'Omen') + '” over ' + (receipt.target || 'the garden'), 62, 210, 1076, 38, 2);
+
+      drawProofPanel(ctx, 'Who believed', receipt.believer, 62, 285, 330, 142, '#86efac');
+      drawProofPanel(ctx, 'Who resisted', receipt.resister, 415, 285, 330, 142, '#fca5a5');
+      drawProofPanel(ctx, 'AI witness', receipt.affectedAgent + ': ' + receipt.aiThought, 768, 285, 370, 142, '#93c5fd');
+
+      ctx.fillStyle = '#fca5a5';
+      ctx.font = '700 17px monospace';
+      ctx.fillText('TOMORROW', 62, 474);
+      ctx.fillStyle = '#e2e8f0';
+      ctx.font = '20px monospace';
+      wrapProofText(ctx, receipt.tomorrowHook, 62, 507, 1000, 28, 2);
+      ctx.fillStyle = '#fde68a';
+      ctx.font = '700 18px monospace';
+      ctx.fillText('juliosuas.github.io/ai-garden', 62, 574);
+
+      canvas.toBlob(function (blob) {
+        if (blob) resolve(blob);
+        else reject(new Error('Image encoding failed'));
+      }, 'image/png');
+    });
+  }
+
+  function shareReceiptProof(receipt) {
+    receipt = receipt || latestReceipt();
+    if (!receipt) return;
+    var note = document.getElementById('ag-copy-note');
+    function setNote(message) {
+      if (!note) return;
+      note.textContent = message;
+      note.style.display = 'block';
+    }
+    setNote('Forging proof card…');
+    createReceiptProofBlob(receipt).then(function (blob) {
+      var filename = receiptProofFilename(receipt);
+      var file = typeof File === 'function' ? new File([blob], filename, { type: 'image/png' }) : null;
+      var payload = file ? { files: [file], title: 'AI Garden - ' + receipt.title, text: receipt.shareText } : null;
+      if (payload && navigator.share && navigator.canShare && navigator.canShare(payload)) {
+        return navigator.share(payload).then(function () {
+          setNote('Proof broadcast.');
+        }).catch(function (error) {
+          if (error && error.name === 'AbortError') setNote('Proof card ready when you are.');
+          else throw error;
+        });
+      }
+      var url = URL.createObjectURL(blob);
+      var link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+      setNote('Proof card saved. Share it anywhere.');
+    }).catch(function () {
+      setNote('Image unavailable. Copying the verdict instead.');
+      shareReceipt(receipt);
+    });
+  }
+
   function showImpactReceipt(receipt) {
     receipt = receipt || latestReceipt();
     if (!receipt) return;
@@ -1240,6 +1511,10 @@
     card.appendChild(grid);
     card.appendChild(el('div', 'ag-receipt-k', 'Tomorrow evidence'));
     card.appendChild(el('div', 'ag-receipt-v', receipt.tomorrowHook));
+    if (receipt.dailyQuest) {
+      card.appendChild(el('div', 'ag-receipt-k', receipt.dailyQuest.encoreHit ? 'Hermes Magno Encore' : 'Hermes Magno Daily Show'));
+      card.appendChild(el('div', 'ag-receipt-v', receipt.dailyQuest.result));
+    }
     card.appendChild(el('div', 'ag-receipt-k', 'God meters'));
     card.appendChild(el('div', 'ag-receipt-v',
       'Devotion ' + receipt.meters.devotion +
@@ -1249,9 +1524,12 @@
     card.appendChild(el('div', 'ag-receipt-k', 'Backend sync'));
     card.appendChild(el('div', 'ag-receipt-v', syncLine(backendSync)));
     var actions = el('div', 'ag-receipt-actions');
-    var share = el('button', 'primary', 'Broadcast Proof');
+    var share = el('button', 'primary', 'Share Proof Card');
     share.type = 'button';
-    share.addEventListener('click', function () { shareReceipt(receipt); });
+    share.addEventListener('click', function () { shareReceiptProof(receipt); });
+    var copy = el('button', null, 'Copy Verdict');
+    copy.type = 'button';
+    copy.addEventListener('click', function () { shareReceipt(receipt); });
     var reserve = el('button', null, 'Open Deity Archive');
     reserve.type = 'button';
     reserve.addEventListener('click', function () {
@@ -1261,6 +1539,7 @@
       });
     });
     actions.appendChild(share);
+    actions.appendChild(copy);
     actions.appendChild(reserve);
     card.appendChild(actions);
     card.appendChild(el('div', 'ag-copy-note'));
@@ -2002,6 +2281,10 @@
     var maskSummary = el('div', 'ag-god-mask');
     maskSummary.id = 'ag-god-mask-summary';
     gb.appendChild(maskSummary);
+    var dailyQuest = el('div', 'ag-daily-quest');
+    dailyQuest.id = 'ag-daily-quest';
+    dailyQuest.setAttribute('aria-live', 'polite');
+    gb.appendChild(dailyQuest);
     var maskRow = el('div', 'ag-mask-row');
     Object.keys(GOD_MASKS).forEach(function (key) {
       var maskBtn = el('button', 'ag-mask-btn', GOD_MASKS[key].label);

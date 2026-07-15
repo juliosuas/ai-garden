@@ -26,6 +26,8 @@ const { maintainDivineWar } = require('./divine-war');
 const { refreshGameWonderAgent } = require('./game-wonder-agent');
 const { applyFeaturedAgentsToWorld } = require('./featured-agents');
 const { refreshWeeklyNarrativeDirector } = require('./weekly-narrative-agent');
+const { refreshDailyQuest } = require('./daily-quest');
+const { refreshAgentCouncil } = require('./agent-council');
 
 const WORLD  = path.join(__dirname, '..', 'experiments', 'world-state.json');
 const README = path.join(__dirname, '..', 'README.md');
@@ -957,6 +959,8 @@ refreshCivilization(world, rng);
 refreshCivilizationVisuals(world, rng, { addDailyCrabAction: true });
 refreshGameWonderAgent(world, rng, { applyAdvice: true });
 applyFeaturedAgentsToWorld(world);
+refreshDailyQuest(world);
+refreshAgentCouncil(world);
 
 // Trim retention
 if (world.history.length > 400) world.history = world.history.slice(-400);

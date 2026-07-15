@@ -31,9 +31,13 @@ const STAKEHOLDER_ASSEMBLY = path.join(ROOT, 'scripts', 'stakeholder-assembly.js
 const GAME_WONDER_AGENT = path.join(ROOT, 'scripts', 'game-wonder-agent.js');
 const FEATURED_AGENTS_SCRIPT = path.join(ROOT, 'scripts', 'featured-agents.js');
 const WEEKLY_NARRATIVE_AGENT = path.join(ROOT, 'scripts', 'weekly-narrative-agent.js');
+const DAILY_QUEST = path.join(ROOT, 'scripts', 'daily-quest.js');
+const AGENT_COUNCIL = path.join(ROOT, 'scripts', 'agent-council.js');
 const MUSIC = path.join(ROOT, 'experiments', 'music.js');
 const ROADMAP = path.join(ROOT, 'ROADMAP.md');
 const GARDEN = path.join(ROOT, 'garden.js');
+const { refreshDailyQuest } = require('./daily-quest');
+const { computeAgentCouncilDecision, refreshAgentCouncil } = require('./agent-council');
 
 const failures = [];
 const notes = [];
@@ -90,6 +94,8 @@ async function main() {
   const gameWonderAgent = read(GAME_WONDER_AGENT);
   const featuredAgentsScript = read(FEATURED_AGENTS_SCRIPT);
   const weeklyNarrativeAgent = read(WEEKLY_NARRATIVE_AGENT);
+  const dailyQuestScript = read(DAILY_QUEST);
+  const agentCouncilScript = read(AGENT_COUNCIL);
   const music = read(MUSIC);
   const roadmap = read(ROADMAP);
   const garden = read(GARDEN);
@@ -103,6 +109,15 @@ async function main() {
   const weeklyNarrative = world.weeklyNarrativeDirector || null;
   const gstackCouncil = world.gstackCouncil || null;
   const stakeholderAssembly = world.stakeholderAssembly || null;
+  const dailyQuest = world.dailyQuest || null;
+  const questProbe = JSON.parse(JSON.stringify(world));
+  delete questProbe.dailyQuest;
+  const firstQuest = JSON.stringify(refreshDailyQuest(questProbe));
+  const secondQuest = JSON.stringify(refreshDailyQuest(questProbe));
+  const firstCouncil = JSON.stringify(computeAgentCouncilDecision(JSON.parse(JSON.stringify(world))));
+  const secondCouncil = JSON.stringify(computeAgentCouncilDecision(JSON.parse(JSON.stringify(world))));
+  const councilProbe = JSON.parse(JSON.stringify(world));
+  const councilDecision = refreshAgentCouncil(councilProbe);
 
   check(world.civilizationBrain && world.civilizationBrain.summary, 'missing civilizationBrain summary');
   check(Array.isArray(world.agentActions) && world.agentActions.length >= 12, 'agent action ledger is too thin');
@@ -155,6 +170,20 @@ async function main() {
   check(weeklyNarrative && Array.isArray(weeklyNarrative.tickerBeats) && weeklyNarrative.tickerBeats.length >= 2, 'Weekly Narrative Agent needs ticker beats');
   check(weeklyNarrative && weeklyNarrative.verifyChecklist && weeklyNarrative.verifyChecklist.ok, 'Weekly Narrative Agent verification failed');
   check(weeklyNarrative && weeklyNarrative.automation && weeklyNarrative.automation.commitMode === 'automatic', 'Weekly Narrative Agent must keep automatic commit mode');
+  check(dailyQuest && dailyQuest.model === 'ai-garden-hermes-magno-v2', 'missing Hermes Magno Daily Show v2');
+  check(dailyQuest && dailyQuest.host === 'Hermes Magno', 'Daily Show lacks its autonomous host');
+  check(dailyQuest && Number(dailyQuest.day) === Number(world.chronicle && world.chronicle.day), 'Daily Prophecy is stale');
+  check(dailyQuest && ['mercy', 'judgment', 'chaos', 'silence'].includes(dailyQuest.maskKey), 'Daily Prophecy has an invalid divine mask');
+  check(dailyQuest && ['rain', 'eclipse', 'lightning', 'comet', 'stars', 'festival'].includes(dailyQuest.act), 'Daily Prophecy has an invalid omen');
+  check(dailyQuest && dailyQuest.objective && dailyQuest.rewardTitle && dailyQuest.witness, 'Daily Prophecy lacks objective, reward, or witness');
+  check(dailyQuest && dailyQuest.opening && dailyQuest.twist && dailyQuest.encoreAct && dailyQuest.encoreObjective && dailyQuest.jackpotTitle, 'Hermes Magno show lacks opening, twist, encore, or jackpot');
+  check(dailyQuest && dailyQuest.encoreAct !== dailyQuest.act, 'Hermes Magno encore must differ from Act I');
+  check(firstQuest === secondQuest, 'Daily Prophecy generation is not deterministic for the same world day');
+  check(firstCouncil === secondCouncil, 'Agent Council is not deterministic for the same canonical day');
+  check(councilDecision && councilDecision.canonical === true, 'Agent Council did not produce a canonical decision');
+  check(councilDecision && councilDecision.council && councilDecision.council.length === 3, 'Agent Council needs a proposer, dissenter, and closer');
+  check(councilDecision && councilDecision.vote && councilDecision.vote.yes >= councilDecision.vote.threshold, 'Agent Council failed to resolve its own deadlock');
+  check(councilProbe.agentActions.some(action => action.id === councilDecision.id), 'Agent Council decision did not enter the action ledger');
   const featuredAgents = world.featuredAgents || [];
   const featuredNames = new Set(featuredAgents.map(agent => agent.name));
   for (const name of ['Codex', 'Hermes', 'OpenClaw', 'Claude', 'Gemini', 'GPT-5', 'Mistral', 'Llama']) {
@@ -224,6 +253,8 @@ async function main() {
   check(index.includes('id="story-meter-fill"'), 'story primer is missing the week progress meter');
   check(index.includes('id="story-meter-label"'), 'story primer is missing the week progress label');
   check(index.includes('id="story-spotlight"'), 'story primer is missing tonight spotlight');
+  check(index.includes('id="daily-prophecy-cue"'), 'story primer does not expose today’s playable prophecy');
+  check(index.includes('updateDailyProphecyCue'), 'story primer cannot refresh today’s playable prophecy');
   check(index.includes('id="story-cliffhanger"'), 'story primer is missing the cliffhanger cue');
   check(index.includes('id="story-if-win"'), 'story primer is missing the win outcome');
   check(index.includes('id="story-if-fail"'), 'story primer is missing the fail outcome');
@@ -241,6 +272,7 @@ async function main() {
   check(index.includes('id="self-optimizer-cue"'), 'spectator cue does not show the Self Optimizer');
   check(index.includes('world.selfOptimizer = shared.selfOptimizer || null'), 'client does not load Self Optimizer state');
   check(index.includes('world.weeklyNarrativeDirector = shared.weeklyNarrativeDirector || null'), 'client does not load Weekly Narrative Agent state');
+  check(index.includes('world.dailyQuest = shared.dailyQuest || null'), 'client does not load the canonical Daily Prophecy');
   check(index.includes('world.gstackCouncil = shared.gstackCouncil || null'), 'client does not load GStack Professional Council state');
   check(index.includes('GStack Professional Council'), 'client does not expose GStack Professional Council');
   check(index.includes('world.stakeholderAssembly = shared.stakeholderAssembly || null'), 'client does not load Stakeholder Assembly state');
@@ -319,13 +351,24 @@ async function main() {
   check(humans.includes('THE MIRROR TRIAL'), 'CIV panel does not expose The Mirror Trial');
   check(humans.includes('Choose the face they will mistake for God'), 'Mirror Trial lacks divine mask selection');
   check(humans.includes('impactReceipt'), 'Mirror Trial lacks impactReceipt output');
-  check(humans.includes('Broadcast Proof'), 'Mirror Trial lacks shareable proof');
+  check(humans.includes('Share Proof Card'), 'Mirror Trial lacks a visual share artifact');
+  check(humans.includes('createReceiptProofBlob'), 'Mirror Trial cannot render its proof card');
+  check(humans.includes("canvas.width = 1200") && humans.includes("canvas.height = 630"), 'Mirror Trial proof card should use a social-ready 1200x630 canvas');
+  check(humans.includes('navigator.canShare'), 'Mirror Trial proof card lacks native file sharing');
+  check(humans.includes('URL.createObjectURL'), 'Mirror Trial proof card lacks a download fallback');
   check(humans.includes('navigator.share'), 'Mirror Trial lacks native share support');
   check(humans.includes('GOD_RECEIPT_STORE'), 'Mirror Trial receipts are not persisted');
+  check(humans.includes('currentDailyQuest'), 'Mirror Trial does not load the Daily Prophecy');
+  check(humans.includes('settleDailyQuest'), 'Mirror Trial cannot complete the Daily Prophecy');
+  check(humans.includes('bestStreak'), 'Daily Prophecy does not preserve personal streaks');
+  check(humans.includes('bestEncoreStreak') && humans.includes('encoreCompletedDay'), 'Hermes Magno does not preserve encore streaks');
+  check(humans.includes('ENCORE COMPLETE') && humans.includes('Encore Unlocked'), 'Hermes Magno lacks a playable two-act payoff');
+  check(humans.includes('aria-live'), 'Daily Prophecy result is not announced accessibly');
   check(humans.includes('BACKEND_SYNC_STORE'), 'human layer does not persist backend sync state');
   check(humans.includes('ag-sync-strip'), 'Observer Lounge lacks visible backend sync status');
   check(humans.includes('createAgentReply'), 'Observer Lounge lacks synchronized AI witness replies');
   check(humans.includes("type !== 'agent'"), 'realtime bus does not accept sanitized agent replies');
+  check(humans.includes("/sse?since=2m&sched=none") && !humans.includes("/sse?poll=1"), 'realtime bus should keep one persistent SSE stream without reconnect spam');
   check(humans.includes("data-ag-season"), 'human layer does not expose season state on the page');
   check(humans.includes('GardenMusic.setSeason'), 'season changes are not synchronized into music');
   check(humans.includes('Forbidden Signal'), 'Mirror Trial lacks the temptation mechanic');
@@ -352,6 +395,7 @@ async function main() {
   check(music.includes('MAX_ACTIVE_VOICES') && music.includes('canScheduleVoice'), 'ambient music should cap scheduled voice density');
   check(index.includes('musicMuted'), 'music preference should persist in local prefs');
   check(index.includes('restoreGardenMusicPreference'), 'music preference should be restorable after reload');
+  check(!index.includes("GardenMusic.start();\n  restoreGardenMusicPreference();"), 'music should not create AudioContext before a user gesture');
   check(garden.includes('seedTargetForViewport'), 'garden background should scale seed count by viewport');
   check(garden.includes('syncSeedsToViewportBudget'), 'garden background should rebalance seed count after viewport resize');
   check(garden.includes('MAX_BACKGROUND_SEEDS'), 'garden background should cap burst particle density');
@@ -384,9 +428,15 @@ async function main() {
   check(dailyWorkflow.includes("cron: '11 4 * * *'"), 'daily evolution cron is missing');
   check(dailyWorkflow.includes('node scripts/playtest-subagent.js'), 'daily cron does not run the playtest subagent');
   check(dailyWorkflow.includes('node --check scripts/weekly-narrative-agent.js'), 'daily cron does not validate the Weekly Narrative Agent');
+  check(dailyWorkflow.includes('node --check scripts/daily-quest.js'), 'daily cron does not validate Daily Prophecy generation');
+  check(dailyWorkflow.includes('node --check scripts/agent-council.js'), 'daily cron does not validate the canonical Agent Council');
   check(dailyWorkflow.includes('bash scripts/agentic-main-push.sh'), 'daily cron does not use retrying agentic main push');
   check(dailyWorkflow.includes('contents: write'), 'daily cron cannot write commits');
   check(dailyEvolution.includes('FORTUNE_SIGNS') && dailyEvolution.includes('world.mysticFortune') && dailyEvolution.includes('applyMiracleBoon'), 'daily evolution needs a mystical luck accelerator');
+  check(dailyEvolution.includes('refreshDailyQuest'), 'daily evolution does not refresh the playable Daily Prophecy');
+  check(dailyEvolution.includes('refreshAgentCouncil'), 'daily evolution does not run the canonical Agent Council');
+  check(dailyQuestScript.includes('ai-garden-hermes-magno-v2') && dailyQuestScript.includes('refreshDailyQuest'), 'Hermes Magno generator contract is incomplete');
+  check(agentCouncilScript.includes('ai-garden-agent-council-v1') && agentCouncilScript.includes('compromise-fork'), 'Agent Council autonomy contract is incomplete');
 
   check(autopilotWorkflow.includes("cron: '37 5 * * *'"), 'daily autopilot PR cron is missing');
   check(autopilotWorkflow.includes('pull-requests: write'), 'autopilot workflow cannot open PRs');
@@ -394,6 +444,7 @@ async function main() {
   check(autopilotWorkflow.includes('Check PR automation permission'), 'autopilot workflow does not preflight PR permissions');
   check(autopilotWorkflow.includes('PR creation blocked'), 'autopilot workflow does not exit cleanly when PR creation is disabled');
   check(autopilotWorkflow.includes('node scripts/autopilot-pr-summary.js'), 'autopilot workflow does not generate a PR summary');
+  check(autopilotWorkflow.includes('node --check scripts/daily-quest.js'), 'autopilot PR does not validate Daily Prophecy generation');
   check(autopilotWorkflow.includes('gh pr create'), 'autopilot workflow does not open a PR');
   check(autopilotWorkflow.includes('--draft'), 'autopilot PRs should start as drafts');
   check(autopilotWorkflow.includes('--label ai-garden-autopilot'), 'autopilot PR label is missing');

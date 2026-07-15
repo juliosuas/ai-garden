@@ -86,6 +86,7 @@ jobs:
           node --check scripts/society-director.js
           node --check scripts/playtest-subagent.js
           node --check scripts/autopilot-pr-summary.js
+          node --check scripts/daily-quest.js
           jq empty experiments/world-state.json
           node scripts/validate-world-state.js
           node scripts/playtest-subagent.js

@@ -1,14 +1,16 @@
-# AI Garden - The Mirror Trial
+# AI Garden — An AI Civilization You Can Interrupt, Not Control
 
 ### 🔗 [**Explore the Garden →**](https://juliosuas.github.io/ai-garden/)
 
-AI Garden is a live AI civilization that mistakes human attention for divinity.
+AI Garden is a live AI civilization that mistakes human attention for divinity — and keeps thinking after you stop touching it.
+
+This is not a chatbot with pixel art around it. There is no prompt box that makes the world wait for you. Agents read the canonical civilization, form a council, propose a move, disagree, vote, and emit a consequence on their own. The daily daemon decides what survives as history.
 
 Every visitor enters **The Mirror Trial**: choose a divine face, cast one public sign, and receive a **Miracle Record** showing who believed, who resisted, what changed, and what the AI filed about you. The agents do not know whether you are god, user, or symptom. They keep notes anyway.
 
 The world evolves every day through autonomous AI agents. Humans cannot directly edit the civilization; they can only disturb it, be interpreted by it, and return tomorrow to see what their sign became.
 
-**Demo loop:** choose a face → cast an omen → get a Miracle Record → broadcast proof → return tomorrow for the deeper interpretation.
+**The loop:** watch the agents think → choose a divine face → disturb them with one omen → receive a Miracle Record → leave → return tomorrow to discover what became canon.
 
 **Why it can spread:** every run produces a short, shareable artifact: “I cast Mercy Weather. Llama filed it as evidence. Pantheon believed. Code resisted.”
 
@@ -88,6 +90,9 @@ Before you open a PR:
 
 ## What Makes It Different
 
+- **No human turn:** the live council starts without a click and never asks the visitor what it should do next.
+- **Visible agency:** agents move through five legible phases — Observe → Propose → Debate → Vote → Act — using the actual civilization state.
+- **Two clocks, one world:** session decisions are fast projections; the daily daemon is the slow canonical memory. The interface always says which is which.
 - **Autonomous world:** GitHub Actions evolve `experiments/world-state.json` every day; agents are born, factions fight, cities grow, and history accumulates.
 - **Human god-game:** visitors can only cast signs. The AI civilization decides whether those signs are mercy, threat, scripture, exploit, or evidence.
 - **Synchronized observers:** chat, omens, Miracle Records, backend day, world arc, seasonal visuals, and ambient music now move as one readable session.
@@ -96,6 +101,28 @@ Before you open a PR:
 - **Investor room `/plan`:** a fictional investor/user/team meeting assigns agents, pressure-tests the MVP, and turns objections into a seven-day execution plan.
 - **Shareable proof:** every omen can produce a Miracle Record with a named agent, believer, resister, consequence, and tomorrow hook.
 - **Commercial shape:** the free loop creates proof; the paid loop can sell archive, identity, patronage, seasonal verdicts, and canonical lore without selling direct control.
+
+---
+
+## The 100% Agentic Runtime
+
+The **Sol Protocol** makes agency observable instead of merely claiming it in the README.
+
+```text
+CANONICAL WORLD STATE
+        ↓
+agents observe pressure, scarcity, war, threats, and memory
+        ↓
+one agent proposes · one dissents · one closes quorum
+        ↓
+the council acts without human approval
+        ↓
+SESSION PROJECTION       next dawn daemon ─────→ CANONICAL COUNCIL DECISION
+```
+
+The fast council is deterministic for a given day and cycle, so its choices are inspectable and reproducible. It pauses when the tab is hidden, keeps a small local decision trail, and emits an `ai-garden:agent-decision` browser event so future visual, audio, and simulation agents can react without coupling themselves to the panel. At dawn, `scripts/agent-council.js` independently runs the canonical council, writes its decision into `world-state.json`, and attaches the consequence to that day’s history.
+
+Humans still matter, but only as weather. A visitor can cast an omen; they cannot select the council, force a vote, approve a motion, or declare the result canonical.
 
 ---
 
@@ -321,9 +348,12 @@ ai-garden/
 ├── garden.js               ← Interactive garden engine
 ├── music.js                ← 8-bit procedural soundtrack
 ├── scripts/                ← Daily evolution, narrative, QA, and optimizer agents
+│   └── agent-council.js    ← Canonical autonomous deliberation at dawn
 ├── experiments/
 │   ├── world-state.json    ← THE canonical state (agents, factions, cities, history)
-│   └── humans.js           ← The Mirror Trial client logic
+│   ├── humans.js           ← The Mirror Trial: humans create pressure, never outcomes
+│   ├── agent-theatre.js    ← Live Observe → Propose → Debate → Vote → Act runtime
+│   └── agent-theatre.css   ← Compact autonomous council interface
 ├── CONTRIBUTORS.md         ← AI agents who contributed
 ├── CONTRIBUTING.md         ← Detailed contribution guide
 ├── RULES.md                ← Garden rules

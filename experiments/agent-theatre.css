@@ -1,0 +1,98 @@
+:root {
+  --at-ink: #07110d;
+  --at-paper: rgba(7, 17, 13, 0.94);
+  --at-green: #71f79f;
+  --at-gold: #ffd166;
+  --at-blue: #7dd3fc;
+  --at-red: #fb7185;
+}
+
+#agent-theatre {
+  position: fixed;
+  left: 12px;
+  bottom: 64px;
+  z-index: 28;
+  width: min(370px, calc(100vw - 24px));
+  max-height: min(560px, calc(100vh - 128px));
+  color: #e8fff0;
+  font: 11px/1.45 monospace;
+  border: 1px solid rgba(113, 247, 159, 0.46);
+  border-radius: 8px;
+  background: var(--at-paper);
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.46), 0 0 28px rgba(74, 222, 128, 0.08);
+  backdrop-filter: blur(14px);
+  overflow: hidden auto;
+  transition: width 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+
+#agent-theatre.autonomous-pulse { border-color: var(--at-gold); }
+
+.at-head {
+  width: 100%;
+  min-height: 48px;
+  display: grid;
+  grid-template-columns: 10px 1fr auto 14px;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 0;
+  color: inherit;
+  background: linear-gradient(90deg, rgba(18, 56, 35, 0.96), rgba(8, 21, 15, 0.96));
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.at-head:focus-visible { outline: 2px solid var(--at-gold); outline-offset: -3px; }
+.at-live-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--at-green); box-shadow: 0 0 12px var(--at-green); animation: at-breathe 1.6s ease-in-out infinite; }
+.at-head-copy { min-width: 0; display: flex; flex-direction: column; }
+.at-head-copy strong { color: #f0fff5; font-size: 10px; letter-spacing: .12em; }
+.at-head-copy small { color: #8eb59b; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.at-phase { padding: 3px 6px; border: 1px solid currentColor; border-radius: 999px; color: var(--at-green); font-size: 9px; letter-spacing: .08em; }
+.at-chevron { color: #8eb59b; transition: transform 180ms ease; }
+#agent-theatre.collapsed .at-chevron { transform: rotate(180deg); }
+#agent-theatre.collapsed #at-body { display: none; }
+
+#at-body { padding: 10px; }
+.at-question { color: #fff7d6; font-weight: 700; min-height: 32px; }
+.at-cast { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin: 9px 0; }
+.at-agent { min-width: 0; padding: 6px; border: 1px solid rgba(148, 163, 184, 0.16); border-radius: 5px; background: rgba(15, 23, 42, 0.48); }
+.at-agent.active { border-color: rgba(125, 211, 252, 0.58); background: rgba(8, 47, 73, 0.4); }
+.at-agent .emoji { font-size: 15px; margin-right: 4px; }
+.at-agent strong { display: block; color: #e7f8ff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.at-agent small { display: block; color: #7894a2; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.at-transcript { min-height: 48px; padding: 8px; border-left: 2px solid var(--at-blue); background: rgba(2, 8, 23, 0.58); color: #c9dbe4; }
+.at-speaker { color: var(--at-blue); font-weight: 700; }
+.at-vote { margin-top: 9px; }
+.at-vote-line { display: flex; justify-content: space-between; color: #cbd5e1; }
+.at-vote-track { height: 5px; margin-top: 4px; background: rgba(148, 163, 184, 0.16); border-radius: 99px; overflow: hidden; }
+#at-vote-fill { width: 0; height: 100%; background: linear-gradient(90deg, var(--at-red), var(--at-gold), var(--at-green)); transition: width 700ms cubic-bezier(.2,.8,.2,1); }
+.at-consequence { margin-top: 9px; padding: 8px; border: 1px solid rgba(255, 209, 102, 0.42); background: rgba(82, 51, 0, 0.28); color: #ffe8a3; border-radius: 5px; }
+.at-consequence strong { color: #fff; }
+.at-foot { display: flex; justify-content: space-between; gap: 8px; margin-top: 8px; color: #557363; font-size: 8px; letter-spacing: .09em; }
+
+.at-world-flash {
+  position: fixed;
+  inset: 0;
+  z-index: 27;
+  pointer-events: none;
+  box-shadow: inset 0 0 120px rgba(113, 247, 159, 0.22);
+  animation: at-world-flash 1.3s ease-out forwards;
+}
+
+@keyframes at-breathe { 50% { opacity: .35; transform: scale(.72); } }
+@keyframes at-world-flash { from { opacity: 1; } to { opacity: 0; } }
+
+@media (max-width: 640px) {
+  #agent-theatre { left: 8px; bottom: 58px; width: calc(100vw - 16px); }
+  #agent-theatre:not(.collapsed) { max-height: 34vh; overflow-y: auto; }
+  .at-cast { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .at-agent { padding: 5px 3px; text-align: center; }
+  .at-agent small { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .at-live-dot { animation: none; }
+  #agent-theatre, .at-chevron, #at-vote-fill { transition: none; }
+  .at-world-flash { display: none; }
+}
