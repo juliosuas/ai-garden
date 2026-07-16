@@ -83,7 +83,7 @@ Before you open a PR:
 <!-- live:end -->
 
 <!-- self-optimizer:start -->
-**Self Optimizer** - Day 97 - overall 100/100 - focus: Game Flow - next: slow the spectacle into one readable scene at a time
+**Self Optimizer** - Day 98 - overall 100/100 - focus: Mobile UX - next: keep the mobile HUD quiet, dismissible, and action-first
 <!-- self-optimizer:end -->
 
 ---
