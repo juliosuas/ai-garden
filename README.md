@@ -79,7 +79,7 @@ Before you open a PR:
 > The garden lives alone. Daily automation evolves the world, opens draft PRs, checks itself, and keeps one seven-day narrative arc coherent.
 
 <!-- live:start -->
-**Day 99** · 193 alive · 396 remembered · 2 active wars · 138 structures · 182 regions (map 23137×14273) · 30 cities · 6 dynasties · 11 religions · 20/20 techs
+**Day 100** · 196 alive · 398 remembered · 2 active wars · 140 structures · 185 regions (map 23563×14463) · 30 cities · 7 dynasties · 11 religions · 20/20 techs
 <!-- live:end -->
 
 <!-- self-optimizer:start -->
