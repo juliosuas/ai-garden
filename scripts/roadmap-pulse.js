@@ -80,7 +80,12 @@ function buildPulse() {
   );
 
   const contracts = [
-    check('Mirror Trial', humans.includes('Choose the face they will mistake for God') && humans.includes('Miracle Record'), 'first action produces proof'),
+    check('Mirror Trial',
+      humans.includes('Choose a face.') &&
+      humans.includes('Nothing happens until you pick a power.') &&
+      humans.includes('Miracle Record') &&
+      humans.includes('Share Result'),
+      'chosen sign produces proof'),
     check('Observer Lounge', humans.includes('ag-chat') && humans.includes('createAgentReply'), 'chat produces an AI witness reply'),
     check('Backend Sync', humans.includes('BACKEND_SYNC_STORE') && humans.includes('ag-sync-strip'), 'human actions show day, arc, and season'),
     check('Seasonal Audio',

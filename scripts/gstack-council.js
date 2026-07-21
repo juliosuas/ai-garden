@@ -198,7 +198,7 @@ function reviewFor(specialist, files, world) {
       check('reduced motion', files.index.includes('prefersReducedMotion'), 'respect reduced motion')
     ],
     monetization: [
-      check('deity archive', files.readme.includes('Deity Archive') && files.humans.includes('Open Deity Archive'), 'make Deity Archive visible'),
+      check('deity archive', files.readme.includes('Deity Archive') && files.humans.includes('Share Result'), 'keep Deity Archive as an honest roadmap while the playable result stays useful'),
       check('paid guardrail', files.roadmap.includes('Cannot force outcomes') && files.readme.includes('without selling direct control'), 'state paid control guardrail'),
       check('minor pass', files.roadmap.includes('Minor God Pass'), 'define Minor God Pass'),
       check('patron pass', files.roadmap.includes('Patron God Pass'), 'define Patron God Pass'),
