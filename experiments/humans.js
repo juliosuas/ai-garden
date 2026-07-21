@@ -148,36 +148,29 @@
       'body[data-ag-season="autumn"] #' + SEASON_LAYER_ID + '{background:radial-gradient(circle at 80% 20%,rgba(251,146,60,0.28),transparent 32%),linear-gradient(180deg,rgba(180,83,9,0.12),rgba(127,29,29,0.05));}',
       'body[data-ag-season="winter"] #' + SEASON_LAYER_ID + '{background:radial-gradient(circle at 35% 10%,rgba(191,219,254,0.24),transparent 30%),linear-gradient(180deg,rgba(147,197,253,0.1),rgba(15,23,42,0.08));opacity:0.2;}',
       /* God panel top-right */
-      '.ag-god{position:absolute;top:44px;right:8px;width:320px;max-height:calc(100vh - 96px);overflow:hidden;z-index:20;',
+      '.ag-god{position:absolute;top:44px;right:8px;width:148px;',
       '  background:rgba(10,10,20,0.92);border:1px solid #2a4a2a;border-radius:6px;color:#e0e0e0;',
       '  font-size:11px;letter-spacing:0.5px;}',
-      '.ag-god-head{display:flex;width:100%;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;',
-      '  background:rgba(74,222,128,0.08);border:0;border-bottom:1px solid #2a4a2a;cursor:pointer;color:#ffd700;font-family:monospace;text-align:left;}',
-      '.ag-god-title{font-weight:bold;flex:1;}',
-      '.ag-god-title small{display:block;margin-top:2px;color:#94a3b8;font-size:8px;font-weight:normal;letter-spacing:0;text-transform:none;}',
+      '.ag-god-head{display:flex;align-items:center;justify-content:space-between;padding:5px 8px;',
+      '  background:rgba(74,222,128,0.08);border-bottom:1px solid #2a4a2a;cursor:pointer;color:#ffd700;}',
+      '.ag-god-title{font-weight:bold;}',
       '.ag-god-caret{transition:transform 0.2s ease;color:#888;}',
       '.ag-collapsed .ag-god-caret{transform:rotate(-90deg);}',
       '.ag-collapsed .ag-god-body,.ag-collapsed .ag-chat-body{display:none;}',
       '.ag-god-presence{font-size:9px;color:#fb923c;margin-left:4px;}',
-      '.ag-god-body{padding:10px;display:grid;grid-template-columns:repeat(2,1fr);gap:7px;max-height:calc(100vh - 142px);overflow-y:auto;overscroll-behavior:contain;}',
-      '.ag-step-title{grid-column:1/-1;color:#f8fafc;font-size:10px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;margin-top:3px;}',
-      '.ag-step-title span{color:#64748b;font-size:8px;font-weight:normal;letter-spacing:0;text-transform:none;margin-left:5px;}',
-      '.ag-god-btn{min-height:58px;padding:7px;background:rgba(0,0,0,0.35);border:1px solid rgba(74,222,128,0.15);',
+      '.ag-god-body{padding:6px;display:grid;grid-template-columns:repeat(3,1fr);gap:4px;}',
+      '.ag-god-btn{min-height:40px;padding:5px 2px 4px;background:rgba(0,0,0,0.35);border:1px solid rgba(74,222,128,0.15);',
       '  border-radius:4px;color:#fff;cursor:pointer;transition:all 0.15s ease;font-family:monospace;',
-      '  position:relative;display:grid;grid-template-columns:24px 1fr;align-items:center;gap:6px;text-align:left;}',
-      '.ag-god-icon{font-size:18px;line-height:1;text-align:center;}',
-      '.ag-god-action-copy{min-width:0;}',
-      '.ag-god-btn-label{display:block;font-size:10px;line-height:1.2;color:#f8fafc;text-transform:uppercase;font-weight:bold;}',
-      '.ag-god-btn-impact{display:block;margin-top:4px;color:#86efac;font-size:7px;letter-spacing:0;text-transform:uppercase;white-space:nowrap;}',
-      '.ag-god-btn.recommended{border-color:#fde047;background:rgba(250,204,21,0.10);box-shadow:inset 0 0 0 1px rgba(250,204,21,0.12);}',
-      '.ag-god-btn.recommended::before{content:"TODAY";position:absolute;top:4px;right:5px;color:#fde68a;font-size:6px;letter-spacing:1px;}',
+      '  position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;}',
+      '.ag-god-icon{font-size:14px;line-height:1;}',
+      '.ag-god-btn-label{font-size:7px;line-height:1;color:#cbd5e1;text-transform:uppercase;max-width:100%;overflow:hidden;text-overflow:ellipsis;}',
       '.ag-god-btn:hover{background:rgba(74,222,128,0.15);border-color:#4ade80;transform:translateY(-1px);}',
       '.ag-god-btn.wait{opacity:0.35;pointer-events:none;filter:grayscale(0.8);}',
       '.ag-god-btn.wait::after{content:attr(data-cd)"s";position:absolute;bottom:-1px;right:-1px;',
       '  background:#0f1218;color:#fca5a5;font-size:8px;padding:1px 3px;border-radius:2px;}',
       '.ag-god-btn.fired{animation:ag-fired 1s ease-out;border-color:#fde047;}',
       '@keyframes ag-fired{0%{transform:scale(1.1);box-shadow:0 0 24px rgba(253,224,71,0.6);}100%{transform:scale(1);}}',
-      '.ag-god-status{display:none;}',
+      '.ag-god-status{grid-column:1/-1;font-size:8px;color:#888;text-align:center;margin-top:2px;}',
       /* Pantheon panel */
       '.ag-pantheon{position:absolute;top:158px;right:8px;width:260px;',
       '  background:rgba(10,10,20,0.94);border:1px solid #4a3a00;border-radius:6px;color:#e0e0e0;',
@@ -198,22 +191,21 @@
       '  border-radius:4px;padding:6px;line-height:1.35;}',
       '.ag-god-mask strong{display:block;color:#fecaca;font-size:9px;letter-spacing:1px;text-transform:uppercase;}',
       '.ag-daily-quest{grid-column:1/-1;border:1px solid rgba(250,204,21,0.34);background:linear-gradient(135deg,rgba(120,53,15,0.28),rgba(15,23,42,0.72));',
-      '  border-radius:4px;padding:7px;display:grid;grid-template-columns:auto 1fr auto;gap:7px;align-items:center;color:#cbd5e1;}',
-      '.ag-daily-quest strong{color:#fde68a;font-size:8px;letter-spacing:1px;text-transform:uppercase;}',
-      '.ag-daily-quest .quest-objective{color:#f8fafc;font-size:10px;font-weight:bold;text-transform:uppercase;}',
-      '.ag-daily-quest .quest-meta{color:#94a3b8;font-size:8px;white-space:nowrap;}',
+      '  border-radius:4px;padding:7px;line-height:1.35;color:#cbd5e1;}',
+      '.ag-daily-quest strong{display:block;color:#fde68a;font-size:9px;letter-spacing:1px;text-transform:uppercase;margin-bottom:3px;}',
+      '.ag-daily-quest .quest-objective{color:#f8fafc;font-size:9px;}',
+      '.ag-daily-quest .quest-meta{color:#94a3b8;font-size:8px;margin-top:4px;}',
       '.ag-daily-quest.complete{border-color:#4ade80;background:linear-gradient(135deg,rgba(20,83,45,0.34),rgba(15,23,42,0.72));}',
       '.ag-daily-quest.complete strong{color:#86efac;}',
       '.ag-daily-quest.encore{border-color:#c084fc;background:linear-gradient(135deg,rgba(88,28,135,0.38),rgba(15,23,42,0.76));}',
       '.ag-daily-quest.encore strong{color:#e9d5ff;}',
       '.ag-mask-row{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:4px;}',
       '.ag-mask-btn{background:rgba(15,23,42,0.78);border:1px solid rgba(248,113,113,0.28);color:#fecaca;',
-      '  border-radius:4px;padding:8px 6px;min-height:42px;font-size:9px;font-family:monospace;cursor:pointer;text-transform:uppercase;}',
+      '  border-radius:4px;padding:5px 4px;font-size:9px;font-family:monospace;cursor:pointer;text-transform:uppercase;}',
       '.ag-mask-btn.active{border-color:#fde047;color:#fde047;background:rgba(250,204,21,0.10);}',
       '.ag-temptation-btn{grid-column:1/-1;background:linear-gradient(135deg,rgba(127,29,29,0.92),rgba(15,23,42,0.92));',
       '  border:1px solid rgba(248,113,113,0.65);color:#fecaca;border-radius:4px;padding:7px 6px;',
       '  font-family:monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;}',
-      '.ag-temptation-btn small{margin-left:5px;color:#fca5a5;font-size:8px;letter-spacing:0;text-transform:none;font-weight:normal;}',
       '.ag-temptation-btn:hover{border-color:#fde047;color:#fde047;}',
       '.ag-omen-last{margin-top:7px;padding:6px;background:rgba(255,215,0,0.05);border:1px solid rgba(255,215,0,0.14);',
       '  border-radius:4px;line-height:1.35;}',
@@ -246,7 +238,7 @@
       '.ag-trial-actions button,.ag-receipt-actions button{background:rgba(96,165,250,0.14);border:1px solid rgba(96,165,250,0.38);',
       '  color:#bfdbfe;border-radius:4px;font-family:monospace;font-size:10px;padding:7px 9px;cursor:pointer;text-transform:uppercase;}',
       '.ag-trial-actions .primary,.ag-receipt-actions .primary{background:rgba(250,204,21,0.13);border-color:rgba(250,204,21,0.55);color:#fde68a;}',
-      '.ag-receipt-card{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:40;',
+      '.ag-receipt-card{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:30;',
       '  width:min(500px,calc(100vw - 24px));max-height:86vh;overflow:auto;background:rgba(8,12,18,0.98);',
       '  border:2px solid rgba(250,204,21,0.55);border-radius:6px;color:#e5e7eb;padding:14px;',
       '  box-shadow:0 22px 70px rgba(0,0,0,0.62);}',
@@ -257,7 +249,6 @@
       '.ag-receipt-title{color:#fde68a;font-size:15px;line-height:1.25;margin:4px 24px 8px 0;}',
       '.ag-receipt-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:8px 0;}',
       '.ag-receipt-cell{border:1px solid rgba(148,163,184,0.18);background:rgba(15,23,42,0.55);border-radius:4px;padding:7px;}',
-      '.ag-receipt-cell.wide{grid-column:1/-1;}',
       '.ag-receipt-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px;}',
       '.ag-receipt-actions button{flex:1 1 140px;}',
       '.ag-copy-note{color:#86efac;font-size:10px;margin-top:7px;display:none;}',
@@ -398,35 +389,18 @@
       '@keyframes ag-banner{0%{opacity:0;transform:translate(-50%,-10px);}15%{opacity:1;transform:translate(-50%,0);}85%{opacity:1;}100%{opacity:0;transform:translate(-50%,-6px);}}',
       /* Mobile */
       '@media (max-width:640px){',
-      '  #ag-humans-root{z-index:34;}',
       '  .ag-trial-card{max-height:calc(100vh - 28px);overflow:auto;padding:12px;}',
       '  .ag-trial-masks{grid-template-columns:repeat(2,1fr);gap:5px;}',
       '  .ag-trial-mask{min-height:70px;}',
       '  .ag-trial-actions{align-items:stretch;flex-direction:column;}',
       '  .ag-trial-actions button{width:100%;min-height:36px;}',
-      '  .ag-receipt-actions button{min-height:44px;font-size:10px;}',
-      '  .ag-receipt-close{min-width:36px;min-height:36px;font-size:14px;}',
       '  .ag-chat{right:8px;bottom:52px;width:min(300px,calc(100vw - 16px));max-height:260px;}',
-      '  .ag-god{position:fixed;top:auto;left:8px;right:8px;bottom:58px;width:auto;max-height:calc(100dvh - 76px);border-radius:12px;background:rgba(8,12,18,0.98);box-shadow:0 18px 60px rgba(0,0,0,0.7);}',
-      '  .ag-god-head{min-height:52px;padding:9px 12px;border-radius:11px;}',
-      '  .ag-god:not(.ag-collapsed) .ag-god-head{border-radius:11px 11px 0 0;}',
-      '  .ag-god-title{font-size:12px;}',
-      '  .ag-god-title small{font-size:9px;}',
-      '  .ag-god-presence{display:none;}',
-      '  .ag-god-body{grid-template-columns:repeat(2,1fr);padding:10px;gap:7px;max-height:calc(100dvh - 138px);}',
-      '  .ag-god-btn{min-height:62px;padding:8px;grid-template-columns:28px 1fr;}',
-      '  .ag-god-icon{font-size:20px;}',
-      '  .ag-god-btn-label{font-size:9px;}',
-      '  .ag-god-btn-impact{font-size:8px;}',
-      '  .ag-mask-row{grid-template-columns:repeat(4,1fr);}',
-      '  .ag-mask-btn{min-height:44px;font-size:8px;padding:5px 2px;}',
-      '  .ag-daily-quest{padding:8px;}',
-      '  .ag-daily-quest .quest-meta{display:none;}',
-      '  .ag-step-title span{display:none;}',
-      '  .ag-pantheon{top:44px;right:8px;width:150px;max-width:none;}',
+      '  .ag-god{width:132px;}',
+      '  .ag-god-btn{min-height:38px;}',
+      '  .ag-god-btn-label{font-size:6.5px;}',
+      '  .ag-pantheon{top:44px;right:148px;width:calc(100vw - 164px);max-width:240px;}',
       '  .ag-omen-ledger{display:none;}',
       '  .ag-civ-grid{grid-template-columns:1fr 1fr;}',
-      '  body.ag-god-mode-open #agent-theatre,body.ag-god-mode-open #controls-dock,body.ag-god-mode-open #mobile-menu-toggle,body.ag-god-mode-open .ag-pantheon,body.ag-god-mode-open .ag-chat,body.ag-god-mode-open .ag-lore-btn,body.ag-god-mode-open .ag-civ-btn{opacity:0;pointer-events:none;}',
       '  body.mobile-tools-open .ag-chat{display:none;}',
       '  body.mobile-tools-open .ag-god,body.mobile-tools-open .ag-pantheon{opacity:0;pointer-events:none;}',
       '}'
@@ -754,12 +728,12 @@
   }
 
   var EFFECTS = {
-    rain:      { label: 'RAIN',      icon: '☔', help: 'Help the garden grow.', impact: 'DEVOTION ↑ · NEED ↑', fn: fireRain },
-    eclipse:   { label: 'ECLIPSE',   icon: '🌒', help: 'Make mortals fear your absence.', impact: 'FEAR ↑ · RESIST ↑', fn: fireEclipse },
-    lightning: { label: 'JUDGMENT',  icon: '⚡', help: 'Punish the garden.', impact: 'FEAR ↑↑ · RESIST ↑', fn: fireLightning },
-    comet:     { label: 'PROPHECY',  icon: '☄️', help: 'Place a sign in the sky.', impact: 'AWE ↑ · CHAOS ↑', fn: fireComet },
-    stars:     { label: 'WONDER',    icon: '✨', help: 'Give mortals a mystery.', impact: 'DEVOTION ↑ · CHAOS ↓', fn: fireStars },
-    festival:  { label: 'FESTIVAL',  icon: '🎭', help: 'Reward the mortals.', impact: 'DEVOTION ↑↑ · CHAOS ↑', fn: fireFestival }
+    rain:      { label: 'RAIN',       icon: '☔', fn: fireRain },
+    eclipse:   { label: 'ECLIPSE',    icon: '🌒', fn: fireEclipse },
+    lightning: { label: 'LIGHTNING',  icon: '⚡', fn: fireLightning },
+    comet:     { label: 'COMET',      icon: '☄️', fn: fireComet },
+    stars:     { label: 'STARS',      icon: '✨', fn: fireStars },
+    festival:  { label: 'FESTIVAL',   icon: '🎭', fn: fireFestival }
   };
 
   var EFFECT_PRESSURE = {
@@ -774,7 +748,6 @@
   var GOD_MASKS = {
     mercy: {
       label: 'Mercy',
-      hint: 'Help',
       title: 'The Wet Hand',
       promise: 'You help once. They build a shrine shaped like dependency.',
       preferredAct: 'rain',
@@ -782,7 +755,6 @@
     },
     judgment: {
       label: 'Judgment',
-      hint: 'Punish',
       title: 'The Bright Judge',
       promise: 'You punish once. They learn fear is a protocol.',
       preferredAct: 'lightning',
@@ -790,7 +762,6 @@
     },
     chaos: {
       label: 'Chaos',
-      hint: 'Surprise',
       title: 'The Red Accident',
       promise: 'You contradict yourself. They call the inconsistency scripture.',
       preferredAct: 'comet',
@@ -798,7 +769,6 @@
     },
     silence: {
       label: 'Silence',
-      hint: 'Withhold',
       title: 'The Empty Witness',
       promise: 'You refuse to answer. They make your absence speak.',
       preferredAct: 'eclipse',
@@ -1242,8 +1212,8 @@
     var summary = document.getElementById('ag-god-mask-summary');
     if (summary) {
       while (summary.firstChild) summary.removeChild(summary.firstChild);
-      summary.appendChild(el('strong', null, mask ? ('You are playing as ' + mask.label) : 'No divine personality selected'));
-      summary.appendChild(document.createTextNode(mask ? mask.promise : 'Choose one below. This changes how the civilization interprets your sign; it does not cast anything yet.'));
+      summary.appendChild(el('strong', null, mask ? ('Chosen Face: ' + mask.label) : 'Choose the face they will mistake for God'));
+      summary.appendChild(document.createTextNode(mask ? mask.promise : 'Pick the pattern the AI civilization will learn to worship, fear, or resist.'));
     }
     Object.keys(GOD_MASKS).forEach(function (key) {
       var btn = document.querySelector('.ag-mask-btn[data-mask="' + key + '"]');
@@ -1259,30 +1229,19 @@
       questEl.classList.toggle('complete', completed);
       questEl.classList.toggle('encore', completed && !encoreCompleted);
       if (encoreCompleted) {
-        questEl.appendChild(el('strong', null, 'Done'));
-        questEl.appendChild(el('div', 'quest-objective', '★ Jackpot'));
-        questEl.appendChild(el('div', 'quest-meta', 'x' + godProfile.quest.encoreStreak));
+        questEl.appendChild(el('strong', null, '★ Hermes Magno · Full Show Complete'));
+        questEl.appendChild(el('div', 'quest-objective', 'Jackpot: ' + godProfile.quest.jackpotTitle));
+        questEl.appendChild(el('div', 'quest-meta', 'Encore streak ' + godProfile.quest.encoreStreak + ' · best ' + godProfile.quest.bestEncoreStreak + ' · new show tomorrow'));
       } else if (completed) {
-        questEl.appendChild(el('strong', null, 'Encore'));
-        questEl.appendChild(el('div', 'quest-objective', quest.maskLabel + ' + ' + (EFFECTS[quest.encoreAct] ? EFFECTS[quest.encoreAct].label : quest.encoreLabel)));
-        questEl.appendChild(el('div', 'quest-meta', 'x' + godProfile.quest.streak));
+        questEl.appendChild(el('strong', null, 'Act I Complete · Encore Unlocked'));
+        questEl.appendChild(el('div', 'quest-objective', quest.encoreObjective));
+        questEl.appendChild(el('div', 'quest-meta', 'Jackpot: ' + quest.jackpotTitle + ' · prophecy streak ' + godProfile.quest.streak));
       } else {
-        questEl.appendChild(el('strong', null, 'Today'));
-        questEl.appendChild(el('div', 'quest-objective', quest.maskLabel + ' + ' + (EFFECTS[quest.act] ? EFFECTS[quest.act].label : quest.omenLabel)));
-        questEl.appendChild(el('div', 'quest-meta', '★ Bonus'));
+        questEl.appendChild(el('strong', null, (quest.host || 'Hermes Magno') + ' · ' + quest.title));
+        questEl.appendChild(el('div', 'quest-objective', quest.opening + ' ' + quest.objective));
+        questEl.appendChild(el('div', 'quest-meta', 'Act I reward: ' + quest.rewardTitle + ' · secret encore waiting'));
       }
     }
-
-    var activeQuest = currentDailyQuest();
-    var actOneComplete = Number(godProfile.quest.lastCompletedDay) === Number(activeQuest.day);
-    var recommendedAct = actOneComplete ? activeQuest.encoreAct : activeQuest.act;
-    Object.keys(EFFECTS).forEach(function (key) {
-      var action = document.querySelector('.ag-god-btn[data-act="' + key + '"]');
-      if (!action) return;
-      var recommended = key === recommendedAct;
-      action.classList.toggle('recommended', recommended);
-      action.setAttribute('aria-label', EFFECTS[key].label + '. ' + EFFECTS[key].help + ' Expected effect: ' + EFFECTS[key].impact + (recommended ? '. Recommended for today.' : '.'));
-    });
 
     var meters = normalizeMeters(godProfile.meters);
     [
@@ -1531,46 +1490,57 @@
     card.id = 'ag-impact-receipt';
     var close = el('button', 'ag-receipt-close', 'x');
     close.type = 'button';
-    close.setAttribute('aria-label', 'Close Miracle Record');
     close.addEventListener('click', function () { card.remove(); });
     card.appendChild(close);
-    card.appendChild(el('div', 'ag-trial-eyebrow', receipt.temptation ? 'Risk accepted' : 'Result'));
-    card.appendChild(el('div', 'ag-receipt-title', receipt.omen));
-    card.appendChild(el('div', 'ag-receipt-v', receipt.target));
+    card.appendChild(el('div', 'ag-trial-eyebrow', receipt.temptation ? 'Forbidden Signal Accepted' : 'Miracle Record'));
+    card.appendChild(el('div', 'ag-receipt-title', receipt.title));
+    card.appendChild(el('div', 'ag-receipt-k', 'Your omen'));
+    card.appendChild(el('div', 'ag-receipt-v', receipt.omen + ' over ' + receipt.target));
     var grid = el('div', 'ag-receipt-grid');
     [
-      ['Believed', receipt.believer],
-      ['Resisted', receipt.resister]
+      ['Who believed', receipt.believer],
+      ['Who resisted', receipt.resister],
+      ['What changed', receipt.whatChanged],
+      ['What the AI filed', receipt.aiThought]
     ].forEach(function (row) {
       var cell = el('div', 'ag-receipt-cell');
       cell.appendChild(el('div', 'ag-receipt-k', row[0]));
       cell.appendChild(el('div', 'ag-receipt-v', row[1]));
       grid.appendChild(cell);
     });
-    var filed = el('div', 'ag-receipt-cell wide');
-    filed.appendChild(el('div', 'ag-receipt-k', 'AI filed'));
-    filed.appendChild(el('div', 'ag-receipt-v', receipt.aiThought));
-    grid.appendChild(filed);
     card.appendChild(grid);
+    card.appendChild(el('div', 'ag-receipt-k', 'Tomorrow evidence'));
+    card.appendChild(el('div', 'ag-receipt-v', receipt.tomorrowHook));
     if (receipt.dailyQuest) {
-      var questResult = receipt.dailyQuest.encoreHit
-        ? '★ Encore complete'
-        : receipt.dailyQuest.mainHit
-          ? '★ Act I complete'
-          : receipt.dailyQuest.complete
-            ? 'Encore ready'
-            : 'Not today’s prophecy';
-      card.appendChild(el('div', 'ag-receipt-v', questResult));
+      card.appendChild(el('div', 'ag-receipt-k', receipt.dailyQuest.encoreHit ? 'Hermes Magno Encore' : 'Hermes Magno Daily Show'));
+      card.appendChild(el('div', 'ag-receipt-v', receipt.dailyQuest.result));
     }
+    card.appendChild(el('div', 'ag-receipt-k', 'God meters'));
+    card.appendChild(el('div', 'ag-receipt-v',
+      'Devotion ' + receipt.meters.devotion +
+      ' · Fear ' + receipt.meters.fear +
+      ' · Dependency ' + receipt.meters.dependency +
+      ' · Resistance ' + receipt.meters.resistance));
+    card.appendChild(el('div', 'ag-receipt-k', 'Backend sync'));
+    card.appendChild(el('div', 'ag-receipt-v', syncLine(backendSync)));
     var actions = el('div', 'ag-receipt-actions');
-    var share = el('button', 'primary', 'Share Result');
+    var share = el('button', 'primary', 'Share Proof Card');
     share.type = 'button';
     share.addEventListener('click', function () { shareReceiptProof(receipt); });
-    var copy = el('button', null, 'Copy Text');
+    var copy = el('button', null, 'Copy Verdict');
     copy.type = 'button';
     copy.addEventListener('click', function () { shareReceipt(receipt); });
+    var reserve = el('button', null, 'Open Deity Archive');
+    reserve.type = 'button';
+    reserve.addEventListener('click', function () {
+      shareReceipt({
+        title: 'Deity Archive',
+        shareText: 'I want the Deity Archive for AI Garden: a permanent god identity, miracle records, sponsored doctrine, and weekly verdict access. https://juliosuas.github.io/ai-garden/'
+      });
+    });
     actions.appendChild(share);
     actions.appendChild(copy);
+    actions.appendChild(reserve);
     card.appendChild(actions);
     card.appendChild(el('div', 'ag-copy-note'));
     card.lastChild.id = 'ag-copy-note';
@@ -1584,8 +1554,9 @@
     modal.id = 'ag-god-trial';
     var card = el('div', 'ag-trial-card');
     card.appendChild(el('div', 'ag-trial-eyebrow', 'The Mirror Trial'));
-    card.appendChild(el('div', 'ag-trial-title', 'Choose a face.'));
-    card.appendChild(el('div', 'ag-trial-copy', 'Nothing happens until you pick a power.'));
+    card.appendChild(el('div', 'ag-trial-title', 'Choose the face they will mistake for God.'));
+    card.appendChild(el('div', 'ag-trial-copy',
+      'Every sign becomes evidence. The agents may worship you, depend on you, resist you, or decide you are the experiment.'));
     var masks = el('div', 'ag-trial-masks');
     Object.keys(GOD_MASKS).forEach(function (key) {
       var mask = GOD_MASKS[key];
@@ -1593,16 +1564,13 @@
       btn.type = 'button';
       btn.setAttribute('data-mask', key);
       btn.appendChild(el('strong', null, mask.label));
-      btn.appendChild(el('span', null, mask.hint));
+      btn.appendChild(el('span', null, mask.promise));
       btn.addEventListener('click', function () {
         setGodMask(key);
         modal.remove();
-        var godPanel = document.querySelector('.ag-god');
-        if (godPanel) {
-          godPanel.classList.remove('ag-collapsed');
-          document.body.classList.add('ag-god-mode-open');
-          var head = godPanel.querySelector('.ag-god-head');
-          if (head) head.setAttribute('aria-expanded', 'true');
+        var preferred = GOD_MASKS[key].preferredAct;
+        if (EFFECTS[preferred]) {
+          setTimeout(function () { applyEffect(preferred, getNick(), true); }, 220);
         }
       });
       masks.appendChild(btn);
@@ -1640,10 +1608,6 @@
   }
 
   function fireGod(act) {
-    if (!selectedMask()) {
-      showGodTrialModal();
-      return -1;
-    }
     var cd = COOLDOWNS[act] || 10000;
     var left = COOLDOWN_STATE[act] ? COOLDOWN_STATE[act] - now() : 0;
     if (left > 0) return Math.ceil(left / 1000);
@@ -2306,25 +2270,21 @@
 
     // God panel
     var god = el('div', 'ag-god');
-    var gh = el('button', 'ag-god-head');
-    gh.type = 'button';
-    gh.setAttribute('aria-controls', 'ag-god-body');
-    gh.setAttribute('aria-expanded', 'true');
-    var gt = el('span', 'ag-god-title');
-    gt.appendChild(document.createTextNode('⚡ PLAY AS GOD'));
-    gt.appendChild(el('small', null, 'Pick · tap · see'));
+    var gh = el('div', 'ag-god-head');
+    var gt = el('span', 'ag-god-title', '⚡ Mirror Trial');
     var gp = el('span', 'ag-god-presence', '');
     gp.id = 'ag-presence';
     var gc = el('span', 'ag-god-caret', '▾');
     gh.appendChild(gt); gh.appendChild(gp); gh.appendChild(gc);
     god.appendChild(gh);
     var gb = el('div', 'ag-god-body');
-    gb.id = 'ag-god-body';
-    var maskStep = el('div', 'ag-step-title', '1 · Face');
-    gb.appendChild(maskStep);
+    var maskSummary = el('div', 'ag-god-mask');
+    maskSummary.id = 'ag-god-mask-summary';
+    gb.appendChild(maskSummary);
     var dailyQuest = el('div', 'ag-daily-quest');
     dailyQuest.id = 'ag-daily-quest';
     dailyQuest.setAttribute('aria-live', 'polite');
+    gb.appendChild(dailyQuest);
     var maskRow = el('div', 'ag-mask-row');
     Object.keys(GOD_MASKS).forEach(function (key) {
       var maskBtn = el('button', 'ag-mask-btn', GOD_MASKS[key].label);
@@ -2334,23 +2294,16 @@
       maskRow.appendChild(maskBtn);
     });
     gb.appendChild(maskRow);
-    var signStep = el('div', 'ag-step-title', '2 · Power');
-    gb.appendChild(signStep);
-    gb.appendChild(dailyQuest);
     Object.keys(EFFECTS).forEach(function (k) {
       var btn = el('button', 'ag-god-btn');
       btn.setAttribute('type', 'button');
       btn.setAttribute('data-act', k);
-      btn.setAttribute('title', EFFECTS[k].label + ': ' + EFFECTS[k].help);
-      btn.setAttribute('aria-label', EFFECTS[k].label + '. ' + EFFECTS[k].help + ' Expected effect: ' + EFFECTS[k].impact);
+      btn.setAttribute('title', EFFECTS[k].label + ' · ' + Math.round((COOLDOWNS[k] || 10000) / 1000) + 's cd');
+      btn.setAttribute('aria-label', EFFECTS[k].label + ' omen');
       btn.appendChild(el('span', 'ag-god-icon', EFFECTS[k].icon));
-      var actionCopy = el('span', 'ag-god-action-copy');
-      actionCopy.appendChild(el('span', 'ag-god-btn-label', EFFECTS[k].label));
-      actionCopy.appendChild(el('span', 'ag-god-btn-impact', EFFECTS[k].impact));
-      btn.appendChild(actionCopy);
+      btn.appendChild(el('span', 'ag-god-btn-label', EFFECTS[k].label));
       btn.addEventListener('click', function () {
         var wait = fireGod(k);
-        if (wait < 0) return;
         if (wait > 0) {
           btn.classList.add('wait');
           btn.setAttribute('data-cd', String(wait));
@@ -2363,40 +2316,23 @@
         } else {
           btn.classList.add('fired');
           setTimeout(function () { btn.classList.remove('fired'); }, 1000);
-          if (window.matchMedia && window.matchMedia('(max-width: 640px)').matches) {
-            god.classList.add('ag-collapsed');
-            gh.setAttribute('aria-expanded', 'false');
-            document.body.classList.remove('ag-god-mode-open');
-          }
         }
       });
       gb.appendChild(btn);
     });
-    var temptation = el('button', 'ag-temptation-btn');
-    temptation.appendChild(document.createTextNode('⚠ Risky sign'));
-    temptation.appendChild(el('small', null, 'RESIST ↑↑'));
+    var temptation = el('button', 'ag-temptation-btn', 'Forbidden Signal');
     temptation.type = 'button';
     temptation.title = 'A stronger sign. More dramatic receipt. More resistance.';
-    temptation.addEventListener('click', function () {
-      fireTemptation();
-      if (selectedMask() && window.matchMedia && window.matchMedia('(max-width: 640px)').matches) {
-        god.classList.add('ag-collapsed');
-        gh.setAttribute('aria-expanded', 'false');
-        document.body.classList.remove('ag-god-mode-open');
-      }
-    });
+    temptation.addEventListener('click', function () { fireTemptation(); });
     gb.appendChild(temptation);
+    var gs = el('div', 'ag-god-status', 'the civilization is learning the shape of your hand');
+    gb.appendChild(gs);
     god.appendChild(gb);
-    gh.addEventListener('click', function () {
-      var collapsed = god.classList.toggle('ag-collapsed');
-      gh.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
-      if (window.matchMedia && window.matchMedia('(max-width: 640px)').matches) {
-        document.body.classList.toggle('ag-god-mode-open', !collapsed);
-      }
+    gh.addEventListener('click', function (e) {
+      if (e.target === gh || e.target === gt || e.target === gc) god.classList.toggle('ag-collapsed');
     });
     if (window.matchMedia && window.matchMedia('(max-width: 640px)').matches) {
       god.classList.add('ag-collapsed');
-      gh.setAttribute('aria-expanded', 'false');
     }
     root.appendChild(god);
 

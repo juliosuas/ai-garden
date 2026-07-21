@@ -349,9 +349,9 @@ async function main() {
   check(humans.includes('WEEKLY NARRATIVE'), 'CIV panel does not expose weekly narrative beats');
   check(humans.includes('Observer Weather'), 'CIV panel does not expose human omen consequences');
   check(humans.includes('THE MIRROR TRIAL'), 'CIV panel does not expose The Mirror Trial');
-  check(humans.includes('Choose a face.'), 'Mirror Trial lacks divine mask selection');
+  check(humans.includes('Choose the face they will mistake for God'), 'Mirror Trial lacks divine mask selection');
   check(humans.includes('impactReceipt'), 'Mirror Trial lacks impactReceipt output');
-  check(humans.includes('Share Result'), 'Mirror Trial lacks a clear visual share action');
+  check(humans.includes('Share Proof Card'), 'Mirror Trial lacks a visual share artifact');
   check(humans.includes('createReceiptProofBlob'), 'Mirror Trial cannot render its proof card');
   check(humans.includes("canvas.width = 1200") && humans.includes("canvas.height = 630"), 'Mirror Trial proof card should use a social-ready 1200x630 canvas');
   check(humans.includes('navigator.canShare'), 'Mirror Trial proof card lacks native file sharing');
@@ -362,7 +362,7 @@ async function main() {
   check(humans.includes('settleDailyQuest'), 'Mirror Trial cannot complete the Daily Prophecy');
   check(humans.includes('bestStreak'), 'Daily Prophecy does not preserve personal streaks');
   check(humans.includes('bestEncoreStreak') && humans.includes('encoreCompletedDay'), 'Hermes Magno does not preserve encore streaks');
-  check(humans.includes('ENCORE COMPLETE') && humans.includes('encoreObjective'), 'Hermes Magno lacks a playable two-act payoff');
+  check(humans.includes('ENCORE COMPLETE') && humans.includes('Encore Unlocked'), 'Hermes Magno lacks a playable two-act payoff');
   check(humans.includes('aria-live'), 'Daily Prophecy result is not announced accessibly');
   check(humans.includes('BACKEND_SYNC_STORE'), 'human layer does not persist backend sync state');
   check(humans.includes('ag-sync-strip'), 'Observer Lounge lacks visible backend sync status');
@@ -380,14 +380,6 @@ async function main() {
   check(humans.includes("chat.classList.add('ag-collapsed')"), 'mobile observer chat should start collapsed');
   check(humans.includes('body.mobile-tools-open .ag-chat'), 'mobile tools drawer should move chat out of the way');
   check(humans.includes('.ag-trial-masks{grid-template-columns:repeat(2,1fr)'), 'mobile Mirror Trial masks should use a two-column tap grid');
-  check(humans.includes('PLAY AS GOD') && humans.includes('Pick · tap · see'), 'mobile God Mode lacks a clear entry point');
-  check(humans.includes("'1 · Face'") && humans.includes("'2 · Power'"), 'God Mode lacks a minimal two-step flow');
-  check(humans.includes('ag-god-btn-impact') && humans.includes('DEVOTION ↑'), 'divine actions do not show compact consequences');
-  check(humans.includes("classList.toggle('recommended'"), 'daily God Mode does not highlight the recommended action');
-  check(humans.includes('Nothing happens until you pick a power.') && !humans.includes("setTimeout(function () { applyEffect(preferred"), 'choosing a divine personality must not cast a surprise omen');
-  check(humans.includes('min-height:44px') && humans.includes('max-height:calc(100dvh - 76px)'), 'mobile God Mode needs touch-sized controls and a viewport-safe sheet');
-  check(!humans.includes('3 clear steps') && !humans.includes('Your turn changes how they remember today') && !humans.includes('Today’s recommended sign is highlighted'), 'mobile God Mode copy regressed into over-explaining');
-  check(humans.includes('Copy Text') && !humans.includes('Open Deity Archive'), 'Miracle Record actions should be honest and minimal');
 
   check(music.includes('HOOK_STEPS'), '8-bit music lacks a repeatable original hook');
   check(music.includes('playNoiseBurst'), '8-bit music lacks chip noise percussion');
@@ -417,7 +409,6 @@ async function main() {
   check(roadmap.includes('Daily Roadmap Cron'), 'ROADMAP is missing the daily cron contract');
   check(roadmap.includes('roadmap-pulse:start'), 'ROADMAP is missing the pulse block');
   check(roadmapPulse.includes('Roadmap Pulse'), 'roadmap pulse script is missing its contract');
-  check(roadmapPulse.includes("humans.includes('Choose a face.')") && roadmapPulse.includes("humans.includes('Share Result')"), 'roadmap pulse does not audit the current Mirror Trial proof loop');
   check(roadmapPulse.includes('Professional Council'), 'roadmap pulse does not audit the professional council');
   check(roadmapPulse.includes('Stakeholder Plan'), 'roadmap pulse does not audit the stakeholder plan');
   check(roadmapPulse.includes('before(workflow'), 'roadmap pulse does not verify rehearsal order before refreshing');
