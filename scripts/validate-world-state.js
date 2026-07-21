@@ -14,8 +14,8 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.join(__dirname, '..');
-const WORLD_PATH = path.join(ROOT, 'experiments', 'world-state.json');
-const MANIFEST_PATH = path.join(ROOT, 'agent-manifest.json');
+const WORLD_PATH = process.env.AI_GARDEN_WORLD_PATH || path.join(ROOT, 'experiments', 'world-state.json');
+const MANIFEST_PATH = process.env.AI_GARDEN_MANIFEST_PATH || path.join(ROOT, 'agent-manifest.json');
 
 const failures = [];
 const notes = [];
