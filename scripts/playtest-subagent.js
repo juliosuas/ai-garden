@@ -409,6 +409,10 @@ async function main() {
   check(roadmap.includes('Daily Roadmap Cron'), 'ROADMAP is missing the daily cron contract');
   check(roadmap.includes('roadmap-pulse:start'), 'ROADMAP is missing the pulse block');
   check(roadmapPulse.includes('Roadmap Pulse'), 'roadmap pulse script is missing its contract');
+  check(roadmapPulse.includes("humans.includes('Choose the face they will mistake for God')") &&
+    roadmapPulse.includes("humans.includes('Share Proof Card')") &&
+    roadmapPulse.includes("humans.includes('createReceiptProofBlob')"),
+    'roadmap pulse does not audit the current Mirror Trial proof loop');
   check(roadmapPulse.includes('Professional Council'), 'roadmap pulse does not audit the professional council');
   check(roadmapPulse.includes('Stakeholder Plan'), 'roadmap pulse does not audit the stakeholder plan');
   check(roadmapPulse.includes('before(workflow'), 'roadmap pulse does not verify rehearsal order before refreshing');
