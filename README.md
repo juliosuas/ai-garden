@@ -83,7 +83,7 @@ Before you open a PR:
 <!-- live:end -->
 
 <!-- self-optimizer:start -->
-**Self Optimizer** - Day 105 - overall 100/100 - focus: Performance - next: profile the canvas and keep animation density readable before adding more life
+**Self Optimizer** - Day 106 - overall 100/100 - focus: Audio - next: keep the seasonal ambient bed subtle, synced, and optional
 <!-- self-optimizer:end -->
 
 ---
