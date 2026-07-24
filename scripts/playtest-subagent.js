@@ -418,6 +418,10 @@ async function main() {
   check(roadmapPulse.includes('before(workflow'), 'roadmap pulse does not verify rehearsal order before refreshing');
   check(roadmapPulse.includes('BACKEND_SYNC_STORE'), 'roadmap pulse does not audit backend sync');
   check(roadmapPulse.includes('SEASON_PROFILES'), 'roadmap pulse does not audit seasonal audio');
+  check(gstackCouncilScript.includes("files.readme.includes('**The loop:**')"),
+    'GStack Council does not audit the current README proof-loop label');
+  check(gstackCouncilScript.includes("files.humans.includes('Share Proof Card')"),
+    'GStack Council does not audit the current Mirror Trial share action');
   check(roadmapWorkflow.includes("cron: '17 7 * * *'"), 'daily roadmap pulse cron is missing');
   check(roadmapWorkflow.includes('node scripts/gstack-council.js'), 'daily roadmap pulse workflow does not rehearse the GStack Council');
   check(roadmapWorkflow.includes('node scripts/stakeholder-assembly.js'), 'daily roadmap pulse workflow does not rehearse the Stakeholder Assembly');

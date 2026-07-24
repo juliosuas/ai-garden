@@ -153,10 +153,10 @@ function reviewFor(specialist, files, world) {
   const optimizer = world.selfOptimizer || {};
   const checksById = {
     product: [
-      check('README pitch', files.readme.includes('AI civilization') && files.readme.includes('Demo loop'), 'tighten README above-the-fold pitch'),
+      check('README pitch', files.readme.includes('AI civilization') && files.readme.includes('**The loop:**'), 'tighten README above-the-fold pitch'),
       check('roadmap north star', files.roadmap.includes('North Star'), 'define the north star in ROADMAP.md'),
       check('proof loop', files.roadmap.includes('choose face -> cast sign or chat'), 'make the proof loop explicit'),
-      check('share proof', files.humans.includes('Broadcast Proof') && files.humans.includes('navigator.share'), 'restore shareable proof'),
+      check('share proof', files.humans.includes('Share Proof Card') && files.humans.includes('navigator.share'), 'restore shareable proof'),
       check('return hook', files.humans.includes('tomorrowHook'), 'restore tomorrow hook on receipts')
     ],
     ux: [
