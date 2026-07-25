@@ -236,7 +236,7 @@ async function main() {
   check(index.includes('body.mobile-tools-open #nav-help'), 'mobile tools drawer should hide the story primer while open');
   check(index.includes('dismissMobileToolsFromOutside') && index.includes("document.addEventListener('touchstart', dismissMobileToolsFromOutside, { passive: true })"), 'mobile tools drawer should dismiss on outside touchstart');
   check(index.includes('aria-label="Open tools"') && index.includes("btn.setAttribute('aria-label', shouldOpen ? 'Close tools' : 'Open tools')"), 'mobile tools drawer toggle should expose its open/close label');
-  check(index.includes('aria-label="Zoom out"') && index.includes('aria-label="Zoom in"') && index.includes('aria-label="Photo mode"') && index.includes('aria-label="Toggle ambient music"') && index.includes('aria-label="Message board"'), 'mobile icon controls should expose accessible names');
+  check(index.includes('aria-label="Zoom out"') && index.includes('aria-label="Zoom in"') && index.includes('aria-label="Photo mode"') && index.includes('aria-label="Turn on ambient garden music"') && index.includes('aria-label="Message board"'), 'mobile icon controls should expose accessible names');
   check(index.includes('quietCanvasPopoversForMobileTools') && index.includes("['object-popup', 'plant-tooltip', 'info-panel', 'follow-indicator']") && index.includes('if (shouldOpen) quietCanvasPopoversForMobileTools();'), 'mobile tools drawer should clear stale canvas popovers when opened');
   check(index.includes('role="group" aria-label="Garden tools"') && index.includes('focusWasInDock') && index.includes("closeBtn.focus({ preventScroll: true })") && index.includes("btn.focus({ preventScroll: true })"), 'mobile tools drawer should manage focus when opened and closed');
   check(index.includes('id="nav-help"'), 'camera/navigation help panel is missing');
@@ -395,6 +395,7 @@ async function main() {
   check(music.includes('MAX_ACTIVE_VOICES') && music.includes('canScheduleVoice'), 'ambient music should cap scheduled voice density');
   check(index.includes('musicMuted'), 'music preference should persist in local prefs');
   check(index.includes('restoreGardenMusicPreference'), 'music preference should be restorable after reload');
+  check(index.includes('audioActionLabel') && index.includes("'Turn off ambient garden music (' + themeLabel + ')'") && index.includes("setAttribute('aria-label', audioActionLabel)"), 'music controls should announce the action and current seasonal theme');
   check(!index.includes("GardenMusic.start();\n  restoreGardenMusicPreference();"), 'music should not create AudioContext before a user gesture');
   check(garden.includes('seedTargetForViewport'), 'garden background should scale seed count by viewport');
   check(garden.includes('syncSeedsToViewportBudget'), 'garden background should rebalance seed count after viewport resize');

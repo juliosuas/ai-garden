@@ -99,7 +99,7 @@ function scoreMobileUX(index, humans) {
     index.includes('aria-label="Zoom out"') &&
       index.includes('aria-label="Zoom in"') &&
       index.includes('aria-label="Photo mode"') &&
-      index.includes('aria-label="Toggle ambient music"') &&
+      index.includes('aria-label="Turn on ambient garden music"') &&
       index.includes('aria-label="Message board"'),
     index.includes('quietCanvasPopoversForMobileTools') &&
       index.includes("['object-popup', 'plant-tooltip', 'info-panel', 'follow-indicator']") &&
@@ -219,7 +219,10 @@ function scoreAudio(music, index, humans) {
     music.includes('visibilitychange'),
     music.includes('MAX_MASTER_VOLUME'),
     music.includes('INPUT_DUCK_VOLUME') && music.includes('focusin') && music.includes('focusout'),
-    music.includes('MAX_ACTIVE_VOICES') && music.includes('canScheduleVoice')
+    music.includes('MAX_ACTIVE_VOICES') && music.includes('canScheduleVoice'),
+    index.includes('audioActionLabel') &&
+      index.includes("'Turn off ambient garden music (' + themeLabel + ')'") &&
+      index.includes("setAttribute('aria-label', audioActionLabel)")
   ];
   return {
     key: 'audio',
@@ -237,7 +240,8 @@ function scoreAudio(music, index, humans) {
       detail('hidden-tab pause', checks[13]),
       detail('capped master volume', checks[14]),
       detail('text-entry ducking', checks[15]),
-      detail('voice density cap', checks[16])
+      detail('voice density cap', checks[16]),
+      detail('stateful audio label', checks[17])
     ])
   };
 }

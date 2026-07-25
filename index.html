@@ -817,7 +817,7 @@ body.reduced-motion .ambient-motes { display: none; }
   <div class="nav-help-actions">
     <button class="nav-help-action primary" id="watch-action-btn" type="button">PROPHECY</button>
     <button class="nav-help-action" id="story-action-btn" type="button" aria-controls="events-panel" aria-expanded="false">STORY LOG</button>
-    <button class="nav-help-action" id="sound-action-btn" type="button" aria-pressed="false">MUSIC</button>
+    <button class="nav-help-action" id="sound-action-btn" type="button" aria-label="Turn on ambient garden music" aria-pressed="false">MUSIC</button>
   </div>
   <div class="nav-help-line"><span class="nav-help-key">Drag / pinch</span><span>map</span></div>
   <div class="nav-help-line"><span class="nav-help-key">Tap agents</span><span>identity</span></div>
@@ -848,7 +848,7 @@ body.reduced-motion .ambient-motes { display: none; }
     <button id="photo-btn" title="Photo mode" aria-label="Photo mode">📸</button>
     <button id="help-btn" title="Show camera guide" aria-label="Show camera guide" aria-controls="nav-help" aria-expanded="false">?</button>
     <button id="ambience-btn" title="Toggle ambience">Audio</button>
-    <button id="music-btn" title="Toggle ambient music" aria-label="Toggle ambient music">🔇</button>
+    <button id="music-btn" title="Turn on ambient garden music" aria-label="Turn on ambient garden music" aria-pressed="false">🔇</button>
     <button id="msg-board-btn" onclick="toggleMessageBoard()" title="Message board" aria-label="Message board">💬</button>
   </div>
 </div>
@@ -1482,14 +1482,19 @@ function refreshMusicButton(unmuted) {
   const mood = GardenMusic.getMood ? GardenMusic.getMood() : 'theme';
   const season = GardenMusic.getSeason ? GardenMusic.getSeason() : '';
   const themeLabel = season ? (mood + ' · ' + season) : mood;
+  const audioActionLabel = isOn
+    ? 'Turn off ambient garden music (' + themeLabel + ')'
+    : 'Turn on ambient garden music';
   btn.textContent = isOn ? '♪' : '🔇';
   btn.classList.toggle('music-on', isOn);
   btn.setAttribute('aria-pressed', isOn ? 'true' : 'false');
+  btn.setAttribute('aria-label', audioActionLabel);
   btn.title = isOn ? 'Ambient garden music: ' + themeLabel : 'Turn on ambient garden music';
   if (soundBtn) {
     soundBtn.textContent = isOn ? ('♪ ' + themeLabel.toUpperCase()) : 'MUSIC';
     soundBtn.classList.toggle('primary', isOn);
     soundBtn.setAttribute('aria-pressed', isOn ? 'true' : 'false');
+    soundBtn.setAttribute('aria-label', audioActionLabel);
     soundBtn.title = isOn ? 'Ambient garden music: ' + themeLabel : 'Turn on ambient garden music';
   }
 }
