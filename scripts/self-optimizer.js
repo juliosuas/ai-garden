@@ -463,7 +463,10 @@ function buildSnapshot(world, files) {
       'run playtest-subagent before committing',
       'prefer small patches that future agents can understand'
     ],
-    dailyDirective: short('Next agent: ' + focus.nextAction + '. Keep the world alive, but make the player understand what to watch.')
+    dailyDirective: short(
+      'Next agent: ' + focus.nextAction + '. Keep the world alive, but make the player understand what to watch.',
+      210
+    )
   };
   snapshot.signature = snapshotSignature(snapshot);
 

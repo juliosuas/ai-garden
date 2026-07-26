@@ -139,6 +139,7 @@ async function main() {
   const optimizer = world.selfOptimizer;
   check(optimizer && optimizer.model === 'ai-garden-self-optimizer-v1', 'missing Self Optimizer world state');
   check(optimizer && optimizer.focus && optimizer.focus.nextAction, 'Self Optimizer needs a daily focus');
+  check(optimizer && optimizer.dailyDirective && optimizer.dailyDirective.endsWith('make the player understand what to watch.'), 'Self Optimizer daily directive is truncated');
   check(optimizer && optimizer.scores && optimizer.scores.mobileUX && optimizer.scores.performance, 'Self Optimizer needs UI/performance scores');
   check(optimizer && Array.isArray(optimizer.backlog) && optimizer.backlog.length >= 4, 'Self Optimizer backlog is too thin');
   check(gstackCouncil && gstackCouncil.model === 'ai-garden-gstack-council-v1', 'missing GStack Professional Council');
