@@ -2717,8 +2717,9 @@ function drawPrimitiveWork(site) {
 function drawPrimitiveWorkers(site, x, y, color) {
   const seed = hashText(site.id || site.type || (x + ':' + y));
   const workers = site.type === 'hearth-circle' || site.type === 'council-stones' ? 2 : 1;
+  const workerFrame = prefersReducedMotion ? 0 : frameCount;
   for (let i = 0; i < workers; i++) {
-    const phase = frameCount * (0.045 + i * 0.011) + seed * 0.37 + i * 2.4;
+    const phase = workerFrame * (0.045 + i * 0.011) + seed * 0.37 + i * 2.4;
     const pxX = x + Math.round(Math.cos(phase) * (7 + i * 2));
     const pxY = y + Math.round(Math.sin(phase * 0.8) * (4 + i));
     if (!pointVisible(pxX, pxY, 6)) continue;
@@ -2728,7 +2729,7 @@ function drawPrimitiveWorkers(site, x, y, color) {
     ctx.globalAlpha = 1;
     px(pxX, pxY - bob, lighten(color, 28));
     rect(pxX - 1, pxY + 1 - bob, 3, 2, i % 2 ? '#93c5fd' : '#f8fafc');
-    if ((frameCount + seed + i * 17) % 64 < 10) px(pxX + 2, pxY - 1 - bob, '#fff7ad');
+    if ((workerFrame + seed + i * 17) % 64 < 10) px(pxX + 2, pxY - 1 - bob, '#fff7ad');
   }
 }
 

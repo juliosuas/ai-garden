@@ -182,7 +182,8 @@ function scoreWorldLife(index, world) {
     index.includes('drawAgentActionBeacons'),
     index.includes('updateAmbientDialogues'),
     index.includes('PIXEL_DIALOGUE'),
-    index.includes('drawPrimitiveWorkers')
+    index.includes('drawPrimitiveWorkers'),
+    index.includes('const workerFrame = prefersReducedMotion ? 0 : frameCount')
   ];
   return {
     key: 'worldLife',
@@ -196,7 +197,8 @@ function scoreWorldLife(index, world) {
       detail('roads', checks[3]),
       detail('first-camp work sites', checks[4]),
       detail('ambient dialogue', checks[9]),
-      detail('animated work sites', checks[11])
+      detail('animated work sites', checks[11]),
+      detail('calm civic motion', checks[12])
     ])
   };
 }
