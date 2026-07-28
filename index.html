@@ -956,7 +956,6 @@ let cameraState = 'FREE';
 let userControlledCamera = false;
 let scenicCameraIndex = 0;
 const SPECTATOR_CAMERA_HOLD_FRAMES = 1080;
-const REDUCED_MOTION_CAMERA_HOLD_FRAMES = 1800;
 
 // Drag-to-pan state
 let dragStartX = 0, dragStartY = 0;     // screen coords at mousedown
@@ -6115,16 +6114,15 @@ function scenicCameraPoints() {
 }
 
 function updateSpectatorCamera(viewW, viewH) {
+  if (prefersReducedMotion) return;
   const points = scenicCameraPoints();
   if (!points.length) return;
-  const focusInterval = prefersReducedMotion ? REDUCED_MOTION_CAMERA_HOLD_FRAMES : SPECTATOR_CAMERA_HOLD_FRAMES;
-  if (frameCount % focusInterval === 1) scenicCameraIndex = (scenicCameraIndex + 1) % points.length;
+  if (frameCount % SPECTATOR_CAMERA_HOLD_FRAMES === 1) scenicCameraIndex = (scenicCameraIndex + 1) % points.length;
   const target = points[scenicCameraIndex % points.length];
   const targetCamX = clampValue(target.x - viewW / 2, 0, Math.max(0, WORLD_W - viewW));
   const targetCamY = clampValue(target.y - viewH / 2, 0, Math.max(0, WORLD_H - viewH));
   const dist = Math.hypot(targetCamX - camX, targetCamY - camY);
-  const motionFactor = prefersReducedMotion ? 0.35 : 1;
-  const ease = clampValue(0.014 + dist / 26000, 0.014, 0.045) * (target.weight || 1) * motionFactor;
+  const ease = clampValue(0.014 + dist / 26000, 0.014, 0.045) * (target.weight || 1);
   camX += (targetCamX - camX) * ease;
   camY += (targetCamY - camY) * ease;
 }

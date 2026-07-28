@@ -302,6 +302,7 @@ async function main() {
   check(index.includes('const visibleDistricts = []') && index.includes('visibleDistrictLabels(visibleDistricts)'), 'civilization projection should label only visible districts');
   check(index.includes('view.settlementSites || []).filter(function(site)') && index.includes('return pointVisible(site.x, site.y, 24);'), 'civilization projection should filter visible work sites before sorting');
   check(index.includes('updateSpectatorCamera'), 'spectator camera touring is missing');
+  check(index.includes('function updateSpectatorCamera(viewW, viewH) {\n  if (prefersReducedMotion) return;'), 'automatic spectator camera touring should pause in calm mode');
   check(index.includes('<canvas id="minimap" width="176" height="132"></canvas>'), 'expanded map minimap is too small');
   check(index.includes('drawPrimitiveWork'), 'canvas does not draw first-camp construction sprites');
   check(index.includes('drawPrimitiveWorkers'), 'first-camp work sites should show tiny civic worker motion');
