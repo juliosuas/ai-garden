@@ -101,6 +101,9 @@ function scoreMobileUX(index, humans) {
       index.includes('aria-label="Photo mode"') &&
       index.includes('aria-label="Turn on ambient garden music"') &&
       index.includes('aria-label="Message board"'),
+    index.includes('name="viewport"') &&
+      !index.includes('user-scalable=no') &&
+      !index.includes('maximum-scale=1'),
     index.includes('quietCanvasPopoversForMobileTools') &&
       index.includes("['object-popup', 'plant-tooltip', 'info-panel', 'follow-indicator']") &&
       index.includes('if (shouldOpen) quietCanvasPopoversForMobileTools();')
@@ -116,6 +119,7 @@ function scoreMobileUX(index, humans) {
       detail('post-action close', checks[2]),
       detail('body drawer state', checks[3]),
       detail('explicit close button', checks[4]),
+      detail('browser zoom available', checks[16]),
       detail('story primer tucked away', checks[5]),
       detail('zoom closes drawer', checks[6]),
       detail('touch outside dismiss', checks[7]),
@@ -124,7 +128,7 @@ function scoreMobileUX(index, humans) {
       detail('collapsed chat', checks[12]),
       detail('two-column trial masks', checks[14]),
       detail('named icon controls', checks[15]),
-      detail('drawer clears canvas popovers', checks[16])
+      detail('drawer clears canvas popovers', checks[17])
     ])
   };
 }
