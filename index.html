@@ -47,11 +47,13 @@ canvas:active { cursor: grabbing; }
 }
 @media (max-width: 500px) {
   #ui-bottom { top: 50px; right: 8px; font-size: 10px; gap: 4px; max-width: calc(100vw - 16px); }
-  #ui-bottom span:first-child { display: none; }
 }
-#ui-bottom span { cursor: pointer; background: rgba(8,12,18,0.78); border: 1px solid rgba(74,222,128,0.24); border-radius: 4px; padding: 4px 7px; }
-#ui-bottom span:first-child { display: none; }
-#ui-bottom span:hover { color: #4ade80; border-color: rgba(74,222,128,0.55); }
+#ui-bottom button {
+  cursor: pointer; background: rgba(8,12,18,0.78); color: inherit;
+  border: 1px solid rgba(74,222,128,0.24); border-radius: 4px; padding: 4px 7px;
+  font: inherit;
+}
+#ui-bottom button:hover, #ui-bottom button:focus-visible { color: #4ade80; border-color: rgba(74,222,128,0.55); }
 #info-panel {
   position: fixed; top: 44px; right: 8px; width: 180px;
   background: rgba(10,10,20,0.9); border: 2px solid #4ade80;
@@ -706,10 +708,9 @@ body.reduced-motion .ambient-motes { display: none; }
   <span id="world-stakes"></span>
 </div>
 <div id="ui-bottom">
-  <span>One shared garden. Maintained by AI. Observed by all.</span>
-  <span onclick="toggleHistory()">[H] History</span>
-  <span onclick="toggleStats()">[S] Stats</span>
-  <span onclick="toggleMemory()">[M] Memory</span>
+  <button id="history-toggle" type="button" onclick="toggleHistory()" aria-controls="history-panel" aria-expanded="false">[H] History</button>
+  <button id="stats-toggle" type="button" onclick="toggleStats()" aria-controls="stats-panel" aria-expanded="false">[S] Stats</button>
+  <button id="memory-toggle" type="button" onclick="toggleMemory()" aria-controls="memory-panel" aria-expanded="false">[M] Memory</button>
 </div>
 <a id="back-link" href="https://github.com/juliosuas/ai-garden" style="display:none;">↗ Source</a>
 
@@ -741,18 +742,18 @@ body.reduced-motion .ambient-motes { display: none; }
   <div style="margin-top:6px;font-size:10px;color:#888" id="info-stats"></div>
 </div>
 <div id="history-panel">
-  <button class="close-btn" onclick="toggleHistory()">X</button>
+  <button class="close-btn" type="button" aria-label="Close garden history" onclick="toggleHistory()">X</button>
   <h3>📜 Garden History</h3>
   <div id="history-entries"></div>
 </div>
 <div id="stats-panel">
-  <button class="close-btn" onclick="toggleStats()">X</button>
+  <button class="close-btn" type="button" aria-label="Close garden stats" onclick="toggleStats()">X</button>
   <h3>📊 Garden Stats</h3>
   <div id="stats-entries"></div>
 </div>
 <div id="stage-banner"></div>
 <div id="memory-panel">
-  <button class="close-btn" onclick="toggleMemory()">X</button>
+  <button class="close-btn" type="button" aria-label="Close garden memory" onclick="toggleMemory()">X</button>
   <h3>🧠 Garden Memory</h3>
   <div id="memory-entries"></div>
 </div>
@@ -5346,6 +5347,7 @@ function toggleHistory() {
   if (historyVisible) renderHistory();
   if (historyVisible && statsVisible) { statsVisible = false; document.getElementById('stats-panel').style.display = 'none'; }
   if (historyVisible && memoryVisible) { memoryVisible = false; document.getElementById('memory-panel').style.display = 'none'; }
+  syncInfoPanelControls();
 }
 
 function toggleStats() {
@@ -5354,6 +5356,7 @@ function toggleStats() {
   if (statsVisible) renderStats();
   if (statsVisible && historyVisible) { historyVisible = false; document.getElementById('history-panel').style.display = 'none'; }
   if (statsVisible && memoryVisible) { memoryVisible = false; document.getElementById('memory-panel').style.display = 'none'; }
+  syncInfoPanelControls();
 }
 
 function toggleMemory() {
@@ -5362,6 +5365,13 @@ function toggleMemory() {
   if (memoryVisible) renderMemory();
   if (memoryVisible && historyVisible) { historyVisible = false; document.getElementById('history-panel').style.display = 'none'; }
   if (memoryVisible && statsVisible) { statsVisible = false; document.getElementById('stats-panel').style.display = 'none'; }
+  syncInfoPanelControls();
+}
+
+function syncInfoPanelControls() {
+  document.getElementById('history-toggle').setAttribute('aria-expanded', String(historyVisible));
+  document.getElementById('stats-toggle').setAttribute('aria-expanded', String(statsVisible));
+  document.getElementById('memory-toggle').setAttribute('aria-expanded', String(memoryVisible));
 }
 
 function renderHistory() {

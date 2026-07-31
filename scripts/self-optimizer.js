@@ -149,6 +149,10 @@ function scoreFlow(index, world) {
     index.includes('focusNextFeaturedAgent'),
     index.includes('minZoomForViewport'),
     index.includes('function updateSpectatorCamera(viewW, viewH) {\n  if (prefersReducedMotion) return;'),
+    index.includes('id="history-toggle" type="button"') &&
+      index.includes('id="stats-toggle" type="button"') &&
+      index.includes('id="memory-toggle" type="button"') &&
+      index.includes('syncInfoPanelControls'),
     Number(world.gameWonderAgent && world.gameWonderAgent.scores && world.gameWonderAgent.scores.flow) >= 70,
     Array.isArray(world.agentActions) && world.agentActions.length >= 12,
     Array.isArray(world.events) && world.events.length >= 5
@@ -169,7 +173,8 @@ function scoreFlow(index, world) {
       detail('spectator camera', checks[10]),
       detail('featured-agent jump', checks[11]),
       detail('dynamic zoom minimum', checks[12]),
-      detail('calm camera', checks[13])
+      detail('calm camera', checks[13]),
+      detail('keyboard info panels', checks[14])
     ])
   };
 }
