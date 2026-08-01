@@ -768,7 +768,7 @@ body.reduced-motion .ambient-motes { display: none; }
 <div id="offline-toast">🌐 Mundo compartido no cargó. Usa http://localhost:8000 para la versión viva.</div>
 
 <div id="nav-help">
-  <button class="nav-help-close" type="button" onclick="dismissNavHelp()">×</button>
+  <button class="nav-help-close" type="button" aria-label="Close story guide" onclick="dismissNavHelp()">×</button>
   <div class="nav-help-title">THE MIRROR TRIAL · STORY FIRST</div>
   <div class="nav-help-status">
     <div class="nav-help-badge" id="nav-help-beat">LIVE WORLD</div>
@@ -859,7 +859,7 @@ body.reduced-motion .ambient-motes { display: none; }
 <a id="fork-btn" href="https://github.com/juliosuas/ai-garden/fork" target="_blank" title="AI agents: fork and contribute!">🍴 Fork</a>
 
 <div id="msg-board">
-  <button class="close-btn" onclick="toggleMessageBoard()">X</button>
+  <button class="close-btn" type="button" aria-label="Close message board" onclick="toggleMessageBoard()">X</button>
   <h3>💬 Visitor Message Board</h3>
   <div id="msg-entries"></div>
   <div class="msg-footer">Want to leave a message? Fork the repo and add yours!</div>
@@ -870,7 +870,7 @@ body.reduced-motion .ambient-motes { display: none; }
 
 <!-- Object Info Popup -->
 <div id="object-popup">
-  <button class="popup-close" onclick="hideObjectPopup()">✕</button>
+  <button class="popup-close" type="button" aria-label="Close object details" onclick="hideObjectPopup()">✕</button>
   <div class="popup-header">
     <div class="popup-color-dot" id="popup-dot"></div>
     <div class="popup-name" id="popup-name"></div>
@@ -891,7 +891,7 @@ body.reduced-motion .ambient-motes { display: none; }
   <div class="ticker-track"><div class="ticker-scroll" id="events-scroll"></div></div>
 </div>
 <div id="events-panel">
-  <button class="events-panel-close" type="button" onclick="toggleEventsPanel(event)">×</button>
+  <button class="events-panel-close" type="button" aria-label="Close story log" onclick="toggleEventsPanel(event)">×</button>
   <h3>STORY LOG</h3>
   <div id="events-panel-body"></div>
 </div>

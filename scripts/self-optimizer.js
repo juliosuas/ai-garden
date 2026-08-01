@@ -106,7 +106,11 @@ function scoreMobileUX(index, humans) {
       !index.includes('maximum-scale=1'),
     index.includes('quietCanvasPopoversForMobileTools') &&
       index.includes("['object-popup', 'plant-tooltip', 'info-panel', 'follow-indicator']") &&
-      index.includes('if (shouldOpen) quietCanvasPopoversForMobileTools();')
+      index.includes('if (shouldOpen) quietCanvasPopoversForMobileTools();'),
+    index.includes('aria-label="Close story guide"') &&
+      index.includes('aria-label="Close message board"') &&
+      index.includes('aria-label="Close object details"') &&
+      index.includes('aria-label="Close story log"')
   ];
   return {
     key: 'mobileUX',
@@ -128,7 +132,8 @@ function scoreMobileUX(index, humans) {
       detail('collapsed chat', checks[12]),
       detail('two-column trial masks', checks[14]),
       detail('named icon controls', checks[15]),
-      detail('drawer clears canvas popovers', checks[17])
+      detail('drawer clears canvas popovers', checks[17]),
+      detail('named overlay close actions', checks[18])
     ])
   };
 }
