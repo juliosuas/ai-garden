@@ -848,7 +848,7 @@ body.reduced-motion .ambient-motes { display: none; }
   <div class="dock-group">
     <button id="photo-btn" title="Photo mode" aria-label="Photo mode">📸</button>
     <button id="help-btn" title="Show camera guide" aria-label="Show camera guide" aria-controls="nav-help" aria-expanded="false">?</button>
-    <button id="ambience-btn" title="Toggle ambience">Audio</button>
+    <button id="ambience-btn" type="button" title="Turn on ambient world effects" aria-label="Turn on ambient world effects" aria-pressed="false">Life FX</button>
     <button id="music-btn" title="Turn on ambient garden music" aria-label="Turn on ambient garden music" aria-pressed="false">🔇</button>
     <button id="msg-board-btn" onclick="toggleMessageBoard()" title="Message board" aria-label="Message board">💬</button>
   </div>
@@ -6441,15 +6441,27 @@ document.addEventListener('touchstart', function() { if (photoMode) exitPhotoMod
 let ambienceOn = false;
 let ambienceParticles = [];
 
+function refreshAmbienceButton() {
+  const btn = document.getElementById('ambience-btn');
+  const actionLabel = ambienceOn ? 'Turn off ambient world effects' : 'Turn on ambient world effects';
+  btn.classList.toggle('active', ambienceOn);
+  btn.setAttribute('aria-label', actionLabel);
+  btn.setAttribute('aria-pressed', String(ambienceOn));
+  btn.title = actionLabel;
+}
+
 document.getElementById('ambience-btn').addEventListener('click', function() {
   ambienceOn = !ambienceOn;
-  this.classList.toggle('active', ambienceOn);
+  refreshAmbienceButton();
   if (!ambienceOn) ambienceParticles = [];
   closeMobileToolsAfterAction();
 });
 
 function updateAmbienceVisuals() {
-  if (!ambienceOn) return;
+  if (!ambienceOn || prefersReducedMotion) {
+    ambienceParticles = [];
+    return;
+  }
   const isNight = currentWeather === 'night';
   const detR = createSeededRandom(frameCount * 7 + 5555);
 
@@ -6479,7 +6491,7 @@ function updateAmbienceVisuals() {
 }
 
 function drawAmbienceVisuals() {
-  if (!ambienceOn) return;
+  if (!ambienceOn || prefersReducedMotion) return;
   for (const p of ambienceParticles) {
     ctx.globalAlpha = Math.min(p.life / 20, 1) * 0.7;
     if (p.type === 'note') {
