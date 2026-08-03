@@ -110,7 +110,10 @@ function scoreMobileUX(index, humans) {
     index.includes('aria-label="Close story guide"') &&
       index.includes('aria-label="Close message board"') &&
       index.includes('aria-label="Close object details"') &&
-      index.includes('aria-label="Close story log"')
+      index.includes('aria-label="Close story log"'),
+    index.includes('id="speed-control" role="group" aria-label="Simulation speed"') &&
+      index.includes('data-speed="1" aria-pressed="true"') &&
+      index.includes("b.setAttribute('aria-pressed', String(isActive))")
   ];
   return {
     key: 'mobileUX',
@@ -133,7 +136,8 @@ function scoreMobileUX(index, humans) {
       detail('two-column trial masks', checks[14]),
       detail('named icon controls', checks[15]),
       detail('drawer clears canvas popovers', checks[17]),
-      detail('named overlay close actions', checks[18])
+      detail('named overlay close actions', checks[18]),
+      detail('announced speed selection', checks[19])
     ])
   };
 }

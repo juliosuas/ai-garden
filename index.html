@@ -839,11 +839,11 @@ body.reduced-motion .ambient-motes { display: none; }
     <button id="agent-focus-btn" title="Jump to the next featured agent">Agents</button>
     <button id="follow-btn" title="Cycle founding agents (F key)">Founders</button>
   </div>
-  <div class="dock-group" id="speed-control">
+  <div class="dock-group" id="speed-control" role="group" aria-label="Simulation speed">
     <span class="dock-label">Speed</span>
-    <button class="active" data-speed="1">1x</button>
-    <button data-speed="2">2x</button>
-    <button data-speed="3">3x</button>
+    <button type="button" class="active" data-speed="1" aria-pressed="true">1x</button>
+    <button type="button" data-speed="2" aria-pressed="false">2x</button>
+    <button type="button" data-speed="3" aria-pressed="false">3x</button>
   </div>
   <div class="dock-group">
     <button id="photo-btn" title="Photo mode" aria-label="Photo mode">📸</button>
@@ -6396,8 +6396,11 @@ let gameSpeed = 1;
 document.querySelectorAll('#speed-control button').forEach(function(btn) {
   btn.addEventListener('click', function() {
     gameSpeed = parseInt(btn.dataset.speed);
-    document.querySelectorAll('#speed-control button').forEach(function(b) { b.classList.remove('active'); });
-    btn.classList.add('active');
+    document.querySelectorAll('#speed-control button').forEach(function(b) {
+      const isActive = b === btn;
+      b.classList.toggle('active', isActive);
+      b.setAttribute('aria-pressed', String(isActive));
+    });
     closeMobileToolsAfterAction();
   });
 });
