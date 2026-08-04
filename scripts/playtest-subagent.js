@@ -234,7 +234,7 @@ async function main() {
   check(index.includes('setZoom(SCALE + 1);\n  closeMobileToolsAfterAction();') && index.includes('setZoom(SCALE - 1);\n  closeMobileToolsAfterAction();'), 'mobile zoom buttons should close the tools drawer after one tap');
   check(index.includes('mobile-tools-open'), 'mobile UI lacks a body state for keeping panels out of the way');
   check(index.includes('id="mobile-dock-close"'), 'mobile tools drawer lacks an explicit close button');
-  check(index.includes('body.mobile-tools-open #nav-help'), 'mobile tools drawer should hide the story primer while open');
+  check(index.includes('body.mobile-tools-open #nav-help') && index.includes('body.mobile-tools-open #agent-theatre'), 'mobile tools drawer should hide the story primer and agent theatre while open');
   check(index.includes('dismissMobileToolsFromOutside') && index.includes("document.addEventListener('touchstart', dismissMobileToolsFromOutside, { passive: true })"), 'mobile tools drawer should dismiss on outside touchstart');
   check(index.includes('aria-label="Open tools"') && index.includes("btn.setAttribute('aria-label', shouldOpen ? 'Close tools' : 'Open tools')"), 'mobile tools drawer toggle should expose its open/close label');
   check(index.includes('aria-label="Zoom out"') && index.includes('aria-label="Zoom in"') && index.includes('aria-label="Photo mode"') && index.includes('aria-label="Turn on ambient garden music"') && index.includes('aria-label="Message board"'), 'mobile icon controls should expose accessible names');
@@ -246,6 +246,7 @@ async function main() {
   check(index.includes('id="speed-control" role="group" aria-label="Simulation speed"') && index.includes('data-speed="1" aria-pressed="true"') && index.includes("b.setAttribute('aria-pressed', String(isActive))"), 'simulation speed controls should announce the selected speed');
   check(index.includes('id="ambience-btn" type="button"') && index.includes('aria-label="Turn on ambient world effects" aria-pressed="false"') && index.includes("btn.setAttribute('aria-pressed', String(ambienceOn))"), 'ambient world effects should be distinct from audio and announce their state');
   check(index.includes('if (!ambienceOn || prefersReducedMotion)') && index.includes('ambienceParticles = [];\n    return;'), 'ambient world effects should stop in calm mode');
+  check(index.includes('width: 44px; height: 44px; background: transparent') && index.includes('height: 44px; min-width: 44px;'), 'mobile tools should keep comfortable 44px tap targets');
   check(index.includes('id="nav-help"'), 'camera/navigation help panel is missing');
   check(index.includes('THE MIRROR TRIAL'), 'The Mirror Trial cue is missing');
   check(index.includes('STORY FIRST'), 'newcomer story mode cue is missing');

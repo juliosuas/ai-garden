@@ -86,7 +86,8 @@ function scoreMobileUX(index, humans) {
     index.includes('closeMobileToolsAfterAction'),
     index.includes('mobile-tools-open'),
     index.includes('id="mobile-dock-close"'),
-    index.includes('body.mobile-tools-open #nav-help'),
+    index.includes('body.mobile-tools-open #nav-help') &&
+      index.includes('body.mobile-tools-open #agent-theatre'),
     index.includes('setZoom(SCALE + 1);\n  closeMobileToolsAfterAction();') && index.includes('setZoom(SCALE - 1);\n  closeMobileToolsAfterAction();'),
     index.includes('dismissMobileToolsFromOutside') && index.includes("document.addEventListener('touchstart', dismissMobileToolsFromOutside, { passive: true })"),
     index.includes('aria-label="Open tools"') && index.includes("btn.setAttribute('aria-label', shouldOpen ? 'Close tools' : 'Open tools')"),
@@ -117,7 +118,9 @@ function scoreMobileUX(index, humans) {
     index.includes('id="ambience-btn" type="button"') &&
       index.includes('aria-label="Turn on ambient world effects" aria-pressed="false"') &&
       index.includes("btn.setAttribute('aria-pressed', String(ambienceOn))") &&
-      index.includes('if (!ambienceOn || prefersReducedMotion)')
+      index.includes('if (!ambienceOn || prefersReducedMotion)'),
+    index.includes('width: 44px; height: 44px; background: transparent') &&
+      index.includes('height: 44px; min-width: 44px;')
   ];
   return {
     key: 'mobileUX',
@@ -131,7 +134,7 @@ function scoreMobileUX(index, humans) {
       detail('body drawer state', checks[3]),
       detail('explicit close button', checks[4]),
       detail('browser zoom available', checks[16]),
-      detail('story primer tucked away', checks[5]),
+      detail('story and agent panels tucked away', checks[5]),
       detail('zoom closes drawer', checks[6]),
       detail('touch outside dismiss', checks[7]),
       detail('accessible tools state', checks[8]),
@@ -142,7 +145,8 @@ function scoreMobileUX(index, humans) {
       detail('drawer clears canvas popovers', checks[17]),
       detail('named overlay close actions', checks[18]),
       detail('announced speed selection', checks[19]),
-      detail('calm, stateful world effects', checks[20])
+      detail('calm, stateful world effects', checks[20]),
+      detail('comfortable mobile tap targets', checks[21])
     ])
   };
 }

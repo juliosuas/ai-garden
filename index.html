@@ -436,7 +436,7 @@ canvas:active { cursor: grabbing; }
     border-bottom: 1px solid rgba(74,222,128,0.22); padding-bottom: 6px;
   }
   #mobile-dock-close {
-    width: 30px; height: 28px; background: transparent; border: 1px solid rgba(251,146,60,0.75);
+    width: 44px; height: 44px; background: transparent; border: 1px solid rgba(251,146,60,0.75);
     color: #fb923c; border-radius: 4px; font-family: monospace; font-size: 16px;
   }
   #controls-dock .dock-group {
@@ -444,12 +444,13 @@ canvas:active { cursor: grabbing; }
   }
   #controls-dock .dock-label { display: none; }
   #zoom-controls button, #agent-focus-btn, #follow-btn, #photo-btn, #help-btn, #ambience-btn, #msg-board-btn, #music-btn {
-    height: 34px;
+    height: 44px; min-width: 44px;
   }
   #agent-focus-btn, #follow-btn, #ambience-btn { flex: 1 1 86px; min-width: 80px; }
   #speed-control button { flex: 1 1 54px; min-width: 54px; }
   body.mobile-tools-open #minimap-panel { display: none; }
   body.mobile-tools-open #nav-help { display: none; }
+  body.mobile-tools-open #agent-theatre { display: none; }
   #nav-help .nav-help-close {
     top: 5px; right: 6px; width: 30px; height: 30px; font-size: 18px;
   }
