@@ -3126,8 +3126,8 @@ function drawFeaturedAgentLabel(agent, pos, scene) {
   }
 }
 
-function drawFeaturedAgent(agent, idx) {
-  const pos = featuredAgentPosition(agent, idx);
+function drawFeaturedAgent(agent, idx, precomputedPos) {
+  const pos = precomputedPos || featuredAgentPosition(agent, idx);
   if (!pointVisible(pos.x, pos.y, 48)) return;
   const scene = featuredAgentScene(agent);
   drawFeaturedAgentAura(agent, pos, scene);
@@ -3144,7 +3144,7 @@ function drawFeaturedAgents() {
   const sorted = cast.map(function(agent, idx) {
     return { agent: agent, idx: idx, pos: featuredAgentPosition(agent, idx) };
   }).sort(function(a, b) { return a.pos.y - b.pos.y; });
-  for (const item of sorted) drawFeaturedAgent(item.agent, item.idx);
+  for (const item of sorted) drawFeaturedAgent(item.agent, item.idx, item.pos);
 }
 
 function findFeaturedAgentAt(gx, gy) {

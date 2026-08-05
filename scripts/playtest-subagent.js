@@ -328,6 +328,7 @@ async function main() {
   check(index.includes('world.featuredAgents = shared.featuredAgents || []'), 'client does not load featured real agents');
   check(index.includes('world.featuredAgentDirector = shared.featuredAgentDirector || null'), 'client does not load featured agent director');
   check(index.includes('drawFeaturedAgents'), 'canvas does not draw featured real agents');
+  check(index.includes('drawFeaturedAgent(item.agent, item.idx, item.pos)'), 'featured agents should reuse their sorted position during drawing');
   check(index.includes('findFeaturedAgentAt'), 'featured real agents are not clickable');
   check(index.includes('showFeaturedAgentPopup'), 'featured real agents do not expose identity popups');
   check(index.includes('featuredAgentDialogueLine'), 'featured real agents do not have individual dialogue');

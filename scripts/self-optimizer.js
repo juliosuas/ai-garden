@@ -293,7 +293,8 @@ function scorePerformance(index, garden) {
     garden.includes('CONNECTION_DISTANCE_SQ'),
     index.includes('visibleCivilizationBounds'),
     index.includes('boxInCivilizationBounds'),
-    index.includes('lineInCivilizationBounds')
+    index.includes('lineInCivilizationBounds'),
+    index.includes('drawFeaturedAgent(item.agent, item.idx, item.pos)')
   ];
   return {
     key: 'performance',
@@ -309,7 +310,8 @@ function scorePerformance(index, garden) {
       detail('garden seed budget', checks[8]),
       detail('resize seed budget', checks[9]),
       detail('burst cap', checks[10]),
-      detail('civilization viewport culling', checks[12] && checks[13] && checks[14])
+      detail('civilization viewport culling', checks[12] && checks[13] && checks[14]),
+      detail('featured position reuse', checks[15])
     ])
   };
 }
