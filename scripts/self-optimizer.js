@@ -120,7 +120,12 @@ function scoreMobileUX(index, humans) {
       index.includes("btn.setAttribute('aria-pressed', String(ambienceOn))") &&
       index.includes('if (!ambienceOn || prefersReducedMotion)'),
     index.includes('width: 44px; height: 44px; background: transparent') &&
-      index.includes('height: 44px; min-width: 44px;')
+      index.includes('height: 44px; min-width: 44px;'),
+    humans.includes('makeCollapsibleHeader') &&
+      humans.includes("header.setAttribute('aria-expanded'") &&
+      humans.includes("if (e.key !== 'Enter' && e.key !== ' ')") &&
+      humans.includes("makeCollapsibleHeader(gh, god, gb, 'Toggle Mirror Trial')") &&
+      humans.includes("makeCollapsibleHeader(ch, chat, cbody, 'Toggle Observer Lounge')")
   ];
   return {
     key: 'mobileUX',
@@ -143,6 +148,7 @@ function scoreMobileUX(index, humans) {
       detail('two-column trial masks', checks[14]),
       detail('named icon controls', checks[15]),
       detail('drawer clears canvas popovers', checks[17]),
+      detail('keyboard panel toggles', checks[22]),
       detail('named overlay close actions', checks[18]),
       detail('announced speed selection', checks[19]),
       detail('calm, stateful world effects', checks[20]),

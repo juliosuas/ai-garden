@@ -391,6 +391,7 @@ async function main() {
   check(humans.includes("chat.classList.add('ag-collapsed')"), 'mobile observer chat should start collapsed');
   check(humans.includes('body.mobile-tools-open .ag-chat'), 'mobile tools drawer should move chat out of the way');
   check(humans.includes('.ag-trial-masks{grid-template-columns:repeat(2,1fr)'), 'mobile Mirror Trial masks should use a two-column tap grid');
+  check(humans.includes('makeCollapsibleHeader') && humans.includes("header.setAttribute('aria-expanded'") && humans.includes("if (e.key !== 'Enter' && e.key !== ' ')") && humans.includes("makeCollapsibleHeader(gh, god, gb, 'Toggle Mirror Trial')") && humans.includes("makeCollapsibleHeader(ph, pantheon, pb, 'Toggle Pantheon')") && humans.includes("makeCollapsibleHeader(ch, chat, cbody, 'Toggle Observer Lounge')"), 'collapsed human panels should be keyboard operable and expose expanded state');
 
   check(music.includes('HOOK_STEPS'), '8-bit music lacks a repeatable original hook');
   check(music.includes('playNoiseBurst'), '8-bit music lacks chip noise percussion');

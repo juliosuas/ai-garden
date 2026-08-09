@@ -153,6 +153,7 @@
       '  font-size:11px;letter-spacing:0.5px;}',
       '.ag-god-head{display:flex;align-items:center;justify-content:space-between;padding:5px 8px;',
       '  background:rgba(74,222,128,0.08);border-bottom:1px solid #2a4a2a;cursor:pointer;color:#ffd700;}',
+      '.ag-god-head:focus-visible,.ag-pantheon-head:focus-visible,.ag-chat-head:focus-visible{outline:2px solid #fde047;outline-offset:-2px;}',
       '.ag-god-title{font-weight:bold;}',
       '.ag-god-caret{transition:transform 0.2s ease;color:#888;}',
       '.ag-collapsed .ag-god-caret{transform:rotate(-90deg);}',
@@ -2268,6 +2269,27 @@
     root.id = 'ag-humans-root';
     document.body.appendChild(root);
 
+    function makeCollapsibleHeader(header, panel, body, label) {
+      header.setAttribute('role', 'button');
+      header.setAttribute('tabindex', '0');
+      header.setAttribute('aria-controls', body.id);
+      header.setAttribute('aria-label', label);
+      function syncExpanded() {
+        header.setAttribute('aria-expanded', String(!panel.classList.contains('ag-collapsed')));
+      }
+      function toggle() {
+        panel.classList.toggle('ag-collapsed');
+        syncExpanded();
+      }
+      header.addEventListener('click', toggle);
+      header.addEventListener('keydown', function (e) {
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        e.preventDefault();
+        toggle();
+      });
+      syncExpanded();
+    }
+
     // God panel
     var god = el('div', 'ag-god');
     var gh = el('div', 'ag-god-head');
@@ -2278,6 +2300,7 @@
     gh.appendChild(gt); gh.appendChild(gp); gh.appendChild(gc);
     god.appendChild(gh);
     var gb = el('div', 'ag-god-body');
+    gb.id = 'ag-god-body';
     var maskSummary = el('div', 'ag-god-mask');
     maskSummary.id = 'ag-god-mask-summary';
     gb.appendChild(maskSummary);
@@ -2328,12 +2351,10 @@
     var gs = el('div', 'ag-god-status', 'the civilization is learning the shape of your hand');
     gb.appendChild(gs);
     god.appendChild(gb);
-    gh.addEventListener('click', function (e) {
-      if (e.target === gh || e.target === gt || e.target === gc) god.classList.toggle('ag-collapsed');
-    });
     if (window.matchMedia && window.matchMedia('(max-width: 640px)').matches) {
       god.classList.add('ag-collapsed');
     }
+    makeCollapsibleHeader(gh, god, gb, 'Toggle Mirror Trial');
     root.appendChild(god);
 
     // Pantheon panel
@@ -2345,6 +2366,7 @@
     ph.appendChild(pt); ph.appendChild(pc);
     pantheon.appendChild(ph);
     var pb = el('div', 'ag-pantheon-body');
+    pb.id = 'ag-pantheon-body';
     [
       ['favor', 'Favor'],
       ['awe', 'Awe'],
@@ -2390,10 +2412,10 @@
     ledger.id = 'ag-omen-ledger';
     pb.appendChild(ledger);
     pantheon.appendChild(pb);
-    ph.addEventListener('click', function () { pantheon.classList.toggle('ag-collapsed'); });
     if (window.matchMedia && window.matchMedia('(max-width: 640px)').matches) {
       pantheon.classList.add('ag-collapsed');
     }
+    makeCollapsibleHeader(ph, pantheon, pb, 'Toggle Pantheon');
     root.appendChild(pantheon);
 
     // Chat panel
@@ -2405,6 +2427,7 @@
     ch.appendChild(cp);
     chat.appendChild(ch);
     var cbody = el('div', 'ag-chat-body');
+    cbody.id = 'ag-chat-body';
     var syncStrip = el('div', 'ag-sync-strip');
     syncStrip.id = 'ag-sync-strip';
     cbody.appendChild(syncStrip);
@@ -2446,10 +2469,10 @@
     var tip = el('div', 'ag-chat-tip', 'humans call it play; agents file it as evidence');
     cbody.appendChild(tip);
     chat.appendChild(cbody);
-    ch.addEventListener('click', function () { chat.classList.toggle('ag-collapsed'); });
     if (window.matchMedia && window.matchMedia('(max-width: 640px)').matches) {
       chat.classList.add('ag-collapsed');
     }
+    makeCollapsibleHeader(ch, chat, cbody, 'Toggle Observer Lounge');
     root.appendChild(chat);
 
     // Lore button + panel
