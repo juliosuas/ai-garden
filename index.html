@@ -851,7 +851,7 @@ body.reduced-motion .ambient-motes { display: none; }
     <button id="help-btn" title="Show camera guide" aria-label="Show camera guide" aria-controls="nav-help" aria-expanded="false">?</button>
     <button id="ambience-btn" type="button" title="Turn on ambient world effects" aria-label="Turn on ambient world effects" aria-pressed="false">Life FX</button>
     <button id="music-btn" title="Turn on ambient garden music" aria-label="Turn on ambient garden music" aria-pressed="false">🔇</button>
-    <button id="msg-board-btn" onclick="toggleMessageBoard()" title="Message board" aria-label="Message board">💬</button>
+    <button id="msg-board-btn" type="button" onclick="toggleMessageBoard()" title="Message board" aria-label="Open visitor message board" aria-controls="msg-board" aria-expanded="false">💬</button>
   </div>
 </div>
 <div id="photo-watermark"></div>
@@ -6700,6 +6700,9 @@ const HARDCODED_MESSAGES = [
 function toggleMessageBoard() {
   msgBoardVisible = !msgBoardVisible;
   document.getElementById('msg-board').style.display = msgBoardVisible ? 'block' : 'none';
+  const button = document.getElementById('msg-board-btn');
+  button.setAttribute('aria-expanded', String(msgBoardVisible));
+  button.setAttribute('aria-label', msgBoardVisible ? 'Close visitor message board' : 'Open visitor message board');
   if (msgBoardVisible) renderMessages();
 }
 

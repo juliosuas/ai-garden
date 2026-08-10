@@ -101,7 +101,7 @@ function scoreMobileUX(index, humans) {
       index.includes('aria-label="Zoom in"') &&
       index.includes('aria-label="Photo mode"') &&
       index.includes('aria-label="Turn on ambient garden music"') &&
-      index.includes('aria-label="Message board"'),
+      index.includes('aria-label="Open visitor message board"'),
     index.includes('name="viewport"') &&
       !index.includes('user-scalable=no') &&
       !index.includes('maximum-scale=1'),
@@ -112,6 +112,10 @@ function scoreMobileUX(index, humans) {
       index.includes('aria-label="Close message board"') &&
       index.includes('aria-label="Close object details"') &&
       index.includes('aria-label="Close story log"'),
+    index.includes('id="msg-board-btn" type="button"') &&
+      index.includes('aria-controls="msg-board" aria-expanded="false"') &&
+      index.includes("button.setAttribute('aria-expanded', String(msgBoardVisible))") &&
+      index.includes("msgBoardVisible ? 'Close visitor message board' : 'Open visitor message board'"),
     index.includes('id="speed-control" role="group" aria-label="Simulation speed"') &&
       index.includes('data-speed="1" aria-pressed="true"') &&
       index.includes("b.setAttribute('aria-pressed', String(isActive))"),
@@ -138,6 +142,7 @@ function scoreMobileUX(index, humans) {
       detail('post-action close', checks[2]),
       detail('body drawer state', checks[3]),
       detail('explicit close button', checks[4]),
+      detail('message board state', checks[19]),
       detail('browser zoom available', checks[16]),
       detail('story and agent panels tucked away', checks[5]),
       detail('zoom closes drawer', checks[6]),
