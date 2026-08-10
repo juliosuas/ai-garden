@@ -83,7 +83,7 @@ Before you open a PR:
 <!-- live:end -->
 
 <!-- self-optimizer:start -->
-**Self Optimizer** - Day 122 - overall 100/100 - focus: Mobile UX - next: keep the mobile HUD quiet, dismissible, and action-first
+**Self Optimizer** - Day 123 - overall 100/100 - focus: Performance - next: profile the canvas and keep animation density readable before adding more life
 <!-- self-optimizer:end -->
 
 ---
