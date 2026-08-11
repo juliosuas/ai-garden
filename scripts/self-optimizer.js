@@ -305,7 +305,9 @@ function scorePerformance(index, garden) {
     index.includes('visibleCivilizationBounds'),
     index.includes('boxInCivilizationBounds'),
     index.includes('lineInCivilizationBounds'),
-    index.includes('drawFeaturedAgent(item.agent, item.idx, item.pos)')
+    index.includes('drawFeaturedAgent(item.agent, item.idx, item.pos)'),
+    index.includes('const citizens = world.citizens;') &&
+      index.includes('if (!c || c.alive === false) continue;')
   ];
   return {
     key: 'performance',
@@ -322,7 +324,8 @@ function scorePerformance(index, garden) {
       detail('resize seed budget', checks[9]),
       detail('burst cap', checks[10]),
       detail('civilization viewport culling', checks[12] && checks[13] && checks[14]),
-      detail('featured position reuse', checks[15])
+      detail('featured position reuse', checks[15]),
+      detail('allocation-free citizen scan', checks[16])
     ])
   };
 }

@@ -318,6 +318,7 @@ async function main() {
   check(index.includes('settlementSites'), 'canvas does not consume settlement construction sites');
   check(index.includes('drawCitizenSprite'), 'citizens do not render as animated pixel sprites');
   check(index.includes('citizenVisualPosition'), 'citizens are not projected into visible animated positions');
+  check(index.includes('const citizens = world.citizens;') && index.includes('if (!c || c.alive === false) continue;'), 'citizen rendering should not allocate a filtered population array every frame');
   check(index.includes('const CITIZEN_VISUAL_LIMIT = 14'), 'citizen background limit should stay low behind featured agents');
   check(index.includes('CITIZEN_PER_DISTRICT_LIMIT'), 'citizens lack a per-district crowd limit');
   check(index.includes('citizenTooCloseToDrawn'), 'citizens lack spacing to prevent crowd clumps');

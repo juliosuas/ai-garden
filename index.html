@@ -4305,10 +4305,11 @@ function drawCitizens() {
   if (!world.citizens || world.citizens.length === 0) return;
   const vL = camX - 20, vR = camX + screenW / SCALE + 20;
   const vT = camY - 20, vB = camY + screenH / SCALE + 20;
-  const citizens = world.citizens.filter(function(c) { return c && c.alive !== false; });
+  const citizens = world.citizens;
   const candidates = [];
   for (let i = 0; i < citizens.length; i++) {
     const c = citizens[i];
+    if (!c || c.alive === false) continue;
     const pos = citizenVisualPosition(c, i);
     if (!pos) continue;
     const cx = pos.x, cy = pos.y;
