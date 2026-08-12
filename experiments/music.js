@@ -471,6 +471,19 @@ const GardenMusic = (function() {
     schedulerTimer = setTimeout(scheduler, 50);
   }
 
+  function pauseScheduling() {
+    playing = false;
+    if (schedulerTimer) {
+      clearTimeout(schedulerTimer);
+      schedulerTimer = null;
+    }
+    if (moodTimer) {
+      clearInterval(moodTimer);
+      moodTimer = null;
+    }
+    hiddenSuspend = false;
+  }
+
   // Auto-detect mood from garden weather/time
   function detectMood() {
     const seasonHint = (window.aiGardenSeason || document.body && document.body.getAttribute('data-ag-season') || '').toLowerCase();
@@ -577,16 +590,7 @@ const GardenMusic = (function() {
     },
 
     stop: function() {
-      playing = false;
-      if (schedulerTimer) {
-        clearTimeout(schedulerTimer);
-        schedulerTimer = null;
-      }
-      if (moodTimer) {
-        clearInterval(moodTimer);
-        moodTimer = null;
-      }
-      hiddenSuspend = false;
+      pauseScheduling();
       if (masterGain) {
         masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
         masterGain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.3);
@@ -616,6 +620,8 @@ const GardenMusic = (function() {
         masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
         masterGain.gain.setValueAtTime(masterGain.gain.value, audioCtx.currentTime);
         masterGain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.3);
+        // Let already-scheduled voices fade, but stop creating silent work.
+        pauseScheduling();
       } else {
         applyMasterVolume(0.5);
       }

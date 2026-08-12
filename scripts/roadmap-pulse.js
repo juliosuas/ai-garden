@@ -95,7 +95,9 @@ function buildPulse() {
       music.includes('MAX_MASTER_VOLUME') &&
       music.includes('INPUT_DUCK_VOLUME') &&
       music.includes('visibilitychange') &&
-      music.includes('MAX_ACTIVE_VOICES'),
+      music.includes('MAX_ACTIVE_VOICES') &&
+      music.includes('function pauseScheduling()') &&
+      music.includes('pauseScheduling();\n      } else'),
       'ambient bed follows season and stays subtle'),
     check('Mobile Safety', humans.includes("chat.classList.add('ag-collapsed')") && index.includes('mobile-tools-open'), 'panels stay out of the way'),
     check('Daily QA', playtest.includes('BACKEND_SYNC_STORE') && selfOptimizer.includes('seasonal ambient'), 'tests protect the loop'),

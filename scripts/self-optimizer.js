@@ -262,6 +262,8 @@ function scoreAudio(music, index, humans) {
     music.includes('MAX_MASTER_VOLUME'),
     music.includes('INPUT_DUCK_VOLUME') && music.includes('focusin') && music.includes('focusout'),
     music.includes('MAX_ACTIVE_VOICES') && music.includes('canScheduleVoice'),
+    music.includes('function pauseScheduling()') &&
+      music.includes('pauseScheduling();\n      } else'),
     index.includes('audioActionLabel') &&
       index.includes("'Turn off ambient garden music (' + themeLabel + ')'") &&
       index.includes("setAttribute('aria-label', audioActionLabel)")
@@ -283,7 +285,8 @@ function scoreAudio(music, index, humans) {
       detail('capped master volume', checks[14]),
       detail('text-entry ducking', checks[15]),
       detail('voice density cap', checks[16]),
-      detail('stateful audio label', checks[17])
+      detail('mute pauses scheduling', checks[17]),
+      detail('stateful audio label', checks[18])
     ])
   };
 }
