@@ -378,7 +378,10 @@ function scoreAutomation(dailyWorkflow, autopilotWorkflow, selfWorkflow, roadmap
     gstackCouncil.includes('Trust And Safety Lead'),
     stakeholderAssembly.includes('Investor/User/Team Room'),
     stakeholderAssembly.includes('Seven-Day /plan'),
-    plan.includes('/plan - Investor Room')
+    plan.includes('/plan - Investor Room'),
+    dailyWorkflow.includes('group: ai-garden-main-writers'),
+    selfWorkflow.includes('group: ai-garden-main-writers'),
+    roadmapWorkflow.includes('group: ai-garden-main-writers')
   ];
   return {
     key: 'automation',
@@ -398,7 +401,8 @@ function scoreAutomation(dailyWorkflow, autopilotWorkflow, selfWorkflow, roadmap
       detail('roadmap syntax check', checks[12]),
       detail('roadmap rehearsal order', checks[22]),
       detail('agentic push retry', checks[23]),
-      detail('weekly narrative contract', checks[34])
+      detail('weekly narrative contract', checks[34]),
+      detail('serialized main writers', checks[43] && checks[44] && checks[45])
     ])
   };
 }

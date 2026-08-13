@@ -18,7 +18,8 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 concurrency:
-  group: daily-self-optimizer
+  # Serialize every workflow that writes directly to main, including manual runs.
+  group: ai-garden-main-writers
   cancel-in-progress: false
 
 jobs:
