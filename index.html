@@ -2712,7 +2712,33 @@ function drawPrimitiveWork(site) {
     rect(x - 4, y, 8, 6, color);
     px(x, y - 1, '#f8fafc');
   }
+  drawPrimitiveWorkCue(site, x, y);
   drawPrimitiveWorkers(site, x, y, color);
+}
+
+function primitiveWorkCue(site) {
+  if (!site || !site.type) return 'WORK';
+  if (site.type === 'hearth-circle') return 'FIRE';
+  if (site.type === 'reed-shelter') return 'HOME';
+  if (site.type === 'tool-yard') return 'TOOL';
+  if (site.type === 'seed-cache' || site.type === 'shared-granary') return 'FOOD';
+  if (site.type === 'signal-fire') return 'SIGNAL';
+  if (site.type === 'council-stones') return 'LAW';
+  if (site.type === 'drying-rack') return 'DRY';
+  if (site.type === 'clay-kiln') return 'KILN';
+  if (site.type === 'memory-pole' || site.type === 'scribe-mat') return 'MEM';
+  if (site.type === 'water-marker') return 'WATER';
+  return 'WORK';
+}
+
+function drawPrimitiveWorkCue(site, x, y) {
+  if (SCALE < 3 || !pointVisible(x, y - 13, 28)) return;
+  const label = primitiveWorkCue(site);
+  const w = label.length * 4 + 3;
+  ctx.globalAlpha = 0.66;
+  rect(x - Math.floor(w / 2), y - 15, w, 7, 'rgba(15,23,42,0.72)');
+  ctx.globalAlpha = 1;
+  drawPixelText(label, x - Math.floor((label.length * 4) / 2), y - 13, '#f8fafc');
 }
 
 function drawPrimitiveWorkers(site, x, y, color) {

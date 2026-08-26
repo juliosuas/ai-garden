@@ -223,7 +223,10 @@ function scoreWorldLife(index, world) {
     index.includes('updateAmbientDialogues'),
     index.includes('PIXEL_DIALOGUE'),
     index.includes('drawPrimitiveWorkers'),
-    index.includes('const workerFrame = prefersReducedMotion ? 0 : frameCount')
+    index.includes('const workerFrame = prefersReducedMotion ? 0 : frameCount'),
+    index.includes('function primitiveWorkCue(site)') &&
+      index.includes("if (site.type === 'tool-yard') return 'TOOL';") &&
+      index.includes('drawPrimitiveWorkCue(site, x, y);')
   ];
   return {
     key: 'worldLife',
@@ -238,7 +241,8 @@ function scoreWorldLife(index, world) {
       detail('first-camp work sites', checks[4]),
       detail('ambient dialogue', checks[9]),
       detail('animated work sites', checks[11]),
-      detail('calm civic motion', checks[12])
+      detail('calm civic motion', checks[12]),
+      detail('readable work-site jobs', checks[13])
     ])
   };
 }
