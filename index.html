@@ -837,7 +837,7 @@ body.reduced-motion .ambient-motes { display: none; }
     <button id="zoom-in" title="Zoom in" aria-label="Zoom in">+</button>
   </div>
   <div class="dock-group">
-    <button id="agent-focus-btn" title="Jump to the next featured agent">Agents</button>
+    <button id="agent-focus-btn" title="Jump to today's readable scene" aria-label="Jump to today's readable scene">Watch</button>
     <button id="follow-btn" title="Cycle founding agents (F key)">Founders</button>
   </div>
   <div class="dock-group" id="speed-control" role="group" aria-label="Simulation speed">
@@ -6262,6 +6262,27 @@ function smoothNavigateTo(worldX, worldY) {
   document.getElementById('follow-indicator').style.display = 'none';
 }
 
+function focusGameWonderMoment() {
+  const focus = gameWonderFocus();
+  if (!focus) {
+    focusNextFeaturedAgent();
+    return;
+  }
+  smoothNavigateTo(focus.x, focus.y);
+  const indicator = document.getElementById('follow-indicator');
+  indicator.style.display = 'block';
+  document.getElementById('follow-name').textContent = 'Watch · ' + (focus.label || 'scene');
+  addSpeechBubble(focus.x, focus.y - focus.radius * 0.55, focus.title || 'Watch this scene', '#fde68a', {
+    speakerId: 'wonder-focus-' + (focus.label || 'scene'),
+    life: 170,
+    force: true,
+    maxChars: 18
+  });
+  setTimeout(function() {
+    if (!followingMascot && cameraState !== 'FOLLOWING') indicator.style.display = 'none';
+  }, 2800);
+}
+
 function focusNextFeaturedAgent() {
   const cast = featuredAgentCast();
   if (!cast.length) {
@@ -6350,7 +6371,7 @@ document.getElementById('zoom-out').addEventListener('click', function() {
 });
 document.getElementById('agent-focus-btn').addEventListener('click', function(e) {
   e.stopPropagation();
-  focusNextFeaturedAgent();
+  focusGameWonderMoment();
   closeMobileToolsAfterAction();
 });
 document.getElementById('help-btn').addEventListener('click', function(e) {

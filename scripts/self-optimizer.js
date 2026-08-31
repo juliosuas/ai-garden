@@ -176,6 +176,10 @@ function scoreFlow(index, world) {
     index.includes('AIGardenHumans.trial'),
     index.includes('updateSpectatorCamera'),
     index.includes('focusNextFeaturedAgent'),
+    index.includes('focusGameWonderMoment') &&
+      index.includes('Jump to today') &&
+      index.includes('Watch · ') &&
+      index.includes('focusGameWonderMoment();'),
     index.includes('minZoomForViewport'),
     index.includes('function updateSpectatorCamera(viewW, viewH) {\n  if (prefersReducedMotion) return;'),
     index.includes('id="history-toggle" type="button"') &&
@@ -201,9 +205,10 @@ function scoreFlow(index, world) {
       detail('god trial CTA', checks[9]),
       detail('spectator camera', checks[10]),
       detail('featured-agent jump', checks[11]),
-      detail('dynamic zoom minimum', checks[12]),
-      detail('calm camera', checks[13]),
-      detail('keyboard info panels', checks[14])
+      detail('daily scene jump', checks[12]),
+      detail('dynamic zoom minimum', checks[13]),
+      detail('calm camera', checks[14]),
+      detail('keyboard info panels', checks[15])
     ])
   };
 }

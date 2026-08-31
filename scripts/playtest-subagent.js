@@ -289,7 +289,9 @@ async function main() {
   check(index.includes('toggleGardenMusic'), 'music controls should use a shared toggle helper');
   check(index.includes('refreshMusicButton'), 'music button state should be visible and synced');
   check(index.includes('id="agent-focus-btn"'), 'featured agent focus button is missing');
+  check(index.includes('Jump to today') && index.includes('>Watch</button>'), 'daily readable scene button should be explicit');
   check(index.includes('focusNextFeaturedAgent'), 'featured agent focus camera helper is missing');
+  check(index.includes('focusGameWonderMoment') && index.includes('gameWonderFocus()') && index.includes('Watch · '), 'daily readable scene button should jump to Wonderwright focus');
   check(index.includes('id="minimap-panel"'), 'minimap lacks a labeled jump panel');
   check(index.includes('COMMAND MAP'), 'minimap should read as a command HUD map');
   check(index.includes('aria-label="Command map"'), 'compact minimap should keep an accessible command-map label');
