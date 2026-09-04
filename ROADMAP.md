@@ -167,11 +167,11 @@ The daily roadmap pulse should run after the self optimizer. It should:
 Schedule: `17 7 * * *` UTC.
 
 <!-- roadmap-pulse:start -->
-**Roadmap Pulse** - Day 147 - 9/9 contracts healthy - season: summer - arc: War of Saints and Source
+**Roadmap Pulse** - Day 148 - 9/9 contracts healthy - season: summer - arc: War of Saints and Source
 
 - Focus: Phase 1 proof loop polish.
-- Next: profile the canvas and keep animation density readable before adding more life
-- Generated: 2026-09-03T12:06:29.980Z
+- Next: keep the seasonal ambient bed subtle, synced, and optional
+- Generated: 2026-09-04T12:07:35.694Z
 
 | Contract | Status | Why |
 |----------|--------|-----|
