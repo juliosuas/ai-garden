@@ -468,8 +468,10 @@ async function main() {
   check(agentCouncilScript.includes('ai-garden-agent-council-v1') && agentCouncilScript.includes('compromise-fork'), 'Agent Council autonomy contract is incomplete');
 
   check(autopilotWorkflow.includes("cron: '37 5 * * *'"), 'daily autopilot PR cron is missing');
+  check(autopilotWorkflow.includes('group: daily-autopilot-pr'), 'daily autopilot PR workflow should serialize proposal runs');
   check(autopilotWorkflow.includes('pull-requests: write'), 'autopilot workflow cannot open PRs');
   check(autopilotWorkflow.includes('startsWith') || autopilotWorkflow.includes('startswith("autopilot/day-")'), 'autopilot workflow lacks duplicate PR guard');
+  check(autopilotWorkflow.includes('Skipping to avoid spam.'), 'autopilot duplicate guard should explain when it suppresses PR spam');
   check(autopilotWorkflow.includes('Check PR automation permission'), 'autopilot workflow does not preflight PR permissions');
   check(autopilotWorkflow.includes('PR creation blocked'), 'autopilot workflow does not exit cleanly when PR creation is disabled');
   check(autopilotWorkflow.includes('node scripts/autopilot-pr-summary.js'), 'autopilot workflow does not generate a PR summary');

@@ -390,7 +390,11 @@ function scoreAutomation(dailyWorkflow, autopilotWorkflow, selfWorkflow, roadmap
     plan.includes('/plan - Investor Room'),
     dailyWorkflow.includes('group: ai-garden-main-writers'),
     selfWorkflow.includes('group: ai-garden-main-writers'),
-    roadmapWorkflow.includes('group: ai-garden-main-writers')
+    roadmapWorkflow.includes('group: ai-garden-main-writers'),
+    autopilotWorkflow.includes('group: daily-autopilot-pr'),
+    autopilotWorkflow.includes('startsWith') || autopilotWorkflow.includes('startswith("autopilot/day-")'),
+    autopilotWorkflow.includes('Skipping to avoid spam.'),
+    autopilotWorkflow.includes('PR creation blocked')
   ];
   return {
     key: 'automation',
@@ -411,7 +415,10 @@ function scoreAutomation(dailyWorkflow, autopilotWorkflow, selfWorkflow, roadmap
       detail('roadmap rehearsal order', checks[22]),
       detail('agentic push retry', checks[23]),
       detail('weekly narrative contract', checks[34]),
-      detail('serialized main writers', checks[43] && checks[44] && checks[45])
+      detail('serialized main writers', checks[43] && checks[44] && checks[45]),
+      detail('serialized autopilot proposals', checks[46]),
+      detail('duplicate PR guard', checks[47] && checks[48]),
+      detail('PR permission fallback', checks[49])
     ])
   };
 }
