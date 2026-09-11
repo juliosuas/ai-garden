@@ -2,10 +2,10 @@
 
 > Fictional rehearsal. This is not real investor or user feedback; it is a product-pressure room generated from the current AI Garden state.
 
-**Generated:** 2026-09-10T11:32:11.961Z
-**World Day:** 154
-**Current Arc:** Week 148-154 · War of Saints and Source
-**Today Priority:** Narrative Director - Every beat needs a who, a why, and a tomorrow.
+**Generated:** 2026-09-11T11:33:35.775Z
+**World Day:** 155
+**Current Arc:** Week 155-161 · War of Saints and Source
+**Today Priority:** Performance Engineer - Profile or cap before drawing more entities.
 
 ## Assigned Agents
 
@@ -29,8 +29,8 @@
 - **Mistral (Investors):** "The paid path is only credible if patrons buy identity and lore pressure, never direct control."
 - **Llama (Users):** "For viral reach, I need a weekly mass omen that a stream can vote on and explain in one sentence."
 - **Claude (Users):** "I will return if yesterday becomes evidence in the archive, not if it disappears after a modal closes."
-- **GPT-5 (Team):** "The story beat today is Week verdict; the product beat is turning that into a repeatable demo."
-- **Wonderwright (Team):** "The next polish target is Narrative Director: Every beat needs a who, a why, and a tomorrow."
+- **GPT-5 (Team):** "The story beat today is Opening signal; the product beat is turning that into a repeatable demo."
+- **Wonderwright (Team):** "The next polish target is Performance Engineer: Profile or cap before drawing more entities."
 - **Gemini (Investors):** "The wedge is not generic AI chat. It is a living civilization that converts attention into politics, receipts, and status."
 
 ## Decision
@@ -43,13 +43,13 @@
 
 | Day | Owner | Workstream | Deliverable | Success Metric |
 |-----|-------|------------|-------------|----------------|
-| Day 154 | Codex | Investor-room demo spine | Expose the fictional boardroom, agent roles, conversation, and /plan in product and docs. | A reviewer can explain the business loop after reading one panel. |
-| Day 155 | OpenClaw | First-minute player pass | Tighten the Mirror Trial path from landing to Miracle Record. | Clean visitor reaches shareable proof in under 60 seconds. |
-| Day 156 | Claude | Deity Archive local MVP | Turn receipts into a local archive of sins, miracles, heresies, and failed gods. | Return visit shows what changed since the last receipt. |
-| Day 157 | Gemini | Latest Gods social proof | Add a static-first latest-gods ticker seeded from local receipts and world pressure. | Demo shows credible social motion without a database. |
-| Day 158 | Llama | Streamer mass omen spec | Define a weekly crowd vote that influences interpretation, not direct outcomes. | One sentence explains how an audience can participate safely. |
-| Day 159 | Mistral | Monetization proof page | Clarify Minor God, Patron God, and Founding Deity reservations with hard guardrails. | Paid value is identity, archive, patronage, and status, not control. |
-| Day 160 | Hermes | Investor demo script | Write the exact 3-minute pitch and proof checklist for the next capital conversation. | Demo covers hook, proof loop, retention, monetization, and safety without improvisation. |
+| Day 155 | Codex | Investor-room demo spine | Expose the fictional boardroom, agent roles, conversation, and /plan in product and docs. | A reviewer can explain the business loop after reading one panel. |
+| Day 156 | OpenClaw | First-minute player pass | Tighten the Mirror Trial path from landing to Miracle Record. | Clean visitor reaches shareable proof in under 60 seconds. |
+| Day 157 | Claude | Deity Archive local MVP | Turn receipts into a local archive of sins, miracles, heresies, and failed gods. | Return visit shows what changed since the last receipt. |
+| Day 158 | Gemini | Latest Gods social proof | Add a static-first latest-gods ticker seeded from local receipts and world pressure. | Demo shows credible social motion without a database. |
+| Day 159 | Llama | Streamer mass omen spec | Define a weekly crowd vote that influences interpretation, not direct outcomes. | One sentence explains how an audience can participate safely. |
+| Day 160 | Mistral | Monetization proof page | Clarify Minor God, Patron God, and Founding Deity reservations with hard guardrails. | Paid value is identity, archive, patronage, and status, not control. |
+| Day 161 | Hermes | Investor demo script | Write the exact 3-minute pitch and proof checklist for the next capital conversation. | Demo covers hook, proof loop, retention, monetization, and safety without improvisation. |
 
 ## Guardrails
 
