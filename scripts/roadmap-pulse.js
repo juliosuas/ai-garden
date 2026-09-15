@@ -111,6 +111,7 @@ function buildPulse() {
       before(workflow, 'node scripts/stakeholder-assembly.js', 'node scripts/roadmap-pulse.js') &&
       workflow.includes('node scripts/roadmap-pulse.js') &&
       workflow.includes('group: ai-garden-main-writers') &&
+      workflow.includes('cancel-in-progress: false') &&
       workflow.includes('contents: write'), 'daily roadmap pulse is scheduled and can commit ROADMAP.md')
   ];
   const passing = contracts.filter(item => item.ok).length;

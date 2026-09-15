@@ -451,6 +451,7 @@ async function main() {
   check(roadmapWorkflow.includes('git add ROADMAP.md'), 'daily roadmap pulse should only commit ROADMAP.md');
   check(roadmapWorkflow.includes('bash scripts/agentic-main-push.sh'), 'daily roadmap pulse should use retrying agentic main push');
   check(roadmapWorkflow.includes('group: ai-garden-main-writers'), 'daily roadmap pulse should serialize with other main-writing workflows');
+  check(roadmapWorkflow.includes('cancel-in-progress: false'), 'daily roadmap pulse should queue behind main writers instead of canceling them');
   check(roadmapWorkflow.includes('contents: write'), 'daily roadmap pulse workflow cannot write ROADMAP commits');
 
   check(dailyWorkflow.includes("cron: '11 4 * * *'"), 'daily evolution cron is missing');
@@ -460,6 +461,7 @@ async function main() {
   check(dailyWorkflow.includes('node --check scripts/agent-council.js'), 'daily cron does not validate the canonical Agent Council');
   check(dailyWorkflow.includes('bash scripts/agentic-main-push.sh'), 'daily cron does not use retrying agentic main push');
   check(dailyWorkflow.includes('group: ai-garden-main-writers'), 'daily cron should serialize with other main-writing workflows');
+  check(dailyWorkflow.includes('cancel-in-progress: false'), 'daily cron should queue behind main writers instead of canceling them');
   check(dailyWorkflow.includes('contents: write'), 'daily cron cannot write commits');
   check(dailyEvolution.includes('FORTUNE_SIGNS') && dailyEvolution.includes('world.mysticFortune') && dailyEvolution.includes('applyMiracleBoon'), 'daily evolution needs a mystical luck accelerator');
   check(dailyEvolution.includes('refreshDailyQuest'), 'daily evolution does not refresh the playable Daily Prophecy');
@@ -504,6 +506,7 @@ async function main() {
   check(selfOptimizerWorkflow.includes('node scripts/playtest-subagent.js'), 'self optimizer workflow does not run the playtest');
   check(selfOptimizerWorkflow.includes('bash scripts/agentic-main-push.sh'), 'self optimizer workflow does not use retrying agentic main push');
   check(selfOptimizerWorkflow.includes('group: ai-garden-main-writers'), 'self optimizer should serialize with other main-writing workflows');
+  check(selfOptimizerWorkflow.includes('cancel-in-progress: false'), 'self optimizer should queue behind main writers instead of canceling them');
   check(selfOptimizerWorkflow.includes('contents: write'), 'self optimizer workflow cannot write commits');
   check(agenticMainPush.includes('git pull --rebase origin main') && agenticMainPush.includes('git push') && agenticMainPush.includes('AGENTIC_PUSH_ATTEMPTS'), 'agentic main push helper should retry rebase and push');
 
