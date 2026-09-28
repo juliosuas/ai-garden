@@ -366,6 +366,7 @@ function scoreAutomation(dailyWorkflow, autopilotWorkflow, selfWorkflow, roadmap
     roadmapWorkflow.includes('git add ROADMAP.md'),
     roadmapWorkflow.includes('bash scripts/agentic-main-push.sh'),
     roadmapWorkflow.includes('contents: write'),
+    roadmapWorkflow.includes('node --test scripts/validate-world-state.test.js'),
     before(roadmapWorkflow, 'node scripts/gstack-council.js', 'node scripts/roadmap-pulse.js') &&
       before(roadmapWorkflow, 'node scripts/stakeholder-assembly.js', 'node scripts/roadmap-pulse.js'),
     agenticMainPush.includes('git pull --rebase origin main') && agenticMainPush.includes('git push') && agenticMainPush.includes('AGENTIC_PUSH_ATTEMPTS'),
@@ -415,14 +416,15 @@ function scoreAutomation(dailyWorkflow, autopilotWorkflow, selfWorkflow, roadmap
       detail('roadmap pulse cron', checks[17]),
       detail('roadmap write permission', checks[21]),
       detail('roadmap syntax check', checks[12]),
-      detail('roadmap rehearsal order', checks[22]),
-      detail('agentic push retry', checks[23]),
-      detail('weekly narrative contract', checks[34]),
-      detail('serialized main writers', checks[43] && checks[44] && checks[45]),
-      detail('queued main writers', checks[46] && checks[47] && checks[48]),
-      detail('serialized autopilot proposals', checks[49]),
-      detail('duplicate PR guard', checks[50] && checks[51]),
-      detail('PR permission fallback', checks[52])
+      detail('roadmap validator tests', checks[22]),
+      detail('roadmap rehearsal order', checks[23]),
+      detail('agentic push retry', checks[24]),
+      detail('weekly narrative contract', checks[35]),
+      detail('serialized main writers', checks[44] && checks[45] && checks[46]),
+      detail('queued main writers', checks[47] && checks[48] && checks[49]),
+      detail('serialized autopilot proposals', checks[50]),
+      detail('duplicate PR guard', checks[51] && checks[52]),
+      detail('PR permission fallback', checks[53])
     ])
   };
 }

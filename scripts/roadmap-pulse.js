@@ -107,6 +107,7 @@ function buildPulse() {
       workflow.includes('node scripts/gstack-council.js') &&
       workflow.includes('node scripts/stakeholder-assembly.js') &&
       workflow.includes('git checkout -- experiments/world-state.json PLAN.md') &&
+      workflow.includes('node --test scripts/validate-world-state.test.js') &&
       before(workflow, 'node scripts/gstack-council.js', 'node scripts/roadmap-pulse.js') &&
       before(workflow, 'node scripts/stakeholder-assembly.js', 'node scripts/roadmap-pulse.js') &&
       workflow.includes('node scripts/roadmap-pulse.js') &&

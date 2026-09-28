@@ -447,6 +447,7 @@ async function main() {
   check(before(roadmapWorkflow, 'node scripts/gstack-council.js', 'node scripts/roadmap-pulse.js'), 'daily roadmap pulse should rehearse the GStack Council before refreshing the pulse');
   check(before(roadmapWorkflow, 'node scripts/stakeholder-assembly.js', 'node scripts/roadmap-pulse.js'), 'daily roadmap pulse should rehearse the Stakeholder Assembly before refreshing the pulse');
   check(roadmapWorkflow.includes('git checkout -- experiments/world-state.json PLAN.md'), 'daily roadmap pulse workflow should restore generated rehearsal files before committing ROADMAP only');
+  check(roadmapWorkflow.includes('node --test scripts/validate-world-state.test.js'), 'daily roadmap pulse workflow should run world-state validator tests before committing');
   check(roadmapWorkflow.includes('node scripts/roadmap-pulse.js'), 'daily roadmap pulse workflow does not run the pulse script');
   check(roadmapWorkflow.includes('git add ROADMAP.md'), 'daily roadmap pulse should only commit ROADMAP.md');
   check(roadmapWorkflow.includes('bash scripts/agentic-main-push.sh'), 'daily roadmap pulse should use retrying agentic main push');
@@ -456,6 +457,7 @@ async function main() {
 
   check(dailyWorkflow.includes("cron: '11 4 * * *'"), 'daily evolution cron is missing');
   check(dailyWorkflow.includes('node scripts/playtest-subagent.js'), 'daily cron does not run the playtest subagent');
+  check(dailyWorkflow.includes('node --test scripts/validate-world-state.test.js'), 'daily cron should run world-state validator tests');
   check(dailyWorkflow.includes('node --check scripts/weekly-narrative-agent.js'), 'daily cron does not validate the Weekly Narrative Agent');
   check(dailyWorkflow.includes('node --check scripts/daily-quest.js'), 'daily cron does not validate Daily Prophecy generation');
   check(dailyWorkflow.includes('node --check scripts/agent-council.js'), 'daily cron does not validate the canonical Agent Council');
@@ -504,6 +506,7 @@ async function main() {
   check(selfOptimizerWorkflow.includes('node --check scripts/stakeholder-assembly.js'), 'self optimizer workflow does not validate the Stakeholder Assembly');
   check(selfOptimizerWorkflow.includes('PLAN.md'), 'self optimizer workflow does not commit PLAN.md');
   check(selfOptimizerWorkflow.includes('node scripts/playtest-subagent.js'), 'self optimizer workflow does not run the playtest');
+  check(selfOptimizerWorkflow.includes('node --test scripts/validate-world-state.test.js'), 'self optimizer workflow should run world-state validator tests');
   check(selfOptimizerWorkflow.includes('bash scripts/agentic-main-push.sh'), 'self optimizer workflow does not use retrying agentic main push');
   check(selfOptimizerWorkflow.includes('group: ai-garden-main-writers'), 'self optimizer should serialize with other main-writing workflows');
   check(selfOptimizerWorkflow.includes('cancel-in-progress: false'), 'self optimizer should queue behind main writers instead of canceling them');
