@@ -231,7 +231,10 @@ function scoreWorldLife(index, world) {
     index.includes('const workerFrame = prefersReducedMotion ? 0 : frameCount'),
     index.includes('function primitiveWorkCue(site)') &&
       index.includes("if (site.type === 'tool-yard') return 'TOOL';") &&
-      index.includes('drawPrimitiveWorkCue(site, x, y);')
+      index.includes('drawPrimitiveWorkCue(site, x, y);'),
+    index.includes('function gameWonderFocusCue(focus)') &&
+      index.includes('focus.target || focus.reason || focus.title') &&
+      index.includes('SCALE >= 3 && cue')
   ];
   return {
     key: 'worldLife',
@@ -247,7 +250,8 @@ function scoreWorldLife(index, world) {
       detail('ambient dialogue', checks[9]),
       detail('animated work sites', checks[11]),
       detail('calm civic motion', checks[12]),
-      detail('readable work-site jobs', checks[13])
+      detail('readable work-site jobs', checks[13]),
+      detail('daily focus target cue', checks[14])
     ])
   };
 }

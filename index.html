@@ -4281,8 +4281,15 @@ function gameWonderFocus() {
     radius: Number(focus.radius) || 42,
     label: String(focus.label || 'WATCH').slice(0, 6),
     title: String(focus.title || ''),
+    reason: String(focus.reason || ''),
+    target: String(focus.target || ''),
     actionType: focus.actionType || 'art'
   };
+}
+
+function gameWonderFocusCue(focus) {
+  const source = focus.target || focus.reason || focus.title;
+  return normalizePixelSpeech(source).replace(/^(THE|A|AN) /, '').slice(0, 18);
 }
 
 function drawGameWonderHighlight() {
@@ -4303,6 +4310,13 @@ function drawGameWonderHighlight() {
   ctx.globalAlpha = 1;
   rect(x - 13, y - ring * 0.58 - 14, 26, 9, 'rgba(8,12,22,0.86)');
   drawPixelText(focus.label, x - focus.label.length * 2, y - ring * 0.58 - 11, visual.color);
+  const cue = gameWonderFocusCue(focus);
+  if (SCALE >= 3 && cue) {
+    const cueY = y + ring * 0.58 + 8;
+    const cueW = cue.length * 4 + 6;
+    rect(x - cueW / 2, cueY - 3, cueW, 8, 'rgba(8,12,22,0.78)');
+    drawPixelText(cue, x - cue.length * 2, cueY, '#fff7ad');
+  }
 }
 
 function citizenDrawPriority(citizen, pos, order) {
