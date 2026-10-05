@@ -187,6 +187,7 @@ function reviewFor(specialist, files, world) {
       check('soft bells', files.music.includes('playSoftBell'), 'restore soft bell accents'),
       check('music button sync', files.index.includes('refreshMusicButton'), 'sync music button state'),
       check('season bridge', files.humans.includes('GardenMusic.setSeason'), 'sync season into music'),
+      check('season label refresh', files.humans.includes("if (typeof window.refreshMusicButton === 'function') window.refreshMusicButton();"), 'refresh music labels after season sync'),
       check('input ducking', files.music.includes('INPUT_DUCK_VOLUME') && files.music.includes('focusin') && files.music.includes('focusout'), 'duck ambient music during text entry'),
       check('voice cap', files.music.includes('MAX_ACTIVE_VOICES') && files.music.includes('canScheduleVoice'), 'cap scheduled audio voice density')
     ],

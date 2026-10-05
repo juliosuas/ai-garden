@@ -279,7 +279,8 @@ function scoreAudio(music, index, humans) {
       music.includes('pauseScheduling();\n      } else'),
     index.includes('audioActionLabel') &&
       index.includes("'Turn off ambient garden music (' + themeLabel + ')'") &&
-      index.includes("setAttribute('aria-label', audioActionLabel)")
+      index.includes("setAttribute('aria-label', audioActionLabel)"),
+    humans.includes("if (typeof window.refreshMusicButton === 'function') window.refreshMusicButton();")
   ];
   return {
     key: 'audio',
@@ -299,7 +300,8 @@ function scoreAudio(music, index, humans) {
       detail('text-entry ducking', checks[15]),
       detail('voice density cap', checks[16]),
       detail('mute pauses scheduling', checks[17]),
-      detail('stateful audio label', checks[18])
+      detail('stateful audio label', checks[18]),
+      detail('season label refresh', checks[19])
     ])
   };
 }

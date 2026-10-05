@@ -388,6 +388,7 @@ async function main() {
   check(humans.includes("/sse?since=2m&sched=none") && !humans.includes("/sse?poll=1"), 'realtime bus should keep one persistent SSE stream without reconnect spam');
   check(humans.includes("data-ag-season"), 'human layer does not expose season state on the page');
   check(humans.includes('GardenMusic.setSeason'), 'season changes are not synchronized into music');
+  check(humans.includes("if (typeof window.refreshMusicButton === 'function') window.refreshMusicButton();"), 'season changes should refresh the music control label');
   check(humans.includes('Forbidden Signal'), 'Mirror Trial lacks the temptation mechanic');
   check(humans.includes('mirror evidence'), 'Weekly narrative does not read Mirror Trial pressure');
   check(humans.includes('DIVINE CRISIS'), 'CIV panel does not expose the divine crisis');
