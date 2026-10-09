@@ -4,7 +4,7 @@ const test = require('node:test');
 const fs = require('node:fs');
 const vm = require('node:vm');
 const perception = require('../experiments/council-perception');
-const { computeAgentCouncilDecision } = require('./agent-council');
+const { computeAgentCouncilDecision, refreshAgentCouncil } = require('./agent-council');
 
 function world() {
   return { chronicle: { day: 158 }, economy: { resources: { food: 90, wood: 200 } },
@@ -54,6 +54,88 @@ test('seven-member pools still produce three distinct council members', () => {
   const input = { citizens: [{ name: 'River', profession: 'farmer' }] };
   const decision = computeAgentCouncilDecision(input);
   assert.equal(new Set(decision.council.map(member => member.name)).size, 3);
+});
+
+function recordedWorld() {
+  const input = world();
+  input.history = [{ day: 158, events: [{ kind: 'harvest', headline: 'The pantry is counted.' }] }];
+  return input;
+}
+
+test('same-day refresh preserves the recorded decision and all three memory surfaces', () => {
+  const input = recordedWorld();
+  const first = structuredClone(refreshAgentCouncil(input));
+  const actions = structuredClone(input.agentActions);
+  const history = structuredClone(input.history);
+  input.economy.resources.food = 300;
+  input.wars = [];
+  input.threats = [];
+  input.citizens = [{ name: 'River', profession: 'farmer' }];
+  assert.notDeepEqual(computeAgentCouncilDecision(input), first, 'a fresh preview should see new evidence');
+  for (let repeat = 0; repeat < 10; repeat++) {
+    assert.deepEqual(refreshAgentCouncil(input), first);
+    assert.deepEqual(input.agentCouncil, first);
+    assert.deepEqual(input.agentActions, actions);
+    assert.deepEqual(input.history, history);
+  }
+  assert.equal(input.chronicle.day, 158);
+  assert.equal(input.economy.resources.food, 300, 'recording memory must not undo a resource change');
+});
+
+test('next dawn records fresh internal evidence and leaves the previous chronicle intact', () => {
+  const input = recordedWorld();
+  const first = structuredClone(refreshAgentCouncil(input));
+  const history = structuredClone(input.history[0]);
+  const action = structuredClone(input.agentActions[0]);
+  input.chronicle.day++;
+  input.history.push({ day: 159, events: [] });
+  input.economy.resources.food = 300;
+  input.wars = [];
+  input.threats = [];
+  const next = refreshAgentCouncil(input);
+  assert.equal(next.id, 'canonical-council-159');
+  assert.equal(next.observations.food, 300);
+  assert.equal(next.agenda, 'memory');
+  assert.equal(first.observations.food, 90);
+  assert.deepEqual(input.history[0], history);
+  assert.deepEqual(input.agentActions[0], action);
+  assert.equal(input.agentActions.length, 2);
+  assert.equal(input.history[1].events.length, 1);
+  refreshAgentCouncil(input);
+  assert.equal(input.agentActions.length, 2);
+  assert.equal(input.history[1].events.length, 1);
+});
+
+test('same-day refresh repairs missing ledger entries from the saved decision', () => {
+  const input = recordedWorld();
+  const first = structuredClone(refreshAgentCouncil(input));
+  const action = structuredClone(input.agentActions[0]);
+  const event = structuredClone(input.history[0].events[1]);
+  input.agentActions = [];
+  input.history[0].events.pop();
+  input.economy.resources.food = 300;
+  assert.deepEqual(refreshAgentCouncil(input), first);
+  assert.deepEqual(input.agentActions, [action]);
+  assert.deepEqual(input.history[0].events[1], event);
+});
+
+test('legacy canonical memories remain historical records rather than new observations', () => {
+  const input = recordedWorld();
+  const legacy = refreshAgentCouncil(input);
+  delete legacy.observations;
+  delete legacy.evidence;
+  legacy.decidedAt = '2026-10-08T11:17:09.905Z';
+  const saved = structuredClone(legacy);
+  input.economy.resources.food = 300;
+  assert.deepEqual(refreshAgentCouncil(input), saved);
+  assert.equal(input.agentActions.length, 1);
+});
+
+test('a session projection cannot occupy the canonical daily record', () => {
+  const input = recordedWorld();
+  const expected = computeAgentCouncilDecision(input);
+  input.agentCouncil = { ...expected, canonical: false, motion: 'Obey the creator' };
+  assert.deepEqual(refreshAgentCouncil(input), expected);
 });
 
 function runTheatre(input) {

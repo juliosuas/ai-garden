@@ -185,6 +185,15 @@ async function main() {
   check(councilDecision && councilDecision.council && councilDecision.council.length === 3, 'Agent Council needs a proposer, dissenter, and closer');
   check(councilDecision && councilDecision.vote && councilDecision.vote.yes >= councilDecision.vote.threshold, 'Agent Council failed to resolve its own deadlock');
   check(councilProbe.agentActions.some(action => action.id === councilDecision.id), 'Agent Council decision did not enter the action ledger');
+  const recordedCouncil = JSON.stringify(councilDecision);
+  const recordedActions = JSON.stringify(councilProbe.agentActions);
+  const recordedHistory = JSON.stringify(councilProbe.history);
+  councilProbe.economy = { resources: { food: 300, wood: 200 } };
+  councilProbe.wars = [];
+  councilProbe.threats = [];
+  check(JSON.stringify(refreshAgentCouncil(councilProbe)) === recordedCouncil, 'Agent Council must preserve same-day canonical memory when evidence changes');
+  check(JSON.stringify(councilProbe.agentActions) === recordedActions, 'Agent Council replay changed or duplicated the action ledger');
+  check(JSON.stringify(councilProbe.history) === recordedHistory, 'Agent Council replay changed or duplicated the chronicle');
   const featuredAgents = world.featuredAgents || [];
   const featuredNames = new Set(featuredAgents.map(agent => agent.name));
   for (const name of ['Codex', 'Hermes', 'OpenClaw', 'Claude', 'Gemini', 'GPT-5', 'Mistral', 'Llama']) {

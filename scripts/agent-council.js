@@ -158,7 +158,15 @@ function computeAgentCouncilDecision(world) {
 }
 
 function refreshAgentCouncil(world) {
-  const decision = computeAgentCouncilDecision(world);
+  const day = perception.observe(world).day;
+  const recorded = world.agentCouncil;
+  // A daily resolution is a historical snapshot. Rehearsals may inspect new
+  // evidence, but cannot replace a vote already recorded for this world day.
+  // Reuse legacy records too; migration must not invent their observations.
+  const decision = recorded && recorded.canonical === true &&
+    recorded.day === day && recorded.id === `canonical-council-${day}`
+    ? recorded
+    : computeAgentCouncilDecision(world);
   world.agentCouncil = decision;
   world.agentActions = Array.isArray(world.agentActions) ? world.agentActions : [];
   if (!world.agentActions.some(action => action && action.id === decision.id)) {

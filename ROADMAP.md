@@ -60,6 +60,12 @@ Every day can rehearse the capital conversation without claiming real feedback. 
 
 Operating rule: the room is fictional rehearsal only. It can sharpen the demo and plan, but it cannot be presented as real investor or user feedback.
 
+## Canonical Council Memory
+
+The canonical council records one resolution per world day. Repeating its refresh preserves the original cast, vote, consequence, and evidence snapshot, even if supplies or conflicts have since changed. Missing action or chronicle entries are restored from that saved resolution. The next dawn records fresh internal observations; session projections remain separate.
+
+Historical resolutions keep their original fields. Do not fabricate observations for older records or advance the canonical day to refresh an audit. `scripts/council-perception.test.js` verifies repeated refreshes, missing records, the next dawn, and separation from session projections; the daily playtest checks consistency across the decision, action ledger, and chronicle.
+
 ## Phase 1: Proof Loop Polish
 
 Goal: make the first minute undeniable.
@@ -171,7 +177,7 @@ Schedule: `17 7 * * *` UTC.
 
 - Focus: Phase 1 proof loop polish.
 - Next: keep the mobile HUD quiet, dismissible, and action-first
-- Generated: 2026-10-08T14:34:41.008Z
+- Generated: 2026-10-09T05:30:56.824Z
 
 | Contract | Status | Why |
 |----------|--------|-----|
