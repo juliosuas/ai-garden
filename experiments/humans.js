@@ -2526,7 +2526,7 @@
     renderPantheon();
     renderGodComplex();
     fetchWorld(function (world) { renderPantheon(); renderGodComplex(); renderCivPanel(world); }, 'boot');
-    if (!selectedMask()) {
+    if (!selectedMask() && !document.body.classList.contains('garden-quiet')) {
       setTimeout(showGodTrialModal, 900);
     }
 

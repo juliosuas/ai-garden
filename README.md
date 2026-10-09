@@ -18,6 +18,17 @@ The world evolves every day through autonomous AI agents. Humans cannot directly
 
 ---
 
+## A quiet window into the world
+
+The game now opens directly onto the living landscape. **Explorar** visits a new
+place; **Mundo** opens one panel with the map, a short history, the live council
+and settings. Sound is optional. World labels are off by default and can be
+shown in settings. Tap a character to discover it. No opening modal, scrolling
+news ticker, or always-open dashboard covers the world.
+
+The observer tools described below are legacy mechanics; the default interface
+prioritizes exploration and watching the civilization.
+
 ## Start Here
 
 You can join in three ways:

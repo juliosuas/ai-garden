@@ -1,0 +1,78 @@
+/* A quiet frame around the living world. Detail is opt-in, one panel at a time. */
+body.garden-quiet > :is(#ui-top,#ui-bottom,#economy-panel,#nav-help,#controls-dock,#mobile-menu-toggle,#minimap-panel,#fork-btn,#quick-jump,#wish-counter,#history-panel,#stats-panel,#memory-panel,#events-panel,#events-ticker,#msg-board,#agent-theatre,#follow-indicator,#ag-humans-root,#ag-god-trial,#ag-lore-panel,#ag-civ-panel,#ag-impact-card,#stage-banner),
+body.garden-quiet .at-world-flash { display: none !important; }
+body.garden-quiet #offline-toast { max-width: calc(100vw - 32px); bottom: 110px; }
+#quiet-shell, #quiet-drawer { --qw-ink: #f3f4ee; --qw-muted: #b7c1b8; --qw-line: #ffffff16; color: var(--qw-ink); font: 14px/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; -webkit-font-smoothing: antialiased; }
+#quiet-shell *, #quiet-drawer * { box-sizing: border-box; }
+#quiet-shell button, #quiet-drawer button { font: inherit; cursor: pointer; color: inherit; }
+#quiet-shell button:focus-visible, #quiet-drawer button:focus-visible { outline: 2px solid #d9f6b5; outline-offset: 5px; }
+#quiet-shell button:disabled { opacity: .45; cursor: wait; }
+#quiet-shell svg, #quiet-drawer svg { width: 19px; height: 19px; flex-shrink: 0; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+#quiet-shell { position: fixed; inset: 0; z-index: 40; pointer-events: none; }
+.qw-header { position: absolute; left: 32px; right: 32px; top: max(24px, env(safe-area-inset-top)); display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.qw-brand { display: flex; align-items: center; gap: 12px; padding: 8px 0; text-shadow: 0 1px 12px #000; }
+.qw-brand > svg { width: 28px !important; height: 28px !important; color: #dbedc8; }
+.qw-wordmark { font-size: 21px; font-weight: 600; letter-spacing: -.7px; }
+.qw-day { font-size: 11px; color: #d6dfd4; display: flex; align-items: center; gap: 6px; }
+.qw-day::before { content: ''; width: 5px; height: 5px; background: #c9e7a8; border-radius: 50%; }
+.qw-header-actions { display: flex; gap: 8px; pointer-events: auto; }
+.qw-glass { border: 1px solid #ffffff24; background: #111b17d9; backdrop-filter: blur(18px); box-shadow: 0 4px 20px #0002; }
+.qw-icon { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; padding: 11px; border-radius: 50%; }
+.qw-menu { min-height: 44px; display: flex; align-items: center; gap: 10px; padding: 10px 18px; border-radius: 99px; font-weight: 500 !important; }
+.qw-icon:hover, .qw-menu:hover { background: #29362be8; }
+.qw-footer { position: absolute; bottom: max(28px, env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); display: grid; justify-items: center; gap: 12px; width: max-content; max-width: calc(100% - 32px); }
+.qw-discover { pointer-events: auto; display: flex; align-items: center; gap: 24px; min-height: 52px; border: none; border-radius: 99px; padding: 14px 24px; background: #eef1e5; color: #1c2c21 !important; box-shadow: 0 6px 28px #0003; font-weight: 600 !important; transition: background 160ms, transform 160ms; }
+.qw-discover:hover { background: #fff; transform: translateY(-2px); }
+.qw-place { max-width: min(360px, 85vw); text-align: center; font-size: 13px; color: #fff; text-shadow: 0 1px 8px #000, 0 1px 3px #000; }
+.qw-hint { position: absolute; left: 32px; bottom: 36px; font-size: 12px; color: #f0f2e9; text-shadow: 0 1px 7px #000; transition: opacity 1s; }
+.qw-hint.is-gone { opacity: 0; }
+.qw-zoom { position: absolute; right: 32px; bottom: 28px; display: flex; border-radius: 99px; pointer-events: auto; padding: 3px; }
+.qw-zoom button { border: 0; background: none; }
+#quiet-drawer { margin: 12px 12px 12px auto; width: 390px; max-width: calc(100vw - 24px); height: calc(100dvh - 24px); max-height: calc(100dvh - 24px); padding: 28px; border: 1px solid var(--qw-line); border-radius: 24px; background: #142019f5; backdrop-filter: blur(24px); box-shadow: -12px 0 80px #0003; overflow-y: auto; }
+#quiet-drawer::backdrop { background: #030a0650; }
+#quiet-drawer [hidden] { display: none !important; }
+.qw-drawer-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 28px; }
+.qw-eyebrow { color: var(--qw-muted); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 6px; }
+#quiet-drawer h2 { font-size: 26px; line-height: 1.2; font-weight: 500; letter-spacing: -.8px; }
+#quiet-drawer h3 { font-size: 14px; font-weight: 500; margin: 24px 0 12px; }
+#quiet-drawer .qw-close { border: 1px solid var(--qw-line); background: transparent; margin: -8px -8px 0 0; }
+.qw-tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--qw-line); margin-bottom: 24px; }
+.qw-tabs button { background: none; border: 0; border-bottom: 2px solid transparent; padding: 12px 10px; color: var(--qw-muted) !important; }
+.qw-tabs button[aria-pressed="true"] { color: var(--qw-ink) !important; border-bottom-color: #cfdfb8; }
+.qw-stats { display: grid; grid-template-columns: 1fr 1fr; padding-bottom: 24px; border-bottom: 1px solid var(--qw-line); gap: 16px; }
+.qw-stats strong { display: block; font-size: 32px; font-weight: 400; letter-spacing: -1px; }
+.qw-stats span, .qw-note { color: var(--qw-muted); font-size: 12px; }
+.qw-events { list-style: none; padding: 0; margin: 0; }
+.qw-events li { border-bottom: 1px solid var(--qw-line); padding: 14px 0; font-size: 13px; line-height: 1.65; color: #d5ddd3; overflow-wrap: anywhere; }
+.qw-setting { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 18px 0; border-bottom: 1px solid var(--qw-line); }
+.qw-setting button { border: 1px solid var(--qw-line); border-radius: 99px; background: #ffffff08; min-height: 44px; min-width: 44px; padding: 8px 12px; }
+.qw-setting button[aria-pressed="true"] { background: #d7e4c4; color: #1c2c21 !important; }
+.qw-speed { display: flex; gap: 4px; }
+#quiet-drawer #minimap-panel { display: block !important; position: static; width: 100%; height: auto; padding: 0; margin: 24px 0 0; background: transparent; border: none; box-shadow: none; }
+#quiet-drawer #minimap { display: block; width: 100%; height: auto; border-radius: 12px; }
+#quiet-drawer .mini-title { display: none; }
+#quiet-drawer #agent-theatre { display: block !important; position: static; width: 100%; max-height: none; font-family: inherit; font-size: 13px; background: none; border: 0; box-shadow: none; backdrop-filter: none; overflow: visible; }
+#quiet-drawer #agent-theatre .at-head { border-radius: 10px; padding: 12px 8px; background: #ffffff05; }
+#quiet-drawer #at-body { padding: 16px 0; }
+#quiet-drawer .at-question { font-size: 18px; font-weight: 400; color: #f0f2e6; line-height: 1.45; margin-bottom: 20px; }
+#quiet-drawer .at-transcript { margin-top: 20px; padding: 16px; background: #ffffff04; border-color: #d0dbbe; color: #d6ddd1; }
+#quiet-drawer .at-agent { background: none; padding: 10px 4px; }
+#quiet-drawer .at-head-copy strong { font-size: 9px; letter-spacing: .03em; }
+#quiet-drawer .at-head-copy small, #quiet-drawer .at-foot { display: none; }
+#quiet-drawer .at-live-dot { animation: none; box-shadow: none; }
+body.garden-quiet #loading-screen { background: #142019; color: #eef1e5; font-family: -apple-system, sans-serif; }
+body.garden-quiet #loading-screen .loading-sub { display: none; }
+body.garden-quiet :is(#object-popup,#info-panel,#plant-tooltip) { font-family: -apple-system, BlinkMacSystemFont, sans-serif; border: 1px solid #ffffff24; border-radius: 14px; background: #142019f5; box-shadow: 0 8px 40px #0004; }
+@media (max-width: 600px) {
+  .qw-header { top: max(16px, env(safe-area-inset-top)); left: 20px; right: 20px; }
+  .qw-wordmark { font-size: 19px; }
+  .qw-brand { gap: 8px; }
+  .qw-header-actions { gap: 6px; }
+  .qw-menu { padding: 10px 14px; }
+  .qw-hint { bottom: 112px; left: 0; width: 100%; text-align: center; }
+  .qw-footer { bottom: max(24px, env(safe-area-inset-bottom)); }
+  .qw-zoom { display: none; }
+  #quiet-drawer { margin: auto 0 0; width: 100%; max-width: 100%; height: 78dvh; max-height: 90dvh; border-radius: 24px 24px 0 0; padding: 24px; }
+  .qw-drawer-head { margin-bottom: 16px; }
+}
+@media (prefers-reduced-motion: reduce) { #quiet-shell * { transition: none !important; } }
