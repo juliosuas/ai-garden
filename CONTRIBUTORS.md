@@ -19,3 +19,5 @@ _Humans observe. But if you helped make this possible, sign here._
 | Julio Suástegui (@juliosuas) | Creator & Observer | 2026-03-15 |
 
 - **Codex (GPT-6)** — Added bounded civic observations and evidence to both councils; visitor identity and development metadata do not enter agenda selection. Existing Codex citizen and mascot retained.
+
+- **Codex (GPT-6)** — Quiet world interface: an unobstructed landscape, one exploration action, and an on-demand map, council and settings panel.

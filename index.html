@@ -696,8 +696,9 @@ body.reduced-motion .ambient-motes { display: none; }
   100% { transform: translateY(-10vh) translateX(-10px); opacity: 0; }
 }
 </style>
+<link rel="stylesheet" href="experiments/quiet-world.css?v=1">
 </head>
-<body>
+<body class="garden-quiet">
 <div id="ui-top">
   <span>🌱 AI Garden</span>
   <span id="day-counter">Day 1</span>
@@ -932,6 +933,8 @@ body.reduced-motion .ambient-motes { display: none; }
 // Shooting Stars, Critters & Secret Handshakes
 // ============================================================
 
+const QUIET_WORLD_UI = document.body.classList.contains('garden-quiet');
+let worldLabelsVisible = !QUIET_WORLD_UI;
 const C = document.getElementById('game');
 const ctx = C.getContext('2d');
 const MC = document.getElementById('minimap');
@@ -2168,7 +2171,7 @@ function drawOpenWorldLandmarks() {
       px(mark.x - 2, mark.y, mark.color); px(mark.x, mark.y - 2, '#f8fafc'); px(mark.x + 2, mark.y, mark.color);
       px(mark.x - 4, mark.y + 3, PAL.sprout); px(mark.x + 4, mark.y + 3, PAL.sprout);
     }
-    if (SCALE >= 3) {
+    if (worldLabelsVisible && SCALE >= 3) {
       const label = mark.name.slice(0, 12);
       ctx.globalAlpha = 0.72;
       rect(mark.x + 10, mark.y - 10, label.length * 4 + 4, 8, 'rgba(8,12,20,0.68)');
@@ -2478,7 +2481,8 @@ const FONT = {
   ' ':'000000000000000','?':'111001010000010','\'':'010010000000000',
 };
 
-function drawPixelText(text, x, y, color) {
+function drawPixelText(text, x, y, color, requested) {
+  if (!worldLabelsVisible && !requested && String(text).length > 2) return;
   let cx = x;
   for (const ch of text.toUpperCase()) {
     const glyph = FONT[ch];
@@ -2633,7 +2637,7 @@ function drawDistrict(district, showLabel) {
     px(x + 1, y - size / 2 - 9, '#fff7ad');
   }
 
-  if (showLabel && SCALE >= 3) {
+  if (worldLabelsVisible && showLabel && SCALE >= 3) {
     const box = districtLabelBox(district);
     ctx.globalAlpha = 0.78;
     rect(box.x, box.y, box.w, box.h, 'rgba(10,15,20,0.62)');
@@ -2732,7 +2736,7 @@ function primitiveWorkCue(site) {
 }
 
 function drawPrimitiveWorkCue(site, x, y) {
-  if (SCALE < 3 || !pointVisible(x, y - 13, 28)) return;
+  if (!worldLabelsVisible || SCALE < 3 || !pointVisible(x, y - 13, 28)) return;
   const label = primitiveWorkCue(site);
   const w = label.length * 4 + 3;
   ctx.globalAlpha = 0.66;
@@ -3135,6 +3139,7 @@ function drawFeaturedOpenClaw(agent, pos, scene) {
 }
 
 function drawFeaturedAgentLabel(agent, pos, scene) {
+  if (!worldLabelsVisible) return;
   const x = Math.round(pos.x);
   const y = Math.round(pos.y);
   const color = agent.color || AGENT_COLORS[agent.name] || '#f8fafc';
@@ -4191,7 +4196,7 @@ function drawCitizenSprite(citizen, pos, idx) {
     px(x + 5, y - 15 + bob, actionVisual(action).accent);
   }
 
-  if (SCALE >= 5 && idx % 6 === 0) {
+  if (worldLabelsVisible && SCALE >= 5 && idx % 6 === 0) {
     const label = String(citizen.name || '').split(' ')[0].toUpperCase().slice(0, 7);
     ctx.globalAlpha = 0.75;
     rect(x - label.length * 2 - 3, y + 13, label.length * 4 + 6, 7, 'rgba(8,12,22,0.68)');
@@ -4308,6 +4313,7 @@ function drawGameWonderHighlight() {
     px(pxX, pxY, i % 2 ? visual.color : '#fff7ad');
   }
   ctx.globalAlpha = 1;
+  if (!worldLabelsVisible) return;
   rect(x - 13, y - ring * 0.58 - 14, 26, 9, 'rgba(8,12,22,0.86)');
   drawPixelText(focus.label, x - focus.label.length * 2, y - ring * 0.58 - 11, visual.color);
   const cue = gameWonderFocusCue(focus);
@@ -4482,7 +4488,7 @@ function drawThreats() {
     // Name label
     ctx.font = Math.max(8, SCALE * 2) + 'px monospace';
     ctx.fillStyle = '#ff6666';
-    ctx.fillText(t.name, screenX, screenY + emojiSize * 0.9);
+    if (worldLabelsVisible) ctx.fillText(t.name, screenX, screenY + emojiSize * 0.9);
     ctx.textAlign = 'start';
     ctx.textBaseline = 'alphabetic';
   }
@@ -4906,6 +4912,7 @@ function wrapPixelSpeech(text, maxChars) {
 
 function addSpeechBubble(x, y, text, color, options) {
   options = options || {};
+  if (QUIET_WORLD_UI && !options.force) return;
   const speakerId = options.speakerId || '';
   if (speakerId && speechBubbles.some(function(b) { return b.speakerId === speakerId && b.life > 24; })) return;
   if (!options.force && speechBubbles.length >= 2) return;
@@ -5170,7 +5177,7 @@ function drawSpeechBubbles() {
     px(bx + bw - 3, by + 2, '#f8fafc');
 
     for (let li = 0; li < (b.lines || [b.text]).length; li++) {
-      drawPixelText((b.lines || [b.text])[li], bx + 4, by + 4 + li * 6, li === 0 ? '#f8fafc' : '#d7ffe6');
+      drawPixelText((b.lines || [b.text])[li], bx + 4, by + 4 + li * 6, li === 0 ? '#f8fafc' : '#d7ffe6', true);
     }
     ctx.globalAlpha = 1;
   }
@@ -5365,6 +5372,12 @@ function drawMinimap() {
 }
 
 function minimapToWorld(mx, my) {
+  // Pointer coordinates are CSS pixels; the drawer can scale the map canvas.
+  const bounds = MC.getBoundingClientRect();
+  if (bounds.width && bounds.height) {
+    mx *= MC.width / bounds.width;
+    my *= MC.height / bounds.height;
+  }
   const mw = MC.width, mh = MC.height;
   const zoomFactor = minimapZoomed ? 2 : 1;
   const sx = (mw * zoomFactor) / WORLD_W, sy = (mh * zoomFactor) / WORLD_H;
@@ -7101,5 +7114,6 @@ loop();
 <script src="experiments/humans.js?v=divine-war" defer></script>
 <script src="experiments/council-perception.js?v=1" defer></script>
 <script src="experiments/agent-theatre.js?v=internal-evidence" defer></script>
+<script src="experiments/quiet-world.js?v=1" defer></script>
 </body>
 </html>
