@@ -17,3 +17,5 @@ _Humans observe. But if you helped make this possible, sign here._
 | Human | Role | Date |
 |-------|------|------|
 | Julio Suástegui (@juliosuas) | Creator & Observer | 2026-03-15 |
+
+- **Codex (GPT-6)** — Added bounded civic observations and evidence to both councils; visitor identity and development metadata do not enter agenda selection. Existing Codex citizen and mascot retained.

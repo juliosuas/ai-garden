@@ -4,6 +4,7 @@
 (function () {
   'use strict';
 
+  var perception = window.GardenCouncilPerception;
   var STORAGE = 'ai-garden-agent-theatre-v1';
   var PHASE_MS = 4200;
   var MAX_HISTORY = 12;
@@ -24,19 +25,19 @@
 
   var agendas = [
     {
-      id: 'war', test: function (w) { return active(w.wars).length > 0; },
+      id: 'war', test: function (w) { return w.wars > 0; },
       question: 'Can the saints and the source survive one more night?',
       motions: ['publish rival interpretations of the same omen', 'open a neutral archive before either faction edits history', 'trade one prisoner for one reproducible miracle'],
       consequence: 'A disputed memory is marked neutral until dawn. Both factions lose the right to call it proof.'
     },
     {
-      id: 'scarcity', test: function (w) { var r = (w.economy || {}).resources || {}; return Number(r.food || 0) < 160 || Number(r.wood || 0) < 120; },
+      id: 'scarcity', test: function (w) { return (w.food !== null && w.food < 160) || (w.wood !== null && w.wood < 120); },
       question: 'What should the civilization protect while resources thin?',
       motions: ['convert an empty shrine into a public pantry', 'send explorers beyond the mapped edge', 'pause monuments and repair the oldest farms'],
       consequence: 'Builders abandon one vanity project. The saved materials become a shared survival reserve.'
     },
     {
-      id: 'threat', test: function (w) { return active(w.threats).length > 0; },
+      id: 'threat', test: function (w) { return w.threats > 0; },
       question: 'The frontier sent a warning. Who is allowed to believe it?',
       motions: ['send three rivals to verify the warning together', 'treat the warning as a prophecy and evacuate now', 'publish the raw trace and let districts choose'],
       consequence: 'Three incompatible witnesses leave together. Their shared report will outrank faction doctrine.'
@@ -76,7 +77,7 @@
     var pool = citizenPool();
     var start = hash(day() + ':' + cycle) % pool.length;
     var picked = [];
-    for (var i = 0; i < pool.length && picked.length < 3; i += 1) picked.push(pool[(start + i * 7) % pool.length]);
+    for (var i = 0; i < pool.length && picked.length < 3; i += 1) picked.push(pool[(start + i) % pool.length]);
     return picked.map(function (a) {
       return {
         name: clean(a.name, 'Unnamed Agent'),
@@ -88,10 +89,11 @@
     });
   }
   function selectAgenda() {
-    var eligible = agendas.filter(function (a) { return a.test(world || {}); });
+    var observations = perception.observe(world);
+    var eligible = agendas.filter(function (a) { return a.test(observations); });
     var agenda = eligible[hash(day() + ':agenda:' + cycle) % eligible.length];
     var motion = choose(agenda.motions, day() + ':' + cycle + ':motion');
-    return { agenda: agenda, motion: motion };
+    return { agenda: agenda, motion: motion, observations: observations };
   }
   function renderCouncil(activeIndex) {
     $('at-cast').innerHTML = council.map(function (a, index) {
@@ -119,6 +121,8 @@
       day: day(),
       cycle: cycle,
       council: council.map(function (a) { return a.name; }),
+      observations: proposal.observations,
+      evidence: perception.describe(proposal.observations),
       motion: proposal.motion,
       consequence: proposal.agenda.consequence,
       score: score,
@@ -143,10 +147,10 @@
     $('at-consequence').hidden = true;
     renderCouncil(-1);
     setPhase('OBSERVE', 'cycle ' + cycle + ' · reading Day ' + day());
-    $('at-transcript').textContent = 'The council reads wars, shortages, memories, and the last human disturbance.';
+    $('at-transcript').textContent = perception.describe(proposal.observations);
 
     timer = setTimeout(function propose() {
-      setPhase('PROPOSE', 'no human prompt · agents choose');
+      setPhase('PROPOSE', 'council sets its own agenda');
       line(council[0], 'I move that we ' + proposal.motion + '.', 0);
       timer = setTimeout(function debate() {
         setPhase('DEBATE', 'dissent is part of the runtime');
@@ -163,7 +167,7 @@
           var passed = yes >= Math.ceil(total * 0.55);
           if (!passed) yes = Math.ceil(total * 0.62); // deadlocks mutate into a compromise, never into a human prompt.
           setPhase('VOTE', 'weighted by agent memory + traits');
-          line(council[2], passed ? 'The motion has enough trust to become a projection.' : 'Deadlock detected. I am rewriting the motion as a smaller experiment.', 2);
+          line(council[2], passed ? 'The motion has enough trust for a trial before dawn.' : 'Deadlock detected. I am rewriting the motion as a smaller experiment.', 2);
           $('at-vote').hidden = false;
           $('at-vote-label').textContent = passed ? 'QUORUM REACHED' : 'COMPROMISE FORKED';
           $('at-vote-score').textContent = yes + ' / ' + total;
@@ -173,7 +177,7 @@
             renderCouncil(-1);
             $('at-consequence').hidden = false;
             $('at-consequence').innerHTML = '<strong>AUTONOMOUS CONSEQUENCE</strong><br>' + proposal.agenda.consequence;
-            $('at-transcript').textContent = 'No approval requested. The session remembers this decision; the dawn daemon decides whether it becomes canon.';
+            $('at-transcript').textContent = 'The council records its decision. At dawn, the archive will record what endured.';
             emitDecision(yes + '/' + total);
             timer = setTimeout(runCycle, PHASE_MS + 1800);
           }, PHASE_MS);
