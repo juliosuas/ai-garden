@@ -9,6 +9,7 @@
   var PHASE_MS = 4200;
   var MAX_HISTORY = 12;
   var world = null;
+  var observedWorld = null;
   var cycle = 0;
   var council = [];
   var proposal = null;
@@ -59,7 +60,7 @@
   }
   function choose(items, salt) { return items[hash(String(salt)) % items.length]; }
   function clean(value, fallback) { return String(value || fallback || '').replace(/[<>]/g, '').slice(0, 90); }
-  function day() { return Number(world && world.chronicle && world.chronicle.day || 1); }
+  function day() { return observedWorld.day; }
   function mascotFor(name) {
     var found = (world && world.mascots || []).find(function (m) { return m.name === name; });
     return found && found.mascot && found.mascot.emoji || choose(['🧠', '🌱', '🦊', '🪲', '🛰️', '🧩'], name);
@@ -89,7 +90,7 @@
     });
   }
   function selectAgenda() {
-    var observations = perception.observe(world);
+    var observations = observedWorld;
     var eligible = agendas.filter(function (a) { return a.test(observations); });
     var agenda = eligible[hash(day() + ':agenda:' + cycle) % eligible.length];
     var motion = choose(agenda.motions, day() + ':' + cycle + ':motion');
@@ -139,6 +140,7 @@
     setTimeout(function () { $('agent-theatre').classList.remove('autonomous-pulse'); }, 1400);
   }
   function runCycle() {
+    observedWorld = perception.observe(world);
     cycle += 1;
     council = chooseCouncil();
     proposal = selectAgenda();

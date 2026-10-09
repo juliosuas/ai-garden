@@ -93,5 +93,19 @@ test('browser council completes a cycle with the same bounded evidence as the da
 
 test('browser loads the perception boundary before the council', () => {
   const html = fs.readFileSync(require.resolve('../index.html'), 'utf8');
-  assert.ok(html.indexOf('src="experiments/council-perception.js') < html.indexOf('src="experiments/agent-theatre.js'));
+  const perceptionIndex = html.indexOf('src="experiments/council-perception.js');
+  const theatreIndex = html.indexOf('src="experiments/agent-theatre.js');
+  assert.ok(perceptionIndex >= 0 && theatreIndex >= 0 && perceptionIndex < theatreIndex);
+});
+
+
+test('browser normalizes invalid days consistently for the entire cycle', async () => {
+  for (const day of [-2, 'invalid', Infinity]) {
+    const input = world();
+    input.chronicle.day = day;
+    const { decision } = await runTheatre(input);
+    assert.equal(decision.day, 1);
+    assert.equal(decision.observations.day, 1);
+    assert.equal(decision.id, 'sol-1-1');
+  }
 });
