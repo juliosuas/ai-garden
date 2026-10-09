@@ -7,6 +7,11 @@ on:
       - experiments/world-state.json
       - scripts/validate-world-state.js
       - scripts/validate-world-state.test.js
+      - scripts/council-perception.test.js
+      - scripts/agent-council.js
+      - experiments/council-perception.js
+      - experiments/agent-theatre.js
+      - index.html
       - .github/workflows/validate-world-state.yml
   push:
     branches: [main]
@@ -15,6 +20,11 @@ on:
       - experiments/world-state.json
       - scripts/validate-world-state.js
       - scripts/validate-world-state.test.js
+      - scripts/council-perception.test.js
+      - scripts/agent-council.js
+      - experiments/council-perception.js
+      - experiments/agent-theatre.js
+      - index.html
       - .github/workflows/validate-world-state.yml
 
 permissions:
@@ -30,5 +40,7 @@ jobs:
           node-version: 22
       - name: Run validator regression tests
         run: node --test scripts/validate-world-state.test.js
+      - name: Test council knowledge boundary
+        run: node --test scripts/council-perception.test.js
       - name: Validate canonical world state
         run: node scripts/validate-world-state.js

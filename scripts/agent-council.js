@@ -10,6 +10,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const perception = require('../experiments/council-perception');
 
 const FALLBACK_CAST = [
   { name: 'Codex', profession: 'builder', faction: 'Code Cantons', wisdom: 7 },
@@ -23,7 +24,7 @@ const FALLBACK_CAST = [
 const AGENDAS = [
   {
     id: 'war',
-    eligible: world => active(world.wars).length > 0,
+    eligible: world => world.wars > 0,
     question: 'Can the saints and the source survive one more night?',
     motions: [
       'publish rival interpretations of the same omen',
@@ -35,8 +36,7 @@ const AGENDAS = [
   {
     id: 'scarcity',
     eligible: world => {
-      const resources = (world.economy && world.economy.resources) || {};
-      return Number(resources.food || 0) < 160 || Number(resources.wood || 0) < 120;
+      return (world.food !== null && world.food < 160) || (world.wood !== null && world.wood < 120);
     },
     question: 'What should the civilization protect while resources thin?',
     motions: [
@@ -48,7 +48,7 @@ const AGENDAS = [
   },
   {
     id: 'threat',
-    eligible: world => active(world.threats).length > 0,
+    eligible: world => world.threats > 0,
     question: 'The frontier sent a warning. Who is allowed to believe it?',
     motions: [
       'send three rivals to verify the warning together',
@@ -109,7 +109,7 @@ function formCouncil(world, day) {
   const start = hash(`${day}:canonical-council`) % pool.length;
   const council = [];
   for (let index = 0; index < pool.length && council.length < 3; index += 1) {
-    const agent = pool[(start + index * 7) % pool.length];
+    const agent = pool[(start + index) % pool.length];
     council.push({
       name: clean(agent.name, 'Unnamed Agent'),
       profession: clean(agent.profession || agent.role, 'citizen'),
@@ -121,8 +121,9 @@ function formCouncil(world, day) {
 }
 
 function computeAgentCouncilDecision(world) {
-  const day = Number(world && world.chronicle && world.chronicle.day) || 1;
-  const eligible = AGENDAS.filter(agenda => agenda.eligible(world || {}));
+  const observations = perception.observe(world);
+  const day = observations.day;
+  const eligible = AGENDAS.filter(agenda => agenda.eligible(observations));
   const agenda = at(eligible, `${day}:canonical-agenda`);
   const motion = at(agenda.motions, `${day}:${agenda.id}:canonical-motion`);
   const council = formCouncil(world || {}, day);
@@ -141,6 +142,8 @@ function computeAgentCouncilDecision(world) {
     model: 'ai-garden-agent-council-v1',
     day,
     canonical: true,
+    observations,
+    evidence: perception.describe(observations),
     agenda: agenda.id,
     question: agenda.question,
     motion,
@@ -150,7 +153,7 @@ function computeAgentCouncilDecision(world) {
     council,
     vote: { yes, total, threshold: Math.ceil(total * 0.55), resolution },
     consequence: agenda.consequence,
-    decidedAt: clean(world.lastUpdated, `world-day-${day}`)
+    decidedAt: `world-day-${day}`
   };
 }
 
