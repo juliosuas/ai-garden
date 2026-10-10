@@ -194,6 +194,11 @@ async function main() {
   check(JSON.stringify(refreshAgentCouncil(councilProbe)) === recordedCouncil, 'Agent Council must preserve same-day canonical memory when evidence changes');
   check(JSON.stringify(councilProbe.agentActions) === recordedActions, 'Agent Council replay changed or duplicated the action ledger');
   check(JSON.stringify(councilProbe.history) === recordedHistory, 'Agent Council replay changed or duplicated the chronicle');
+  check(before(dailyEvolution, 'world.chronicle.day++;', 'applyCouncilConsequence(world)') &&
+    before(dailyEvolution, 'applyCouncilConsequence(world)', 'refreshAgentCouncil(world)'),
+    'Council consequences must resolve at dawn before the daily resolution is replaced');
+  check(dailyWorkflow.includes('node --test scripts/council-consequence.test.js scripts/council-perception.test.js'),
+    'Daily evolution must test finite council consequences and the perception boundary');
   const featuredAgents = world.featuredAgents || [];
   const featuredNames = new Set(featuredAgents.map(agent => agent.name));
   for (const name of ['Codex', 'Hermes', 'OpenClaw', 'Claude', 'Gemini', 'GPT-5', 'Mistral', 'Llama']) {

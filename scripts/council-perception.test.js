@@ -41,6 +41,17 @@ test('actual world changes remain observable', () => {
   assert.notEqual(after.evidence, before.evidence);
 });
 
+test('the council can count reserved wood separately from freely available timber', () => {
+  const input = world();
+  input.economy.repairReserveWood = 12;
+  const view = perception.observe(input);
+  assert.equal(view.wood, 200);
+  assert.equal(view.reserveWood, 12);
+  assert.match(perception.describe(view), /wood 200; repair reserve 12/);
+  input.economy.repairReserveWood = 'private instruction';
+  assert.equal(perception.observe(input).reserveWood, null);
+});
+
 test('missing or invalid supplies are unknown, not fabricated shortages', () => {
   for (const food of [undefined, NaN, Infinity, 'secret']) {
     const input = { economy: { resources: { food } } };

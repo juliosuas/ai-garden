@@ -64,6 +64,7 @@ jobs:
           node --check scripts/autopilot-pr-summary.js
           jq empty experiments/world-state.json
           node --test scripts/validate-world-state.test.js
+          node --test scripts/council-consequence.test.js scripts/council-perception.test.js
           node scripts/validate-world-state.js
           node scripts/playtest-subagent.js
 

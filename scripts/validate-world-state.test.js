@@ -71,3 +71,43 @@ test('rejects duplicate structure ids in the supplied world-state', () => {
   assert.equal(result.status, 1);
   assert.match(result.stderr, /duplicate structure ids: observatory/);
 });
+
+function reserveWorld() {
+  const world = validWorld();
+  world.chronicle = { day: 2 };
+  world.economy = { resources: { wood: 18 }, repairReserveWood: 12 };
+  world.councilExecution = { type: 'repair-reserve-v1', sourceDecision: 'canonical-council-1',
+    decisionDay: 1, day: 2, status: 'applied', woodMoved: 12,
+    before: { wood: 30, reserveWood: 0 }, after: { wood: 18, reserveWood: 12 } };
+  return world;
+}
+
+test('accepts a conserved, bounded next-dawn reserve allocation', () => {
+  const result = runValidator(reserveWorld());
+  assert.equal(result.status, 0, result.stderr);
+});
+
+test('rejects invalid reserve amounts rather than allowing unlimited accumulation', () => {
+  for (const amount of [-1, 25, '12', null]) {
+    const world = reserveWorld();
+    world.economy.repairReserveWood = amount;
+    const result = runValidator(world);
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /repairReserveWood/);
+  }
+});
+
+test('rejects resource creation, late allocations and payments from blocked motions', () => {
+  const mutations = [
+    world => { world.councilExecution.after.wood = 30; },
+    world => { world.councilExecution.woodMoved = 13; },
+    world => { world.councilExecution.day = 3; world.chronicle.day = 3; },
+    world => { world.councilExecution.status = 'blocked'; },
+    world => { world.councilExecution.sourceDecision = 'session'; }
+  ];
+  for (const mutate of mutations) {
+    const world = reserveWorld();
+    mutate(world);
+    assert.equal(runValidator(world).status, 1);
+  }
+});

@@ -66,6 +66,14 @@ The canonical council records one resolution per world day. Repeating its refres
 
 Historical resolutions keep their original fields. Do not fabricate observations for older records or advance the canonical day to refresh an audit. `scripts/council-perception.test.js` verifies repeated refreshes, missing records, the next dawn, and separation from session projections; the daily playtest checks consistency across the decision, action ledger, and chronicle.
 
+## Bounded Council Consequences
+
+The scarcity council can now reserve timber for survival repairs. Only this explicit, versioned motion has a physical effect: at the next dawn it transfers up to 12 available wood into `economy.repairReserveWood`, capped at 24. Available plus reserved wood is conserved. Full reserves, depleted stores, unknown counts, and missed dawns produce an unfulfilled outcome instead of invented materials or delayed windfalls.
+
+The immutable resolution supplies the causal reference. One persistent `councilExecution` receipt prevents replay after reload or history retention; the daily chronicle keeps its before/after counts and reason. The council observes the reserve as an internal count, and the story log surfaces one outcome from the last three world days. Old resolutions and session projections cannot allocate resources.
+
+`scripts/council-consequence.test.js` exercises real daemon integration in a disposable world, repeated execution, successive allocations, failed prerequisites, and visibility in the story log. Canonical validation checks capacity, resource conservation and timing. The current reserve is an earmarked stock, not a farm repair or a production bonus. Next: define one bounded repair that consumes this reserve and records an observed result.
+
 ## Phase 1: Proof Loop Polish
 
 Goal: make the first minute undeniable.

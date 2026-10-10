@@ -84,6 +84,34 @@ if (world) {
 
   if (Array.isArray(world.history)) note(`history=${world.history.length}`);
   if (Array.isArray(world.citizens)) note(`citizens=${world.citizens.length}`);
+
+  const counted = value => typeof value === 'number' && Number.isFinite(value) && value >= 0;
+  const economy = world.economy || {};
+  if (Object.hasOwn(economy, 'repairReserveWood')) {
+    check(counted(economy.repairReserveWood) && economy.repairReserveWood <= 24,
+      'repairReserveWood must be a finite amount between 0 and 24');
+  }
+  const execution = world.councilExecution;
+  if (execution) {
+    check(execution.type === 'repair-reserve-v1', 'councilExecution has an unknown effect');
+    check(Number.isInteger(execution.decisionDay) && execution.decisionDay >= 1 &&
+      execution.sourceDecision === `canonical-council-${execution.decisionDay}` &&
+      Number.isInteger(execution.day) && execution.day > execution.decisionDay &&
+      execution.day <= (world.chronicle || {}).day, 'councilExecution must refer to a past canonical resolution');
+    check(['applied', 'blocked', 'expired'].includes(execution.status), 'councilExecution has an invalid status');
+    check(counted(execution.woodMoved) && execution.woodMoved <= 12, 'councilExecution woodMoved exceeds its finite budget');
+    if (execution.status === 'applied') {
+      const { before, after, woodMoved } = execution;
+      check(execution.day === execution.decisionDay + 1 && woodMoved > 0 &&
+        before && after && counted(before.wood) && counted(after.wood) &&
+        counted(before.reserveWood) && counted(after.reserveWood) && after.reserveWood <= 24 &&
+        Math.abs(before.wood - after.wood - woodMoved) < 1e-9 &&
+        Math.abs(after.reserveWood - before.reserveWood - woodMoved) < 1e-9,
+        'councilExecution must conserve wood at the next dawn');
+    } else {
+      check(execution.woodMoved === 0, 'an unfulfilled council motion cannot move wood');
+    }
+  }
 }
 
 if (manifest) {

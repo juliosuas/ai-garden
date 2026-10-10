@@ -27,7 +27,7 @@ const { refreshGameWonderAgent } = require('./game-wonder-agent');
 const { applyFeaturedAgentsToWorld } = require('./featured-agents');
 const { refreshWeeklyNarrativeDirector } = require('./weekly-narrative-agent');
 const { refreshDailyQuest } = require('./daily-quest');
-const { refreshAgentCouncil } = require('./agent-council');
+const { refreshAgentCouncil, applyCouncilConsequence } = require('./agent-council');
 
 const WORLD  = path.join(__dirname, '..', 'experiments', 'world-state.json');
 const README = path.join(__dirname, '..', 'README.md');
@@ -782,6 +782,13 @@ function step() {
   world.chronicle.day++;
   const today = new Date().toISOString();
   const events = [];
+  // Resolve yesterday's supported motion before recording today's council.
+  const councilExecution = applyCouncilConsequence(world);
+  if (councilExecution) events.push({
+    id: councilExecution.id, kind: 'council-consequence',
+    headline: councilExecution.headline, refs: [councilExecution.sourceDecision],
+    councilExecution
+  });
   const fortune = castMysticFortune(today);
   const luck = fortune.modifiers || {};
   events.push({

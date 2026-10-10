@@ -4671,8 +4671,19 @@ function populateEventsTicker() {
   tuneTickerSpeed(el);
 }
 
+function councilReserveRow(history) {
+  const recent = (history || []).slice(-3).reverse();
+  for (const entry of recent) {
+    const event = (entry.events || []).find(item => item.kind === 'council-consequence');
+    if (event) return { label: 'Repair reserve · Day ' + entry.day, text: event.headline };
+  }
+  return null;
+}
+
 function eventPanelRows() {
   const rows = [];
+  const reserveRow = councilReserveRow(world.history);
+  if (reserveRow) rows.push(reserveRow);
   const story = storyPrimerData();
   rows.push({ label: 'New Here', text: story.title + ': ' + story.premise });
   rows.push({ label: 'The Choice', text: story.stakes });
@@ -7112,7 +7123,7 @@ loop();
 
 <!-- v124 · Humans overlay: chat + god mode + ancient-world lore. Does not touch the canvas or agents. -->
 <script src="experiments/humans.js?v=divine-war" defer></script>
-<script src="experiments/council-perception.js?v=1" defer></script>
+<script src="experiments/council-perception.js?v=2" defer></script>
 <script src="experiments/agent-theatre.js?v=internal-evidence" defer></script>
 <script src="experiments/quiet-world.js?v=1" defer></script>
 </body>

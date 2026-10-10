@@ -13,18 +13,24 @@
   function observe(world) {
     world = world || {};
     var resources = (world.economy || {}).resources || {};
-    return {
+    var view = {
       day: amount((world.chronicle || {}).day) || 1,
       food: amount(resources.food),
       wood: amount(resources.wood),
       wars: active(world.wars).length,
       threats: active(world.threats).length
     };
+    if (Object.prototype.hasOwnProperty.call(world.economy || {}, 'repairReserveWood')) {
+      view.reserveWood = amount(world.economy.repairReserveWood);
+    }
+    return view;
   }
   function describe(view) {
     return 'Day ' + view.day + ': ' + view.wars + ' active conflicts; ' +
       view.threats + ' frontier warnings; food ' + (view.food === null ? 'unknown' : view.food) +
-      '; wood ' + (view.wood === null ? 'unknown' : view.wood) + '.';
+      '; wood ' + (view.wood === null ? 'unknown' : view.wood) +
+      (Object.prototype.hasOwnProperty.call(view, 'reserveWood')
+        ? '; repair reserve ' + (view.reserveWood === null ? 'unknown' : view.reserveWood) : '') + '.';
   }
   var api = { observe: observe, describe: describe };
   if (typeof module === 'object' && module.exports) module.exports = api;

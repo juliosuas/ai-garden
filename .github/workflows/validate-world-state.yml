@@ -8,6 +8,8 @@ on:
       - scripts/validate-world-state.js
       - scripts/validate-world-state.test.js
       - scripts/council-perception.test.js
+      - scripts/council-consequence.test.js
+      - scripts/daily-evolution.js
       - scripts/agent-council.js
       - experiments/council-perception.js
       - experiments/agent-theatre.js
@@ -21,6 +23,8 @@ on:
       - scripts/validate-world-state.js
       - scripts/validate-world-state.test.js
       - scripts/council-perception.test.js
+      - scripts/council-consequence.test.js
+      - scripts/daily-evolution.js
       - scripts/agent-council.js
       - experiments/council-perception.js
       - experiments/agent-theatre.js
@@ -42,5 +46,7 @@ jobs:
         run: node --test scripts/validate-world-state.test.js
       - name: Test council knowledge boundary
         run: node --test scripts/council-perception.test.js
+      - name: Test finite council consequences
+        run: node --test scripts/council-consequence.test.js
       - name: Validate canonical world state
         run: node scripts/validate-world-state.js
