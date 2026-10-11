@@ -5,6 +5,7 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const { spawnSync } = require('node:child_process');
+const { attemptConstruction } = require('./construction');
 const test = require('node:test');
 
 const validator = path.join(__dirname, 'validate-world-state.js');
@@ -70,6 +71,38 @@ test('rejects duplicate structure ids in the supplied world-state', () => {
 
   assert.equal(result.status, 1);
   assert.match(result.stderr, /duplicate structure ids: observatory/);
+});
+
+function constructedWorld() {
+  const world = validWorld();
+  world.chronicle = { day: 10, structures: 1 };
+  world.citizens = [{ id: 'builder', alive: true }];
+  world.economy = { resources: { wood: 4, stone: 2 }, repairReserveWood: 12 };
+  attemptConstruction(world, { id: 'cache', built: 10, builder: 'builder' }, 'daily');
+  attemptConstruction(world, { id: 'other', built: 10, builder: 'builder' }, 'extra');
+  return world;
+}
+
+test('accepts finite funded works and blocked attempts alongside legacy structures', () => {
+  const result = runValidator(constructedWorld());
+  assert.equal(result.status, 0, result.stderr);
+});
+
+test('rejects construction resource creation, overspending, invented works and duplicate attempts', () => {
+  const changes = [w => { w.constructionLedger.receipts[0].after.wood = 4; },
+    w => { w.constructionLedger.receipts[0].spent.wood = 5; },
+    w => { w.constructionLedger.receipts[1].spent.stone = 2; },
+    w => { w.constructionLedger.day = 11; },
+    w => { w.constructionLedger.receipts.push(w.constructionLedger.receipts[0]); },
+    w => { w.structures.pop(); },
+    w => { w.structures.at(-1).funding.cost.wood = 0; },
+    w => { w.structures.push({ ...w.structures.at(-1), id: 'unpaid-copy' }); }];
+  for (const change of changes) {
+    const world = constructedWorld(); change(world);
+    const result = runValidator(world);
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /construction|funded structure/);
+  }
 });
 
 function reserveWorld() {

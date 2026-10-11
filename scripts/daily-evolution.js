@@ -28,6 +28,7 @@ const { applyFeaturedAgentsToWorld } = require('./featured-agents');
 const { refreshWeeklyNarrativeDirector } = require('./weekly-narrative-agent');
 const { refreshDailyQuest } = require('./daily-quest');
 const { refreshAgentCouncil, applyCouncilConsequence } = require('./agent-council');
+const { attemptConstruction } = require('./construction');
 
 const WORLD  = path.join(__dirname, '..', 'experiments', 'world-state.json');
 const README = path.join(__dirname, '..', 'README.md');
@@ -491,7 +492,7 @@ function battle() {
   return { war: w, winner, loser };
 }
 
-function buildStructure() {
+function buildStructure(slot = 'daily', accelerated = false) {
   const type = pick(STRUCTURE_TYPES);
   const builders = world.citizens.filter(c => c.alive && (c.profession === 'builder' || c.profession === 'stonemason' || c.profession === 'sculptor'));
   const others = world.citizens.filter(c => c.alive);
@@ -512,9 +513,19 @@ function buildStructure() {
       ? ['First', 'Shared', 'Warm', 'River', 'Dawn', 'Old', 'Kin', 'Stone', 'Ash', 'Seed']
       : ['Grey', 'Morning', 'Lonely', 'Iron', 'High', 'Low', 'Broken', 'Quiet', 'Bronze', 'Amber']) + ' ' + type.split('-').map(w => w[0].toUpperCase() + w.slice(1)).join(' ')
   };
-  world.structures.push(s);
-  world.chronicle.structures++;
-  return s;
+  const receipt = attemptConstruction(world, s, slot);
+  if (!receipt) return null;
+  return {
+    kind: receipt.status === 'built' ? 'structure' : 'construction-blocked',
+    headline: receipt.status === 'built'
+      ? (accelerated ? 'Fortune hastened the work: ' : '') + s.name + ' built near the ' +
+        (s.region || 'village heart') + (s.purpose ? ' — ' + s.purpose : '') +
+        `. Available wood ${receipt.before.wood} → ${receipt.after.wood}; stone ${receipt.before.stone} → ${receipt.after.stone}.`
+      : 'Construction paused: ' + receipt.reason + (receipt.before
+        ? ` Available wood ${receipt.before.wood}; stone ${receipt.before.stone}.` : ''),
+    refs: receipt.status === 'built' ? [s.id, s.builder] : [],
+    construction: receipt
+  };
 }
 
 function expandMap() {
@@ -764,12 +775,7 @@ function applyMiracleBoon(fortune) {
       refs: w.sides
     };
   }
-  const s = buildStructure();
-  return {
-    kind: 'structure',
-    headline: 'Miracle acceleration: ' + s.name + ' rose in one day' + (s.purpose ? ' — ' + s.purpose : ''),
-    refs: s.builder ? [s.builder] : []
-  };
+  return buildStructure('fortune', true);
 }
 
 function factionName(id) {
@@ -829,20 +835,12 @@ function step() {
     }
   }
 
-  // 4. Structures — always one, with fortune-driven bursts
+  // 4. Works share counted supplies; fortune changes timing, not materials.
   const s1 = buildStructure();
-  events.push({
-    kind: 'structure',
-    headline: s1.name + ' built near the ' + (s1.region || 'village heart') + (s1.purpose ? ' — ' + s1.purpose : ''),
-    refs: s1.builder ? [s1.builder] : []
-  });
+  if (s1) events.push(s1);
   if (chance(clampChance(0.35 + (luck.structureBoost || 0)))) {
-    const s2 = buildStructure();
-    events.push({
-      kind: 'structure',
-      headline: s2.name + ' also rose that same day' + (s2.purpose ? ' — ' + s2.purpose : ''),
-      refs: s2.builder ? [s2.builder] : []
-    });
+    const s2 = buildStructure('extra');
+    if (s2) events.push(s2);
   }
 
   // 5. Map expansion — v124 · guaranteed every day + 40% second region

@@ -12,6 +12,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { COST, SLOTS, TYPE } = require('./construction');
 
 const ROOT = path.join(__dirname, '..');
 const WORLD_PATH = process.env.AI_GARDEN_WORLD_PATH || path.join(ROOT, 'experiments', 'world-state.json');
@@ -111,6 +112,49 @@ if (world) {
     } else {
       check(execution.woodMoved === 0, 'an unfulfilled council motion cannot move wood');
     }
+  }
+  // Historical structures need no migration. Only new funded works carry this
+  // contract; the latest bounded ledger survives chronicle retention and reload.
+  const ledger = world.constructionLedger;
+  if (ledger) {
+    check(Number.isInteger(ledger.day) && ledger.day >= 1 && ledger.day <= (world.chronicle || {}).day,
+      'constructionLedger must belong to a canonical world day');
+    const receipts = Array.isArray(ledger.receipts) ? ledger.receipts : [];
+    check(Array.isArray(ledger.receipts) && receipts.length >= 1 && receipts.length <= SLOTS.length &&
+      new Set(receipts.map(r => r && r.slot)).size === receipts.length,
+      'constructionLedger must contain at most three distinct attempts');
+    for (const receipt of receipts) {
+      if (!receipt) { check(false, 'construction receipt is missing'); continue; }
+      check(receipt.type === TYPE && SLOTS.includes(receipt.slot) && receipt.day === ledger.day &&
+        receipt.id === `construction-${ledger.day}-${receipt.slot}` && ['built', 'blocked'].includes(receipt.status),
+        'construction receipt has an invalid identity or outcome');
+      const spent = receipt.spent || {};
+      const { before, after } = receipt;
+      check(counted(spent.wood) && counted(spent.stone) &&
+        spent.wood === (receipt.status === 'built' ? COST.wood : 0) &&
+        spent.stone === (receipt.status === 'built' ? COST.stone : 0),
+        'construction receipt must spend exactly its finite cost, or nothing when blocked');
+      check((receipt.status === 'blocked' && before === null && after === null) ||
+        (before && after && Object.keys(COST).every(key => counted(before[key]) && counted(after[key]) &&
+          Math.abs(before[key] - after[key] - spent[key]) < 1e-9)),
+        'construction receipt must conserve counted materials');
+      const structure = (world.structures || []).find(s => s && s.id === receipt.structureId);
+      check(receipt.status === 'built'
+        ? structure && structure.built === receipt.day && structure.funding && structure.funding.receipt === receipt.id
+        : receipt.structureId === null,
+      'construction outcome must match its completed structure');
+    }
+  }
+  const fundedReceipts = new Set();
+  for (const structure of world.structures || []) {
+    if (!structure || !structure.funding) continue;
+    const { receipt, cost = {} } = structure.funding;
+    check(Number.isInteger(structure.built) && structure.built >= 1 && structure.built <= (world.chronicle || {}).day &&
+      SLOTS.some(slot => receipt === `construction-${structure.built}-${slot}`) &&
+      cost.wood === COST.wood && cost.stone === COST.stone,
+      'funded structure must retain its material cost and canonical receipt');
+    check(!fundedReceipts.has(receipt), 'a construction receipt cannot fund more than one structure');
+    fundedReceipts.add(receipt);
   }
 }
 

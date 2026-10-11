@@ -180,7 +180,9 @@ test('the real daemon resolves the previous vote once and publishes its resource
     assert.equal(result.status, 0, result.stderr);
     const after = JSON.parse(fs.readFileSync(worldPath, 'utf8'));
     assert.equal(after.chronicle.day, world.chronicle.day + 2);
-    assert.equal(after.economy.resources.wood, 18);
+    const constructionSpent = after.history.slice(-2).flatMap(entry => entry.events)
+      .reduce((sum, event) => sum + (event.construction ? event.construction.spent.wood : 0), 0);
+    assert.equal(after.economy.resources.wood, 18 - constructionSpent);
     assert.equal(after.economy.repairReserveWood, 12);
     const events = after.history.slice(-2).flatMap(entry => entry.events);
     const executions = events.filter(event => event.kind === 'council-consequence');
@@ -189,7 +191,7 @@ test('the real daemon resolves the previous vote once and publishes its resource
     assert.equal(executions[0].refs[0], world.agentCouncil.id);
     assert.match(executions[0].headline, /Available wood 30 → 18; reserved wood 0 → 12/);
     assert.equal(after.agentCouncil.day, after.chronicle.day);
-    assert.equal(after.agentCouncil.observations.wood, 18);
+    assert.equal(after.agentCouncil.observations.wood, 18 - constructionSpent);
     assert.equal(after.agentCouncil.observations.reserveWood, 12);
   } finally {
     fs.rmSync(directory, { recursive: true, force: true });

@@ -4680,8 +4680,18 @@ function councilReserveRow(history) {
   return null;
 }
 
+function constructionRow(history) {
+  for (const entry of (history || []).slice(-3).reverse()) {
+    const event = (entry.events || []).find(item => item.construction && item.construction.type === 'funded-construction-v1');
+    if (event) return { label: 'Public work · Day ' + entry.day, text: event.headline };
+  }
+  return null;
+}
+
 function eventPanelRows() {
   const rows = [];
+  const workRow = constructionRow(world.history);
+  if (workRow) rows.push(workRow);
   const reserveRow = councilReserveRow(world.history);
   if (reserveRow) rows.push(reserveRow);
   const story = storyPrimerData();

@@ -72,7 +72,15 @@ The scarcity council can now reserve timber for survival repairs. Only this expl
 
 The immutable resolution supplies the causal reference. One persistent `councilExecution` receipt prevents replay after reload or history retention; the daily chronicle keeps its before/after counts and reason. The council observes the reserve as an internal count, and the story log surfaces one outcome from the last three world days. Old resolutions and session projections cannot allocate resources.
 
-`scripts/council-consequence.test.js` exercises real daemon integration in a disposable world, repeated execution, successive allocations, failed prerequisites, and visibility in the story log. Canonical validation checks capacity, resource conservation and timing. The current reserve is an earmarked stock, not a farm repair or a production bonus. Next: define one bounded repair that consumes this reserve and records an observed result.
+`scripts/council-consequence.test.js` exercises real daemon integration in a disposable world, repeated execution, successive allocations, failed prerequisites, and visibility in the story log. Canonical validation checks capacity, resource conservation and timing. The current reserve is an earmarked stock, not a farm repair or a production bonus. Repairs require actual recorded damage; do not invent damage to use the stock.
+
+## Finite Daily Construction
+
+Daily works now require a common material floor of 4 available wood and 2 stone per completed structure. The normal, extra, and fortune construction attempts share the same supplies. A living builder and distinct structure are required; unknown or insufficient stores pause the work. Reserved repair timber cannot fund construction. Existing structures and historical counts remain intact.
+
+One `constructionLedger` holds at most three receipts for the latest world day. Each records success or blockage, materials before/after, the exact cost, and a completed structure reference when applicable. Repeated attempts in the same slot cannot build or charge again after reload. The daily chronicle keeps the outcome, and the story log shows one recent result. Fortune may hasten a funded work but cannot create materials. This is an initial material floor, not a complete economy or a cap on population/map growth.
+
+`scripts/construction.test.js` verifies depletion, protected reserves, replay, failed prerequisites, bounded records, internal evidence, story visibility, and actual daemon execution in disposable copies. Daily evolution and world-state CI run it; canonical validation rejects invented materials and inconsistent works. Next: add bounded harvesting with an ecological source and recorded costs so scarcity can support sustainable recovery. Structure repairs first need a genuine damage record from an internal event.
 
 ## Phase 1: Proof Loop Polish
 
