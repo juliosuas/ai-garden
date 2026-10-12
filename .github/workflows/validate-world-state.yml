@@ -9,6 +9,8 @@ on:
       - scripts/validate-world-state.test.js
       - scripts/council-perception.test.js
       - scripts/council-consequence.test.js
+      - scripts/timber-harvest.js
+      - scripts/timber-harvest.test.js
       - scripts/construction.js
       - scripts/construction.test.js
       - scripts/daily-evolution.js
@@ -26,6 +28,8 @@ on:
       - scripts/validate-world-state.test.js
       - scripts/council-perception.test.js
       - scripts/council-consequence.test.js
+      - scripts/timber-harvest.js
+      - scripts/timber-harvest.test.js
       - scripts/construction.js
       - scripts/construction.test.js
       - scripts/daily-evolution.js
@@ -54,5 +58,7 @@ jobs:
         run: node --test scripts/council-consequence.test.js
       - name: Test funded daily construction
         run: node --test scripts/construction.test.js
+      - name: Test bounded woodland gathering
+        run: node --test scripts/timber-harvest.test.js
       - name: Validate canonical world state
         run: node scripts/validate-world-state.js

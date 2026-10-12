@@ -13,6 +13,7 @@
 const fs = require('fs');
 const path = require('path');
 const { COST, SLOTS, TYPE } = require('./construction');
+const timber = require('./timber-harvest');
 
 const ROOT = path.join(__dirname, '..');
 const WORLD_PATH = process.env.AI_GARDEN_WORLD_PATH || path.join(ROOT, 'experiments', 'world-state.json');
@@ -111,6 +112,47 @@ if (world) {
         'councilExecution must conserve wood at the next dawn');
     } else {
       check(execution.woodMoved === 0, 'an unfulfilled council motion cannot move wood');
+    }
+  }
+  const woodlandStock = world.woodlandStock;
+  const harvest = world.timberHarvest;
+  if (woodlandStock) {
+    check(timber.sourceValid(woodlandStock, (world.chronicle || {}).day) &&
+      (world.map?.regions || []).some(r => r.id === woodlandStock.regionId),
+      'woodlandStock must be one bounded source tied to an existing region');
+    check(harvest && harvest.day === woodlandStock.lastDay && harvest.regionId === woodlandStock.regionId,
+      'woodlandStock requires its latest once-only timber receipt');
+  }
+  if (harvest) {
+    const { before, after } = harvest;
+    check(harvest.type === timber.TYPE && Number.isInteger(harvest.day) && harvest.day >= 1 &&
+      harvest.day <= (world.chronicle || {}).day && harvest.id === `timber-${harvest.day}` &&
+      ['gathered', 'resting', 'blocked'].includes(harvest.status),
+      'timber receipt has an invalid identity or outcome');
+    check(counted(harvest.recovered) && harvest.recovered <= timber.RECOVERY &&
+      counted(harvest.gathered) && harvest.gathered <= timber.DAILY_LIMIT &&
+      harvest.spentFood === (harvest.status === 'gathered' ? timber.FOOD_COST : 0) &&
+      (harvest.status === 'gathered' ? harvest.gathered > 0 : harvest.gathered === 0),
+      'timber receipt exceeds its finite daily yield or food cost');
+    check(before && after && ['stock', 'wood', 'food'].every(key =>
+      (before[key] === null && after[key] === null) || (counted(before[key]) && counted(after[key]) &&
+        Math.abs(after[key] - before[key] - (key === 'stock' ? harvest.recovered - harvest.gathered :
+          key === 'wood' ? harvest.gathered : -harvest.spentFood)) < 1e-9)),
+      'timber receipt must conserve counted forest, timber and food');
+    check(woodlandStock ? before && after && before.stock >= timber.FLOOR && before.stock <= timber.CAPACITY &&
+      after.stock === woodlandStock.stock && harvest.day >= woodlandStock.establishedDay &&
+      (harvest.day !== woodlandStock.establishedDay || (before.stock === timber.CAPACITY && harvest.recovered === 0))
+      : harvest.regionId === null && before?.stock === null && after?.stock === null && harvest.recovered === 0,
+      'timber receipt must match its ecological source without invented recovery');
+    if (harvest.status === 'gathered') {
+      check(woodlandStock && before && after && counted(before.wood) && counted(before.food) &&
+        after.wood <= timber.STORE_TARGET && after.stock >= timber.FLOOR &&
+        harvest.gathered === Math.min(timber.DAILY_LIMIT, timber.STORE_TARGET - before.wood,
+          before.stock + harvest.recovered - timber.FLOOR) &&
+        (world.citizens || []).some(c => c.id === harvest.actorId && c.profession === 'ranger'),
+        'timber gathering needs a recorded ranger, low stores and a protected forest floor');
+    } else {
+      check(harvest.actorId === null, 'unfulfilled timber gathering cannot claim a worker');
     }
   }
   // Historical structures need no migration. Only new funded works carry this

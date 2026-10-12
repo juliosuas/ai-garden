@@ -199,6 +199,11 @@ async function main() {
     'Council consequences must resolve at dawn before the daily resolution is replaced');
   check(dailyWorkflow.includes('node --test scripts/council-consequence.test.js scripts/council-perception.test.js'),
     'Daily evolution must test finite council consequences and the perception boundary');
+  check(before(dailyEvolution, 'applyCouncilConsequence(world)', 'applyTimberHarvest(world)') &&
+    before(dailyEvolution, 'applyTimberHarvest(world)', 'const fortune = castMysticFortune(today);'),
+    'Woodland gathering must follow reserve allocation and precede daily works');
+  check(dailyWorkflow.includes('scripts/timber-harvest.test.js') && index.includes('const timberRow = timberHarvestRow(world.history);'),
+    'Bounded woodland gathering needs regression coverage and a visible story receipt');
   const featuredAgents = world.featuredAgents || [];
   const featuredNames = new Set(featuredAgents.map(agent => agent.name));
   for (const name of ['Codex', 'Hermes', 'OpenClaw', 'Claude', 'Gemini', 'GPT-5', 'Mistral', 'Llama']) {

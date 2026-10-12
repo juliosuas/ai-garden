@@ -6,6 +6,7 @@ const os = require('node:os');
 const path = require('node:path');
 const { spawnSync } = require('node:child_process');
 const { attemptConstruction } = require('./construction');
+const { applyTimberHarvest } = require('./timber-harvest');
 const test = require('node:test');
 
 const validator = path.join(__dirname, 'validate-world-state.js');
@@ -142,5 +143,42 @@ test('rejects resource creation, late allocations and payments from blocked moti
     const world = reserveWorld();
     mutate(world);
     assert.equal(runValidator(world).status, 1);
+  }
+});
+
+function timberWorld() {
+  const world = validWorld();
+  world.chronicle = { day: 10 };
+  world.map = { regions: [{ id: 'grove', biome: 'woodland', discoveredDay: 7 }] };
+  world.citizens = [{ id: 'ranger', profession: 'ranger', alive: true }];
+  world.economy = { resources: { wood: 0, food: 30 } };
+  applyTimberHarvest(world);
+  return world;
+}
+test('accepts bounded woodland transfer, paid gathering and unfulfilled journeys', () => {
+  assert.equal(runValidator(timberWorld()).status, 0);
+  const world = timberWorld();
+  world.chronicle.day++;
+  world.economy.resources.food = 0;
+  applyTimberHarvest(world);
+  const result = runValidator(world);
+  assert.equal(result.status, 0, result.stderr);
+  const absent = validWorld(); absent.chronicle = { day: 10 };
+  applyTimberHarvest(absent);
+  assert.equal(runValidator(absent).status, 0);
+});
+test('rejects excess regeneration, unpaid gathering, source replacement and phantom timber', () => {
+  const changes = [w => { w.woodlandStock.stock = 25; }, w => { w.woodlandStock.stock = 7; },
+    w => { w.woodlandStock.regionId = 'invented'; }, w => { w.woodlandStock.lastDay = 11; },
+    w => { w.timberHarvest.recovered = 2; }, w => { w.timberHarvest.spentFood = 0; },
+    w => { w.timberHarvest.after.wood = 5; }, w => { w.timberHarvest.after.stock = 24; },
+    w => { w.timberHarvest.actorId = 'ghost'; }, w => { w.timberHarvest.day = 11; },
+    w => { w.timberHarvest.gathered = 5; }, w => { w.timberHarvest.status = 'blocked'; },
+    w => { delete w.woodlandStock; }, w => { delete w.timberHarvest; }];
+  for (const change of changes) {
+    const world = timberWorld(); change(world);
+    const result = runValidator(world);
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /timber|woodland/i);
   }
 });

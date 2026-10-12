@@ -29,6 +29,7 @@ const { refreshWeeklyNarrativeDirector } = require('./weekly-narrative-agent');
 const { refreshDailyQuest } = require('./daily-quest');
 const { refreshAgentCouncil, applyCouncilConsequence } = require('./agent-council');
 const { attemptConstruction } = require('./construction');
+const { applyTimberHarvest } = require('./timber-harvest');
 
 const WORLD  = path.join(__dirname, '..', 'experiments', 'world-state.json');
 const README = path.join(__dirname, '..', 'README.md');
@@ -794,6 +795,12 @@ function step() {
     id: councilExecution.id, kind: 'council-consequence',
     headline: councilExecution.headline, refs: [councilExecution.sourceDecision],
     councilExecution
+  });
+  // Replenish from one bounded internal source before today's works consume wood.
+  const timberHarvest = applyTimberHarvest(world);
+  if (timberHarvest) events.push({
+    id: timberHarvest.id, kind: 'timber-harvest', headline: timberHarvest.headline,
+    refs: [timberHarvest.regionId, timberHarvest.actorId].filter(Boolean), timberHarvest
   });
   const fortune = castMysticFortune(today);
   const luck = fortune.modifiers || {};

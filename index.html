@@ -4688,8 +4688,18 @@ function constructionRow(history) {
   return null;
 }
 
+function timberHarvestRow(history) {
+  for (const entry of (history || []).slice(-3).reverse()) {
+    const event = (entry.events || []).find(item => item.timberHarvest && item.timberHarvest.type === 'woodland-timber-v1');
+    if (event) return { label: 'Woodland · Day ' + entry.day, text: event.headline };
+  }
+  return null;
+}
+
 function eventPanelRows() {
   const rows = [];
+  const timberRow = timberHarvestRow(world.history);
+  if (timberRow) rows.push(timberRow);
   const workRow = constructionRow(world.history);
   if (workRow) rows.push(workRow);
   const reserveRow = councilReserveRow(world.history);
