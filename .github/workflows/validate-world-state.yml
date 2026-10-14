@@ -17,6 +17,9 @@ on:
       - scripts/agent-council.js
       - experiments/council-perception.js
       - experiments/agent-theatre.js
+      - experiments/humans.js
+      - experiments/witness-perception.js
+      - scripts/witness-perception.test.js
       - index.html
       - .github/workflows/validate-world-state.yml
   push:
@@ -36,6 +39,9 @@ on:
       - scripts/agent-council.js
       - experiments/council-perception.js
       - experiments/agent-theatre.js
+      - experiments/humans.js
+      - experiments/witness-perception.js
+      - scripts/witness-perception.test.js
       - index.html
       - .github/workflows/validate-world-state.yml
 
@@ -60,5 +66,7 @@ jobs:
         run: node --test scripts/construction.test.js
       - name: Test bounded woodland gathering
         run: node --test scripts/timber-harvest.test.js
+      - name: Test session witness knowledge boundary
+        run: node --test scripts/witness-perception.test.js
       - name: Validate canonical world state
         run: node scripts/validate-world-state.js

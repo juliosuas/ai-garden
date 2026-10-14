@@ -213,7 +213,7 @@ function scoreFlow(index, world) {
   };
 }
 
-function scoreWorldLife(index, world) {
+function scoreWorldLife(index, world, humans) {
   const view = world.civilizationView || {};
   const checks = [
     Array.isArray(world.featuredAgents) && world.featuredAgents.length === 8,
@@ -234,7 +234,9 @@ function scoreWorldLife(index, world) {
       index.includes('drawPrimitiveWorkCue(site, x, y);'),
     index.includes('function gameWonderFocusCue(focus)') &&
       index.includes('focus.target || focus.reason || focus.title') &&
-      index.includes('SCALE >= 3 && cue')
+      index.includes('SCALE >= 3 && cue'),
+    before(index, 'experiments/witness-perception.js', 'experiments/humans.js') &&
+      humans.includes('perception.replyText(world || {}, act)')
   ];
   return {
     key: 'worldLife',
@@ -486,7 +488,7 @@ function buildSnapshot(world, files) {
   const scores = [
     scoreMobileUX(files.index, files.humans),
     scoreFlow(files.index, world),
-    scoreWorldLife(files.index, world),
+    scoreWorldLife(files.index, world, files.humans),
     scoreAudio(files.music, files.index, files.humans),
     scorePerformance(files.index, files.garden),
     scoreAutomation(

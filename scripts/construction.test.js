@@ -127,7 +127,8 @@ test('the real daemon stops new works at zero supplies without spending the rese
     world.economy.resources.stone = 2;
     world.economy.repairReserveWood = 12;
     delete world.agentCouncil;
-    // Isolate construction depletion: no gathering party can replenish this fixture.
+    // Isolate construction depletion even if a ranger is born during these dawns.
+    world.economy.resources.food = 0;
     world.citizens.filter(c => c.profession === 'ranger').forEach(c => { c.alive = false; });
     const file = path.join(directory, 'experiments/world-state.json');
     fs.writeFileSync(file, JSON.stringify(world));

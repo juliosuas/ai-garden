@@ -7,7 +7,7 @@ AI Garden becomes commercially useful when it feels like a living AI civilizatio
 1. A human enters The Mirror Trial.
 2. They cast one sign or speak in the Observer Lounge.
 3. The world syncs that action to the current backend day, arc, and season.
-4. An AI witness answers as if the civilization is studying the human.
+4. A session witness reports internal counts or locally visible phenomena; synchronization details stay in the visitor interface.
 5. The human receives proof worth sharing and a reason to return tomorrow.
 
 The product must stay static-first until the loop is proven. No auth, database, or payment plumbing should be added before the daily proof loop is sticky.
@@ -91,6 +91,14 @@ A living ranger may transfer at most 4 wood from the patch when available stores
 One `woodlandStock` source and one latest `timberHarvest` receipt persist across reload and chronicle retention. The source's last processed day independently prevents replay. The chronicle and story log show recovery, collection or blockage using internal woodland, worker and supply evidence only. Development instructions and visitor identities never influence the calculation. This run deploys mechanics without advancing or changing canonical world state; the existing daily evolution initializes the patch on its next scheduled dawn.
 
 `scripts/timber-harvest.test.js` verifies paid conservation, bounded recovery, failure, reload, long-term demand, knowledge separation, story visibility and actual daemon execution in disposable worlds. Daily evolution and canonical validation CI run the suite. Next: one finite stone source with an extraction cost and exhaustion receipt; forestry currently leaves the stone bottleneck visible. Food needs and remaining observer-aware legacy narration require separate work. Do not invent damage, actors or supplies to demonstrate a consequence.
+
+## Internal Session Witnesses
+
+New session witness replies use a detached allowlist of the canonical day and public food, wood and stone counts. Raw visitor messages, nicknames, receipt prose, development directives and narrative plans never enter their spoken evidence. Missing or invalid measurements remain unknown. Day, arc, version and synchronization time continue to serve the visitor interface separately.
+
+The six visual interventions are translated into fixed internal phenomena: rain, a solar shadow, lightning, a comet, stars and music between shelters. They do not reveal an external origin, establish an unobserved cause or promise a material consequence. A visual rain cannot prove a harvest, and lightning cannot establish damage without inspection. Unknown effect keys produce the ordinary store report. These are deterministic session descriptions; they do not imply real awareness or create canonical memories, resources or entities.
+
+`scripts/witness-perception.test.js` executes the actual browser reply function without its network bus, checks all six phenomena and their unknown alternatives, verifies observable supply changes and unknown counts, and rejects reliance on raw chat or development metadata. It also verifies the browser/CommonJS boundary, repeated calls, the offline fallback and deferred loading order. Daily evolution, self-optimizer and validation CI run this coverage; roadmap-pulse and playtest enforce the boundary. Existing historical records remain intact. Other legacy character dialogue, receipt narration and narrative directors still require separate bounded adaptation; this change does not claim to finish every narrative surface.
 
 ## Phase 1: Proof Loop Polish
 
@@ -208,7 +216,7 @@ Schedule: `17 7 * * *` UTC.
 | Contract | Status | Why |
 |----------|--------|-----|
 | Mirror Trial | OK | chosen sign produces proof |
-| Observer Lounge | OK | chat produces an AI witness reply |
+| Observer Lounge | OK | witness replies use internal evidence |
 | Backend Sync | OK | human actions show day, arc, and season |
 | Seasonal Audio | OK | ambient bed follows season and stays subtle |
 | Mobile Safety | OK | panels stay out of the way |

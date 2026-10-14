@@ -55,6 +55,7 @@ jobs:
         run: |
           node --check scripts/daily-evolution.js
           node --check scripts/construction.js
+          node --check experiments/witness-perception.js
           node --check scripts/timber-harvest.js
           node --check scripts/civilization-brain.js
           node --check scripts/civilization-visuals.js
@@ -66,7 +67,7 @@ jobs:
           node --check scripts/autopilot-pr-summary.js
           jq empty experiments/world-state.json
           node --test scripts/validate-world-state.test.js
-          node --test scripts/council-consequence.test.js scripts/council-perception.test.js scripts/construction.test.js scripts/timber-harvest.test.js
+          node --test scripts/council-consequence.test.js scripts/council-perception.test.js scripts/construction.test.js scripts/timber-harvest.test.js scripts/witness-perception.test.js
           node scripts/validate-world-state.js
           node scripts/playtest-subagent.js
 

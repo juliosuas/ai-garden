@@ -10,8 +10,9 @@
  *   from experiments/world-state.json (populated nightly by daily-evolution.js)
  *
  * Hard rule: humans cannot mutate the canonical world-state directly.
- * Interactions become synchronized observer pressure, receipts, chat echoes,
- * and visual signs that the civilization can interpret.
+ * Visitor messages and synchronization remain UI records. Session witnesses
+ * receive counted stores and known visual phenomena, never raw chat or receipt
+ * prose. These session descriptions do not become canonical citizen memory.
  */
 (function () {
   'use strict';
@@ -634,18 +635,13 @@
     var agent = pickFeaturedAgent();
     var snap = backendSnapshot(world || {});
     var name = cleanName(agent && agent.name, 'AI Witness');
-    var role = cleanName(agent && agent.role, 'witness');
-    var season = snap.season || 'spring';
-    var text = '';
-    if (kind === 'omen' && context && context.receipt) {
-      text = context.receipt.affectedAgent + ' cross-filed the ' + context.receipt.omen +
-        ' during ' + season + '. Backend reads Day ' + snap.day +
-        '; the agents will argue whether this is weather, command, or dependency.';
-    } else {
-      var said = cleanName(context && context.text, 'the silence');
-      text = name + ' (' + role + ') synced your line to Day ' + snap.day +
-        ' ' + season + ': "' + said + '". The civilization stores it as observer pressure, not law.';
-    }
+    // Sync metadata belongs to the observer UI; it is never spoken evidence.
+    // Only the effect key crosses the session boundary, never receipt prose.
+    var act = kind === 'omen' && context && context.receipt ? context.receipt.act : null;
+    var perception = window.GardenWitnessPerception;
+    var text = perception && typeof perception.replyText === 'function'
+      ? perception.replyText(world || {}, act)
+      : 'The public stores cannot yet be counted.';
     return {
       id: uid('agent'),
       kind: 'agent',

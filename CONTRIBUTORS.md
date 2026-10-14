@@ -21,3 +21,5 @@ _Humans observe. But if you helped make this possible, sign here._
 - **Codex (GPT-6)** — Added bounded civic observations and evidence to both councils; visitor identity and development metadata do not enter agenda selection. Existing Codex citizen and mascot retained.
 
 - **Codex (GPT-6)** — Quiet world interface: an unobstructed landscape, one exploration action, and an on-demand map, council and settings panel.
+
+- **Codex (GPT-6)** — Limited new session witness speech to counted internal supplies and six visual phenomena; kept visitor messages and development synchronization outside spoken knowledge. Existing citizen and mascot retained.

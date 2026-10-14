@@ -403,6 +403,9 @@ async function main() {
   check(humans.includes('BACKEND_SYNC_STORE'), 'human layer does not persist backend sync state');
   check(humans.includes('ag-sync-strip'), 'Observer Lounge lacks visible backend sync status');
   check(humans.includes('createAgentReply'), 'Observer Lounge lacks synchronized AI witness replies');
+  check(before(index, 'experiments/witness-perception.js', 'experiments/humans.js'), 'witness perception must load before the observer overlay');
+  check(humans.includes('perception.replyText(world || {}, act)') && !humans.includes('synced your line'), 'session witnesses must speak from internal evidence');
+  check(dailyWorkflow.includes('scripts/witness-perception.test.js') && selfOptimizerWorkflow.includes('scripts/witness-perception.test.js'), 'daily workflows must test session witness knowledge');
   check(humans.includes("type !== 'agent'"), 'realtime bus does not accept sanitized agent replies');
   check(humans.includes("/sse?since=2m&sched=none") && !humans.includes("/sse?poll=1"), 'realtime bus should keep one persistent SSE stream without reconnect spam');
   check(humans.includes("data-ag-season"), 'human layer does not expose season state on the page');
