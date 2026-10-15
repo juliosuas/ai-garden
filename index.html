@@ -3005,12 +3005,10 @@ function featuredAgentPosition(agent, idx) {
 }
 
 function featuredAgentDialogueLine(agent, salt) {
-  const action = featuredAgentAction(agent);
-  if (action && salt % 4 === 0) return action.headline || action.outcome || agent.currentGoal;
-  const lines = featuredAgentLines(agent);
-  if (lines.length) return deterministicPick(lines, salt);
-  if (agent.currentGoal) return agent.currentGoal;
-  return (agent.role || 'agent') + ' reporting';
+  const perception = window.GardenWitnessPerception;
+  return perception && typeof perception.residentLine === 'function'
+    ? perception.residentLine(world, agent && agent.id, salt)
+    : 'STORES NEED A RECOUNT';
 }
 
 function drawFeaturedAgentAura(agent, pos, scene) {
@@ -7142,7 +7140,7 @@ loop();
 </script>
 
 <!-- v124 · Humans overlay: chat + god mode + ancient-world lore. Does not touch the canvas or agents. -->
-<script src="experiments/witness-perception.js?v=1" defer></script>
+<script src="experiments/witness-perception.js?v=2" defer></script>
 <script src="experiments/humans.js?v=internal-witness" defer></script>
 <script src="experiments/council-perception.js?v=2" defer></script>
 <script src="experiments/agent-theatre.js?v=internal-evidence" defer></script>

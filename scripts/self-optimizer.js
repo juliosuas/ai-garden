@@ -236,6 +236,7 @@ function scoreWorldLife(index, world, humans) {
       index.includes('focus.target || focus.reason || focus.title') &&
       index.includes('SCALE >= 3 && cue'),
     before(index, 'experiments/witness-perception.js', 'experiments/humans.js') &&
+      index.includes('perception.residentLine(world, agent && agent.id, salt)') &&
       humans.includes('perception.replyText(world || {}, act)')
   ];
   return {

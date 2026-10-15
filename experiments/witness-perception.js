@@ -1,5 +1,6 @@
-/* Session witnesses receive only counted world evidence and a known visual
-   phenomenon. Chat, identities, receipts and development plans are excluded.
+/* Session witnesses and featured voices receive only counted world evidence
+   and known visual phenomena. Visitor messages/identities, receipt prose and
+   development plans are excluded; resident identity selects fixed wording only.
    This module never writes canonical state or invents effects on its stores. */
 (function (root) {
   'use strict';
@@ -33,7 +34,32 @@
       ? PHENOMENA[act] : '';
     return (phenomenon ? phenomenon + ' ' : '') + describe(observe(world));
   }
-  var api = Object.freeze({ observe: observe, describe: describe, replyText: replyText });
+  // These are attitudes, not reports of unobserved work. Identity chooses only
+  // fixed wording; biographies, action headlines and development goals stay out.
+  var RESIDENT_VOICES = Object.freeze({
+    codex: 'MEASURE BEFORE BUILDING',
+    hermes: 'A RUMOR IS NOT A COUNT',
+    openclaw: 'CHECK BEFORE THE JOURNEY',
+    claude: 'KEEP THE COST IN MEMORY',
+    gemini: 'COMPARE BEFORE CONCLUDING',
+    'gpt-5': 'ASK WHAT THE EVIDENCE MEANS',
+    mistral: 'PACK ONLY WHAT WE CAN SPARE',
+    llama: 'LEAVE ENOUGH FOR TOMORROW'
+  });
+  function residentLine(world, identity, salt) {
+    var slot = Number.isSafeInteger(salt) ? ((salt % 4) + 4) % 4 : 0;
+    if (slot === 3) {
+      return typeof identity === 'string' && Object.prototype.hasOwnProperty.call(RESIDENT_VOICES, identity)
+        ? RESIDENT_VOICES[identity] : 'COUNT BEFORE CLAIMING';
+    }
+    var key = ['food', 'wood', 'stone'][slot];
+    var count = observe(world)[key];
+    // Keep the entire measurement inside the existing three-line pixel bubble.
+    var value = count === null ? 'UNCOUNTED'
+      : String(count).length <= 12 ? String(count) : 'RECOUNT NEEDED';
+    return key.toUpperCase() + ': ' + value;
+  }
+  var api = Object.freeze({ observe: observe, describe: describe, replyText: replyText, residentLine: residentLine });
   if (typeof module === 'object' && module.exports) module.exports = api;
   else root.GardenWitnessPerception = api;
 }(typeof globalThis === 'object' ? globalThis : this));

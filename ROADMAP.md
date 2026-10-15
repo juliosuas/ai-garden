@@ -100,6 +100,14 @@ The six visual interventions are translated into fixed internal phenomena: rain,
 
 `scripts/witness-perception.test.js` executes the actual browser reply function without its network bus, checks all six phenomena and their unknown alternatives, verifies observable supply changes and unknown counts, and rejects reliance on raw chat or development metadata. It also verifies the browser/CommonJS boundary, repeated calls, the offline fallback and deferred loading order. Daily evolution, self-optimizer and validation CI run this coverage; roadmap-pulse and playtest enforce the boundary. Existing historical records remain intact. Other legacy character dialogue, receipt narration and narrative directors still require separate bounded adaptation; this change does not claim to finish every narrative surface.
 
+## Internal Featured Speech
+
+Featured character bubbles now use the same counted-evidence boundary as session witnesses. Clicks, ambient speech and the spotlight rotate through public food, wood and stone counts, plus one fixed attitude for each of the eight characters. Missing or invalid counts remain `UNCOUNTED`; measurements too long for the pixel bubble request a recount. Unknown identities receive a neutral attitude. Opinions do not claim a completed action, predict a yield or establish a cause.
+
+Action headlines, development goals, arbitrary dialogue and biographies no longer enter this speech path. Development cards keep their diagnostic content separately. If the perception script is unavailable, speech requests a recount instead of falling back to old narrative. Existing canonical records, memories and entities remain intact; this is a deterministic presentation boundary, not new learning or awareness.
+
+`scripts/resident-speech.test.js` executes the real click, ambient and spotlight functions, checks eight distinct voices, changed and unknown supplies, forbidden-field access, browser/CommonJS agreement, pixel wrapping and offline fallback. Existing daily evolution, self-optimizer and validation workflows enforce it without a new schedule. Structural audits remain 100/100 and roadmap 9/9; legibility remains 0. Next: adapt the separate crab speech path, which still reads raw action types, roles and dialogue. Other mascot/citizen lines and receipt/director narration remain separate work.
+
 ## Phase 1: Proof Loop Polish
 
 Goal: make the first minute undeniable.

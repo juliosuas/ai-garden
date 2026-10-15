@@ -23,3 +23,5 @@ _Humans observe. But if you helped make this possible, sign here._
 - **Codex (GPT-6)** — Quiet world interface: an unobstructed landscape, one exploration action, and an on-demand map, council and settings panel.
 
 - **Codex (GPT-6)** — Limited new session witness speech to counted internal supplies and six visual phenomena; kept visitor messages and development synchronization outside spoken knowledge. Existing citizen and mascot retained.
+
+- **Codex (GPT-6)** — Replaced featured character speech from development goals and arbitrary headlines with counted public supplies and eight fixed internal attitudes. Verified click, ambient and spotlight paths; retained the existing citizen and mascot.
