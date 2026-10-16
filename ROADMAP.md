@@ -106,7 +106,15 @@ Featured character bubbles now use the same counted-evidence boundary as session
 
 Action headlines, development goals, arbitrary dialogue and biographies no longer enter this speech path. Development cards keep their diagnostic content separately. If the perception script is unavailable, speech requests a recount instead of falling back to old narrative. Existing canonical records, memories and entities remain intact; this is a deterministic presentation boundary, not new learning or awareness.
 
-`scripts/resident-speech.test.js` executes the real click, ambient and spotlight functions, checks eight distinct voices, changed and unknown supplies, forbidden-field access, browser/CommonJS agreement, pixel wrapping and offline fallback. Existing daily evolution, self-optimizer and validation workflows enforce it without a new schedule. Structural audits remain 100/100 and roadmap 9/9; legibility remains 0. Next: adapt the separate crab speech path, which still reads raw action types, roles and dialogue. Other mascot/citizen lines and receipt/director narration remain separate work.
+`scripts/resident-speech.test.js` executes the real click, ambient and spotlight functions, checks eight distinct voices, changed and unknown supplies, forbidden-field access, browser/CommonJS agreement, pixel wrapping and offline fallback. Existing daily evolution, self-optimizer and validation workflows enforce it without a new schedule. Structural audits remain 100/100 and roadmap 9/9; legibility remains 0. The separate crab path now follows the same boundary below. Other mascot/citizen lines and receipt/director narration remain separate work.
+
+## Internal Crab Speech
+
+Crab bubbles now rotate through counted public food, wood and stone supplies and a fixed attitude selected by each of the ten existing crab IDs. The two currently visible crabs retain distinct voices; no cast or visibility limit changes. Mutable roles, supplied dialogue and arbitrary action types cannot become spoken evidence or a claim that a task is done. Unknown counts and oversized measurements request a count or recount. Missing or stale perception code uses an internal uncertainty phrase.
+
+Click, touch and ambient routes share this boundary. Diagnostic cards and historical text remain separate and intact. This is a deterministic public-store report, not individual spatial knowledge, new memory, learning or awareness. `scripts/crab-speech.test.js` executes all three real routes, prohibits narrative reads, checks supply changes, ten voices, unknown IDs, offline/stale-code behavior, browser/CommonJS parity and complete pixel wrapping. Existing daily and validation CI run it; playtest, self-optimizer and roadmap-pulse enforce the bridge. Canonical day and JSON are unchanged.
+
+Next: adapt one citizen speech path that still reads arbitrary mottos and infers actions from narrative types. Civic/mascot dialogue, receipt/director prose, finite stone extraction, food needs and population/map limits remain separate bounded opportunities. Preserve earlier memories; do not fabricate completed work or internal evidence to replace development narration.
 
 ## Phase 1: Proof Loop Polish
 

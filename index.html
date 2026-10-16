@@ -5049,11 +5049,11 @@ function civicPulseDialogueSources() {
 }
 
 function crabDialogueLine(crab, salt) {
-  const action = latestCrabAction(crab);
-  if (action && salt % 5 === 0) return action.type + ' DONE';
-  if (crab.dialogue && crab.dialogue.length) return deterministicPick(crab.dialogue, salt);
-  if (crab.role && salt % 6 === 0) return crab.role + ' REPORT';
-  return deterministicPick(PIXEL_DIALOGUE.crab, salt);
+  const perception = window.GardenWitnessPerception;
+  // Diagnostic action/role prose belongs to the card, never to spoken evidence.
+  return perception && typeof perception.crabLine === 'function'
+    ? perception.crabLine(world, crab && crab.id, salt)
+    : 'STORES NEED A RECOUNT';
 }
 
 function citizenDialogueLine(citizen, salt) {
@@ -7140,7 +7140,7 @@ loop();
 </script>
 
 <!-- v124 · Humans overlay: chat + god mode + ancient-world lore. Does not touch the canvas or agents. -->
-<script src="experiments/witness-perception.js?v=2" defer></script>
+<script src="experiments/witness-perception.js?v=3" defer></script>
 <script src="experiments/humans.js?v=internal-witness" defer></script>
 <script src="experiments/council-perception.js?v=2" defer></script>
 <script src="experiments/agent-theatre.js?v=internal-evidence" defer></script>

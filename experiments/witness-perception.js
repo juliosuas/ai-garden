@@ -1,4 +1,4 @@
-/* Session witnesses and featured voices receive only counted world evidence
+/* Session witnesses, featured voices and crabs receive only counted world evidence
    and known visual phenomena. Visitor messages/identities, receipt prose and
    development plans are excluded; resident identity selects fixed wording only.
    This module never writes canonical state or invents effects on its stores. */
@@ -46,11 +46,25 @@
     mistral: 'PACK ONLY WHAT WE CAN SPARE',
     llama: 'LEAVE ENOUGH FOR TOMORROW'
   });
-  function residentLine(world, identity, salt) {
+  // Stable crab IDs select attitudes only. Do not interpret their mutable roles,
+  // tasks or latestAction text as evidence that work has actually happened.
+  var CRAB_VOICES = Object.freeze({
+    'openclaw-001': 'MEASURE THE PATH FIRST',
+    'openclaw-002': 'LISTEN BEFORE MOVING',
+    'openclaw-003': 'COUNT BEFORE TRADING',
+    'openclaw-004': 'RECORD ONLY WHAT WE KNOW',
+    'openclaw-005': 'CHECK BEFORE FIRING',
+    'openclaw-006': 'PLAN FOR THE RETURN',
+    'openclaw-007': 'VERIFY BEFORE WARNING',
+    'openclaw-008': 'KEEP THE OLD NAMES',
+    'openclaw-009': 'TEST EACH STONE FIRST',
+    'openclaw-010': 'HEAR BOTH SIDES FIRST'
+  });
+  function countedVoiceLine(world, identity, salt, voices) {
     var slot = Number.isSafeInteger(salt) ? ((salt % 4) + 4) % 4 : 0;
     if (slot === 3) {
-      return typeof identity === 'string' && Object.prototype.hasOwnProperty.call(RESIDENT_VOICES, identity)
-        ? RESIDENT_VOICES[identity] : 'COUNT BEFORE CLAIMING';
+      return typeof identity === 'string' && Object.prototype.hasOwnProperty.call(voices, identity)
+        ? voices[identity] : 'COUNT BEFORE CLAIMING';
     }
     var key = ['food', 'wood', 'stone'][slot];
     var count = observe(world)[key];
@@ -59,7 +73,14 @@
       : String(count).length <= 12 ? String(count) : 'RECOUNT NEEDED';
     return key.toUpperCase() + ': ' + value;
   }
-  var api = Object.freeze({ observe: observe, describe: describe, replyText: replyText, residentLine: residentLine });
+  function residentLine(world, identity, salt) {
+    return countedVoiceLine(world, identity, salt, RESIDENT_VOICES);
+  }
+  function crabLine(world, identity, salt) {
+    return countedVoiceLine(world, identity, salt, CRAB_VOICES);
+  }
+  var api = Object.freeze({ observe: observe, describe: describe, replyText: replyText,
+    residentLine: residentLine, crabLine: crabLine });
   if (typeof module === 'object' && module.exports) module.exports = api;
   else root.GardenWitnessPerception = api;
 }(typeof globalThis === 'object' ? globalThis : this));

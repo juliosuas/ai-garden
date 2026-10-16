@@ -407,6 +407,7 @@ async function main() {
   check(humans.includes('perception.replyText(world || {}, act)') && !humans.includes('synced your line'), 'session witnesses must speak from internal evidence');
   check(dailyWorkflow.includes('scripts/witness-perception.test.js') && selfOptimizerWorkflow.includes('scripts/witness-perception.test.js'), 'daily workflows must test session witness knowledge');
   check(index.includes('perception.residentLine(world, agent && agent.id, salt)'), 'featured voices must use counted internal evidence');
+  check(index.includes('perception.crabLine(world, crab && crab.id, salt)'), 'crab voices must use counted internal evidence');
   check(dailyWorkflow.includes('scripts/resident-speech.test.js') && selfOptimizerWorkflow.includes('scripts/resident-speech.test.js'), 'daily workflows must test featured speech knowledge');
   check(humans.includes("type !== 'agent'"), 'realtime bus does not accept sanitized agent replies');
   check(humans.includes("/sse?since=2m&sched=none") && !humans.includes("/sse?poll=1"), 'realtime bus should keep one persistent SSE stream without reconnect spam');

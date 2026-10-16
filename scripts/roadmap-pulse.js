@@ -89,6 +89,7 @@ function buildPulse() {
     check('Observer Lounge', humans.includes('ag-chat') && humans.includes('createAgentReply') &&
       humans.includes('perception.replyText(world || {}, act)') &&
       index.includes('perception.residentLine(world, agent && agent.id, salt)') &&
+      index.includes('perception.crabLine(world, crab && crab.id, salt)') &&
       before(index, 'experiments/witness-perception.js', 'experiments/humans.js'), 'witness replies use internal evidence'),
     check('Backend Sync', humans.includes('BACKEND_SYNC_STORE') && humans.includes('ag-sync-strip'), 'human actions show day, arc, and season'),
     check('Seasonal Audio',
