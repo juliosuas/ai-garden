@@ -90,6 +90,7 @@ function buildPulse() {
       humans.includes('perception.replyText(world || {}, act)') &&
       index.includes('perception.residentLine(world, agent && agent.id, salt)') &&
       index.includes('perception.crabLine(world, crab && crab.id, salt)') &&
+      index.includes('perception.citizenLine(world, citizen && citizen.profession, salt)') &&
       before(index, 'experiments/witness-perception.js', 'experiments/humans.js'), 'witness replies use internal evidence'),
     check('Backend Sync', humans.includes('BACKEND_SYNC_STORE') && humans.includes('ag-sync-strip'), 'human actions show day, arc, and season'),
     check('Seasonal Audio',

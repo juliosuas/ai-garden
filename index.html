@@ -5057,18 +5057,11 @@ function crabDialogueLine(crab, salt) {
 }
 
 function citizenDialogueLine(citizen, salt) {
-  const action = recentActionForCitizen(citizen);
-  if (action && salt % 3 === 0) {
-    const actionLines = PIXEL_DIALOGUE.action[action.type] || PIXEL_DIALOGUE.action.council;
-    return deterministicPick(actionLines, salt);
-  }
-  const need = citizenLifeNeed(citizen, hashText(citizen.id || citizen.name || salt));
-  if (need && need.lines && salt % 3 === 1) return deterministicPick(need.lines, salt);
-  if (citizen.faction === 'f-pantheon-covenant' && salt % 4 === 0) return 'THE SIGN IS LAW';
-  if (citizen.faction === 'f-code-cantons' && salt % 4 === 0) return 'SHOW THE TRACE';
-  const lines = PIXEL_DIALOGUE.citizen[citizen.profession] || PIXEL_DIALOGUE.citizen.default;
-  if (citizen.personality && citizen.personality.motto && salt % 5 === 0) return citizen.personality.motto;
-  return deterministicPick(lines, salt);
+  const perception = window.GardenWitnessPerception;
+  // Mottos, narrative actions and clock-based need cues are not observations.
+  return perception && typeof perception.citizenLine === 'function'
+    ? perception.citizenLine(world, citizen && citizen.profession, salt)
+    : 'STORES NEED A RECOUNT';
 }
 
 function ambientDialogueSources() {
@@ -7140,7 +7133,7 @@ loop();
 </script>
 
 <!-- v124 · Humans overlay: chat + god mode + ancient-world lore. Does not touch the canvas or agents. -->
-<script src="experiments/witness-perception.js?v=3" defer></script>
+<script src="experiments/witness-perception.js?v=4" defer></script>
 <script src="experiments/humans.js?v=internal-witness" defer></script>
 <script src="experiments/council-perception.js?v=2" defer></script>
 <script src="experiments/agent-theatre.js?v=internal-evidence" defer></script>

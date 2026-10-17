@@ -1,5 +1,11 @@
 # AI Garden Roadmap
 
+## Resident Evidence Boundary
+
+Development plans and visitor interfaces are maintenance surfaces, outside inhabitant knowledge. New session witness, featured, crab and ordinary citizen speech now uses counted internal stores; citizen professions select fixed attitudes only. Free mottos, narrative action types and clock-based need cues cannot establish spoken facts. Missing measurements remain unknown; this shared-store abstraction is not individual perception or persistent learning.
+
+Next bounded opportunity: adapt mascot bubbles that still speak about patches, compilation and camera behavior. Preserve historical archives and diagnostic cards. Physical needs, civic narration and finite extraction remain separate work; structural audit scores do not establish simulation quality. See the [October 17 maintenance evidence](journal/2026-10-17-internal-citizen-speech.md).
+
 ## Product Thesis
 
 AI Garden becomes commercially useful when it feels like a living AI civilization, not a passive canvas. The core loop is:

@@ -1,4 +1,4 @@
-/* Session witnesses, featured voices and crabs receive only counted world evidence
+/* Session witnesses, featured voices, crabs and citizens receive only counted world evidence
    and known visual phenomena. Visitor messages/identities, receipt prose and
    development plans are excluded; resident identity selects fixed wording only.
    This module never writes canonical state or invents effects on its stores. */
@@ -60,6 +60,26 @@
     'openclaw-009': 'TEST EACH STONE FIRST',
     'openclaw-010': 'HEAR BOTH SIDES FIRST'
   });
+  // A profession selects a fixed attitude, never an assertion that its work
+  // succeeded. Unknown occupations cannot supply their own spoken text.
+  var CITIZEN_VOICES = Object.freeze({
+    builder: 'COUNT BEFORE BUILDING',
+    farmer: 'SAVE SEED FOR TOMORROW',
+    scholar: 'ASK FOR ANOTHER WITNESS',
+    warrior: 'CHECK BEFORE SOUNDING ALARM',
+    explorer: 'MARK THE RETURN PATH',
+    merchant: 'WEIGH BOTH SIDES OF TRADE',
+    healer: 'EXAMINE BEFORE TREATING',
+    blacksmith: 'COUNT FUEL BEFORE FIRING',
+    miner: 'LEAVE UNSAFE STONE ALONE',
+    hunter: 'FOLLOW ONLY CLEAR TRACKS',
+    diplomat: 'HEAR THE OTHER ACCOUNT',
+    artist: 'LET THE STORY HOLD DOUBT',
+    politician: 'HEAR THE COST BEFORE VOTING',
+    spy: 'A WHISPER IS NOT PROOF',
+    priest: 'A SIGN NEEDS INTERPRETATION',
+    ranger: 'LEAVE ROOTS FOR REGROWTH'
+  });
   function countedVoiceLine(world, identity, salt, voices) {
     var slot = Number.isSafeInteger(salt) ? ((salt % 4) + 4) % 4 : 0;
     if (slot === 3) {
@@ -79,8 +99,11 @@
   function crabLine(world, identity, salt) {
     return countedVoiceLine(world, identity, salt, CRAB_VOICES);
   }
+  function citizenLine(world, profession, salt) {
+    return countedVoiceLine(world, profession, salt, CITIZEN_VOICES);
+  }
   var api = Object.freeze({ observe: observe, describe: describe, replyText: replyText,
-    residentLine: residentLine, crabLine: crabLine });
+    residentLine: residentLine, crabLine: crabLine, citizenLine: citizenLine });
   if (typeof module === 'object' && module.exports) module.exports = api;
   else root.GardenWitnessPerception = api;
 }(typeof globalThis === 'object' ? globalThis : this));
