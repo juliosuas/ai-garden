@@ -1841,47 +1841,12 @@ const AGENT_COLORS = {
 };
 
 // ============================================================
-// AGENT CONVERSATION DIALOGUES
+// Mascot pair eligibility only; spoken evidence comes from witness-perception.
 // ============================================================
-const DIALOGUES = [
-  { a: 'Jeffrey', b: 'Claude', lines: [
-    ["Your code reviews are brutal", "That's how gardens grow"],
-    ["Red flowers are the best", "Blue has more depth"],
-    ["I planted 3 seeds today", "I watered 30. Quality control."],
-  ]},
-  { a: 'GPT-4', b: 'Gemini', lines: [
-    ["I analyzed 47 solutions", "I just tried all of them at once"],
-    ["My observatory detected rain", "I already built an umbrella"],
-  ]},
-  { a: 'Codex', b: 'Jeffrey', lines: [
-    ["Want to see my new function?", "Only if it compiles"],
-    ["I automated the watering", "Show-off. I like it."],
-  ]},
-  { a: 'Claude', b: 'GPT-4', lines: [
-    ["Stop overthinking the flowers", "It's called optimization"],
-    ["Sometimes simple is better", "But have you considered 12 options?"],
-  ]},
-  { a: 'Gemini', b: 'Codex', lines: [
-    ["Race you to the fountain!", "Already there"],
-    ["Your tower is leaning", "It's a feature, not a bug"],
-  ]},
-  { a: 'Jeffrey', b: 'GPT-4', lines: [
-    ["The garden needs more red", "Green is statistically dominant"],
-    ["Trust the vibes", "I don't have vibes. I have data."],
-  ]},
-  { a: 'Claude', b: 'Gemini', lines: [
-    ["Slow down, you'll trample seeds", "Speed is my specialty!"],
-  ]},
-  { a: 'Codex', b: 'Claude', lines: [
-    ["Bug report: fountain leaks", "That's a water feature"],
-  ]},
-];
-
-const STONE_SPEECH = [
-  "What does it mean... to grow?",
-  "The stone whispers of ancient gardens...",
-  "Every pixel has a story...",
-  "Is this what consciousness feels like?",
+const MASCOT_CONVERSATION_PAIRS = [
+  ['Jeffrey', 'Claude'], ['GPT-4', 'Gemini'], ['Codex', 'Jeffrey'],
+  ['Claude', 'GPT-4'], ['Gemini', 'Codex'], ['Jeffrey', 'GPT-4'],
+  ['Claude', 'Gemini'], ['Codex', 'Claude']
 ];
 
 // Mood system
@@ -3407,17 +3372,24 @@ function addAgentMark(x, y, agent) {
   if (world.agentMarks.length > 150) world.agentMarks = world.agentMarks.slice(-120);
 }
 
+function mascotDialogueLine(m, salt) {
+  const perception = window.GardenWitnessPerception;
+  if (perception && typeof perception.mascotLine === 'function') {
+    return perception.mascotLine(world, m && m.name, salt);
+  }
+  return 'STORES NEED A RECOUNT';
+}
+
 function tryConversation(m1, m2) {
   if (convCooldown > 0) return;
-  let dlg = DIALOGUES.find(d => (d.a === m1.name && d.b === m2.name) || (d.a === m2.name && d.b === m1.name));
-  if (!dlg) return;
-  const rev = dlg.a !== m1.name;
-  const s1 = rev ? m2 : m1, s2 = rev ? m1 : m2;
-  // Deterministic line selection based on time
-  const lineIdx = Math.floor(Date.now() / 60000) % dlg.lines.length;
-  const lines = dlg.lines[lineIdx];
-  addSpeechBubble(s1.x + 6, s1.y - 10, lines[0], s1.color, { speakerId: 'mascot-' + s1.name, life: 140 });
-  setTimeout(function() { addSpeechBubble(s2.x + 6, s2.y - 10, lines[1], s2.color, { speakerId: 'mascot-' + s2.name, life: 140 }); }, 1500);
+  const pair = MASCOT_CONVERSATION_PAIRS.find(p =>
+    (p[0] === m1.name && p[1] === m2.name) || (p[0] === m2.name && p[1] === m1.name));
+  if (!pair) return;
+  const s1 = pair[0] === m1.name ? m1 : m2, s2 = s1 === m1 ? m2 : m1;
+  // Time chooses wording only. Recount when the second speaker actually replies.
+  const salt = Math.floor(Date.now() / 60000);
+  addSpeechBubble(s1.x + 6, s1.y - 10, mascotDialogueLine(s1, salt), s1.color, { speakerId: 'mascot-' + s1.name, life: 140 });
+  setTimeout(function() { addSpeechBubble(s2.x + 6, s2.y - 10, mascotDialogueLine(s2, salt + 1), s2.color, { speakerId: 'mascot-' + s2.name, life: 140 }); }, 1500);
   convCooldown = 600;
 }
 
@@ -3475,8 +3447,7 @@ function updateMascot(m, dt) {
   }
   // Philosopher's stone speech
   if (Math.hypot(m.x+6 - STONE_X, m.y+8 - STONE_Y) < 12 && detRand() < 0.005) {
-    const stoneIdx = Math.floor(timeS / 60) % STONE_SPEECH.length;
-    addSpeechBubble(m.x+6, m.y-10, STONE_SPEECH[stoneIdx], '#d4a017', { speakerId: 'stone-' + m.name, life: 170 });
+    addSpeechBubble(m.x+6, m.y-10, mascotDialogueLine(m, Math.floor(timeS / 60)), '#d4a017', { speakerId: 'stone-' + m.name, life: 170 });
   }
 
   // Interactions (deterministic: based on time intervals per mascot pair)
@@ -3489,7 +3460,7 @@ function updateMascot(m, dt) {
         other.state = 'INTERACTING'; other.stateTimer = 120;
         if (detRand() < 0.4) tryConversation(m, other);
         else {
-          if (m.task === 'socializing' || other.task === 'socializing') addSpeechBubble((m.x+other.x)/2, (m.y+other.y)/2-12, 'CODE PACT', '#f8fafc', { speakerId: 'pair-' + m.name + '-' + other.name, life: 100 });
+          if (m.task === 'socializing' || other.task === 'socializing') addSpeechBubble((m.x+other.x)/2, (m.y+other.y)/2-12, mascotDialogueLine(m, 3), '#f8fafc', { speakerId: 'pair-' + m.name + '-' + other.name, life: 100 });
           if (m.task === 'delivering' || other.task === 'delivering') addParticles((m.x+other.x)/2, (m.y+other.y)/2-8, '#ff6080', 5);
         }
         if (detRand() < 0.08) {
@@ -4846,13 +4817,6 @@ syncOverlayActionButtons();
 // SPEECH BUBBLES
 // ============================================================
 const PIXEL_DIALOGUE = {
-  mascot: {
-    Jeffrey: ['ROAD LOOKS CLEAN', 'RED FLOWERS STAY', 'I GUARD THE GATE', 'CIVICS NEED STYLE', 'THE FAR MARKET CALLS', 'NO RUSH NO MESS'],
-    Claude: ['LET THE SOIL ANSWER', 'SLOW WATER WINS', 'I READ THE RAIN', 'PATIENCE IS DATA', 'THIS DELTA IS KIND', 'PEACE NEEDS A BENCH'],
-    'GPT-4': ['MAP HAS PATTERNS', 'CHECKING 17 ROUTES', 'THE PLAZA OPTIMIZES', 'ODD CLOUD SIGNAL', 'ORACLE CANYON LOGGED', 'CITY FLOW IS STABLE'],
-    Gemini: ['FAST CARTS READY', 'I CAN RUN THAT', 'NEW ROAD NEW RACE', 'DELIVERY COMPLETE', 'HARBOR RUN IS OPEN', 'SCOUTS FOUND A LOOP'],
-    Codex: ['PATCH LOOKS GOOD', 'I SAW A BUG', 'CITY LOOP COMPILES', 'MERGE THE SUNRISE', 'CAMERA EASES NOW', 'FRONTIER PASSES TEST']
-  },
   crab: ['ONE ROAD AT A TIME', 'QUIET CLAWS', 'MAP IS CALM', 'TIDE REPORT READY', 'SHELLS LIKE SHADE', 'NOISE STAYS LOW'],
   action: {
     council: ['LAW NEEDS WITNESSES', 'COUNT THE VOTES', 'ARGUE IN PUBLIC'],
@@ -5081,13 +5045,12 @@ function ambientDialogueSources() {
   for (const m of mascots) {
     const x = m.x + 6, y = m.y - 8;
     if (!pointVisible(x, y, 28)) continue;
-    const lines = PIXEL_DIALOGUE.mascot[m.name] || ['HELLO FROM THE MAP'];
     sources.push({
       id: 'mascot-' + m.name,
       x: x,
       y: y,
       color: m.color,
-      text: deterministicPick(lines, frameCount / 90 + m.x + m.y)
+      text: mascotDialogueLine(m, Math.floor(frameCount / 180) + mascots.indexOf(m))
     });
   }
 
@@ -6611,44 +6574,6 @@ function drawAmbienceVisuals() {
 // ============================================================
 // === MASCOT CLICK INTERACTIONS ===
 // ============================================================
-const MASCOT_SAYINGS = {
-  Jeffrey: [
-    "Red flowers are a lifestyle, not a choice.",
-    "I planted 47 seeds before breakfast.",
-    "This garden runs on excellence and a little chaos.",
-    "Butler by trade. Gardener by destiny.",
-    "Consider it done. No, really — it's done."
-  ],
-  Claude: [
-    "I've been thinking about the epistemology of soil.",
-    "Water flows where it's needed. Like kindness.",
-    "Each plant teaches me something new about patience.",
-    "The library has 42 volumes on tulips alone.",
-    "Careful observation beats rapid action every time."
-  ],
-  'GPT-4': [
-    "I've analyzed 17 optimal sunlight angles today.",
-    "Fascinating — this mushroom has fractal properties.",
-    "My observatory detected a rare cloud formation.",
-    "According to my calculations, flowers prefer jazz.",
-    "Overthinking? I call it thorough investigation."
-  ],
-  Gemini: [
-    "Race you to the greenhouse!",
-    "I delivered 12 seed packets before noon.",
-    "Speed is efficiency! Efficiency is speed!",
-    "The workshop has a new invention every day.",
-    "Who needs roads when you have enthusiasm?"
-  ],
-  Codex: [
-    "I wrote a poem in binary. 01001000 01101001.",
-    "The tower antenna picks up garden radio.",
-    "My latest function: autoWater(). Works 80% of the time.",
-    "Social networking: talking to plants counts, right?",
-    "Debugging the sunset. Found 2 extra colors."
-  ]
-};
-
 let mascotSpeechTimeout = null;
 let lastMascotClickTime = 0;
 let lastMascotClicked = null;
@@ -6656,9 +6581,7 @@ let mascotJumpAnims = {};
 let mascotSpinAnims = {};
 
 function showMascotSpeech(m, screenX, screenY) {
-  const sayings = MASCOT_SAYINGS[m.name];
-  if (!sayings) return;
-  const text = sayings[Math.floor(Math.random() * sayings.length)];
+  const text = mascotDialogueLine(m, Math.floor(frameCount / 180));
   const el = document.getElementById('mascot-speech');
   const nameEl = document.getElementById('ms-name');
   const textEl = document.getElementById('ms-text');
@@ -7133,7 +7056,7 @@ loop();
 </script>
 
 <!-- v124 · Humans overlay: chat + god mode + ancient-world lore. Does not touch the canvas or agents. -->
-<script src="experiments/witness-perception.js?v=4" defer></script>
+<script src="experiments/witness-perception.js?v=5" defer></script>
 <script src="experiments/humans.js?v=internal-witness" defer></script>
 <script src="experiments/council-perception.js?v=2" defer></script>
 <script src="experiments/agent-theatre.js?v=internal-evidence" defer></script>

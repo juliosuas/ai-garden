@@ -409,6 +409,8 @@ async function main() {
   check(index.includes('perception.residentLine(world, agent && agent.id, salt)'), 'featured voices must use counted internal evidence');
   check(index.includes('perception.crabLine(world, crab && crab.id, salt)'), 'crab voices must use counted internal evidence');
   check(index.includes('perception.citizenLine(world, citizen && citizen.profession, salt)'), 'citizen voices must use counted internal evidence');
+  check(index.includes('perception.mascotLine(world, m && m.name, salt)'), 'mascot speech must use counted internal evidence');
+  check(dailyWorkflow.includes('scripts/mascot-speech.test.js') && selfOptimizerWorkflow.includes('scripts/mascot-speech.test.js'), 'daily workflows must test mascot speech knowledge');
   check(dailyWorkflow.includes('scripts/citizen-speech.test.js') && selfOptimizerWorkflow.includes('scripts/citizen-speech.test.js'), 'daily workflows must test citizen speech knowledge');
   check(dailyWorkflow.includes('scripts/resident-speech.test.js') && selfOptimizerWorkflow.includes('scripts/resident-speech.test.js'), 'daily workflows must test featured speech knowledge');
   check(humans.includes("type !== 'agent'"), 'realtime bus does not accept sanitized agent replies');

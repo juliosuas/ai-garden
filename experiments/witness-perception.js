@@ -1,4 +1,4 @@
-/* Session witnesses, featured voices, crabs and citizens receive only counted world evidence
+/* Session witnesses, featured voices, crabs, citizens and mascots receive only counted world evidence
    and known visual phenomena. Visitor messages/identities, receipt prose and
    development plans are excluded; resident identity selects fixed wording only.
    This module never writes canonical state or invents effects on its stores. */
@@ -80,6 +80,15 @@
     priest: 'A SIGN NEEDS INTERPRETATION',
     ranger: 'LEAVE ROOTS FOR REGROWTH'
   });
+  // Existing mascot names select opinions only; tasks and cosmetic work cycles
+  // never establish a harvest, completed delivery or material consequence.
+  var MASCOT_VOICES = Object.freeze({
+    Jeffrey: 'LEAVE ROOM FOR ROOTS',
+    Claude: 'LET THE SOIL REST',
+    'GPT-4': 'COMPARE THE TWO ACCOUNTS',
+    Gemini: 'PACK FOR THE RETURN',
+    Codex: 'MEASURE TWICE BEFORE CUTTING'
+  });
   function countedVoiceLine(world, identity, salt, voices) {
     var slot = Number.isSafeInteger(salt) ? ((salt % 4) + 4) % 4 : 0;
     if (slot === 3) {
@@ -102,8 +111,11 @@
   function citizenLine(world, profession, salt) {
     return countedVoiceLine(world, profession, salt, CITIZEN_VOICES);
   }
+  function mascotLine(world, identity, salt) {
+    return countedVoiceLine(world, identity, salt, MASCOT_VOICES);
+  }
   var api = Object.freeze({ observe: observe, describe: describe, replyText: replyText,
-    residentLine: residentLine, crabLine: crabLine, citizenLine: citizenLine });
+    residentLine: residentLine, crabLine: crabLine, citizenLine: citizenLine, mascotLine: mascotLine });
   if (typeof module === 'object' && module.exports) module.exports = api;
   else root.GardenWitnessPerception = api;
 }(typeof globalThis === 'object' ? globalThis : this));

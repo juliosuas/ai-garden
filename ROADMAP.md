@@ -2,7 +2,7 @@
 
 ## Resident Evidence Boundary
 
-Development plans and visitor interfaces are maintenance surfaces, outside inhabitant knowledge. New session witness, featured, crab and ordinary citizen speech now uses counted internal stores; citizen professions select fixed attitudes only. Free mottos, narrative action types and clock-based need cues cannot establish spoken facts. Missing measurements remain unknown; this shared-store abstraction is not individual perception or persistent learning.
+Development plans and visitor interfaces are maintenance surfaces, outside inhabitant knowledge. New session witness, featured, crab, ordinary citizen and mascot speech now uses counted internal stores; citizen professions select fixed attitudes only. Free mottos, narrative action types and clock-based need cues cannot establish spoken facts. Missing measurements remain unknown; this shared-store abstraction is not individual perception or persistent learning.
 
 Next bounded opportunity: adapt mascot bubbles that still speak about patches, compilation and camera behavior. Preserve historical archives and diagnostic cards. Physical needs, civic narration and finite extraction remain separate work; structural audit scores do not establish simulation quality. See the [October 17 maintenance evidence](journal/2026-10-17-internal-citizen-speech.md).
 
@@ -120,7 +120,15 @@ Crab bubbles now rotate through counted public food, wood and stone supplies and
 
 Click, touch and ambient routes share this boundary. Diagnostic cards and historical text remain separate and intact. This is a deterministic public-store report, not individual spatial knowledge, new memory, learning or awareness. `scripts/crab-speech.test.js` executes all three real routes, prohibits narrative reads, checks supply changes, ten voices, unknown IDs, offline/stale-code behavior, browser/CommonJS parity and complete pixel wrapping. Existing daily and validation CI run it; playtest, self-optimizer and roadmap-pulse enforce the bridge. Canonical day and JSON are unchanged.
 
-Next: adapt one citizen speech path that still reads arbitrary mottos and infers actions from narrative types. Civic/mascot dialogue, receipt/director prose, finite stone extraction, food needs and population/map limits remain separate bounded opportunities. Preserve earlier memories; do not fabricate completed work or internal evidence to replace development narration.
+Citizen and mascot speech now use the same boundary. Civic dialogue, receipt/director prose, finite stone extraction, food needs and population/map limits remain separate bounded opportunities. Preserve earlier memories; do not fabricate completed work or internal evidence to replace development narration.
+
+## Internal Mascot Speech
+
+All five existing mascots now use counted public food, wood and stone plus a fixed internal attitude. Clicks, ambient bubbles, pair conversations, nearby greetings and stone-side speech share `GardenWitnessPerception.mascotLine`. Development vocabulary, invented completed tasks and speculative consciousness claims no longer enter these paths. Unknown measurements remain uncounted; missing or stale perception requests a recount. The two-speaker pair exchange keeps its existing eligibility and cooldown, and its delayed reply measures supplies at reply time.
+
+`scripts/mascot-speech.test.js` executes the actual captured click, DOM/pixel text, ambient selection, conversation timer and stone/greeting branches. It checks five distinct attitudes, forbidden reads, changed/invalid stores, unknown identities, browser/CommonJS agreement, complete pixel wrapping and unchanged records. Existing daily and validation CI enforce it; self-optimizer, roadmap-pulse and playtest guard the bridge. No canonical day, resource, entity, history or memory changes. This remains a shared-store presentation abstraction, not individual sensing, learning or awareness.
+
+Next: adapt civic pulse speech, where arbitrary `form`, `visibleChange` and `consequence` text can still become a public utterance. Receipt/director narration and physical ecology remain separate bounded work. Preserve historical records and keep maintenance evidence outside inhabitant memory.
 
 ## Phase 1: Proof Loop Polish
 
