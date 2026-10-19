@@ -4975,17 +4975,16 @@ function civicPulseAnchor(event, fallbackIdx) {
       (regionName && (dRegionName === regionName || dRegionName.includes(regionName) || regionName.includes(dRegionName)));
   });
   if (direct) return direct;
-  const seed = hashText(event.id || event.headline || event.visibleChange || fallbackIdx);
+  const seed = hashText(event.id || fallbackIdx);
   return districts[seed % districts.length];
 }
 
-function civicPulseText(event) {
-  const form = String(event.form || '').trim();
-  if (form) return compactTickerText('PUBLIC WORK: ' + form, 46);
-  const change = String(event.visibleChange || event.mood || event.headline || '').trim();
-  if (change) return compactTickerText(change, 52);
-  const consequence = String(event.consequence || event.whyItMatters || '').trim();
-  return consequence ? compactTickerText(consequence, 52) : 'PUBLIC WORK CONTINUES';
+function civicPulseText(salt) {
+  const perception = window.GardenWitnessPerception;
+  // Director event prose places scenes; it cannot establish spoken knowledge.
+  return perception && typeof perception.civicLine === 'function'
+    ? perception.civicLine(world, salt)
+    : 'STORES NEED A RECOUNT';
 }
 
 function civicPulseDialogueSources() {
@@ -5004,8 +5003,8 @@ function civicPulseDialogueSources() {
       id: 'civic-' + (event.id || i),
       x: x,
       y: y,
-      color: event.form ? '#facc15' : (anchor.color || '#93c5fd'),
-      text: civicPulseText(event)
+      color: anchor.color || '#93c5fd',
+      text: civicPulseText(Math.floor(frameCount / 180) + i)
     });
     if (sources.length >= 2) break;
   }
@@ -7056,7 +7055,7 @@ loop();
 </script>
 
 <!-- v124 · Humans overlay: chat + god mode + ancient-world lore. Does not touch the canvas or agents. -->
-<script src="experiments/witness-perception.js?v=5" defer></script>
+<script src="experiments/witness-perception.js?v=6" defer></script>
 <script src="experiments/humans.js?v=internal-witness" defer></script>
 <script src="experiments/council-perception.js?v=2" defer></script>
 <script src="experiments/agent-theatre.js?v=internal-evidence" defer></script>

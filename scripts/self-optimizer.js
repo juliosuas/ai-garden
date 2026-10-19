@@ -240,6 +240,7 @@ function scoreWorldLife(index, world, humans) {
       index.includes('perception.crabLine(world, crab && crab.id, salt)') &&
       index.includes('perception.citizenLine(world, citizen && citizen.profession, salt)') &&
       index.includes('perception.mascotLine(world, m && m.name, salt)') &&
+      index.includes('perception.civicLine(world, salt)') &&
       humans.includes('perception.replyText(world || {}, act)')
   ];
   return {

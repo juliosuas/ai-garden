@@ -1,4 +1,4 @@
-/* Session witnesses, featured voices, crabs, citizens and mascots receive only counted world evidence
+/* Session witnesses, featured voices, crabs, citizens, mascots and civic voices receive only counted world evidence
    and known visual phenomena. Visitor messages/identities, receipt prose and
    development plans are excluded; resident identity selects fixed wording only.
    This module never writes canonical state or invents effects on its stores. */
@@ -89,6 +89,8 @@
     Gemini: 'PACK FOR THE RETURN',
     Codex: 'MEASURE TWICE BEFORE CUTTING'
   });
+  // Public discussion is an attitude, not proof that a narrated work happened.
+  var CIVIC_VOICES = Object.freeze({ public: 'HEAR BOTH ACCOUNTS FIRST' });
   function countedVoiceLine(world, identity, salt, voices) {
     var slot = Number.isSafeInteger(salt) ? ((salt % 4) + 4) % 4 : 0;
     if (slot === 3) {
@@ -114,8 +116,12 @@
   function mascotLine(world, identity, salt) {
     return countedVoiceLine(world, identity, salt, MASCOT_VOICES);
   }
+  function civicLine(world, salt) {
+    return countedVoiceLine(world, 'public', salt, CIVIC_VOICES);
+  }
   var api = Object.freeze({ observe: observe, describe: describe, replyText: replyText,
-    residentLine: residentLine, crabLine: crabLine, citizenLine: citizenLine, mascotLine: mascotLine });
+    residentLine: residentLine, crabLine: crabLine, citizenLine: citizenLine, mascotLine: mascotLine,
+    civicLine: civicLine });
   if (typeof module === 'object' && module.exports) module.exports = api;
   else root.GardenWitnessPerception = api;
 }(typeof globalThis === 'object' ? globalThis : this));

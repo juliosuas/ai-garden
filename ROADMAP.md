@@ -2,9 +2,9 @@
 
 ## Resident Evidence Boundary
 
-Development plans and visitor interfaces are maintenance surfaces, outside inhabitant knowledge. New session witness, featured, crab, ordinary citizen and mascot speech now uses counted internal stores; citizen professions select fixed attitudes only. Free mottos, narrative action types and clock-based need cues cannot establish spoken facts. Missing measurements remain unknown; this shared-store abstraction is not individual perception or persistent learning.
+Development plans and visitor interfaces are maintenance surfaces, outside inhabitant knowledge. Session witnesses, featured characters, crabs, citizens, mascots and civic bubbles now speak from counted internal stores and fixed attitudes. Civic event form/change/consequence prose cannot establish completed public work or spoken facts. Missing measurements remain unknown; this shared-store abstraction is not individual perception or persistent learning.
 
-Next bounded opportunity: adapt mascot bubbles that still speak about patches, compilation and camera behavior. Preserve historical archives and diagnostic cards. Physical needs, civic narration and finite extraction remain separate work; structural audit scores do not establish simulation quality. See the [October 17 maintenance evidence](journal/2026-10-17-internal-citizen-speech.md).
+Next bounded opportunity: move `focusGameWonderMoment`'s arbitrary `focus.title` from its speech bubble into a clearly separate development cue. Preserve historical archives and diagnostic cards. Physical food needs, finite stone extraction and population/map limits remain separate work; structural audit scores do not establish simulation quality. See the [October 19 maintenance evidence](journal/2026-10-19-internal-civic-speech.md).
 
 ## Product Thesis
 

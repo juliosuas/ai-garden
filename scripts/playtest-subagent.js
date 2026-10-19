@@ -410,6 +410,8 @@ async function main() {
   check(index.includes('perception.crabLine(world, crab && crab.id, salt)'), 'crab voices must use counted internal evidence');
   check(index.includes('perception.citizenLine(world, citizen && citizen.profession, salt)'), 'citizen voices must use counted internal evidence');
   check(index.includes('perception.mascotLine(world, m && m.name, salt)'), 'mascot speech must use counted internal evidence');
+  check(index.includes('perception.civicLine(world, salt)'), 'civic speech must use counted internal evidence');
+  check(dailyWorkflow.includes('scripts/civic-speech.test.js') && selfOptimizerWorkflow.includes('scripts/civic-speech.test.js'), 'daily workflows must test civic speech knowledge');
   check(dailyWorkflow.includes('scripts/mascot-speech.test.js') && selfOptimizerWorkflow.includes('scripts/mascot-speech.test.js'), 'daily workflows must test mascot speech knowledge');
   check(dailyWorkflow.includes('scripts/citizen-speech.test.js') && selfOptimizerWorkflow.includes('scripts/citizen-speech.test.js'), 'daily workflows must test citizen speech knowledge');
   check(dailyWorkflow.includes('scripts/resident-speech.test.js') && selfOptimizerWorkflow.includes('scripts/resident-speech.test.js'), 'daily workflows must test featured speech knowledge');
