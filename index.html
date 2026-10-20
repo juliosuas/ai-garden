@@ -37,6 +37,8 @@ canvas:active { cursor: grabbing; }
   background: rgba(10,10,20,0.9); border: 1px solid #4ade80;
   color: #4ade80; font-size: 11px; padding: 4px 12px;
   z-index: 15; font-family: monospace; display: none; border-radius: 3px;
+  box-sizing: border-box; width: max-content; max-width: calc(100vw - 24px);
+  overflow-wrap: anywhere; pointer-events: none;
 }
 #ui-bottom {
   position: fixed; top: 52px; right: 12px; left: auto; height: auto; min-height: 0;
@@ -735,7 +737,7 @@ body.reduced-motion .ambient-motes { display: none; }
     <span id="time-phase-clock" style="margin-left:auto"></span>
   </div>
 </div>
-<div id="follow-indicator">Following: <span id="follow-name"></span> — click elsewhere or ESC to stop</div>
+<div id="follow-indicator" role="status" aria-live="polite" aria-atomic="true">Camera: <span id="follow-name"></span> — click elsewhere or ESC to stop</div>
 <div id="info-panel">
   <div class="name" id="info-name"></div>
   <div class="model" id="info-model"></div>
@@ -6261,6 +6263,7 @@ let dpadIntervals = {}; // kept for compatibility
 let navTargetX = null, navTargetY = null;
 let navAnimating = false;
 let featuredFocusIndex = -1;
+let wonderFocusTimeout = null;
 
 function smoothNavigateTo(worldX, worldY) {
   const viewW = screenW / SCALE, viewH = screenH / SCALE;
@@ -6274,6 +6277,8 @@ function smoothNavigateTo(worldX, worldY) {
 }
 
 function focusGameWonderMoment() {
+  clearTimeout(wonderFocusTimeout);
+  wonderFocusTimeout = null;
   const focus = gameWonderFocus();
   if (!focus) {
     focusNextFeaturedAgent();
@@ -6282,16 +6287,15 @@ function focusGameWonderMoment() {
   smoothNavigateTo(focus.x, focus.y);
   const indicator = document.getElementById('follow-indicator');
   indicator.style.display = 'block';
-  document.getElementById('follow-name').textContent = 'Watch · ' + (focus.label || 'scene');
-  addSpeechBubble(focus.x, focus.y - focus.radius * 0.55, focus.title || 'Watch this scene', '#fde68a', {
-    speakerId: 'wonder-focus-' + (focus.label || 'scene'),
-    life: 170,
-    force: true,
-    maxChars: 18
-  });
-  setTimeout(function() {
-    if (!followingMascot && cameraState !== 'FOLLOWING') indicator.style.display = 'none';
-  }, 2800);
+  // Camera guidance belongs to the interface, never to inhabitant speech or memory.
+  const title = focus.title.replace(/\s+/g, ' ').trim();
+  const cue = ('Watch · ' + (focus.label || 'scene') + (title ? ' — ' + title : '')).slice(0, 160);
+  const name = document.getElementById('follow-name');
+  name.textContent = cue;
+  wonderFocusTimeout = setTimeout(function() {
+    wonderFocusTimeout = null;
+    if (name.textContent === cue && !followingMascot && cameraState !== 'FOLLOWING') indicator.style.display = 'none';
+  }, 6000);
 }
 
 function focusNextFeaturedAgent() {

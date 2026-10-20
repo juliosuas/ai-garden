@@ -360,6 +360,8 @@ async function main() {
   check(index.includes('drawGameWonderHighlight'), 'canvas does not draw Game Wonder Agent focus highlight');
   check(index.includes('gameWonderFocus'), 'Game Wonder Agent focus helper is missing');
   check(index.includes('function gameWonderFocusCue(focus)') && index.includes('focus.target || focus.reason || focus.title') && index.includes('SCALE >= 3 && cue'), 'Game Wonder focus should label the daily target when zoomed in');
+  check(index.includes('Camera guidance belongs to the interface') && !index.includes("speakerId: 'wonder-focus-'"), 'camera focus prose must stay outside inhabitant speech');
+  check(dailyWorkflow.includes('scripts/focus-cue.test.js') && selfOptimizerWorkflow.includes('scripts/focus-cue.test.js'), 'daily workflows must verify camera and speech separation');
   check(index.includes('wonder.cameraTargets'), 'spectator camera does not consume Game Wonder Agent camera targets');
   check(index.includes('addSpeechBubble'), 'pixel speech bubble helper is missing');
   check(index.includes('updateAmbientDialogues'), 'ambient agent dialogue scheduler is missing');

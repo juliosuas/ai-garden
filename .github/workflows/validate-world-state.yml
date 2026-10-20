@@ -25,6 +25,7 @@ on:
       - scripts/citizen-speech.test.js
       - scripts/mascot-speech.test.js
       - scripts/civic-speech.test.js
+      - scripts/focus-cue.test.js
       - index.html
       - .github/workflows/validate-world-state.yml
   push:
@@ -52,6 +53,7 @@ on:
       - scripts/citizen-speech.test.js
       - scripts/mascot-speech.test.js
       - scripts/civic-speech.test.js
+      - scripts/focus-cue.test.js
       - index.html
       - .github/workflows/validate-world-state.yml
 
@@ -77,6 +79,6 @@ jobs:
       - name: Test bounded woodland gathering
         run: node --test scripts/timber-harvest.test.js
       - name: Test session witness knowledge boundary
-        run: node --test scripts/witness-perception.test.js scripts/resident-speech.test.js scripts/crab-speech.test.js scripts/citizen-speech.test.js scripts/mascot-speech.test.js scripts/civic-speech.test.js
+        run: node --test scripts/witness-perception.test.js scripts/resident-speech.test.js scripts/crab-speech.test.js scripts/citizen-speech.test.js scripts/mascot-speech.test.js scripts/civic-speech.test.js scripts/focus-cue.test.js
       - name: Validate canonical world state
         run: node scripts/validate-world-state.js

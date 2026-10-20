@@ -241,6 +241,8 @@ function scoreWorldLife(index, world, humans) {
       index.includes('perception.citizenLine(world, citizen && citizen.profession, salt)') &&
       index.includes('perception.mascotLine(world, m && m.name, salt)') &&
       index.includes('perception.civicLine(world, salt)') &&
+      index.includes('Camera guidance belongs to the interface') &&
+      !index.includes("speakerId: 'wonder-focus-'") &&
       humans.includes('perception.replyText(world || {}, act)')
   ];
   return {

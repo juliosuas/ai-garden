@@ -4,7 +4,9 @@
 
 Development plans and visitor interfaces are maintenance surfaces, outside inhabitant knowledge. Session witnesses, featured characters, crabs, citizens, mascots and civic bubbles now speak from counted internal stores and fixed attitudes. Civic event form/change/consequence prose cannot establish completed public work or spoken facts. Missing measurements remain unknown; this shared-store abstraction is not individual perception or persistent learning.
 
-Next bounded opportunity: move `focusGameWonderMoment`'s arbitrary `focus.title` from its speech bubble into a clearly separate development cue. Preserve historical archives and diagnostic cards. Physical food needs, finite stone extraction and population/map limits remain separate work; structural audit scores do not establish simulation quality. See the [October 19 maintenance evidence](journal/2026-10-19-internal-civic-speech.md).
+Camera focus guidance now stays in an accessible, bounded interface cue rather than an inhabitant speech bubble. Repeated focus requests retain one expiry timer and cannot erase a newer spotlight. The quiet presentation still hides this retained legacy control; no new exploration interaction is claimed. See the [October 20 maintenance evidence](journal/2026-10-20-camera-cue.md).
+
+Next bounded opportunity: review `receiptConsequence` and receipt `aiThought` attribution in `experiments/humans.js`; distinguish a local interface interpretation from a resident's verified observation without rewriting old receipts. Physical food needs, finite stone extraction and population/map limits remain separate work; structural audit scores do not establish simulation quality.
 
 ## Product Thesis
 

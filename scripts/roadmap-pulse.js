@@ -93,6 +93,8 @@ function buildPulse() {
       index.includes('perception.citizenLine(world, citizen && citizen.profession, salt)') &&
       index.includes('perception.mascotLine(world, m && m.name, salt)') &&
       index.includes('perception.civicLine(world, salt)') &&
+      index.includes('Camera guidance belongs to the interface') &&
+      !index.includes("speakerId: 'wonder-focus-'") &&
       before(index, 'experiments/witness-perception.js', 'experiments/humans.js'), 'witness replies use internal evidence'),
     check('Backend Sync', humans.includes('BACKEND_SYNC_STORE') && humans.includes('ag-sync-strip'), 'human actions show day, arc, and season'),
     check('Seasonal Audio',
