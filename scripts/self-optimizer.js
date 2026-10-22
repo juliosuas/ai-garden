@@ -243,7 +243,11 @@ function scoreWorldLife(index, world, humans) {
       index.includes('perception.civicLine(world, salt)') &&
       index.includes('Camera guidance belongs to the interface') &&
       !index.includes("speakerId: 'wonder-focus-'") &&
-      humans.includes('perception.replyText(world || {}, act)')
+      humans.includes('perception.replyText(world || {}, act)') &&
+      humans.includes('perception.replyText(worldCache || {}, omen && omen.act)') &&
+      humans.includes("evidenceScope: 'local-session-v1'") &&
+      humans.includes('receiptScope(receipt)') &&
+      humans.includes('receiptShareText(receipt)')
   ];
   return {
     key: 'worldLife',

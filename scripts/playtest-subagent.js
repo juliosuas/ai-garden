@@ -408,6 +408,12 @@ async function main() {
   check(before(index, 'experiments/witness-perception.js', 'experiments/humans.js'), 'witness perception must load before the observer overlay');
   check(humans.includes('perception.replyText(world || {}, act)') && !humans.includes('synced your line'), 'session witnesses must speak from internal evidence');
   check(dailyWorkflow.includes('scripts/witness-perception.test.js') && selfOptimizerWorkflow.includes('scripts/witness-perception.test.js'), 'daily workflows must test session witness knowledge');
+  check(humans.includes('perception.replyText(worldCache || {}, omen && omen.act)') &&
+    humans.includes("evidenceScope: 'local-session-v1'") && humans.includes('receiptScope(receipt)') &&
+    humans.includes('receiptShareText(receipt)') && !humans.includes('Tomorrow the agents will cite this as evidence'),
+    'local receipts must separate counted observations from unverified legacy stories');
+  check(dailyWorkflow.includes('scripts/receipt-evidence.test.js') && selfOptimizerWorkflow.includes('scripts/receipt-evidence.test.js'),
+    'daily workflows must test receipt evidence and archive preservation');
   check(index.includes('perception.residentLine(world, agent && agent.id, salt)'), 'featured voices must use counted internal evidence');
   check(index.includes('perception.crabLine(world, crab && crab.id, salt)'), 'crab voices must use counted internal evidence');
   check(index.includes('perception.citizenLine(world, citizen && citizen.profession, salt)'), 'citizen voices must use counted internal evidence');

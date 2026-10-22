@@ -6,7 +6,9 @@ Development plans and visitor interfaces are maintenance surfaces, outside inhab
 
 Camera focus guidance now stays in an accessible, bounded interface cue rather than an inhabitant speech bubble. Repeated focus requests retain one expiry timer and cannot erase a newer spotlight. The quiet presentation still hides this retained legacy control; no new exploration interaction is claimed. See the [October 20 maintenance evidence](journal/2026-10-20-camera-cue.md).
 
-Next bounded opportunity: review `receiptConsequence` and receipt `aiThought` attribution in `experiments/humans.js`; distinguish a local interface interpretation from a resident's verified observation without rewriting old receipts. Physical food needs, finite stone extraction and population/map limits remain separate work; structural audit scores do not establish simulation quality.
+Local receipts now record only the six known visual phenomena and counted public stores. Local meters cannot establish belief, resistance, material consequences or future resident testimony. Receipt cards, archive summaries and text/image sharing identify local records and unverified legacy stories; saved historical receipts are not rewritten. Exported observations use a full-width panel and the receipt's saved season, never today's synchronization metadata. See [October 21 maintenance evidence](journal/2026-10-21-receipt-evidence.md).
+
+Next bounded opportunity: review `createOmen` and Observer Weather interpretation, whose separate prose can still imply that external input controls resident beliefs. Preserve historical records and route any resident-facing observation through internal evidence. Physical food needs, finite stone extraction and population/map limits remain separate work; structural audit scores do not establish simulation quality.
 
 ## Product Thesis
 

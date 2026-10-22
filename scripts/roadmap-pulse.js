@@ -88,6 +88,10 @@ function buildPulse() {
       'chosen sign produces proof'),
     check('Observer Lounge', humans.includes('ag-chat') && humans.includes('createAgentReply') &&
       humans.includes('perception.replyText(world || {}, act)') &&
+      humans.includes('perception.replyText(worldCache || {}, omen && omen.act)') &&
+      humans.includes("evidenceScope: 'local-session-v1'") &&
+      humans.includes('receiptScope(receipt)') &&
+      humans.includes('receiptShareText(receipt)') &&
       index.includes('perception.residentLine(world, agent && agent.id, salt)') &&
       index.includes('perception.crabLine(world, crab && crab.id, salt)') &&
       index.includes('perception.citizenLine(world, citizen && citizen.profession, salt)') &&

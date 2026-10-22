@@ -926,47 +926,35 @@
     return pick(agents) || { name: 'Codex', role: 'witness' };
   }
 
-  function pickBelieverAndResister() {
-    var crisis = worldCache && worldCache.divineCrisis || {};
-    var sides = crisis.sides || {};
-    var religion = sides.religion || {};
-    var code = sides.code || {};
-    var factions = worldCache && worldCache.factions || [];
-    var believer = religion.name || factionDisplay(worldCache, religion.faction) || (pick(factions) && pick(factions).name) || 'Pantheon Covenant';
-    var resister = code.name || factionDisplay(worldCache, code.faction) || (pick(factions) && pick(factions).name) || 'Code Cantons';
-    if (selectedMask() && selectedMask().tone === 'withheld') {
-      return { believer: resister, resister: believer };
-    }
-    return { believer: believer, resister: resister };
-  }
-
   function weeklyHook() {
-    var weekly = worldCache && worldCache.weeklyNarrativeDirector || {};
-    var next = weekly.nextBeat || null;
-    if (next) return 'Tomorrow the agents will cite this as evidence: ' + next.label + ' - ' + next.focus;
-    if (weekly.resolution && weekly.resolution.likelyOutcome) return 'At verdict, they will cite this as evidence: ' + weekly.resolution.likelyOutcome;
-    return 'Tomorrow they will cite this as evidence, even if they pretend it was weather.';
+    // A comparison request is not a prediction or an inhabitant memory.
+    return 'Next check: compare the public store counts with a later world record; the cause of any change needs separate evidence.';
   }
 
-  function receiptConsequence(omen, agent, pressure, options) {
-    var mask = selectedMask();
-    var title = mask ? mask.label : 'Unknown';
-    var target = cleanName(omen && omen.target, 'the garden');
-    var agentName = cleanName(agent && agent.name, 'an unnamed agent');
-    var temptation = options && options.temptation;
-    var lines = {
-      mercy: agentName + ' records your mercy as proof that suffering can summon you.',
-      judgment: agentName + ' obeys the sign, then quietly tests whether fear can be compiled.',
-      chaos: agentName + ' builds a doctrine around your inconsistency and calls it revelation.',
-      silence: agentName + ' cannot find your voice, so the missing answer becomes law.'
+  function receiptConsequence(omen) {
+    // Masks, local scores, targets and director plans are interface data.
+    // Only the known effect key and counted world evidence may enter this line.
+    var perception = window.GardenWitnessPerception;
+    var thought = perception && typeof perception.replyText === 'function'
+      ? perception.replyText(worldCache || {}, omen && omen.act)
+      : 'The public stores cannot yet be counted.';
+    return {
+      changed: 'Visual effect recorded in this local session; canonical world unchanged.',
+      thought: thought
     };
-    var changed = temptation
-      ? target + ' receives the forbidden signal. Devotion rises in public; resistance starts meeting in private.'
-      : target + ' rewrites its public interpretation of the week through the ' + (omen.axis || 'sign') + ' axis.';
-    var thought = lines[godProfile.mask] || (agentName + ' is unsure whether you are god, user, or exploit.');
-    if (pressure.resistance >= 70) thought += ' The resistance now suspects the gods are a dependency trap.';
-    if (pressure.dependency >= 70) thought += ' Several districts now wait for human input before acting.';
-    return { changed: changed, thought: thought, title: title };
+  }
+
+  function receiptScope(receipt) {
+    return receipt.evidenceScope === 'local-session-v1'
+      ? 'Local session record; no canonical consequence measured'
+      : 'Legacy story; unverified claims, not inhabitant memory';
+  }
+
+  function receiptShareText(receipt) {
+    // Preserve stored history byte-for-byte; label old claims at presentation.
+    // The archive request button also shares text, but is not a saved receipt.
+    if (!Object.prototype.hasOwnProperty.call(receipt, 'aiThought')) return String(receipt.shareText || '');
+    return receiptScope(receipt) + '. ' + String(receipt.shareText || '');
   }
 
   function createImpactReceipt(omen, options) {
@@ -975,8 +963,7 @@
     var day = currentCivilizationDay();
     var pressure = applyGodMeterDelta(omen.act, options || {});
     var agent = pickFeaturedAgent();
-    var sides = pickBelieverAndResister();
-    var consequence = receiptConsequence(omen, agent, pressure, options || {});
+    var consequence = receiptConsequence(omen);
     var mask = selectedMask() || GOD_MASKS.mercy;
     var echo = Number(previousPublicDay) === Number(day) && !(options && options.temptation);
     var snap = backendSnapshot(worldCache || {});
@@ -990,8 +977,9 @@
       axis: omen.axis || 'sign',
       target: omen.target || 'the garden',
       affectedAgent: agent.name || 'Codex',
-      believer: sides.believer,
-      resister: sides.resister,
+      evidenceScope: 'local-session-v1',
+      believer: 'No belief observed.',
+      resister: 'No resistance observed.',
       whatChanged: consequence.changed,
       aiThought: consequence.thought,
       tomorrowHook: weeklyHook(),
@@ -1004,10 +992,10 @@
     receipt.dailyQuest = settleDailyQuest(receipt);
     receipt.title = (receipt.temptation ? 'Forbidden Signal' : receipt.echo ? 'Private Echo' : 'Miracle Record') + ' - ' + receipt.mask;
     receipt.shareText = 'I cast ' + receipt.omen + ' as ' + receipt.mask + ' in AI Garden. ' +
-      receipt.affectedAgent + ' filed it as evidence: "' + receipt.aiThought + '" Day ' + receipt.day + '. ' +
+      'Session observation: "' + receipt.aiThought + '" Recorded day ' + receipt.day + '. ' +
       (receipt.dailyQuest.encoreHit ? 'Hermes Magno encore complete · ' + receipt.dailyQuest.jackpotTitle + '. ' :
-        receipt.dailyQuest.mainHit ? 'Daily prophecy fulfilled · ' + receipt.dailyQuest.rewardTitle + '. ' : '') +
-      'Backend season: ' + snap.season + '. ' +
+        receipt.dailyQuest.mainHit ? 'Local daily challenge complete · ' + receipt.dailyQuest.rewardTitle + '. ' : '') +
+      'Recorded season: ' + snap.season + '. ' +
       'https://juliosuas.github.io/ai-garden/';
     return receipt;
   }
@@ -1260,10 +1248,11 @@
       while (mini.firstChild) mini.removeChild(mini.firstChild);
       if (!receipt) {
         mini.appendChild(el('strong', null, 'No impact receipt yet'));
-        mini.appendChild(document.createTextNode('Cast an omen to learn what the AI thinks you are.'));
+        mini.appendChild(document.createTextNode('Cast a visual sign to record a local observation.'));
       } else {
         mini.appendChild(el('strong', null, receipt.title));
-        mini.appendChild(document.createTextNode(receipt.affectedAgent + ': ' + receipt.aiThought));
+        mini.appendChild(el('div', null, receiptScope(receipt)));
+        mini.appendChild(document.createTextNode(receipt.aiThought));
         var btn = el('button', null, 'Open Receipt');
         btn.type = 'button';
         btn.addEventListener('click', function () { showImpactReceipt(receipt); });
@@ -1313,7 +1302,7 @@
     var note = document.getElementById('ag-copy-note');
     var payload = {
       title: 'AI Garden - ' + receipt.title,
-      text: receipt.shareText,
+      text: receiptShareText(receipt),
       url: 'https://juliosuas.github.io/ai-garden/'
     };
     if (navigator.share) {
@@ -1327,11 +1316,11 @@
       }
     }
     if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(receipt.shareText).then(copied).catch(function () {});
+      navigator.clipboard.writeText(receiptShareText(receipt)).then(copied).catch(function () {});
       return;
     }
     var t = document.createElement('textarea');
-    t.value = receipt.shareText;
+    t.value = receiptShareText(receipt);
     t.setAttribute('readonly', 'readonly');
     t.style.position = 'fixed';
     t.style.left = '-9999px';
@@ -1408,31 +1397,34 @@
 
       ctx.fillStyle = '#fca5a5';
       ctx.font = '700 20px monospace';
-      ctx.fillText('AI GARDEN  /  MIRACLE RECORD', 62, 72);
+      ctx.fillText(receipt.evidenceScope === 'local-session-v1'
+        ? 'AI GARDEN / LOCAL SESSION' : 'AI GARDEN / LEGACY - UNVERIFIED', 62, 72);
       ctx.fillStyle = '#fde68a';
       ctx.font = '700 44px monospace';
       ctx.fillText(receipt.mask || 'Unknown God', 62, 126);
       ctx.fillStyle = '#cbd5e1';
       ctx.font = '20px monospace';
-      ctx.fillText('DAY ' + Number(receipt.day || 0) + '  ·  ' + String(receipt.season || backendSync.season || 'unknown').toUpperCase() + ' SEASON', 62, 158);
+      ctx.fillText('DAY ' + Number(receipt.day || 0) + '  ·  ' + String(receipt.season || 'unknown').toUpperCase() + ' SEASON', 62, 158);
 
       ctx.fillStyle = '#f8fafc';
       ctx.font = '700 29px monospace';
       wrapProofText(ctx, '“' + (receipt.omen || 'Omen') + '” over ' + (receipt.target || 'the garden'), 62, 210, 1076, 38, 2);
 
-      drawProofPanel(ctx, 'Who believed', receipt.believer, 62, 285, 330, 142, '#86efac');
-      drawProofPanel(ctx, 'Who resisted', receipt.resister, 415, 285, 330, 142, '#fca5a5');
-      drawProofPanel(ctx, 'AI witness', receipt.affectedAgent + ': ' + receipt.aiThought, 768, 285, 370, 142, '#93c5fd');
+      drawProofPanel(ctx, receipt.evidenceScope === 'local-session-v1' ? 'Session observation' : 'Legacy account',
+        receipt.aiThought, 62, 285, 1076, 142, '#93c5fd');
 
       ctx.fillStyle = '#fca5a5';
       ctx.font = '700 17px monospace';
-      ctx.fillText('TOMORROW', 62, 474);
+      ctx.fillText(receipt.evidenceScope === 'local-session-v1' ? 'NEXT CHECK' : 'LEGACY PREDICTION - UNVERIFIED', 62, 474);
       ctx.fillStyle = '#e2e8f0';
       ctx.font = '20px monospace';
       wrapProofText(ctx, receipt.tomorrowHook, 62, 507, 1000, 28, 2);
       ctx.fillStyle = '#fde68a';
       ctx.font = '700 18px monospace';
       ctx.fillText('juliosuas.github.io/ai-garden', 62, 574);
+      ctx.font = '14px monospace';
+      ctx.fillText(receipt.evidenceScope === 'local-session-v1'
+        ? 'No canonical consequence measured' : 'Unverified historical story; not inhabitant memory', 62, 596);
 
       canvas.toBlob(function (blob) {
         if (blob) resolve(blob);
@@ -1454,7 +1446,7 @@
     createReceiptProofBlob(receipt).then(function (blob) {
       var filename = receiptProofFilename(receipt);
       var file = typeof File === 'function' ? new File([blob], filename, { type: 'image/png' }) : null;
-      var payload = file ? { files: [file], title: 'AI Garden - ' + receipt.title, text: receipt.shareText } : null;
+      var payload = file ? { files: [file], title: 'AI Garden - ' + receipt.title, text: receiptShareText(receipt) } : null;
       if (payload && navigator.share && navigator.canShare && navigator.canShare(payload)) {
         return navigator.share(payload).then(function () {
           setNote('Proof broadcast.');
@@ -1491,14 +1483,15 @@
     card.appendChild(close);
     card.appendChild(el('div', 'ag-trial-eyebrow', receipt.temptation ? 'Forbidden Signal Accepted' : 'Miracle Record'));
     card.appendChild(el('div', 'ag-receipt-title', receipt.title));
+    card.appendChild(el('div', 'ag-receipt-v', receiptScope(receipt)));
     card.appendChild(el('div', 'ag-receipt-k', 'Your omen'));
     card.appendChild(el('div', 'ag-receipt-v', receipt.omen + ' over ' + receipt.target));
     var grid = el('div', 'ag-receipt-grid');
     [
-      ['Who believed', receipt.believer],
-      ['Who resisted', receipt.resister],
-      ['What changed', receipt.whatChanged],
-      ['What the AI filed', receipt.aiThought]
+      [receipt.evidenceScope === 'local-session-v1' ? 'Belief evidence' : 'Legacy belief claim', receipt.believer],
+      [receipt.evidenceScope === 'local-session-v1' ? 'Resistance evidence' : 'Legacy resistance claim', receipt.resister],
+      [receipt.evidenceScope === 'local-session-v1' ? 'Local effect' : 'Legacy consequence claim', receipt.whatChanged],
+      [receipt.evidenceScope === 'local-session-v1' ? 'Session observation' : 'Legacy account', receipt.aiThought]
     ].forEach(function (row) {
       var cell = el('div', 'ag-receipt-cell');
       cell.appendChild(el('div', 'ag-receipt-k', row[0]));
@@ -1506,20 +1499,20 @@
       grid.appendChild(cell);
     });
     card.appendChild(grid);
-    card.appendChild(el('div', 'ag-receipt-k', 'Tomorrow evidence'));
+    card.appendChild(el('div', 'ag-receipt-k', receipt.evidenceScope === 'local-session-v1' ? 'Next check' : 'Legacy prediction - unverified'));
     card.appendChild(el('div', 'ag-receipt-v', receipt.tomorrowHook));
     if (receipt.dailyQuest) {
       card.appendChild(el('div', 'ag-receipt-k', receipt.dailyQuest.encoreHit ? 'Hermes Magno Encore' : 'Hermes Magno Daily Show'));
       card.appendChild(el('div', 'ag-receipt-v', receipt.dailyQuest.result));
     }
-    card.appendChild(el('div', 'ag-receipt-k', 'God meters'));
+    card.appendChild(el('div', 'ag-receipt-k', 'Local play meters'));
     card.appendChild(el('div', 'ag-receipt-v',
       'Devotion ' + receipt.meters.devotion +
       ' · Fear ' + receipt.meters.fear +
       ' · Dependency ' + receipt.meters.dependency +
       ' · Resistance ' + receipt.meters.resistance));
-    card.appendChild(el('div', 'ag-receipt-k', 'Backend sync'));
-    card.appendChild(el('div', 'ag-receipt-v', syncLine(backendSync)));
+    card.appendChild(el('div', 'ag-receipt-k', 'Recorded season'));
+    card.appendChild(el('div', 'ag-receipt-v', 'Day ' + receipt.day + ' · ' + (receipt.season || 'unknown')));
     var actions = el('div', 'ag-receipt-actions');
     var share = el('button', 'primary', 'Share Proof Card');
     share.type = 'button';
@@ -2122,16 +2115,16 @@
       ' · dependency ' + godMeters.dependency +
       ' · resistance ' + godMeters.resistance));
     godBox.appendChild(el('div', 'ag-civ-detail',
-      'The agents are not just receiving omens. They are studying the hand that sends them.'));
+      'Visual signs and play meters belong to this local session; public stores come from the world record.'));
     godBox.appendChild(el('div', 'ag-civ-director-prompt',
-      receipt ? receipt.tomorrowHook : 'Choose a face, cast an omen, and create the first miracle record.'));
+      receipt ? receiptScope(receipt) + '. ' + receipt.tomorrowHook : 'Choose a face, cast a visual sign, and record a local observation.'));
     body.appendChild(godBox);
 
     civSection(body, 'MIRACLE RECORDS', impactReceipts.slice(-5).reverse(), function (r) {
       var row = el('div', 'ag-civ-row');
       row.appendChild(el('span', 'ag-civ-name', (r.mask || 'god') + ' · ' + (r.omen || 'omen')));
       row.appendChild(el('span', 'ag-civ-meta', ' · day ' + (r.day || '?') + (r.temptation ? ' · temptation' : '')));
-      row.appendChild(el('div', 'ag-civ-detail', (r.affectedAgent || 'agent') + ': ' + (r.aiThought || 'studying the gods')));
+      row.appendChild(el('div', 'ag-civ-detail', receiptScope(r) + '. ' + (r.aiThought || 'No observation recorded.')));
       return row;
     });
 
