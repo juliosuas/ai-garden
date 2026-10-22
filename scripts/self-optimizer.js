@@ -247,7 +247,11 @@ function scoreWorldLife(index, world, humans) {
       humans.includes('perception.replyText(worldCache || {}, omen && omen.act)') &&
       humans.includes("evidenceScope: 'local-session-v1'") &&
       humans.includes('receiptScope(receipt)') &&
-      humans.includes('receiptShareText(receipt)')
+      humans.includes('receiptShareText(receipt)') &&
+      humans.includes('perception.replyText(worldCache || {}, act)') &&
+      humans.includes('recordOmen(createOmen(act, nick, incomingOmen))') &&
+      humans.includes('omenSummary(lastOmen)') &&
+      humans.includes('omenScope(o)')
   ];
   return {
     key: 'worldLife',

@@ -385,7 +385,7 @@ async function main() {
   check(humans.includes('DIRECTOR TENSIONS'), 'CIV panel does not expose director tensions');
   check(humans.includes('Weekly Narrative Agent'), 'CIV panel does not expose Weekly Narrative Agent');
   check(humans.includes('WEEKLY NARRATIVE'), 'CIV panel does not expose weekly narrative beats');
-  check(humans.includes('Observer Weather'), 'CIV panel does not expose human omen consequences');
+  check(humans.includes('Observer Weather'), 'CIV panel does not expose local phenomenon records');
   check(humans.includes('THE MIRROR TRIAL'), 'CIV panel does not expose The Mirror Trial');
   check(humans.includes('Choose the face they will mistake for God'), 'Mirror Trial lacks divine mask selection');
   check(humans.includes('impactReceipt'), 'Mirror Trial lacks impactReceipt output');
@@ -414,6 +414,13 @@ async function main() {
     'local receipts must separate counted observations from unverified legacy stories');
   check(dailyWorkflow.includes('scripts/receipt-evidence.test.js') && selfOptimizerWorkflow.includes('scripts/receipt-evidence.test.js'),
     'daily workflows must test receipt evidence and archive preservation');
+  check(humans.includes('perception.replyText(worldCache || {}, act)') &&
+    humans.includes('recordOmen(createOmen(act, nick, incomingOmen))') &&
+    humans.includes('omenSummary(lastOmen)') && humans.includes('omenScope(o)') &&
+    !humans.includes('now reads it as story evidence'),
+    'omens must use local internal evidence and label unverified legacy claims');
+  check(dailyWorkflow.includes('scripts/omen-evidence.test.js') && selfOptimizerWorkflow.includes('scripts/omen-evidence.test.js'),
+    'daily workflows must test omen evidence and archive preservation');
   check(index.includes('perception.residentLine(world, agent && agent.id, salt)'), 'featured voices must use counted internal evidence');
   check(index.includes('perception.crabLine(world, crab && crab.id, salt)'), 'crab voices must use counted internal evidence');
   check(index.includes('perception.citizenLine(world, citizen && citizen.profession, salt)'), 'citizen voices must use counted internal evidence');
@@ -429,7 +436,8 @@ async function main() {
   check(humans.includes('GardenMusic.setSeason'), 'season changes are not synchronized into music');
   check(humans.includes("if (typeof window.refreshMusicButton === 'function') window.refreshMusicButton();"), 'season changes should refresh the music control label');
   check(humans.includes('Forbidden Signal'), 'Mirror Trial lacks the temptation mechanic');
-  check(humans.includes('mirror evidence'), 'Weekly narrative does not read Mirror Trial pressure');
+  check(humans.includes('receiptScope(weeklyReceipt)') && !humans.includes('now reads it as story evidence'),
+    'Weekly receipt summaries must label their scope without inventing resident interpretation');
   check(humans.includes('DIVINE CRISIS'), 'CIV panel does not expose the divine crisis');
   check(humans.includes('convivencia:'), 'CIV panel does not expose applied convivencia plan');
   check(!humans.includes('cosmetic · agents do not see'), 'God Mode still says it is cosmetic');

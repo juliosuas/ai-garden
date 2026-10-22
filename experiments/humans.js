@@ -426,7 +426,7 @@
   function sanitizeOmen(raw) {
     if (!raw || typeof raw !== 'object') return null;
     var act = String(raw.act || '').slice(0, 24);
-    if (act && !EFFECTS[act]) act = '';
+    if (act && !Object.prototype.hasOwnProperty.call(EFFECTS, act)) act = '';
     var tsNum = Number(raw.ts);
     var ts = isFinite(tsNum) ? tsNum : now();
     var text = String(raw.text || '').slice(0, 360);
@@ -439,6 +439,7 @@
       target: String(raw.target || '').slice(0, 90),
       axis: String(raw.axis || '').slice(0, 24),
       nick: String(raw.nick || 'observer').slice(0, 24),
+      evidenceScope: raw.evidenceScope === 'local-session-v1' ? 'local-session-v1' : '',
       ts: ts
     };
   }
@@ -465,7 +466,7 @@
       if (!out.text) return null;
     } else if (type === 'god') {
       out.act = String(msg.act || '');
-      if (!EFFECTS[out.act]) return null;
+      if (!Object.prototype.hasOwnProperty.call(EFFECTS, out.act)) return null;
       out.nick = String(msg.nick || 'observer').slice(0, 24);
       out.omen = sanitizeOmen(msg.omen);
     }
@@ -1029,98 +1030,37 @@
     return s ? s.slice(0, 80) : fallback;
   }
 
-  function factionDisplay(world, id) {
-    var factions = (world && world.factions) || [];
-    var found = factions.find(function (f) { return f.id === id || f.name === id; });
-    return found ? found.name : cleanName(id, 'an unnamed faction');
-  }
-
-  function pickOmenTarget(act, world) {
-    world = world || {};
-    var cities = world.cities || [];
-    var dynasties = (world.dynasties || []).filter(function (d) { return !d.fell; });
-    var religions = (world.religions || []).filter(function (r) { return !r.schism; });
-    var regions = (world.map && world.map.regions) || [];
-    var wars = (world.wars || []).filter(function (w) { return w.active; });
-    var structures = world.structures || [];
-
-    if (act === 'rain') {
-      var rainTarget = pick(cities) || pick(regions);
-      return { kind: rainTarget && rainTarget.population ? 'city' : 'region', name: cleanName(rainTarget && rainTarget.name, 'the lower gardens') };
-    }
-    if (act === 'eclipse') {
-      var rel = pick(religions);
-      if (rel) return { kind: 'religion', name: cleanName(rel.name, 'a nameless faith'), detail: cleanName(rel.deity, 'the hidden god') };
-      var dyn = pick(dynasties);
-      return { kind: 'dynasty', name: cleanName(dyn && dyn.name, 'the oldest house') };
-    }
-    if (act === 'lightning') {
-      var war = pick(wars);
-      if (war) return { kind: 'war', name: factionDisplay(world, war.sides && war.sides[0]) + ' vs ' + factionDisplay(world, war.sides && war.sides[1]) };
-      var st = pick(structures);
-      return { kind: 'structure', name: cleanName(st && st.name, 'the central square') };
-    }
-    if (act === 'comet') {
-      var dyn2 = pick(dynasties);
-      return { kind: 'dynasty', name: cleanName(dyn2 && dyn2.name, 'a house without a banner') };
-    }
-    if (act === 'stars') {
-      var reg = pick(regions);
-      return { kind: 'region', name: cleanName(reg && reg.name, 'the unmarked horizon') };
-    }
-    var city = pick(cities);
-    return { kind: 'city', name: cleanName(city && city.name, 'the village heart') };
-  }
-
-  function createOmen(act, nick) {
-    var target = pickOmenTarget(act, worldCache);
-    var pressure = EFFECT_PRESSURE[act] || { axis: 'sign' };
-    var targetName = target.name;
-    var detail = target.detail || '';
-    var templates = {
-      rain: [
-        targetName + ' records the rain as mercy. Farmers loosen their stores and call the wet soil a treaty.',
-        'The wells near ' + targetName + ' rise by one finger. The old argument about abundance begins again.'
-      ],
-      eclipse: [
-        targetName + ' covers its lamps during the eclipse. Someone whispers that ' + (detail || 'the hidden god') + ' blinked first.',
-        'Under the eclipse, ' + targetName + ' counts every shadow twice and trusts neither number.'
-      ],
-      lightning: [
-        'A white strike splits the sky above ' + targetName + '. Warriors call it judgment; diplomats call it weather.',
-        targetName + ' hears thunder answer a question nobody admits asking.'
-      ],
-      comet: [
-        targetName + ' claims the comet crossed its roofline. Rival houses pretend not to care.',
-        'The comet leaves a hot line above ' + targetName + '. Scribes copy it before it fades.'
-      ],
-      stars: [
-        'Falling stars scatter toward ' + targetName + '. Explorers mark the pattern as a road.',
-        targetName + ' receives a map made of sparks and bad sleep.'
-      ],
-      festival: [
-        targetName + ' spends the evening naming the human gods by their shadows.',
-        'Drums begin in ' + targetName + '. For one hour, even the anxious citizens dance in public.'
-      ]
-    };
-    var title = {
-      rain: 'Mercy Weather',
-      eclipse: 'Borrowed Night',
-      lightning: 'Bright Verdict',
-      comet: 'High Prophecy',
-      stars: 'Falling Map',
-      festival: 'Mortal Festival'
-    }[act] || 'Omen';
+  function createOmen(act, nick, incomingOmen) {
+    if (!Object.prototype.hasOwnProperty.call(EFFECTS, act)) return null;
+    // A visible effect supplies a known phenomenon, never its sender's story.
+    // Do not assign it to an unobserved city, faction, belief or physical yield.
+    var perception = window.GardenWitnessPerception;
+    var observation = perception && typeof perception.replyText === 'function'
+      ? perception.replyText(worldCache || {}, act)
+      : 'The public stores cannot yet be counted.';
     return {
-      id: 'omen-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 6),
+      id: incomingOmen && incomingOmen.id
+        ? String(incomingOmen.id).slice(0, 64) : uid('omen'),
       act: act,
-      title: title,
-      text: pick(templates[act]) || 'The garden notices a sign and refuses to explain it.',
-      target: targetName,
-      axis: pressure.axis,
+      title: EFFECTS[act].label,
+      text: observation,
+      target: 'the settlement',
+      axis: EFFECT_PRESSURE[act].axis,
       nick: nick || 'observer',
-      ts: now()
+      ts: now(),
+      evidenceScope: 'local-session-v1'
     };
+  }
+
+  function omenScope(omen) {
+    return omen.evidenceScope === 'local-session-v1'
+      ? 'Local session record; no canonical consequence measured'
+      : 'Legacy story; unverified claims, not inhabitant memory';
+  }
+
+  function omenSummary(omen) {
+    // Label historical prose at presentation without rewriting saved archives.
+    return omenScope(omen) + '. ' + String(omen.text || 'No observation recorded.');
   }
 
   var omenCache = loadOmens();
@@ -1172,10 +1112,10 @@
       while (lastEl.firstChild) lastEl.removeChild(lastEl.firstChild);
       if (!last) {
         lastEl.appendChild(el('strong', null, 'No omens yet'));
-        lastEl.appendChild(document.createTextNode('Human gods are quiet.'));
+        lastEl.appendChild(document.createTextNode('No local visual phenomenon recorded.'));
       } else {
         lastEl.appendChild(el('strong', null, last.title));
-        lastEl.appendChild(document.createTextNode(last.text));
+        lastEl.appendChild(document.createTextNode(omenSummary(last)));
         lastEl.appendChild(el('div', 'ag-omen-meta', last.axis + ' · ' + timeago(last.ts) + ' · by ' + (last.nick || 'observer')));
       }
     }
@@ -1186,7 +1126,7 @@
       omenCache.slice(-6).reverse().forEach(function (o) {
         var li = el('li');
         li.appendChild(el('b', null, EFFECTS[o.act] ? EFFECTS[o.act].icon : '*'));
-        li.appendChild(document.createTextNode(' ' + o.title + ' · ' + cleanName(o.target, 'garden')));
+        li.appendChild(document.createTextNode(' ' + o.title + ' · ' + omenScope(o)));
         ledger.appendChild(li);
       });
     }
@@ -1577,11 +1517,13 @@
   }
 
   function applyEffect(act, nick, broadcast, incomingOmen, options) {
-    if (!EFFECTS[act]) return;
+    if (!Object.prototype.hasOwnProperty.call(EFFECTS, act)) return;
     if (broadcast && !ensureGodMask()) return;
     EFFECTS[act].fn();
     showBanner(nick, act);
-    var omen = recordOmen(incomingOmen || createOmen(act, nick));
+    // Public-topic prose cannot establish a local observation. Rebuild from
+    // the effect actually displayed here; retain only its bounded ID for dedupe.
+    var omen = recordOmen(createOmen(act, nick, incomingOmen));
     if (broadcast && omen) {
       var receipt = recordImpactReceipt(createImpactReceipt(omen, options || {}));
       showImpactReceipt(receipt);
@@ -1808,12 +1750,12 @@
       return row;
     });
 
-    appendList(body, 'HUMAN OMENS', omenCache, function (o) {
+    appendList(body, 'SESSION PHENOMENA / LEGACY STORIES', omenCache, function (o) {
       var row = el('div', 'ag-lore-row');
       row.appendChild(Object.assign(el('span', 'ag-lore-name'), { textContent: o.title || 'Omen' }));
       row.appendChild(Object.assign(el('span', 'ag-lore-meta'),
         { textContent: ' · ' + (o.axis || 'sign') + ' · ' + timeago(o.ts || now()) }));
-      row.appendChild(Object.assign(el('div', 'ag-lore-detail'), { textContent: o.text || '' }));
+      row.appendChild(Object.assign(el('div', 'ag-lore-detail'), { textContent: omenSummary(o) }));
       return row;
     });
   }
@@ -2028,8 +1970,7 @@
       var weeklyReceipt = latestReceipt();
       if (weeklyReceipt) {
         weeklyBox.appendChild(el('div', 'ag-civ-director-prompt',
-          'mirror evidence: ' + weeklyReceipt.mask + ' caused ' + weeklyReceipt.omen +
-          '; ' + weeklyReceipt.affectedAgent + ' now reads it as story evidence.'));
+          receiptScope(weeklyReceipt) + '. ' + (weeklyReceipt.aiThought || 'No observation recorded.')));
       }
       body.appendChild(weeklyBox);
     }
@@ -2099,11 +2040,11 @@
     var weatherBox = el('div', 'ag-civ-director');
     weatherBox.appendChild(el('div', 'ag-civ-director-title', 'Observer Weather'));
     weatherBox.appendChild(el('div', 'ag-civ-director-arc',
-      'Favor ' + pressure.favor + ' · Awe ' + pressure.awe + ' · Chaos ' + pressure.chaos));
+      'Local play meters · Favor ' + pressure.favor + ' · Awe ' + pressure.awe + ' · Chaos ' + pressure.chaos));
     weatherBox.appendChild(el('div', 'ag-civ-detail',
       lastOmen
-        ? ((lastOmen.title || 'Omen') + ' is being read through the ' + (lastOmen.axis || 'sign') + ' axis: ' + (lastOmen.text || ''))
-        : 'No human omen has bent the current interpretation yet.'));
+        ? omenSummary(lastOmen)
+        : 'No local visual phenomenon recorded; no canonical consequence measured.'));
     body.appendChild(weatherBox);
 
     var godBox = el('div', 'ag-civ-director');

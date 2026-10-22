@@ -8,7 +8,9 @@ Camera focus guidance now stays in an accessible, bounded interface cue rather t
 
 Local receipts now record only the six known visual phenomena and counted public stores. Local meters cannot establish belief, resistance, material consequences or future resident testimony. Receipt cards, archive summaries and text/image sharing identify local records and unverified legacy stories; saved historical receipts are not rewritten. Exported observations use a full-width panel and the receipt's saved season, never today's synchronization metadata. See [October 21 maintenance evidence](journal/2026-10-21-receipt-evidence.md).
 
-Next bounded opportunity: review `createOmen` and Observer Weather interpretation, whose separate prose can still imply that external input controls resident beliefs. Preserve historical records and route any resident-facing observation through internal evidence. Physical food needs, finite stone extraction and population/map limits remain separate work; structural audit scores do not establish simulation quality.
+New omen records now describe the six visual phenomena and counted stores through the same internal evidence boundary. Remote effects are rebuilt from the displayed effect and local snapshot, retaining only the incoming record ID; public-topic prose cannot establish local resident interpretation. Pantheon, lore, weather and weekly receipt summaries label their local or unverified legacy scope without rewriting saved history. Local meters do not measure resident beliefs. See [October 22 maintenance evidence](journal/2026-10-22-omen-evidence.md).
+
+Next bounded opportunity: the public chat bus still accepts arbitrary `type: agent` text and retained witness messages without a provenance label. Review that presentation boundary without passing visitor prose into inhabitant knowledge or rewriting saved messages. Physical food needs, finite stone extraction and population/map limits remain separate work; structural audit scores do not establish simulation quality.
 
 ## Product Thesis
 

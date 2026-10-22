@@ -92,6 +92,10 @@ function buildPulse() {
       humans.includes("evidenceScope: 'local-session-v1'") &&
       humans.includes('receiptScope(receipt)') &&
       humans.includes('receiptShareText(receipt)') &&
+      humans.includes('perception.replyText(worldCache || {}, act)') &&
+      humans.includes('recordOmen(createOmen(act, nick, incomingOmen))') &&
+      humans.includes('omenSummary(lastOmen)') &&
+      humans.includes('omenScope(o)') &&
       index.includes('perception.residentLine(world, agent && agent.id, salt)') &&
       index.includes('perception.crabLine(world, crab && crab.id, salt)') &&
       index.includes('perception.citizenLine(world, citizen && citizen.profession, salt)') &&
