@@ -10,7 +10,9 @@ Local receipts now record only the six known visual phenomena and counted public
 
 New omen records now describe the six visual phenomena and counted stores through the same internal evidence boundary. Remote effects are rebuilt from the displayed effect and local snapshot, retaining only the incoming record ID; public-topic prose cannot establish local resident interpretation. Pantheon, lore, weather and weekly receipt summaries label their local or unverified legacy scope without rewriting saved history. Local meters do not measure resident beliefs. See [October 22 maintenance evidence](journal/2026-10-22-omen-evidence.md).
 
-Next bounded opportunity: the public chat bus still accepts arbitrary `type: agent` text and retained witness messages without a provenance label. Review that presentation boundary without passing visitor prose into inhabitant knowledge or rewriting saved messages. Physical food needs, finite stone extraction and population/map limits remain separate work; structural audit scores do not establish simulation quality.
+Public-topic `type: agent` messages now stay in the visitor transcript as **Public relay · unverified**, with a claimed name and no backend badge. A sender cannot import a local evidence marker, effect or synchronization snapshot. New locally generated observations retain counted internal evidence and a local-session label; pre-existing agent records display as unverified legacy transcripts without changing their saved fields. Retention stays at 200 messages and 40 visible rows. Scope labels describe local bookkeeping, not authenticated identities or resident memory. See [October 23 maintenance evidence](journal/2026-10-23-chat-provenance.md).
+
+Next bounded opportunity: adapt the retained Mirror Trial invitation and status copy that still promises worship, dependency and learning from a visitor without measured resident consequences. Update its coupled structural audits together; preserve local play and historical records. Physical food needs, finite stone extraction and population/map limits remain separate work; structural audit scores do not establish simulation quality.
 
 ## Product Thesis
 

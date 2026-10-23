@@ -59,7 +59,7 @@ jobs:
           node --check scripts/roadmap-pulse.js
           jq empty experiments/world-state.json
           node --test scripts/validate-world-state.test.js
-          node --test scripts/witness-perception.test.js scripts/resident-speech.test.js scripts/crab-speech.test.js scripts/citizen-speech.test.js scripts/mascot-speech.test.js scripts/civic-speech.test.js scripts/focus-cue.test.js scripts/receipt-evidence.test.js scripts/omen-evidence.test.js
+          node --test scripts/witness-perception.test.js scripts/resident-speech.test.js scripts/crab-speech.test.js scripts/citizen-speech.test.js scripts/mascot-speech.test.js scripts/civic-speech.test.js scripts/focus-cue.test.js scripts/receipt-evidence.test.js scripts/omen-evidence.test.js scripts/chat-provenance.test.js
           node scripts/validate-world-state.js
           node scripts/playtest-subagent.js
 

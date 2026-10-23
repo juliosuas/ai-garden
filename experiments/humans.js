@@ -280,6 +280,7 @@
       '.ag-chat-row[data-kind="agent"] .ag-chat-avatar{background:#60a5fa;color:#020617;}',
       '.ag-chat-row[data-kind="agent"] .ag-chat-nick{color:#93c5fd;}',
       '.ag-chat-row[data-kind="agent"] .ag-chat-text{color:#dbeafe;}',
+      '.ag-chat-origin{display:block;margin-bottom:2px;color:#cbd5e1;font-size:10px;line-height:1.4;}',
       '.ag-chat-sync{display:block;margin-top:3px;color:#64748b;font-size:9px;line-height:1.3;}',
       '.ag-chat-avatar{width:18px;height:18px;border-radius:50%;background:#4ade80;color:#0a0a14;',
       '  font-size:10px;font-weight:bold;display:flex;align-items:center;justify-content:center;',
@@ -462,7 +463,8 @@
     } else if (type === 'agent') {
       out.nick = String(msg.nick || 'AI Witness').slice(0, 24);
       out.text = String(msg.text || '').slice(0, 360);
-      out.sync = sanitizeSyncSnapshot(msg.sync);
+      // A public publisher cannot attest a resident voice or backend snapshot.
+      // Keep its prose as visitor communication, never as local testimony.
       if (!out.text) return null;
     } else if (type === 'god') {
       out.act = String(msg.act || '');
@@ -646,6 +648,7 @@
     return {
       id: uid('agent'),
       kind: 'agent',
+      evidenceScope: 'local-session-v1',
       nick: name,
       text: text.slice(0, 360),
       ts: now(),
@@ -1551,6 +1554,34 @@
   // ─── CHAT ──────────────────────────────────────────────────
   var chatCache = loadChat();
 
+  function receivePublicMessage(msg) {
+    if (msg.from) recordPresence(msg.from);
+    if (msg.type === 'chat') {
+      pushChat({ id: msg.id, kind: 'chat', nick: msg.nick || 'anon', text: msg.text || '', ts: msg.ts || now(), sync: msg.sync || null });
+    } else if (msg.type === 'agent') {
+      // Origin is assigned here, not copied from a sender-supplied scope.
+      // Do not generate a resident reply or import a claimed effect/snapshot.
+      pushChat({ id: msg.id, kind: 'relay', evidenceScope: 'public-topic-v1',
+        nick: msg.nick || 'AI Witness', text: msg.text || '', ts: msg.ts || now() });
+    } else if (msg.type === 'god' && Object.prototype.hasOwnProperty.call(EFFECTS, msg.act)) {
+      applyEffect(msg.act, msg.nick, false, msg.omen);
+    }
+    // ping: presence only, no transcript entry.
+  }
+
+  function chatPresentation(msg) {
+    // Old records retain their original fields. Scope is local bookkeeping,
+    // not authentication; public messages never receive this local marker.
+    if (msg.kind === 'agent' && msg.evidenceScope === 'local-session-v1') {
+      return { kind: 'agent', label: 'Local session observation', name: msg.nick || 'AI Witness', local: true };
+    }
+    if (msg.kind === 'agent' || msg.kind === 'relay') {
+      return { kind: 'relay', label: msg.kind === 'relay' ? 'Public relay · unverified' : 'Legacy transcript · unverified',
+        name: 'Claimed name: ' + (msg.nick || 'unknown'), local: false };
+    }
+    return { kind: 'chat', label: 'Visitor message', name: msg.nick || 'anon', local: false };
+  }
+
   function chatKey(msg) {
     if (msg.id) return msg.id;
     var bucket = Math.floor((Number(msg.ts) || now()) / 15000);
@@ -1588,19 +1619,21 @@
     }
     var recent = visible;
     recent.forEach(function (m) {
+      var presentation = chatPresentation(m);
       var row = el('li', 'ag-chat-row');
-      row.setAttribute('data-kind', m.kind || 'chat');
+      row.setAttribute('data-kind', presentation.kind);
       var initial = (m.nick || '?').slice(0, 1).toUpperCase();
       var avatar = el('div', 'ag-chat-avatar', initial);
-      if (m.kind !== 'agent') avatar.style.background = hashColor(m.nick || 'anon');
+      if (!presentation.local) avatar.style.background = hashColor(m.nick || 'anon');
       var body = el('div');
-      var nick = el('span', 'ag-chat-nick', m.nick || 'anon');
+      body.appendChild(el('span', 'ag-chat-origin', presentation.label));
+      var nick = el('span', 'ag-chat-nick', presentation.name);
       var ts = el('span', 'ag-chat-ts', timeago(m.ts || now()));
       var text = el('span', 'ag-chat-text', ' ' + (m.text || ''));
       body.appendChild(nick);
       body.appendChild(ts);
       body.appendChild(text);
-      if (m.sync && m.kind === 'agent') {
+      if (m.sync && presentation.local) {
         body.appendChild(el('span', 'ag-chat-sync',
           'backend ' + (m.sync.version ? ('v' + m.sync.version + ' · ') : '') +
           syncLine(m.sync)));
@@ -2396,7 +2429,7 @@
       msgIn.value = '';
     });
     cbody.appendChild(form);
-    var tip = el('div', 'ag-chat-tip', 'humans call it play; agents file it as evidence');
+    var tip = el('div', 'ag-chat-tip', 'Visitor chat stays outside inhabitant knowledge. Local session observations use counted world stores; public relays are unverified.');
     cbody.appendChild(tip);
     chat.appendChild(cbody);
     if (window.matchMedia && window.matchMedia('(max-width: 640px)').matches) {
@@ -2478,17 +2511,7 @@
     }, 45000);
 
     // Bus listener
-    bus.on(function (msg) {
-      if (msg.from) recordPresence(msg.from);
-      if (msg.type === 'chat') {
-        pushChat({ id: msg.id, kind: 'chat', nick: msg.nick || 'anon', text: msg.text || '', ts: msg.ts || now(), sync: msg.sync || null });
-      } else if (msg.type === 'agent') {
-        pushChat({ id: msg.id, kind: 'agent', nick: msg.nick || 'AI Witness', text: msg.text || '', ts: msg.ts || now(), sync: msg.sync || null });
-      } else if (msg.type === 'god' && EFFECTS[msg.act]) {
-        applyEffect(msg.act, msg.nick, false, msg.omen);
-      }
-      // ping: presence only, no UI change needed
-    });
+    bus.on(receivePublicMessage);
 
     initBus();
   }

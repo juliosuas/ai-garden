@@ -96,6 +96,10 @@ function buildPulse() {
       humans.includes('recordOmen(createOmen(act, nick, incomingOmen))') &&
       humans.includes('omenSummary(lastOmen)') &&
       humans.includes('omenScope(o)') &&
+      humans.includes('bus.on(receivePublicMessage)') &&
+      humans.includes("kind: 'relay', evidenceScope: 'public-topic-v1'") &&
+      humans.includes('chatPresentation(m)') &&
+      humans.includes('m.sync && presentation.local') &&
       index.includes('perception.residentLine(world, agent && agent.id, salt)') &&
       index.includes('perception.crabLine(world, crab && crab.id, salt)') &&
       index.includes('perception.citizenLine(world, citizen && citizen.profession, salt)') &&

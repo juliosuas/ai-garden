@@ -421,6 +421,13 @@ async function main() {
     'omens must use local internal evidence and label unverified legacy claims');
   check(dailyWorkflow.includes('scripts/omen-evidence.test.js') && selfOptimizerWorkflow.includes('scripts/omen-evidence.test.js'),
     'daily workflows must test omen evidence and archive preservation');
+  check(humans.includes('bus.on(receivePublicMessage)') &&
+    humans.includes("kind: 'relay', evidenceScope: 'public-topic-v1'") &&
+    humans.includes('chatPresentation(m)') && humans.includes('m.sync && presentation.local') &&
+    !humans.includes('humans call it play; agents file it as evidence'),
+    'public chat must remain unverified visitor communication, outside resident testimony');
+  check(dailyWorkflow.includes('scripts/chat-provenance.test.js') && selfOptimizerWorkflow.includes('scripts/chat-provenance.test.js'),
+    'daily workflows must test public chat origin and legacy archive preservation');
   check(index.includes('perception.residentLine(world, agent && agent.id, salt)'), 'featured voices must use counted internal evidence');
   check(index.includes('perception.crabLine(world, crab && crab.id, salt)'), 'crab voices must use counted internal evidence');
   check(index.includes('perception.citizenLine(world, citizen && citizen.profession, salt)'), 'citizen voices must use counted internal evidence');

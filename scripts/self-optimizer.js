@@ -251,7 +251,11 @@ function scoreWorldLife(index, world, humans) {
       humans.includes('perception.replyText(worldCache || {}, act)') &&
       humans.includes('recordOmen(createOmen(act, nick, incomingOmen))') &&
       humans.includes('omenSummary(lastOmen)') &&
-      humans.includes('omenScope(o)')
+      humans.includes('omenScope(o)') &&
+      humans.includes('bus.on(receivePublicMessage)') &&
+      humans.includes("kind: 'relay', evidenceScope: 'public-topic-v1'") &&
+      humans.includes('chatPresentation(m)') &&
+      humans.includes('m.sync && presentation.local')
   ];
   return {
     key: 'worldLife',
