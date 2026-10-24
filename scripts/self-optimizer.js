@@ -255,7 +255,11 @@ function scoreWorldLife(index, world, humans) {
       humans.includes('bus.on(receivePublicMessage)') &&
       humans.includes("kind: 'relay', evidenceScope: 'public-topic-v1'") &&
       humans.includes('chatPresentation(m)') &&
-      humans.includes('m.sync && presentation.local')
+      humans.includes('m.sync && presentation.local') &&
+      humans.includes('Choose a face for local visual play') &&
+      humans.includes('Local play meters, from 0 to 100; not resident beliefs') &&
+      humans.includes('no resident belief or learning is measured') &&
+      !humans.includes('setTimeout(function () { applyEffect(preferred')
   ];
   return {
     key: 'worldLife',

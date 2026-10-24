@@ -387,7 +387,13 @@ async function main() {
   check(humans.includes('WEEKLY NARRATIVE'), 'CIV panel does not expose weekly narrative beats');
   check(humans.includes('Observer Weather'), 'CIV panel does not expose local phenomenon records');
   check(humans.includes('THE MIRROR TRIAL'), 'CIV panel does not expose The Mirror Trial');
-  check(humans.includes('Choose the face they will mistake for God'), 'Mirror Trial lacks divine mask selection');
+  check(humans.includes('Choose a face for local visual play') &&
+    humans.includes('Local play meters, from 0 to 100; not resident beliefs') &&
+    humans.includes('no resident belief or learning is measured') &&
+    !humans.includes('setTimeout(function () { applyEffect(preferred'),
+    'Mirror Trial must separate face selection, explicit signs and unmeasured resident beliefs');
+  check(dailyWorkflow.includes('scripts/trial-evidence.test.js') && selfOptimizerWorkflow.includes('scripts/trial-evidence.test.js'),
+    'daily workflows must test the trial invitation and non-emitting face selection');
   check(humans.includes('impactReceipt'), 'Mirror Trial lacks impactReceipt output');
   check(humans.includes('Share Proof Card'), 'Mirror Trial lacks a visual share artifact');
   check(humans.includes('createReceiptProofBlob'), 'Mirror Trial cannot render its proof card');
@@ -484,7 +490,7 @@ async function main() {
   check(roadmap.includes('Daily Roadmap Cron'), 'ROADMAP is missing the daily cron contract');
   check(roadmap.includes('roadmap-pulse:start'), 'ROADMAP is missing the pulse block');
   check(roadmapPulse.includes('Roadmap Pulse'), 'roadmap pulse script is missing its contract');
-  check(roadmapPulse.includes("humans.includes('Choose the face they will mistake for God')") &&
+  check(roadmapPulse.includes("humans.includes('Choose a face for local visual play')") &&
     roadmapPulse.includes("humans.includes('Share Proof Card')") &&
     roadmapPulse.includes("humans.includes('createReceiptProofBlob')"),
     'roadmap pulse does not audit the current Mirror Trial proof loop');

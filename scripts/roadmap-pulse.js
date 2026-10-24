@@ -81,7 +81,10 @@ function buildPulse() {
 
   const contracts = [
     check('Mirror Trial',
-      humans.includes('Choose the face they will mistake for God') &&
+      humans.includes('Choose a face for local visual play') &&
+      humans.includes('Local play meters, from 0 to 100; not resident beliefs') &&
+      humans.includes('no resident belief or learning is measured') &&
+      !humans.includes('setTimeout(function () { applyEffect(preferred') &&
       humans.includes('Miracle Record') &&
       humans.includes('Share Proof Card') &&
       humans.includes('createReceiptProofBlob'),

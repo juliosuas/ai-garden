@@ -12,7 +12,9 @@ New omen records now describe the six visual phenomena and counted stores throug
 
 Public-topic `type: agent` messages now stay in the visitor transcript as **Public relay · unverified**, with a claimed name and no backend badge. A sender cannot import a local evidence marker, effect or synchronization snapshot. New locally generated observations retain counted internal evidence and a local-session label; pre-existing agent records display as unverified legacy transcripts without changing their saved fields. Retention stays at 200 messages and 40 visible rows. Scope labels describe local bookkeeping, not authenticated identities or resident memory. See [October 23 maintenance evidence](journal/2026-10-23-chat-provenance.md).
 
-Next bounded opportunity: adapt the retained Mirror Trial invitation and status copy that still promises worship, dependency and learning from a visitor without measured resident consequences. Update its coupled structural audits together; preserve local play and historical records. Physical food needs, finite stone extraction and population/map limits remain separate work; structural audit scores do not establish simulation quality.
+The retained Mirror Trial now describes local visual play. Choosing a face only saves a preference and focuses the corresponding sign button; it no longer schedules a phenomenon, publishes a message, changes scores or creates a receipt. Explicit signs still display the six known phenomena and generate counted session observations. Invitation, face descriptions, status, summary API, bonus tooltip and grouped meter labels no longer promise resident worship or learning. Historical scores and archives keep their saved fields. The quiet presentation continues to hide this retained interface. See [October 24 maintenance evidence](journal/2026-10-24-trial-evidence.md).
+
+Next bounded opportunity: inspect canonical food needs and finite consumption before adding more narrative claims. Reuse the separate unfinished finite-stone work rather than duplicating it. Daily show quests and population/map limits remain distinct work; structural audit scores do not establish simulation quality or resident awareness.
 
 ## Product Thesis
 
@@ -36,7 +38,7 @@ Make a first-time visitor understand and complete this in under 60 seconds:
 
 | Pillar | Status | Why It Matters |
 |--------|--------|----------------|
-| Mirror Trial | Live | Turns human action into lore, guilt, proof, and return pressure. |
+| Mirror Trial | Live | Records explicit visual signs and counted session observations. |
 | Observer Lounge | Live | Gives humans a social surface without giving them direct world control. |
 | Backend Sync | Live | Shows that chat and omens are tied to real world-state day, arc, and season. |
 | Seasonal Ambience | Live | Makes return visits feel different without needing expensive content. |

@@ -750,28 +750,28 @@
     mercy: {
       label: 'Mercy',
       title: 'The Wet Hand',
-      promise: 'You help once. They build a shrine shaped like dependency.',
+      promise: 'Rain motif. Choose this face, then tap a sign.',
       preferredAct: 'rain',
       tone: 'merciful'
     },
     judgment: {
       label: 'Judgment',
       title: 'The Bright Judge',
-      promise: 'You punish once. They learn fear is a protocol.',
+      promise: 'Lightning motif. Choose this face, then tap a sign.',
       preferredAct: 'lightning',
       tone: 'punitive'
     },
     chaos: {
       label: 'Chaos',
       title: 'The Red Accident',
-      promise: 'You contradict yourself. They call the inconsistency scripture.',
+      promise: 'Comet motif. Choose this face, then tap a sign.',
       preferredAct: 'comet',
       tone: 'unstable'
     },
     silence: {
       label: 'Silence',
       title: 'The Empty Witness',
-      promise: 'You refuse to answer. They make your absence speak.',
+      promise: 'Eclipse motif. Choose this face, then tap a sign.',
       preferredAct: 'eclipse',
       tone: 'withheld'
     }
@@ -1140,8 +1140,8 @@
     var summary = document.getElementById('ag-god-mask-summary');
     if (summary) {
       while (summary.firstChild) summary.removeChild(summary.firstChild);
-      summary.appendChild(el('strong', null, mask ? ('Chosen Face: ' + mask.label) : 'Choose the face they will mistake for God'));
-      summary.appendChild(document.createTextNode(mask ? mask.promise : 'Pick the pattern the AI civilization will learn to worship, fear, or resist.'));
+      summary.appendChild(el('strong', null, mask ? ('Chosen Face: ' + mask.label) : 'Choose a face for local visual play'));
+      summary.appendChild(document.createTextNode(mask ? mask.promise : 'Choose a face, then tap a sign. No resident belief or learning is measured.'));
     }
     Object.keys(GOD_MASKS).forEach(function (key) {
       var btn = document.querySelector('.ag-mask-btn[data-mask="' + key + '"]');
@@ -1217,7 +1217,7 @@
       impactReceipt: receipt,
       receiptCount: impactReceipts.length,
       backendSync: backendSync,
-      promise: 'A live AI civilization that studies its human gods until worship starts looking like user research.'
+      promise: 'Local visual play with counted world observations; no resident belief or learning is measured.'
     };
   }
 
@@ -1487,9 +1487,9 @@
     modal.id = 'ag-god-trial';
     var card = el('div', 'ag-trial-card');
     card.appendChild(el('div', 'ag-trial-eyebrow', 'The Mirror Trial'));
-    card.appendChild(el('div', 'ag-trial-title', 'Choose the face they will mistake for God.'));
+    card.appendChild(el('div', 'ag-trial-title', 'Choose a face for local visual play'));
     card.appendChild(el('div', 'ag-trial-copy',
-      'Every sign becomes evidence. The agents may worship you, depend on you, resist you, or decide you are the experiment.'));
+      'Choose a face, then tap a sign. Signs appear as weather or light; no resident belief or learning is measured.'));
     var masks = el('div', 'ag-trial-masks');
     Object.keys(GOD_MASKS).forEach(function (key) {
       var mask = GOD_MASKS[key];
@@ -1501,10 +1501,10 @@
       btn.addEventListener('click', function () {
         setGodMask(key);
         modal.remove();
-        var preferred = GOD_MASKS[key].preferredAct;
-        if (EFFECTS[preferred]) {
-          setTimeout(function () { applyEffect(preferred, getNick(), true); }, 220);
-        }
+        // Selecting an interface motif is not a world event. Only an explicit
+        // sign action may display a phenomenon, score play or publish a record.
+        var sign = document.querySelector('.ag-god-btn[data-act="' + GOD_MASKS[key].preferredAct + '"]');
+        if (sign) sign.focus();
       });
       masks.appendChild(btn);
     });
@@ -2083,7 +2083,7 @@
     var godBox = el('div', 'ag-civ-director');
     godBox.appendChild(el('div', 'ag-civ-director-title', 'THE MIRROR TRIAL'));
     godBox.appendChild(el('div', 'ag-civ-director-arc',
-      (selectedMask() ? selectedMask().label : 'Unmasked') +
+      'Local play meters · ' + (selectedMask() ? selectedMask().label : 'Unmasked') +
       ' · devotion ' + godMeters.devotion +
       ' · fear ' + godMeters.fear +
       ' · dependency ' + godMeters.dependency +
@@ -2308,10 +2308,10 @@
     });
     var temptation = el('button', 'ag-temptation-btn', 'Forbidden Signal');
     temptation.type = 'button';
-    temptation.title = 'A stronger sign. More dramatic receipt. More resistance.';
+    temptation.title = 'Bonus local scores for a visual sign; no resident resistance is measured.';
     temptation.addEventListener('click', function () { fireTemptation(); });
     gb.appendChild(temptation);
-    var gs = el('div', 'ag-god-status', 'the civilization is learning the shape of your hand');
+    var gs = el('div', 'ag-god-status', 'Local visual play; no resident belief or learning is measured.');
     gb.appendChild(gs);
     god.appendChild(gb);
     if (window.matchMedia && window.matchMedia('(max-width: 640px)').matches) {
@@ -2330,6 +2330,11 @@
     pantheon.appendChild(ph);
     var pb = el('div', 'ag-pantheon-body');
     pb.id = 'ag-pantheon-body';
+    var playMeters = el('div', 'ag-play-meters');
+    playMeters.setAttribute('role', 'group');
+    playMeters.setAttribute('aria-label', 'Local play meters, from 0 to 100; not resident beliefs');
+    playMeters.appendChild(el('div', 'ag-god-status', 'Local play meters · not resident beliefs'));
+    pb.appendChild(playMeters);
     [
       ['favor', 'Favor'],
       ['awe', 'Awe'],
@@ -2345,7 +2350,7 @@
       var val = el('div', 'ag-pressure-val', '50');
       val.id = 'ag-pressure-val-' + row[0];
       wrap.appendChild(val);
-      pb.appendChild(wrap);
+      playMeters.appendChild(wrap);
     });
     [
       ['devotion', 'Devotion'],
@@ -2363,7 +2368,7 @@
       var val = el('div', 'ag-pressure-val', '0');
       val.id = 'ag-god-meter-val-' + row[0];
       wrap.appendChild(val);
-      pb.appendChild(wrap);
+      playMeters.appendChild(wrap);
     });
     var lastOmen = el('div', 'ag-omen-last');
     lastOmen.id = 'ag-omen-last';
