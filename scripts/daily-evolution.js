@@ -29,6 +29,7 @@ const { refreshWeeklyNarrativeDirector } = require('./weekly-narrative-agent');
 const { refreshDailyQuest } = require('./daily-quest');
 const { refreshAgentCouncil, applyCouncilConsequence } = require('./agent-council');
 const { attemptConstruction } = require('./construction');
+const { applyFoodNeeds } = require('./food-needs');
 const { applyTimberHarvest } = require('./timber-harvest');
 
 const WORLD  = path.join(__dirname, '..', 'experiments', 'world-state.json');
@@ -795,6 +796,11 @@ function step() {
     id: councilExecution.id, kind: 'council-consequence',
     headline: councilExecution.headline, refs: [councilExecution.sourceDecision],
     councilExecution
+  });
+  // Residents eat before discretionary gathering parties spend shared food.
+  const foodNeeds = applyFoodNeeds(world);
+  if (foodNeeds) events.push({
+    id: foodNeeds.id, kind: 'food-needs', headline: foodNeeds.headline, refs: [], foodNeeds
   });
   // Replenish from one bounded internal source before today's works consume wood.
   const timberHarvest = applyTimberHarvest(world);

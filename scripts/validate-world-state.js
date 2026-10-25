@@ -13,6 +13,7 @@
 const fs = require('fs');
 const path = require('path');
 const { COST, SLOTS, TYPE } = require('./construction');
+const food = require('./food-needs');
 const timber = require('./timber-harvest');
 
 const ROOT = path.join(__dirname, '..');
@@ -113,6 +114,10 @@ if (world) {
     } else {
       check(execution.woodMoved === 0, 'an unfulfilled council motion cannot move wood');
     }
+  }
+  if (world.foodNeeds) {
+    check(food.validReceipt(world.foodNeeds, (world.chronicle || {}).day),
+      'foodNeeds must conserve finite communal rations with bounded scarcity evidence');
   }
   const woodlandStock = world.woodlandStock;
   const harvest = world.timberHarvest;

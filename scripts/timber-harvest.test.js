@@ -136,7 +136,7 @@ test('the actual daemon gathers before funded works and publishes conserved rece
     const world = JSON.parse(fs.readFileSync(path.join(root, 'experiments/world-state.json'), 'utf8'));
     world.economy.resources.wood = 0;
     world.economy.resources.stone = 2;
-    world.economy.resources.food = 30;
+    world.economy.resources.food = 300;
     world.economy.repairReserveWood = 12;
     delete world.agentCouncil; delete world.woodlandStock; delete world.timberHarvest;
     const file = path.join(directory, 'experiments/world-state.json');
@@ -148,7 +148,9 @@ test('the actual daemon gathers before funded works and publishes conserved rece
     assert.equal(after.structures.length, world.structures.length + 1);
     assert.equal(after.economy.resources.wood, 4);
     assert.equal(after.economy.resources.stone, 0);
-    assert.equal(after.economy.resources.food, 26);
+    const meals = after.history.slice(-2).flatMap(h => h.events).filter(e => e.kind === 'food-needs');
+    assert.equal(meals.length, 2);
+    assert.equal(after.economy.resources.food, 296 - meals.reduce((sum, e) => sum + e.foodNeeds.consumed, 0));
     assert.equal(after.economy.repairReserveWood, 12);
     assert.equal(after.woodlandStock.stock, 17);
     const events = after.history.slice(-2).flatMap(h => h.events);

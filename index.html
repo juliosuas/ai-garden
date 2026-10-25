@@ -4667,8 +4667,18 @@ function timberHarvestRow(history) {
   return null;
 }
 
+function foodNeedsRow(history) {
+  for (const entry of (history || []).slice(-3).reverse()) {
+    const event = (entry.events || []).find(item => item.foodNeeds && item.foodNeeds.type === 'communal-rations-v1');
+    if (event) return { label: 'Rations · Day ' + entry.day, text: event.headline };
+  }
+  return null;
+}
+
 function eventPanelRows() {
   const rows = [];
+  const foodRow = foodNeedsRow(world.history);
+  if (foodRow) rows.push(foodRow);
   const timberRow = timberHarvestRow(world.history);
   if (timberRow) rows.push(timberRow);
   const workRow = constructionRow(world.history);

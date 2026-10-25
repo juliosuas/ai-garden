@@ -269,3 +269,9 @@ Schedule: `17 7 * * *` UTC.
 ## Operator Rule
 
 If a change does not improve proof, retention, shareability, monetization clarity, mobile usability, performance, or world liveliness, do not ship it.
+
+## Persistent world maintenance · 2026-10-25
+
+Daily evolution now debits finite communal food before discretionary timber work: one store unit per 25 living inhabitants, rounded up. Each dawn records population, demand, consumption, remaining stores and unmet demand; consecutive scarcity is capped at seven recorded dawns. The story log surfaces recent rations. Missing or invalid counts produce no invented food or starvation evidence. No automatic deaths, new entities or resident knowledge of maintenance are added. This rule begins on the next normal canonical dawn; this maintenance run does not advance it.
+
+Next bounded opportunity: finite seasonal food gathering from existing internal sources, with ecological limits and explicit costs. There is currently no new replenishment source; persistent shortages can stop timber parties. Keep population/map limits and the unfinished stone work separate. See the maintenance journal for evidence and publication status.

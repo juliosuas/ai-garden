@@ -86,6 +86,10 @@ async function main() {
   const roadmapWorkflow = read(ROADMAP_WORKFLOW);
   const autopilotSummary = read(AUTOPILOT_SUMMARY);
   const dailyEvolution = read(DAILY_EVOLUTION);
+  check(dailyEvolution.includes("require('./food-needs')") &&
+    before(dailyEvolution, 'const foodNeeds = applyFoodNeeds(world)', 'const timberHarvest = applyTimberHarvest(world)'),
+    'resident rations must precede discretionary timber gathering');
+  check(index.includes('const foodRow = foodNeedsRow(world.history);'), 'story log must surface counted food needs');
   const selfOptimizer = read(SELF_OPTIMIZER);
   const roadmapPulse = read(ROADMAP_PULSE);
   const agenticMainPush = read(AGENTIC_MAIN_PUSH);
