@@ -53,13 +53,14 @@ jobs:
           node --check scripts/stakeholder-assembly.js
           node --check scripts/playtest-subagent.js
           node --check scripts/food-needs.js
+          node --check scripts/food-gathering.js
           node --check scripts/daily-evolution.js
           node --check scripts/game-wonder-agent.js
           node --check scripts/weekly-narrative-agent.js
           node --check scripts/daily-quest.js
           node --check scripts/roadmap-pulse.js
           jq empty experiments/world-state.json
-          node --test scripts/validate-world-state.test.js scripts/food-needs.test.js
+          node --test scripts/validate-world-state.test.js scripts/food-needs.test.js scripts/food-gathering.test.js
           node --test scripts/witness-perception.test.js scripts/resident-speech.test.js scripts/crab-speech.test.js scripts/citizen-speech.test.js scripts/mascot-speech.test.js scripts/civic-speech.test.js scripts/focus-cue.test.js scripts/receipt-evidence.test.js scripts/omen-evidence.test.js scripts/chat-provenance.test.js scripts/trial-evidence.test.js
           node scripts/validate-world-state.js
           node scripts/playtest-subagent.js

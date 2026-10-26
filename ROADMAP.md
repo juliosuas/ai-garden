@@ -270,8 +270,10 @@ Schedule: `17 7 * * *` UTC.
 
 If a change does not improve proof, retention, shareability, monetization clarity, mobile usability, performance, or world liveliness, do not ship it.
 
-## Persistent world maintenance · 2026-10-25
+## Persistent world maintenance · 2026-10-26
 
-Daily evolution now debits finite communal food before discretionary timber work: one store unit per 25 living inhabitants, rounded up. Each dawn records population, demand, consumption, remaining stores and unmet demand; consecutive scarcity is capped at seven recorded dawns. The story log surfaces recent rations. Missing or invalid counts produce no invented food or starvation evidence. No automatic deaths, new entities or resident knowledge of maintenance are added. This rule begins on the next normal canonical dawn; this maintenance run does not advance it.
+Communal rations now have a supplementary seasonal source: one patch in an already discovered orchard-belt region. A living herbalist can transfer up to eight food before the meal, paying one timber for baskets. The patch starts with 32 aggregate game units, protects eight, and regrows at most two/three/four units in spring/summer/autumn. Winter permits neither growth nor gathering. Stores at 32 or above pause trips; existing surplus is preserved. The patch never migrates or multiplies. These are explicit simulation rules, not measured harvests.
 
-Next bounded opportunity: finite seasonal food gathering from existing internal sources, with ecological limits and explicit costs. There is currently no new replenishment source; persistent shortages can stop timber parties. Keep population/map limits and the unfinished stone work separate. See the maintenance journal for evidence and publication status.
+Latest source and receipt persist together, bounding recovery, costs and same-day replay. Missing or inconsistent ledgers fail closed. The story log surfaces recent yields, costs and season. Rations still precede discretionary timber trips. Maintenance changes no canonical day, historical records, entities or resident memories; development remains outside their knowledge.
+
+Next bounded opportunity: seasonal food budgeting and a reserve policy grounded in counted supplies. One patch cannot sustain the current 390 living inhabitants' demand of 16 food per dawn, and baskets compete with other timber uses. Examine this balance before claiming sustainability. Recover the separate unfinished stone work; population/map growth limits remain independent. Six own commits await remote synchronization because GitHub DNS is unavailable; see the maintenance journal.

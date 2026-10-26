@@ -14,6 +14,7 @@ const fs = require('fs');
 const path = require('path');
 const { COST, SLOTS, TYPE } = require('./construction');
 const food = require('./food-needs');
+const gathering = require('./food-gathering');
 const timber = require('./timber-harvest');
 
 const ROOT = path.join(__dirname, '..');
@@ -114,6 +115,15 @@ if (world) {
     } else {
       check(execution.woodMoved === 0, 'an unfulfilled council motion cannot move wood');
     }
+  }
+  if (world.orchardStock || world.foodGathering) {
+    check(gathering.validReceipt(world.foodGathering, (world.chronicle || {}).day, world.orchardStock),
+      'foodGathering must conserve a bounded orchard, food and basket timber once per dawn');
+    if (world.orchardStock) check((world.map?.regions || []).some(r => r.id === world.orchardStock.regionId),
+      'orchardStock must remain tied to one existing region');
+    if (world.foodGathering?.status === 'gathered') check((world.citizens || []).some(c =>
+      c.id === world.foodGathering.actorId && c.profession === 'herbalist'),
+      'food gathering needs a recorded herbalist');
   }
   if (world.foodNeeds) {
     check(food.validReceipt(world.foodNeeds, (world.chronicle || {}).day),

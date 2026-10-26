@@ -30,6 +30,7 @@ const { refreshDailyQuest } = require('./daily-quest');
 const { refreshAgentCouncil, applyCouncilConsequence } = require('./agent-council');
 const { attemptConstruction } = require('./construction');
 const { applyFoodNeeds } = require('./food-needs');
+const { applyFoodGathering } = require('./food-gathering');
 const { applyTimberHarvest } = require('./timber-harvest');
 
 const WORLD  = path.join(__dirname, '..', 'experiments', 'world-state.json');
@@ -796,6 +797,12 @@ function step() {
     id: councilExecution.id, kind: 'council-consequence',
     headline: councilExecution.headline, refs: [councilExecution.sourceDecision],
     councilExecution
+  });
+  // Supplement stores from one finite orchard before the communal meal.
+  const foodGathering = applyFoodGathering(world);
+  if (foodGathering) events.push({
+    id: foodGathering.id, kind: 'food-gathering', headline: foodGathering.headline,
+    refs: [foodGathering.regionId, foodGathering.actorId].filter(Boolean), foodGathering
   });
   // Residents eat before discretionary gathering parties spend shared food.
   const foodNeeds = applyFoodNeeds(world);

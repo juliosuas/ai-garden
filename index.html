@@ -4667,6 +4667,14 @@ function timberHarvestRow(history) {
   return null;
 }
 
+function foodGatheringRow(history) {
+  for (const entry of (history || []).slice(-3).reverse()) {
+    const event = (entry.events || []).find(item => item.foodGathering && item.foodGathering.type === 'orchard-food-v1');
+    if (event) return { label: 'Orchard · Day ' + entry.day, text: event.headline };
+  }
+  return null;
+}
+
 function foodNeedsRow(history) {
   for (const entry of (history || []).slice(-3).reverse()) {
     const event = (entry.events || []).find(item => item.foodNeeds && item.foodNeeds.type === 'communal-rations-v1');
@@ -4677,6 +4685,8 @@ function foodNeedsRow(history) {
 
 function eventPanelRows() {
   const rows = [];
+  const gatheringRow = foodGatheringRow(world.history);
+  if (gatheringRow) rows.push(gatheringRow);
   const foodRow = foodNeedsRow(world.history);
   if (foodRow) rows.push(foodRow);
   const timberRow = timberHarvestRow(world.history);

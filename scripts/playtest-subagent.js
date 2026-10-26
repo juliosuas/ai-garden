@@ -90,6 +90,10 @@ async function main() {
     before(dailyEvolution, 'const foodNeeds = applyFoodNeeds(world)', 'const timberHarvest = applyTimberHarvest(world)'),
     'resident rations must precede discretionary timber gathering');
   check(index.includes('const foodRow = foodNeedsRow(world.history);'), 'story log must surface counted food needs');
+  check(dailyEvolution.includes("require('./food-gathering')") &&
+    before(dailyEvolution, 'const foodGathering = applyFoodGathering(world)', 'const foodNeeds = applyFoodNeeds(world)'),
+    'finite orchard gathering must precede the communal meal');
+  check(index.includes('const gatheringRow = foodGatheringRow(world.history);'), 'story log must surface counted orchard gathering');
   const selfOptimizer = read(SELF_OPTIMIZER);
   const roadmapPulse = read(ROADMAP_PULSE);
   const agenticMainPush = read(AGENTIC_MAIN_PUSH);
