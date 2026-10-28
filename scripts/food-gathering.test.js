@@ -136,7 +136,11 @@ test('actual daemon shares gathered food before timber work, validates accountin
     fs.mkdirSync(path.join(dir, 'experiments'));
     fs.copyFileSync(path.join(root, 'experiments/council-perception.js'), path.join(dir, 'experiments/council-perception.js'));
     for (const file of ['README.md', 'agent-manifest.json']) fs.copyFileSync(path.join(root, file), path.join(dir, file));
-    const w = JSON.parse(bytes); w.chronicle.day = 195;
+    const w = JSON.parse(bytes);
+    // Preserve the fixture's existing construction timeline: the current
+    // canonical world can already contain funded works after day 195.
+    const startDay = Math.max(195, Number(w.chronicle.day) || 0);
+    w.chronicle.day = startDay;
     w.economy.resources.food = 0; w.economy.resources.wood = 2;
     delete w.agentCouncil; delete w.foodNeeds; delete w.foodGathering; delete w.orchardStock;
     delete w.timberHarvest; delete w.woodlandStock; delete w.constructionLedger;
@@ -144,7 +148,7 @@ test('actual daemon shares gathered food before timber work, validates accountin
     const run = spawnSync(process.execPath, [path.join(dir, 'scripts/daily-evolution.js'), '1'], { encoding: 'utf8', timeout: 15000 });
     assert.equal(run.status, 0, run.stderr);
     const after = JSON.parse(fs.readFileSync(file));
-    assert.equal(after.chronicle.day, 196);
+    assert.equal(after.chronicle.day, startDay + 1);
     assert.equal(after.foodGathering.gathered, 8); assert.equal(after.foodGathering.spentWood, 1);
     assert.equal(after.foodNeeds.before, 8); assert.equal(after.foodNeeds.consumed, 8);
     assert.equal(after.foodNeeds.unmet, Math.ceil(w.citizens.filter(c => c.alive === true).length / 25) - 8);
