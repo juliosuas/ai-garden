@@ -7,6 +7,10 @@ const CAPACITY = 32;
 const FLOOR = 8;
 const DAILY_LIMIT = 8;
 const STORE_TARGET = 32;
+// The orchard remains supplementary, but it should not call a store "full"
+// below one counted communal meal. The cap prevents population growth from
+// turning this one patch into an unbounded source.
+const MAX_STORE_TARGET = 48;
 const WOOD_COST = 1;
 const SEASONS = ['spring', 'summer', 'autumn', 'winter'];
 const RECOVERY = [2, 3, 4, 0];
@@ -14,6 +18,16 @@ const counted = n => typeof n === 'number' && Number.isFinite(n) && n >= 0 && n 
 const validDay = day => Number.isSafeInteger(day) && day >= 1;
 const seasonIndex = day => Math.floor(day % 28 / 7);
 const near = (a, b) => Math.abs(a - b) < 1e-9;
+
+function reserveTargetForPopulation(population) {
+  const meal = Math.ceil(population / 25);
+  return Math.max(STORE_TARGET, Math.min(MAX_STORE_TARGET, meal));
+}
+
+function reserveTarget(world) {
+  const citizens = Array.isArray(world.citizens) ? world.citizens : [];
+  return reserveTargetForPopulation(citizens.filter(c => c && c.alive === true).length);
+}
 
 function orchard(region, day) {
   return region && typeof region.id === 'string' && region.id && region.biome === 'orchard-belt' &&
@@ -45,9 +59,15 @@ function validReceipt(r, day, source) {
       r.recovered !== (r.available && r.day > source.establishedDay ?
         Math.min(RECOVERY[seasonIndex(r.day)], CAPACITY - b.stock) : 0)) return false;
   } else if (r.regionId !== null || r.available || b.stock !== null || a.stock !== null || r.recovered !== 0) return false;
+  // Receipts written before the reserve target was introduced remain readable
+  // at the original 32-unit target; new receipts bind the target explicitly.
+  const target = r.target === undefined ? STORE_TARGET : r.target;
+  if (!Number.isInteger(target) || target < STORE_TARGET || target > MAX_STORE_TARGET) return false;
+  if (r.population !== undefined && (!Number.isSafeInteger(r.population) || r.population < 0 ||
+    target !== reserveTargetForPopulation(r.population))) return false;
   if (r.status === 'gathered') return !!(source && r.available && r.season !== 'winter' &&
-    counted(b.food) && counted(b.wood) && b.wood >= WOOD_COST && a.food <= STORE_TARGET &&
-    r.gathered === Math.min(DAILY_LIMIT, STORE_TARGET - b.food, b.stock + r.recovered - FLOOR));
+    counted(b.food) && counted(b.wood) && b.wood >= WOOD_COST && a.food <= target &&
+    r.gathered === Math.min(DAILY_LIMIT, target - b.food, b.stock + r.recovered - FLOOR));
   return true;
 }
 
@@ -73,6 +93,8 @@ function applyFoodGathering(world) {
   const before = snapshot();
   const available = !!(source && regions.some(r => r.id === source.regionId && orchard(r, day)));
   const season = SEASONS[seasonIndex(day)];
+  const population = Array.isArray(world.citizens) ? world.citizens.filter(c => c && c.alive === true).length : 0;
+  const target = reserveTarget(world);
   // A skipped interval is unknown: at most this dawn's growth, never catch-up.
   const recovered = available && source.establishedDay < day ?
     Math.min(RECOVERY[seasonIndex(day)], CAPACITY - source.stock) : 0;
@@ -85,12 +107,12 @@ function applyFoodGathering(world) {
     .find(c => c && c.alive === true && c.profession === 'herbalist' && typeof c.id === 'string' && c.id);
   if (available) {
     if (before.food === null || before.wood === null) reason = 'Food or basket timber could not be counted.';
-    else if (before.food >= STORE_TARGET) { status = 'resting'; reason = 'Food stores are sufficient; the orchard rests.'; }
+    else if (before.food >= target) { status = 'resting'; reason = 'Food stores meet the bounded communal reserve; the orchard rests.'; }
     else if (season === 'winter') { status = 'resting'; reason = 'Winter closes the orchard; its protected stock remains.'; }
     else if (!herbalist) reason = 'No living herbalist could gather the fruit.';
     else if (before.wood < WOOD_COST) reason = 'Gathering needs one timber for baskets.';
     else {
-      gathered = Math.min(DAILY_LIMIT, STORE_TARGET - before.food, source.stock - FLOOR);
+      gathered = Math.min(DAILY_LIMIT, target - before.food, source.stock - FLOOR);
       if (gathered > 0) {
         source.stock -= gathered;
         resources.food += gathered;
@@ -106,11 +128,11 @@ function applyFoodGathering(world) {
   const headline = gathered > 0 ?
     `Orchard gathering: ${gathered} food stored for ${spentWood} timber; patch ${after.stock}/${CAPACITY} (${season}).` :
     `Orchard: ${reason} Stock ${after.stock === null ? 'unknown' : after.stock + '/' + CAPACITY} (${season}).`;
-  const receipt = { id: `food-gathering-${day}`, type: TYPE, day, season, status, reason, available,
+  const receipt = { id: `food-gathering-${day}`, type: TYPE, day, season, population, target, status, reason, available,
     regionId: source ? source.regionId : null, actorId, recovered, gathered, spentWood, before, after, headline };
   if (source) world.orchardStock = source;
   world.foodGathering = receipt;
   return receipt;
 }
 module.exports = { applyFoodGathering, validReceipt, sourceValid, orchard, TYPE, CAPACITY, FLOOR,
-  DAILY_LIMIT, STORE_TARGET, WOOD_COST, SEASONS, RECOVERY };
+  DAILY_LIMIT, STORE_TARGET, MAX_STORE_TARGET, WOOD_COST, SEASONS, RECOVERY, reserveTarget, reserveTargetForPopulation };

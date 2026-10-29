@@ -6,7 +6,7 @@ const os = require('node:os');
 const path = require('node:path');
 const vm = require('node:vm');
 const { spawnSync } = require('node:child_process');
-const { applyFoodGathering, validReceipt, CAPACITY, FLOOR, RECOVERY } = require('./food-gathering');
+const { applyFoodGathering, validReceipt, CAPACITY, FLOOR, RECOVERY, MAX_STORE_TARGET } = require('./food-gathering');
 const { applyFoodNeeds } = require('./food-needs');
 function fixture(food = 0, day = 14) {
   return { chronicle: { day }, map: { regions: [{ id: 'orchard', biome: 'orchard-belt', discoveredDay: 2 }] },
@@ -56,6 +56,24 @@ test('fractional demand stops at the food target and surplus never grows without
   assert.equal(w.economy.resources.food, 32); assert.equal(w.orchardStock.stock, 32);
   const surplus = fixture(380); applyFoodGathering(surplus);
   assert.equal(surplus.economy.resources.food, 380); assert.equal(surplus.economy.resources.wood, 10);
+});
+test('the reserve follows one counted meal without turning one orchard into an unlimited pantry', () => {
+  const w = fixture(32);
+  w.citizens = Array.from({ length: 1000 }, (_, i) => ({ id: `resident-${i}`, alive: true, profession: 'builder' }));
+  w.citizens[0] = { id: 'herbalist', alive: true, profession: 'herbalist' };
+  const r = applyFoodGathering(w);
+  assert.equal(r.target, 40); assert.equal(r.gathered, 8); assert.equal(r.after.food, 40);
+  assert.ok(validReceipt(r, w.chronicle.day, w.orchardStock));
+  w.citizens.push(...Array.from({ length: 300 }, (_, i) => ({ id: `late-${i}`, alive: true, profession: 'builder' })));
+  w.chronicle.day++;
+  w.economy.resources.food = 0;
+  const bounded = applyFoodGathering(w);
+  assert.equal(bounded.target, MAX_STORE_TARGET); assert.equal(bounded.gathered, 8);
+  for (const mutate of [r => { r.target = 31; }, r => { r.target = MAX_STORE_TARGET + 1; }, r => { r.population = 1001; }]) {
+    const invalid = fixture(); invalid.citizens = structuredClone(w.citizens.slice(0, 1000));
+    const receipt = applyFoodGathering(invalid); mutate(receipt);
+    assert.equal(validReceipt(receipt, invalid.chronicle.day, invalid.orchardStock), false);
+  }
 });
 test('many hungry dawns conserve stock and protect its floor with one source and receipt', () => {
   const w = fixture(); w.economy.resources.wood = 1000;
