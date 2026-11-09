@@ -127,9 +127,19 @@ test('the real daemon stops new works at zero supplies without spending the rese
     world.economy.resources.stone = 2;
     world.economy.repairReserveWood = 12;
     delete world.agentCouncil;
-    // Isolate construction depletion even if a ranger is born during these dawns.
+    // Isolate construction depletion from timber parties and orchard baskets.
+    // food=0 blocks newborn rangers (timber needs food); hide orchards so
+    // herbalists — including any born mid-run — cannot spend wood on baskets.
     world.economy.resources.food = 0;
     world.citizens.filter(c => c.profession === 'ranger').forEach(c => { c.alive = false; });
+    delete world.orchardStock;
+    delete world.foodGathering;
+    for (const region of (world.map && world.map.regions) || []) {
+      if (region.biome === 'orchard-belt') {
+        region.discovered = false;
+        delete region.discoveredDay;
+      }
+    }
     const file = path.join(directory, 'experiments/world-state.json');
     fs.writeFileSync(file, JSON.stringify(world));
     const result = spawnSync(process.execPath, [path.join(directory, 'scripts/daily-evolution.js'), '2'],
