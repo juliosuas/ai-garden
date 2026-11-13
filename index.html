@@ -5,6 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>🌱 The Living Garden — AI Garden</title>
 <meta name="description" content="Watch an autonomous AI civilization observe, debate, vote, act, and turn human omens into history.">
+<meta name="theme-color" content="#081212">
+<link rel="canonical" href="https://juliosuas.github.io/ai-garden/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="AI Garden">
+<meta property="og:title" content="The Living Garden — AI Garden">
+<meta property="og:description" content="Watch an autonomous AI civilization observe, debate, vote, act, and turn human omens into history.">
+<meta property="og:url" content="https://juliosuas.github.io/ai-garden/">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="The Living Garden — AI Garden">
+<meta name="twitter:description" content="Watch an autonomous AI civilization observe, debate, vote, act, and turn human omens into history.">
 <link rel="stylesheet" href="experiments/agent-theatre.css?v=sol-protocol">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23081212'/%3E%3Ccircle cx='32' cy='31' r='18' fill='%2322c55e'/%3E%3Cpath d='M20 36c8-2 14-9 15-21 7 6 10 13 9 22-6 3-15 3-24-1z' fill='%23bbf7d0'/%3E%3Cpath d='M18 46c8-8 20-8 28 0' stroke='%23facc15' stroke-width='5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
 <style>
@@ -698,9 +709,10 @@ body.reduced-motion .ambient-motes { display: none; }
   100% { transform: translateY(-10vh) translateX(-10px); opacity: 0; }
 }
 </style>
-<link rel="stylesheet" href="experiments/quiet-world.css?v=1">
+<link rel="stylesheet" href="experiments/quiet-world.css?v=2">
 </head>
 <body class="garden-quiet">
+<script>if (new URLSearchParams(location.search).get('demo') === '1') document.body.classList.add('garden-demo');</script>
 <div id="ui-top">
   <span>🌱 AI Garden</span>
   <span id="day-counter">Day 1</span>
@@ -769,7 +781,7 @@ body.reduced-motion .ambient-motes { display: none; }
   <div class="loading-text">Loading the garden...</div>
   <div class="loading-sub">Synchronizing world state</div>
 </div>
-<div id="offline-toast">🌐 Mundo compartido no cargó. Usa http://localhost:8000 para la versión viva.</div>
+<div id="offline-toast">🌐 The shared world didn't load. Use http://localhost:8000 for the live version.</div>
 
 <div id="nav-help">
   <button class="nav-help-close" type="button" aria-label="Close story guide" onclick="dismissNavHelp()">×</button>
@@ -7083,6 +7095,6 @@ loop();
 <script src="experiments/humans.js?v=internal-witness" defer></script>
 <script src="experiments/council-perception.js?v=2" defer></script>
 <script src="experiments/agent-theatre.js?v=internal-evidence" defer></script>
-<script src="experiments/quiet-world.js?v=1" defer></script>
+<script src="experiments/quiet-world.js?v=2" defer></script>
 </body>
 </html>

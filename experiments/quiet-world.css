@@ -76,3 +76,19 @@ body.garden-quiet :is(#object-popup,#info-panel,#plant-tooltip) { font-family: -
   .qw-drawer-head { margin-bottom: 16px; }
 }
 @media (prefers-reduced-motion: reduce) { #quiet-shell * { transition: none !important; } }
+
+/* Recording mode (?demo=1): only the world, the wordmark and the place caption. */
+body.garden-demo :is(.qw-header-actions,.qw-zoom,.qw-hint,.qw-discover,#offline-toast,#loading-screen .loading-sub) { display: none !important; }
+body.garden-demo #quiet-shell { pointer-events: none; }
+body.garden-demo .qw-wordmark { font-size: clamp(24px, 2.4vw, 36px); }
+body.garden-demo .qw-day { font-size: clamp(12px, 1.1vw, 16px); }
+body.garden-demo .qw-footer { bottom: max(48px, 6vh); }
+body.garden-demo .qw-place { font-size: clamp(15px, 1.4vw, 22px); font-weight: 600; letter-spacing: .02em; max-width: 90vw; padding: 8px 18px; border-radius: 99px; background: #111b17b3; backdrop-filter: blur(12px); transition: opacity .4s; }
+body.garden-demo .qw-place:empty { opacity: 0; }
+@media (orientation: portrait) {
+  body.garden-demo .qw-header { top: max(64px, 5vh); }
+  body.garden-demo .qw-wordmark { font-size: clamp(26px, 4vw, 44px); }
+  body.garden-demo .qw-day { font-size: clamp(13px, 1.8vw, 20px); }
+  body.garden-demo .qw-place { font-size: clamp(16px, 2.6vw, 28px); }
+  body.garden-demo .qw-footer { bottom: max(120px, 11vh); }
+}
