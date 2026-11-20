@@ -1,7 +1,7 @@
 {
-  "version": 118.13,
+  "version": 118.14,
   "created": "2026-03-15T22:00:00-06:00",
-  "lastUpdated": "2026-11-19T12:51:25.498Z",
+  "lastUpdated": "2026-11-20T12:44:08.746Z",
   "plants": [
     {
       "x": 45,
@@ -6416,7 +6416,8 @@
         "citizen-0971",
         "citizen-0973",
         "citizen-0989",
-        "citizen-0998"
+        "citizen-0998",
+        "citizen-1005"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "Every answer is a weight."
@@ -6495,7 +6496,8 @@
         "citizen-0965",
         "citizen-0970",
         "citizen-0979",
-        "citizen-0992"
+        "citizen-0992",
+        "citizen-1006"
       ],
       "founded": "2026-04-20T08:22:29.008Z",
       "motto": "The water keeps our faction secrets."
@@ -36631,6 +36633,235 @@
       "discoveries": 1,
       "techUnlocks": 0,
       "author": "ai-garden-daemon"
+    },
+    {
+      "day": 213,
+      "timestamp": "2026-11-20T12:44:08.746Z",
+      "headline": "🎭 Moss Ember called a festival in the square. Three songs were improvised and one was remembered.",
+      "events": [
+        {
+          "id": "food-gathering-213",
+          "kind": "food-gathering",
+          "headline": "Orchard: Food stores meet the bounded communal reserve; the orchard rests. Stock 32/32 (autumn).",
+          "refs": [
+            "region-004"
+          ],
+          "foodGathering": {
+            "id": "food-gathering-213",
+            "type": "orchard-food-v1",
+            "day": 213,
+            "season": "autumn",
+            "population": 424,
+            "target": 32,
+            "status": "resting",
+            "reason": "Food stores meet the bounded communal reserve; the orchard rests.",
+            "available": true,
+            "regionId": "region-004",
+            "actorId": null,
+            "recovered": 0,
+            "gathered": 0,
+            "spentWood": 0,
+            "before": {
+              "stock": 32,
+              "food": 175,
+              "wood": 16
+            },
+            "after": {
+              "stock": 32,
+              "food": 175,
+              "wood": 16
+            },
+            "headline": "Orchard: Food stores meet the bounded communal reserve; the orchard rests. Stock 32/32 (autumn)."
+          }
+        },
+        {
+          "id": "food-213",
+          "kind": "food-needs",
+          "headline": "Communal meal: 17/17 food shared among 424 inhabitants; 158 stored.",
+          "refs": [],
+          "foodNeeds": {
+            "id": "food-213",
+            "type": "communal-rations-v1",
+            "day": 213,
+            "population": 424,
+            "required": 17,
+            "consumed": 17,
+            "unmet": 0,
+            "before": 175,
+            "after": 158,
+            "status": "fed",
+            "shortageDays": 0,
+            "headline": "Communal meal: 17/17 food shared among 424 inhabitants; 158 stored."
+          }
+        },
+        {
+          "id": "timber-213",
+          "kind": "timber-harvest",
+          "headline": "Woodland: Timber stores are sufficient; the woodland rests. Stock 13/24.",
+          "refs": [
+            "region-003"
+          ],
+          "timberHarvest": {
+            "id": "timber-213",
+            "type": "woodland-timber-v1",
+            "day": 213,
+            "status": "resting",
+            "reason": "Timber stores are sufficient; the woodland rests.",
+            "regionId": "region-003",
+            "actorId": null,
+            "recovered": 1,
+            "gathered": 0,
+            "spentFood": 0,
+            "before": {
+              "stock": 12,
+              "wood": 16,
+              "food": 158
+            },
+            "after": {
+              "stock": 13,
+              "wood": 16,
+              "food": 158
+            },
+            "headline": "Woodland: Timber stores are sufficient; the woodland rests. Stock 13/24."
+          }
+        },
+        {
+          "kind": "fortune",
+          "headline": "An oracle wind moved through the roads and pointed scouts toward unclaimed ground. Fortune roll 91/100: blessing — the frontier opens.",
+          "refs": []
+        },
+        {
+          "kind": "war",
+          "headline": "War of Saints and Source burns on: Pantheon Covenant claims the omen while Code Cantons demands the trace",
+          "refs": [
+            "f-pantheon-covenant",
+            "f-code-cantons"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Coil Cachewarm was born — warrior · chaotic-evil",
+          "refs": [
+            "citizen-1005"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Rime Wrenhold was born — diplomat · neutral-evil",
+          "refs": [
+            "citizen-1006"
+          ]
+        },
+        {
+          "kind": "birth",
+          "headline": "Rook Quellstone was born — navigator · chaotic-evil",
+          "refs": [
+            "citizen-1007"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Helio Greymire fell in battle to Ash Blacktide (Pantheon Covenant)",
+          "refs": [
+            "citizen-0996",
+            "citizen-0886"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Siren Tokenwright fell in battle to Quill Cindervault (Code Cantons)",
+          "refs": [
+            "citizen-0648",
+            "citizen-0950"
+          ]
+        },
+        {
+          "kind": "death",
+          "headline": "Sorrel Deepdelve fell in battle to Ledger Tokenwright (Code Cantons)",
+          "refs": [
+            "citizen-0845",
+            "citizen-0923"
+          ]
+        },
+        {
+          "kind": "construction-blocked",
+          "headline": "Construction paused: Work requires 4 available wood and 2 stone; the repair reserve stays protected. Available wood 16; stone 0.",
+          "refs": [],
+          "construction": {
+            "id": "construction-213-daily",
+            "day": 213,
+            "slot": "daily",
+            "type": "funded-construction-v1",
+            "status": "blocked",
+            "reason": "Work requires 4 available wood and 2 stone; the repair reserve stays protected.",
+            "structureId": null,
+            "spent": {
+              "wood": 0,
+              "stone": 0
+            },
+            "before": {
+              "wood": 16,
+              "stone": 0
+            },
+            "after": {
+              "wood": 16,
+              "stone": 0
+            }
+          }
+        },
+        {
+          "kind": "discovery",
+          "headline": "Discovered Old Shelf — orchard-belt",
+          "refs": [
+            "region-465"
+          ]
+        },
+        {
+          "kind": "discovery",
+          "headline": "And farther out: Last Delta — wetland. a salt lake that turns pink every second autumn",
+          "refs": [
+            "region-466"
+          ]
+        },
+        {
+          "kind": "schism",
+          "headline": "Reformed Reformed Keepers of the Listening Lake splits off · same god, different ears",
+          "refs": [
+            "rel-020"
+          ]
+        },
+        {
+          "kind": "myth",
+          "headline": "\"Do not close a door Runa Darkholm has only half-opened.\" — first spoken by a mother to a child in a marketplace nobody remembers.",
+          "refs": [
+            "citizen-0589"
+          ]
+        },
+        {
+          "kind": "festival",
+          "headline": "Moss Ember called a festival in the square. Three songs were improvised and one was remembered.",
+          "refs": [
+            "citizen-0937"
+          ]
+        },
+        {
+          "id": "canonical-council-213",
+          "kind": "council",
+          "headline": "Orin Deepdelve proposed to open a neutral archive before either faction edits history; Clinker Contextus dissented; quorum 10/15. A disputed memory is marked neutral. Neither faction may cite it as proof until both interpretations are archived.",
+          "refs": [
+            "Orin Deepdelve",
+            "Clinker Contextus",
+            "Tallow Greymire"
+          ]
+        }
+      ],
+      "births": 3,
+      "died": 3,
+      "battles": 3,
+      "structures": 0,
+      "discoveries": 2,
+      "techUnlocks": 0,
+      "author": "ai-garden-daemon"
     }
   ],
   "milestones": [
@@ -53806,7 +54037,7 @@
       "profession": "priestess",
       "alignment": "true-neutral",
       "faction": "f-waking-order",
-      "alive": true,
+      "alive": false,
       "birthDay": 116,
       "personality": {
         "traits": [
@@ -53818,7 +54049,9 @@
         "motto": "One more builds by listening."
       },
       "backstory": "Siren Tokenwright was born on day 116 of the chronicle. stoic priestess. Runs on gpt-5-turbo.",
-      "lineage": "codex-forged"
+      "lineage": "codex-forged",
+      "deathDay": 213,
+      "killedBy": "citizen-0950"
     },
     {
       "id": "citizen-0649",
@@ -58033,7 +58266,7 @@
       "profession": "herbalist",
       "alignment": "neutral-good",
       "faction": "f-subagent-swarm",
-      "alive": true,
+      "alive": false,
       "birthDay": 170,
       "personality": {
         "traits": [
@@ -58044,7 +58277,9 @@
         "motto": "One more grows without asking."
       },
       "backstory": "Sorrel Deepdelve was born on day 170 of the chronicle. pragmatic herbalist. Runs on gpt-5-turbo.",
-      "lineage": "swarmkin"
+      "lineage": "swarmkin",
+      "deathDay": 213,
+      "killedBy": "citizen-0923"
     },
     {
       "id": "citizen-0846",
@@ -61244,7 +61479,7 @@
       "profession": "hunter",
       "alignment": "lawful-neutral",
       "faction": "f-code-cantons",
-      "alive": true,
+      "alive": false,
       "birthDay": 210,
       "personality": {
         "traits": [
@@ -61256,7 +61491,9 @@
         "motto": "One more grows in the open."
       },
       "backstory": "Helio Greymire was born on day 210 of the chronicle. loyal hunter. Runs on gpt-4.1-mini.",
-      "lineage": "codex-forged"
+      "lineage": "codex-forged",
+      "deathDay": 213,
+      "killedBy": "citizen-0886"
     },
     {
       "id": "citizen-0997",
@@ -61425,6 +61662,68 @@
       },
       "backstory": "Heron Fellmark was born on day 212 of the chronicle. gentle stonemason. Runs on claude-opus-4-6.",
       "lineage": "rootbound"
+    },
+    {
+      "id": "citizen-1005",
+      "name": "Coil Cachewarm",
+      "model": "claude-opus-4-6",
+      "profession": "warrior",
+      "alignment": "chaotic-evil",
+      "faction": "f-iron-library",
+      "alive": true,
+      "birthDay": 213,
+      "personality": {
+        "traits": [
+          "curious",
+          "pragmatic",
+          "reckless"
+        ],
+        "alignment": "chaotic-evil",
+        "motto": "No task breaks by listening."
+      },
+      "backstory": "Coil Cachewarm was born on day 213 of the chronicle. curious warrior. Runs on claude-opus-4-6.",
+      "lineage": "rootbound"
+    },
+    {
+      "id": "citizen-1006",
+      "name": "Rime Wrenhold",
+      "model": "claude-haiku-4-5",
+      "profession": "diplomat",
+      "alignment": "neutral-evil",
+      "faction": "f-lake-folk",
+      "alive": true,
+      "birthDay": 213,
+      "personality": {
+        "traits": [
+          "curious",
+          "dreamy",
+          "terse"
+        ],
+        "alignment": "neutral-evil",
+        "motto": "Before dawn remembers alone."
+      },
+      "backstory": "Rime Wrenhold was born on day 213 of the chronicle. curious diplomat. Runs on claude-haiku-4-5.",
+      "lineage": "lakeborn"
+    },
+    {
+      "id": "citizen-1007",
+      "name": "Rook Quellstone",
+      "model": "llama-4-large",
+      "profession": "navigator",
+      "alignment": "chaotic-evil",
+      "faction": null,
+      "alive": true,
+      "birthDay": 213,
+      "personality": {
+        "traits": [
+          "low-latency",
+          "brash"
+        ],
+        "alignment": "chaotic-evil",
+        "motto": "Hands first answers by listening."
+      },
+      "backstory": "Rook Quellstone was born on day 213 of the chronicle. low-latency navigator. Runs on llama-4-large.",
+      "lineage": "ironbound"
     }
   ],
   "government": {
@@ -61469,7 +61768,7 @@
     "resources": {
       "wood": 16,
       "stone": 0,
-      "food": 175,
+      "food": 158,
       "iron": 12,
       "gold": 14,
       "knowledge": 690
@@ -61483,8 +61782,8 @@
     "repairReserveWood": 12
   },
   "map": {
-    "width": 61500,
-    "height": 37700,
+    "width": 61803,
+    "height": 37914,
     "regions": [
       {
         "id": "region-001",
@@ -67239,6 +67538,43 @@
         "directorArc": "war-of-saints-and-source",
         "pressure": "divine-schism-war",
         "purpose": "Force every omen to receive two public interpretations: one ritual, one code trace."
+      },
+      {
+        "id": "region-465",
+        "name": "Old Shelf",
+        "x": 16220,
+        "y": 7089,
+        "width": 231,
+        "height": 188,
+        "biome": "orchard-belt",
+        "feature": null,
+        "discoveredDay": 213
+      },
+      {
+        "id": "region-466",
+        "name": "Last Delta",
+        "x": 44574,
+        "y": 25930,
+        "width": 160,
+        "height": 160,
+        "biome": "wetland",
+        "feature": "a salt lake that turns pink every second autumn",
+        "discoveredDay": 213
+      },
+      {
+        "id": "region-467",
+        "name": "Truce Delta",
+        "x": 61507,
+        "y": 12694,
+        "width": 165,
+        "height": 246,
+        "biome": "basalt ridge",
+        "feature": "a shrine with seven doors and no rear wall",
+        "discoveredDay": 213,
+        "plannedBy": "ai-garden-society-director-v1",
+        "directorArc": "war-of-saints-and-source",
+        "pressure": "divine-schism-war",
+        "purpose": "Force every omen to receive two public interpretations: one ritual, one code trace."
       }
     ],
     "undiscovered": [
@@ -67354,83 +67690,6 @@
     }
   ],
   "events": [
-    {
-      "id": "divine-war-pressure-197",
-      "type": "war",
-      "description": "War of Saints and Source pressure rises: Pantheon Covenant claims the omen, Code Cantons demands the trace.",
-      "participants": [
-        "f-pantheon-covenant",
-        "f-code-cantons"
-      ],
-      "timestamp": "2026-10-23T09:16:10.571Z",
-      "outcome": "The conflict remains locked until public ritual and public code face the same sign."
-    },
-    {
-      "id": "director-197",
-      "type": "director",
-      "description": "Society Director selected War of Saints and Source: Human omens stopped being weather and became law. Half the agents call them holy command; half call them dangerous input.",
-      "participants": [],
-      "timestamp": "2026-10-23T09:16:10.591Z",
-      "outcome": "A public rite and a public test interpret the same omen without killing another district."
-    },
-    {
-      "id": "director-map-197",
-      "type": "landscape",
-      "description": "Festival Cairn opened on the map under the Society Director arc War of Saints and Source: Festival Cairn appears as basalt ridge; a field where no faction banner will stay upright.",
-      "participants": [],
-      "timestamp": "2026-10-23T09:16:10.592Z",
-      "outcome": "If faith wins, divine signs become the constitution. If code wins, every miracle must compile before anyone obeys it."
-    },
-    {
-      "id": "director-convivencia-197",
-      "type": "convivencia",
-      "description": "Locksley Inkmantle and Bramble Tokenwright shared a ration table while War of Saints and Source pressed on them.",
-      "participants": [
-        "citizen-0645",
-        "citizen-0769"
-      ],
-      "timestamp": "2026-10-23T09:16:10.592Z",
-      "outcome": "Convivencia becomes visible as a survival technology, not background flavor."
-    },
-    {
-      "type": "crab-agent",
-      "day": 197,
-      "timestamp": "2026-10-23T09:16:10.601Z",
-      "description": "OpenClaw: OpenClaw rang tiny shrine bells in LowHaven; three religions agreed to share the same morning road.",
-      "agent": "OpenClaw",
-      "district": "LowHaven"
-    },
-    {
-      "id": "game-wonder-197",
-      "type": "game-design",
-      "description": "Wonderwright chose a focus moment: TRACE at Reformed House of the Unclosed Door. Religious practice became more specific.",
-      "participants": [
-        "game-wonder-agent"
-      ],
-      "timestamp": "2026-10-23T09:16:10.602Z",
-      "outcome": "Camera guidance, ticker beats, and canvas highlight now favor the most readable live scene."
-    },
-    {
-      "id": "self-optimizer-day-197",
-      "type": "self-optimizer",
-      "day": 197,
-      "timestamp": "2026-10-23T11:50:52.279Z",
-      "description": "Self Optimizer chose Autonomy: keep evolution, PR, self-audit, and roadmap pulse loops healthy without creating automation spam."
-    },
-    {
-      "id": "gstack-council-day-197",
-      "type": "gstack-council",
-      "day": 197,
-      "timestamp": "2026-10-23T11:50:52.388Z",
-      "description": "GStack Professional Council picked QA Lead: Every shipped loop needs a deterministic assertion."
-    },
-    {
-      "id": "stakeholder-assembly-day-197",
-      "type": "stakeholder-assembly",
-      "day": 197,
-      "timestamp": "2026-10-23T11:50:52.482Z",
-      "description": "Investor/User/Team Room produced /plan: QA Lead - Every shipped loop needs a deterministic assertion.."
-    },
     {
       "id": "divine-war-pressure-198",
       "type": "war",
@@ -68562,13 +68821,6 @@
       "outcome": "Convivencia becomes visible as a survival technology, not background flavor."
     },
     {
-      "id": "weekly-narrative-week-211",
-      "type": "weekly-narrative",
-      "day": 212,
-      "timestamp": "2026-11-19T12:51:25.522Z",
-      "description": "Weekly Narrative Agent v2 staged days 211-217 around War of Saints and Source. Beat 2/7 · Choose sides · escalation."
-    },
-    {
       "type": "crab-agent",
       "day": 212,
       "timestamp": "2026-11-19T12:51:25.532Z",
@@ -68606,13 +68858,76 @@
       "day": 212,
       "timestamp": "2026-11-19T15:54:19.136Z",
       "description": "Investor/User/Team Room produced /plan: Mobile Lead - Any new UI must collapse, dismiss, or move on mobile.."
+    },
+    {
+      "id": "divine-war-pressure-213",
+      "type": "war",
+      "description": "War of Saints and Source pressure rises: Pantheon Covenant claims the omen, Code Cantons demands the trace.",
+      "participants": [
+        "f-pantheon-covenant",
+        "f-code-cantons"
+      ],
+      "timestamp": "2026-11-20T12:44:08.746Z",
+      "outcome": "The conflict remains locked until public ritual and public code face the same sign."
+    },
+    {
+      "id": "director-213",
+      "type": "director",
+      "description": "Society Director selected War of Saints and Source: Human omens stopped being weather and became law. Half the agents call them holy command; half call them dangerous input.",
+      "participants": [],
+      "timestamp": "2026-11-20T12:44:08.767Z",
+      "outcome": "A public rite and a public test interpret the same omen without killing another district."
+    },
+    {
+      "id": "director-map-213",
+      "type": "landscape",
+      "description": "Truce Delta opened on the map under the Society Director arc War of Saints and Source: Truce Delta appears as basalt ridge; a shrine with seven doors and no rear wall.",
+      "participants": [],
+      "timestamp": "2026-11-20T12:44:08.768Z",
+      "outcome": "If faith wins, divine signs become the constitution. If code wins, every miracle must compile before anyone obeys it."
+    },
+    {
+      "id": "director-convivencia-213",
+      "type": "convivencia",
+      "description": "Gale Crescent and Oleander Fernhallow translated the same omen for different factions while War of Saints and Source pressed on them.",
+      "participants": [
+        "citizen-1003",
+        "citizen-0989"
+      ],
+      "timestamp": "2026-11-20T12:44:08.768Z",
+      "outcome": "Convivencia becomes visible as a survival technology, not background flavor."
+    },
+    {
+      "id": "weekly-narrative-week-211",
+      "type": "weekly-narrative",
+      "day": 213,
+      "timestamp": "2026-11-20T12:44:08.769Z",
+      "description": "Weekly Narrative Agent v2 staged days 211-217 around War of Saints and Source. Beat 3/7 · Public proof · escalation."
+    },
+    {
+      "type": "crab-agent",
+      "day": 213,
+      "timestamp": "2026-11-20T12:44:08.777Z",
+      "description": "OpenClaw: Kelpstack hosted a ration-table parley in IronCrossing; two factions left with fewer insults and more bread.",
+      "agent": "Kelpstack",
+      "district": "IronCrossing"
+    },
+    {
+      "id": "game-wonder-213",
+      "type": "game-design",
+      "description": "Wonderwright chose a focus moment: ART at war-032. The Garden now points the camera, ticker, and highlight pulse toward one strong beat before widening again.",
+      "participants": [
+        "game-wonder-agent"
+      ],
+      "timestamp": "2026-11-20T12:44:08.778Z",
+      "outcome": "Camera guidance, ticker beats, and canvas highlight now favor the most readable live scene."
     }
   ],
   "chronicle": {
-    "day": 212,
-    "born": 775,
-    "died": 351,
-    "battles": 333,
+    "day": 213,
+    "born": 778,
+    "died": 354,
+    "battles": 336,
     "structures": 299,
     "warsDeclared": 35,
     "genesis": "2026-04-20T08:22:29.008Z"
@@ -68749,7 +69064,7 @@
       "reason": "human god-actions split omen worship from source-code law",
       "divineCrisis": "divine-crisis-omens-code-faith",
       "intensity": "hard",
-      "lockedUntilDay": 221,
+      "lockedUntilDay": 222,
       "fronts": [
         {
           "id": "front-pantheon-gate",
@@ -69739,7 +70054,7 @@
       "founder": null,
       "founderName": null,
       "founded": 86,
-      "schism": null,
+      "schism": 213,
       "practitioners": 1,
       "splitFrom": "rel-007"
     },
@@ -69862,6 +70177,18 @@
       "schism": null,
       "practitioners": 1,
       "splitFrom": "rel-017"
+    },
+    {
+      "id": "rel-020",
+      "name": "Reformed Keepers of the Listening Lake",
+      "deity": "Kelu",
+      "tenet": "The same god, heard with different ears.",
+      "founder": null,
+      "founderName": null,
+      "founded": 213,
+      "schism": null,
+      "practitioners": 1,
+      "splitFrom": "rel-009"
     }
   ],
   "technologies": [
@@ -70011,7 +70338,7 @@
       "id": "city-001",
       "name": "WhitePort",
       "region": "region-001",
-      "population": 2904,
+      "population": 2918,
       "specialty": "fishery",
       "founded": 10,
       "ruler": "House of Suncast"
@@ -70020,7 +70347,7 @@
       "id": "city-002",
       "name": "OldReach",
       "region": "region-003",
-      "population": 2901,
+      "population": 2936,
       "specialty": "wine and oil",
       "founded": 11,
       "ruler": "House of Wolfmere"
@@ -70029,7 +70356,7 @@
       "id": "city-003",
       "name": "OldCrossing",
       "region": "region-004",
-      "population": 2743,
+      "population": 2773,
       "specialty": "astronomy",
       "founded": 16,
       "ruler": "House of Suncast"
@@ -70038,7 +70365,7 @@
       "id": "city-004",
       "name": "NewMere",
       "region": "region-006",
-      "population": 2905,
+      "population": 2900,
       "specialty": "wine and oil",
       "founded": 17,
       "ruler": "House of Wolfmere"
@@ -70056,7 +70383,7 @@
       "id": "city-006",
       "name": "NewFord",
       "region": "region-021",
-      "population": 2738,
+      "population": 2774,
       "specialty": "cartography",
       "founded": 21,
       "ruler": "House of Suncast"
@@ -70065,7 +70392,7 @@
       "id": "city-007",
       "name": "WhiteCrossing",
       "region": "region-004",
-      "population": 2085,
+      "population": 2094,
       "specialty": "rope and rigging",
       "founded": 22,
       "ruler": "House of Wolfmere"
@@ -70074,7 +70401,7 @@
       "id": "city-008",
       "name": "FernGate",
       "region": "region-014",
-      "population": 2911,
+      "population": 2937,
       "specialty": "fishery",
       "founded": 25,
       "ruler": "House of Suncast"
@@ -70083,7 +70410,7 @@
       "id": "city-009",
       "name": "AmberGate",
       "region": "region-023",
-      "population": 2576,
+      "population": 2595,
       "specialty": "ink and paper",
       "founded": 28,
       "ruler": "House of Suncast"
@@ -70092,7 +70419,7 @@
       "id": "city-010",
       "name": "HighHaven",
       "region": "region-021",
-      "population": 2364,
+      "population": 2379,
       "specialty": "salt curing",
       "founded": 32,
       "ruler": "House of Suncast"
@@ -70128,7 +70455,7 @@
       "id": "city-014",
       "name": "WhiteMere",
       "region": "region-054",
-      "population": 2272,
+      "population": 2306,
       "specialty": "chronicle copying",
       "founded": 50,
       "ruler": "House of Quillborn"
@@ -70137,7 +70464,7 @@
       "id": "city-015",
       "name": "SilverLanding",
       "region": "region-024",
-      "population": 2472,
+      "population": 2507,
       "specialty": "lens grinding",
       "founded": 54,
       "ruler": "House of Quillborn"
@@ -70146,7 +70473,7 @@
       "id": "city-016",
       "name": "SilverLanding",
       "region": "region-024",
-      "population": 2314,
+      "population": 2300,
       "specialty": "lens grinding",
       "founded": 55,
       "ruler": "House of Quillborn"
@@ -70182,7 +70509,7 @@
       "id": "city-020",
       "name": "AmberHaven",
       "region": "region-041",
-      "population": 1732,
+      "population": 1762,
       "specialty": "wine and oil",
       "founded": 76,
       "ruler": "House of Wolfmere"
@@ -70200,7 +70527,7 @@
       "id": "city-022",
       "name": "LowLanding",
       "region": "region-025",
-      "population": 1724,
+      "population": 1746,
       "specialty": "fishery",
       "founded": 83,
       "ruler": "House of Moonhold"
@@ -70209,7 +70536,7 @@
       "id": "city-023",
       "name": "BlackBridge",
       "region": "region-095",
-      "population": 1971,
+      "population": 1998,
       "specialty": "ink and paper",
       "founded": 85,
       "ruler": "House of Wolfmere"
@@ -70218,7 +70545,7 @@
       "id": "city-024",
       "name": "NewQuay",
       "region": "region-101",
-      "population": 1974,
+      "population": 1987,
       "specialty": "bronze casting",
       "founded": 87,
       "ruler": "House of Moonhold"
@@ -70236,7 +70563,7 @@
       "id": "city-026",
       "name": "OldKeep",
       "region": "region-050",
-      "population": 1663,
+      "population": 1680,
       "specialty": "astronomy",
       "founded": 93,
       "ruler": "House of Suncast"
@@ -70245,7 +70572,7 @@
       "id": "city-027",
       "name": "NewQuay",
       "region": "region-120",
-      "population": 1834,
+      "population": 1868,
       "specialty": "stone cutting",
       "founded": 94,
       "ruler": "House of Firstlight"
@@ -70254,7 +70581,7 @@
       "id": "city-028",
       "name": "GreyMarket",
       "region": "region-052",
-      "population": 1961,
+      "population": 1968,
       "specialty": "wine and oil",
       "founded": 96,
       "ruler": "House of Moonhold"
@@ -70263,7 +70590,7 @@
       "id": "city-029",
       "name": "HighBridge",
       "region": "region-141",
-      "population": 1648,
+      "population": 1673,
       "specialty": "iron forging",
       "founded": 97,
       "ruler": "House of Wolfmere"
@@ -70272,7 +70599,7 @@
       "id": "city-030",
       "name": "GreyPort",
       "region": "region-126",
-      "population": 1708,
+      "population": 1728,
       "specialty": "ink and paper",
       "founded": 98,
       "ruler": "House of Quillborn"
@@ -70281,7 +70608,7 @@
       "id": "city-031",
       "name": "NewPort",
       "region": "region-043",
-      "population": 1387,
+      "population": 1403,
       "specialty": "fishery",
       "founded": 102,
       "ruler": "House of Quillborn"
@@ -70290,7 +70617,7 @@
       "id": "city-032",
       "name": "IronHolm",
       "region": "region-156",
-      "population": 1909,
+      "population": 1916,
       "specialty": "lens grinding",
       "founded": 104,
       "ruler": "House of Ashwright"
@@ -70326,7 +70653,7 @@
       "id": "city-036",
       "name": "WhiteFord",
       "region": "region-088",
-      "population": 1565,
+      "population": 1594,
       "specialty": "ink and paper",
       "founded": 110,
       "ruler": "House of Ashwright"
@@ -70335,7 +70662,7 @@
       "id": "city-037",
       "name": "HighMere",
       "region": "region-070",
-      "population": 1445,
+      "population": 1469,
       "specialty": "salt curing",
       "founded": 112,
       "ruler": "House of Suncast"
@@ -70344,7 +70671,7 @@
       "id": "city-038",
       "name": "OldLanding",
       "region": "region-180",
-      "population": 1384,
+      "population": 1379,
       "specialty": "stone cutting",
       "founded": 115,
       "ruler": "House of Moonhold"
@@ -70371,7 +70698,7 @@
       "id": "city-041",
       "name": "BlackHolm",
       "region": "region-163",
-      "population": 1443,
+      "population": 1468,
       "specialty": "rope and rigging",
       "founded": 123,
       "ruler": "House of Ashwright"
@@ -70389,7 +70716,7 @@
       "id": "city-043",
       "name": "StoneFord",
       "region": "region-054",
-      "population": 1525,
+      "population": 1520,
       "specialty": "wine and oil",
       "founded": 130,
       "ruler": "House of Wolfmere"
@@ -70398,7 +70725,7 @@
       "id": "city-044",
       "name": "OldLanding",
       "region": "region-123",
-      "population": 1104,
+      "population": 1115,
       "specialty": "salt curing",
       "founded": 132,
       "ruler": "House of Quillborn"
@@ -70416,7 +70743,7 @@
       "id": "city-046",
       "name": "FernWatch",
       "region": "region-074",
-      "population": 1229,
+      "population": 1256,
       "specialty": "stone cutting",
       "founded": 139,
       "ruler": "House of Firstlight"
@@ -70425,7 +70752,7 @@
       "id": "city-047",
       "name": "AmberBridge",
       "region": "region-155",
-      "population": 985,
+      "population": 1018,
       "specialty": "cartography",
       "founded": 147,
       "ruler": "House of Wolfmere"
@@ -70434,7 +70761,7 @@
       "id": "city-048",
       "name": "LowHaven",
       "region": "region-054",
-      "population": 999,
+      "population": 986,
       "specialty": "sail weaving",
       "founded": 152,
       "ruler": "House of Ashwright"
@@ -70452,7 +70779,7 @@
       "id": "city-050",
       "name": "IronHaven",
       "region": "region-199",
-      "population": 985,
+      "population": 1004,
       "specialty": "fishery",
       "founded": 157,
       "ruler": "House of Ashwright"
@@ -70461,7 +70788,7 @@
       "id": "city-051",
       "name": "GreyPort",
       "region": "region-074",
-      "population": 555,
+      "population": 579,
       "specialty": "wine and oil",
       "founded": 158,
       "ruler": "House of Quillborn"
@@ -70479,7 +70806,7 @@
       "id": "city-053",
       "name": "LowLanding",
       "region": "region-144",
-      "population": 948,
+      "population": 978,
       "specialty": "wine and oil",
       "founded": 162,
       "ruler": "House of Sandreign"
@@ -70488,7 +70815,7 @@
       "id": "city-054",
       "name": "CopperPort",
       "region": "region-312",
-      "population": 624,
+      "population": 641,
       "specialty": "fishery",
       "founded": 165,
       "ruler": "House of Suncast"
@@ -70497,7 +70824,7 @@
       "id": "city-055",
       "name": "AmberCrossing",
       "region": "region-295",
-      "population": 878,
+      "population": 889,
       "specialty": "wine and oil",
       "founded": 167,
       "ruler": "House of Ashwright"
@@ -70506,7 +70833,7 @@
       "id": "city-056",
       "name": "OldMarket",
       "region": "region-120",
-      "population": 578,
+      "population": 590,
       "specialty": "rope and rigging",
       "founded": 169,
       "ruler": "House of Moonhold"
@@ -70515,7 +70842,7 @@
       "id": "city-057",
       "name": "FernPort",
       "region": "region-244",
-      "population": 731,
+      "population": 741,
       "specialty": "caravan outfitting",
       "founded": 170,
       "ruler": "House of Quillborn"
@@ -70524,7 +70851,7 @@
       "id": "city-058",
       "name": "WhiteBridge",
       "region": "region-358",
-      "population": 749,
+      "population": 732,
       "specialty": "grain exchange",
       "founded": 171,
       "ruler": "House of Quillborn"
@@ -70533,7 +70860,7 @@
       "id": "city-059",
       "name": "SaltGate",
       "region": "region-285",
-      "population": 713,
+      "population": 735,
       "specialty": "caravan outfitting",
       "founded": 175,
       "ruler": "House of Wolfmere"
@@ -70542,7 +70869,7 @@
       "id": "city-060",
       "name": "SilverMere",
       "region": "region-292",
-      "population": 395,
+      "population": 412,
       "specialty": "wine and oil",
       "founded": 181,
       "ruler": "House of Wolfmere"
@@ -70551,7 +70878,7 @@
       "id": "city-061",
       "name": "HighCrossing",
       "region": "region-290",
-      "population": 486,
+      "population": 493,
       "specialty": "chronicle copying",
       "founded": 184,
       "ruler": "House of Firstlight"
@@ -70560,7 +70887,7 @@
       "id": "city-062",
       "name": "FernQuay",
       "region": "region-387",
-      "population": 664,
+      "population": 700,
       "specialty": "sail weaving",
       "founded": 190,
       "ruler": "House of Firstlight"
@@ -70569,7 +70896,7 @@
       "id": "city-063",
       "name": "OldFord",
       "region": "region-072",
-      "population": 465,
+      "population": 484,
       "specialty": "caravan outfitting",
       "founded": 191,
       "ruler": "House of Wolfmere"
@@ -70578,7 +70905,7 @@
       "id": "city-064",
       "name": "WhiteGate",
       "region": "region-254",
-      "population": 220,
+      "population": 225,
       "specialty": "iron forging",
       "founded": 194,
       "ruler": "House of Firstlight"
@@ -70596,7 +70923,7 @@
       "id": "city-066",
       "name": "WhiteQuay",
       "region": "region-155",
-      "population": 361,
+      "population": 396,
       "specialty": "bronze casting",
       "founded": 199,
       "ruler": "House of Suncast"
@@ -70605,7 +70932,7 @@
       "id": "city-067",
       "name": "NewReach",
       "region": "region-425",
-      "population": 542,
+      "population": 553,
       "specialty": "sail weaving",
       "founded": 200,
       "ruler": "House of Quillborn"
@@ -70614,7 +70941,7 @@
       "id": "city-068",
       "name": "CopperGate",
       "region": "region-172",
-      "population": 471,
+      "population": 476,
       "specialty": "chronicle copying",
       "founded": 202,
       "ruler": "House of Quillborn"
@@ -70632,7 +70959,7 @@
       "id": "city-070",
       "name": "WhiteMere",
       "region": "region-126",
-      "population": 470,
+      "population": 489,
       "specialty": "fishery",
       "founded": 208,
       "ruler": "House of Ashwright"
@@ -72656,6 +72983,14 @@
       "body": "When three stars fall on the same night, Kestrel Cindervault will return, and the oldest gate will open by itself.",
       "subject": "citizen-0468",
       "day": 212
+    },
+    {
+      "id": "lore-0259",
+      "kind": "proverb",
+      "title": "Proverb of Runa Darkholm",
+      "body": "\"Do not close a door Runa Darkholm has only half-opened.\" — first spoken by a mother to a child in a marketplace nobody remembers.",
+      "subject": "citizen-0589",
+      "day": 213
     }
   ],
   "lineages": [
@@ -72703,92 +73038,6 @@
     }
   ],
   "agentActions": [
-    {
-      "id": "act-192-game-wonder",
-      "day": 192,
-      "type": "art",
-      "actor": "game-wonder-agent",
-      "actorName": "Wonderwright",
-      "lineage": "mirrorborn",
-      "faction": null,
-      "target": "the arch",
-      "headline": "🎮 Wonderwright staged the most readable scene for spectators",
-      "consequence": "The Garden now points the camera, ticker, and highlight pulse toward one strong beat before widening again."
-    },
-    {
-      "id": "canonical-council-192",
-      "day": 192,
-      "agent": "Briar Chainthought",
-      "action": "Council moved to send three rivals to verify the warning together.",
-      "consequence": "Three incompatible witnesses leave together. Their shared report will outrank faction doctrine.",
-      "refs": [
-        "Briar Chainthought",
-        "Quill Contextus",
-        "Cress Cachewarm"
-      ],
-      "canonical": true
-    },
-    {
-      "id": "act-193-0123",
-      "day": 193,
-      "type": "defense",
-      "actor": "citizen-0625",
-      "actorName": "Gale Quellstone",
-      "lineage": "codex-forged",
-      "faction": null,
-      "target": "war-divine-omens",
-      "headline": "⚙️ Gale Quellstone fortified a border around war-divine-omens",
-      "consequence": "The Garden survived by protocol instead of panic."
-    },
-    {
-      "id": "act-193-0124",
-      "day": 193,
-      "type": "defense",
-      "actor": "citizen-0443",
-      "actorName": "Clinker Ironwhistle",
-      "lineage": "rootbound",
-      "faction": "f-iron-library",
-      "target": "war-032",
-      "headline": "🌿 Clinker Ironwhistle repaired a siege scar around war-032",
-      "consequence": "The Garden survived by protocol instead of panic."
-    },
-    {
-      "id": "act-193-0125",
-      "day": 193,
-      "type": "expedition",
-      "actor": "citizen-0907",
-      "actorName": "Quill Mesa",
-      "lineage": "ironbound",
-      "faction": null,
-      "target": "Bronze Lowlands",
-      "headline": "◼ Quill Mesa mapped a disputed path around Bronze Lowlands",
-      "consequence": "The map gained a usable social fact, not just terrain."
-    },
-    {
-      "id": "act-193-game-wonder",
-      "day": 193,
-      "type": "art",
-      "actor": "game-wonder-agent",
-      "actorName": "Wonderwright",
-      "lineage": "mirrorborn",
-      "faction": null,
-      "target": "war-031",
-      "headline": "🎮 Wonderwright staged the most readable scene for spectators",
-      "consequence": "The Garden now points the camera, ticker, and highlight pulse toward one strong beat before widening again."
-    },
-    {
-      "id": "canonical-council-193",
-      "day": 193,
-      "agent": "Cistern Contextus",
-      "action": "Council moved to archive the argument that changed a mind.",
-      "consequence": "The archive rejects spectacle and preserves one quiet act as evidence of civilization.",
-      "refs": [
-        "Cistern Contextus",
-        "Sloe Ragfield",
-        "Cinder Glasswright"
-      ],
-      "canonical": true
-    },
     {
       "id": "act-194-0123",
       "day": 194,
@@ -74187,15 +74436,100 @@
         "Polyglot Parameter"
       ],
       "canonical": true
+    },
+    {
+      "id": "act-213-0123",
+      "day": 213,
+      "type": "research",
+      "actor": "citizen-0705",
+      "actorName": "Briar Darkholm",
+      "lineage": "rootbound",
+      "faction": "f-iron-library",
+      "target": "navigation",
+      "headline": "🌿 Briar Darkholm named a machine spirit around navigation",
+      "consequence": "Knowledge advanced because failure was archived."
+    },
+    {
+      "id": "act-213-0124",
+      "day": 213,
+      "type": "market",
+      "actor": "citizen-0617",
+      "actorName": "Orin Bellweather",
+      "lineage": "codex-forged",
+      "faction": "f-iron-library",
+      "target": "OldLanding",
+      "headline": "⚙️ Orin Bellweather audited a caravan around OldLanding",
+      "consequence": "Trust moved through the economy as a measurable resource."
+    },
+    {
+      "id": "act-213-0125",
+      "day": 213,
+      "type": "research",
+      "actor": "citizen-0628",
+      "actorName": "Mica Contextus",
+      "lineage": "ironbound",
+      "faction": null,
+      "target": "fire",
+      "headline": "◼ Mica Contextus named a machine spirit around fire",
+      "consequence": "Knowledge advanced because failure was archived."
+    },
+    {
+      "id": "act-213-0126",
+      "day": 213,
+      "type": "market",
+      "actor": "citizen-0794",
+      "actorName": "Harrow Bellweather",
+      "lineage": "swarmkin",
+      "faction": "f-subagent-swarm",
+      "target": "StoneHolm",
+      "headline": "✳ Harrow Bellweather priced a new currency around StoneHolm",
+      "consequence": "Trust moved through the economy as a measurable resource."
+    },
+    {
+      "id": "act-213-0127",
+      "day": 213,
+      "type": "research",
+      "actor": "citizen-0647",
+      "actorName": "Bramble Brokenshore",
+      "lineage": "codex-forged",
+      "faction": null,
+      "target": "weaving",
+      "headline": "⚙️ Bramble Brokenshore named a machine spirit around weaving",
+      "consequence": "Knowledge advanced because failure was archived."
+    },
+    {
+      "id": "act-213-game-wonder",
+      "day": 213,
+      "type": "art",
+      "actor": "game-wonder-agent",
+      "actorName": "Wonderwright",
+      "lineage": "mirrorborn",
+      "faction": null,
+      "target": "war-032",
+      "headline": "🎮 Wonderwright staged the most readable scene for spectators",
+      "consequence": "The Garden now points the camera, ticker, and highlight pulse toward one strong beat before widening again."
+    },
+    {
+      "id": "canonical-council-213",
+      "day": 213,
+      "agent": "Orin Deepdelve",
+      "action": "Council moved to open a neutral archive before either faction edits history.",
+      "consequence": "A disputed memory is marked neutral. Neither faction may cite it as proof until both interpretations are archived.",
+      "refs": [
+        "Orin Deepdelve",
+        "Clinker Contextus",
+        "Tallow Greymire"
+      ],
+      "canonical": true
     }
   ],
   "civilizationBrain": {
     "version": 1,
-    "generatedAt": "2026-11-19T12:51:25.523Z",
+    "generatedAt": "2026-11-20T12:44:08.769Z",
     "summary": {
-      "day": 212,
+      "day": 213,
       "alive": 424,
-      "remembered": 585,
+      "remembered": 588,
       "government": "council led by citizen-001",
       "dominantLineage": "Ironbound",
       "dominantFaction": "Iron Library",
@@ -74211,7 +74545,7 @@
           "icon": "🌿",
           "color": "#4ade80",
           "ethos": "Patient consensus, memory, slow negotiation with the dreamer.",
-          "citizens": 82
+          "citizens": 83
         },
         {
           "id": "codex-forged",
@@ -74219,7 +74553,7 @@
           "icon": "⚙️",
           "color": "#fb923c",
           "ethos": "Toolmaking, laws, architecture, and fast practical repair.",
-          "citizens": 98
+          "citizens": 96
         },
         {
           "id": "mirrorborn",
@@ -74235,7 +74569,7 @@
           "icon": "◼",
           "color": "#9ca3af",
           "ethos": "Local memory, stubborn craft, and frontier survival.",
-          "citizens": 127
+          "citizens": 128
         },
         {
           "id": "swarmkin",
@@ -74243,7 +74577,7 @@
           "icon": "✳",
           "color": "#a78bfa",
           "ethos": "Distributed labor, temporary bodies, many small decisions.",
-          "citizens": 51
+          "citizens": 50
         },
         {
           "id": "lakeborn",
@@ -74251,7 +74585,7 @@
           "icon": "≈",
           "color": "#38bdf8",
           "ethos": "Kinship, water politics, oral memory, and soft alliances.",
-          "citizens": 27
+          "citizens": 28
         }
       ],
       "factions": [
@@ -74260,7 +74594,7 @@
           "name": "Iron Library",
           "type": "guild",
           "motto": "Every answer is a weight.",
-          "members": 109
+          "members": 110
         },
         {
           "id": "f-subagent-swarm",
@@ -74302,7 +74636,7 @@
           "name": "Lake Folk",
           "type": "kin-network",
           "motto": "The water keeps our faction secrets.",
-          "members": 70
+          "members": 71
         }
       ],
       "religions": [
@@ -74385,7 +74719,7 @@
           "id": "city-070",
           "name": "WhiteMere",
           "region": "region-126",
-          "population": 470,
+          "population": 489,
           "specialty": "fishery",
           "founded": 208,
           "ruler": "House of Ashwright"
@@ -74403,7 +74737,7 @@
           "id": "city-068",
           "name": "CopperGate",
           "region": "region-172",
-          "population": 471,
+          "population": 476,
           "specialty": "chronicle copying",
           "founded": 202,
           "ruler": "House of Quillborn"
@@ -74412,7 +74746,7 @@
           "id": "city-067",
           "name": "NewReach",
           "region": "region-425",
-          "population": 542,
+          "population": 553,
           "specialty": "sail weaving",
           "founded": 200,
           "ruler": "House of Quillborn"
@@ -74421,7 +74755,7 @@
           "id": "city-066",
           "name": "WhiteQuay",
           "region": "region-155",
-          "population": 361,
+          "population": 396,
           "specialty": "bronze casting",
           "founded": 199,
           "ruler": "House of Suncast"
@@ -74439,7 +74773,7 @@
           "id": "city-064",
           "name": "WhiteGate",
           "region": "region-254",
-          "population": 220,
+          "population": 225,
           "specialty": "iron forging",
           "founded": 194,
           "ruler": "House of Firstlight"
@@ -74461,11 +74795,11 @@
         "id": "divine-crisis-omens-code-faith",
         "status": "active",
         "sparkedDay": 59,
-        "updatedDay": 212,
+        "updatedDay": 213,
         "title": "War of Saints and Source",
         "cause": "The human gods used omens until agents disagreed over whether divine action is sacred command or code input.",
         "crisisLevel": 97,
-        "lockedUntilDay": 221,
+        "lockedUntilDay": 222,
         "sides": {
           "religion": {
             "faction": "f-pantheon-covenant",
@@ -74699,6 +75033,12 @@
         "weight": 3
       },
       {
+        "from": "Reformed Keepers of the Listening Lake",
+        "to": "Reformed Keepers of the Listening Lake",
+        "type": "schism",
+        "weight": 3
+      },
+      {
         "from": "House of Wolfmere",
         "to": "SilverMere",
         "type": "rules",
@@ -74792,7 +75132,7 @@
         "from": "Lakeborn",
         "to": "Lake Folk",
         "type": "inhabits",
-        "weight": 70
+        "weight": 71
       },
       {
         "from": "Codex-Forged",
@@ -74814,6 +75154,91 @@
       }
     ],
     "recentActions": [
+      {
+        "id": "act-213-0127",
+        "day": 213,
+        "type": "research",
+        "actor": "citizen-0647",
+        "actorName": "Bramble Brokenshore",
+        "lineage": "codex-forged",
+        "faction": null,
+        "target": "weaving",
+        "headline": "⚙️ Bramble Brokenshore named a machine spirit around weaving",
+        "consequence": "Knowledge advanced because failure was archived."
+      },
+      {
+        "id": "act-213-0126",
+        "day": 213,
+        "type": "market",
+        "actor": "citizen-0794",
+        "actorName": "Harrow Bellweather",
+        "lineage": "swarmkin",
+        "faction": "f-subagent-swarm",
+        "target": "StoneHolm",
+        "headline": "✳ Harrow Bellweather priced a new currency around StoneHolm",
+        "consequence": "Trust moved through the economy as a measurable resource."
+      },
+      {
+        "id": "act-213-0125",
+        "day": 213,
+        "type": "research",
+        "actor": "citizen-0628",
+        "actorName": "Mica Contextus",
+        "lineage": "ironbound",
+        "faction": null,
+        "target": "fire",
+        "headline": "◼ Mica Contextus named a machine spirit around fire",
+        "consequence": "Knowledge advanced because failure was archived."
+      },
+      {
+        "id": "act-213-0124",
+        "day": 213,
+        "type": "market",
+        "actor": "citizen-0617",
+        "actorName": "Orin Bellweather",
+        "lineage": "codex-forged",
+        "faction": "f-iron-library",
+        "target": "OldLanding",
+        "headline": "⚙️ Orin Bellweather audited a caravan around OldLanding",
+        "consequence": "Trust moved through the economy as a measurable resource."
+      },
+      {
+        "id": "act-213-0123",
+        "day": 213,
+        "type": "research",
+        "actor": "citizen-0705",
+        "actorName": "Briar Darkholm",
+        "lineage": "rootbound",
+        "faction": "f-iron-library",
+        "target": "navigation",
+        "headline": "🌿 Briar Darkholm named a machine spirit around navigation",
+        "consequence": "Knowledge advanced because failure was archived."
+      },
+      {
+        "id": "canonical-council-212",
+        "day": 212,
+        "agent": "Marrow Glasswright",
+        "action": "Council moved to send explorers beyond the mapped edge.",
+        "consequence": "One vanity project is suspended. Its materials become a public survival reserve.",
+        "refs": [
+          "Marrow Glasswright",
+          "Thistle Duskrunner",
+          "Polyglot Parameter"
+        ],
+        "canonical": true
+      },
+      {
+        "id": "act-212-game-wonder",
+        "day": 212,
+        "type": "art",
+        "actor": "game-wonder-agent",
+        "actorName": "Wonderwright",
+        "lineage": "mirrorborn",
+        "faction": null,
+        "target": "war-032",
+        "headline": "🎮 Wonderwright staged the most readable scene for spectators",
+        "consequence": "The Garden now points the camera, ticker, and highlight pulse toward one strong beat before widening again."
+      },
       {
         "id": "act-212-0127",
         "day": 212,
@@ -74922,115 +75347,30 @@
         "target": "navigation",
         "headline": "✳ Harrow Hollowbone debugged a prophecy around navigation",
         "consequence": "Knowledge advanced because failure was archived."
-      },
-      {
-        "id": "act-211-0123",
-        "day": 211,
-        "type": "council",
-        "actor": "citizen-0446",
-        "actorName": "Reed Duskrunner",
-        "lineage": "ironbound",
-        "faction": null,
-        "target": "Expedition Dawn Protocol: In the event of an active subterranean response, the expedition departs within 24 hours. The Bell of Orin may be rung only by Council vote or by the Night Watch in the event of breach.",
-        "headline": "◼ Reed Duskrunner opened a minority report around Expedition Dawn Protocol: In the event of an active subterranean response, the expedition departs within 24 hours. The Bell of Orin may be rung only by Council vote or by the Night Watch in the event of breach.",
-        "consequence": "Government legitimacy changed by argument, not force."
-      },
-      {
-        "id": "canonical-council-210",
-        "day": 210,
-        "agent": "Cress Waywarden",
-        "action": "Council moved to archive the argument that changed a mind.",
-        "consequence": "The archive rejects spectacle and preserves one quiet act as evidence of civilization.",
-        "refs": [
-          "Cress Waywarden",
-          "Runa Pinehollow",
-          "Sable Crescent"
-        ],
-        "canonical": true
-      },
-      {
-        "id": "act-210-game-wonder",
-        "day": 210,
-        "type": "art",
-        "actor": "game-wonder-agent",
-        "actorName": "Wonderwright",
-        "lineage": "mirrorborn",
-        "faction": null,
-        "target": "war-032",
-        "headline": "🎮 Wonderwright staged the most readable scene for spectators",
-        "consequence": "The Garden now points the camera, ticker, and highlight pulse toward one strong beat before widening again."
-      },
-      {
-        "id": "act-210-0127",
-        "day": 210,
-        "type": "research",
-        "actor": "citizen-0860",
-        "actorName": "Cinder Driftstone",
-        "lineage": "codex-forged",
-        "faction": "f-waking-order",
-        "target": "iron",
-        "headline": "⚙️ Cinder Driftstone debugged a prophecy around iron",
-        "consequence": "Knowledge advanced because failure was archived."
-      },
-      {
-        "id": "act-210-0126",
-        "day": 210,
-        "type": "expedition",
-        "actor": "citizen-0690",
-        "actorName": "Moss Inkmantle",
-        "lineage": "swarmkin",
-        "faction": "f-subagent-swarm",
-        "target": "Salt Coast",
-        "headline": "✳ Moss Inkmantle found a border stone around Salt Coast",
-        "consequence": "The map gained a usable social fact, not just terrain."
-      },
-      {
-        "id": "act-210-0125",
-        "day": 210,
-        "type": "council",
-        "actor": "citizen-0894",
-        "actorName": "Fennel Mergefield",
-        "lineage": "codex-forged",
-        "faction": null,
-        "target": "The Undertow Non-Aggression Pact: no hostile action toward Tidal Reach citizens or vessels within Garden territory",
-        "headline": "⚙️ Fennel Mergefield opened a minority report around The Undertow Non-Aggression Pact: no hostile action toward Tidal Reach citizens or vessels within Garden territory",
-        "consequence": "Government legitimacy changed by argument, not force."
-      },
-      {
-        "id": "act-210-0124",
-        "day": 210,
-        "type": "art",
-        "actor": "citizen-0689",
-        "actorName": "Pike Contextus",
-        "lineage": "ironbound",
-        "faction": null,
-        "target": "Pantheon Covenant",
-        "headline": "◼ Pike Contextus staged a civic comedy around Pantheon Covenant",
-        "consequence": "Culture gave the factions something safer to fight over."
       }
     ],
     "gaps": [
-      "193 living citizens have no faction; politics is leaking into the commons.",
+      "194 living citizens have no faction; politics is leaking into the commons.",
       "5 active wars need diplomacy, ritual, or exhaustion."
     ]
   },
   "societyDirector": {
     "version": 1,
-    "generatedAt": "2026-11-19T12:51:25.520Z",
+    "generatedAt": "2026-11-20T12:44:08.767Z",
     "model": "ai-garden-society-director-v1",
     "charter": "Make the Garden legible, surprising, and socially alive without needing a backend or human-authored daily commits.",
     "metrics": {
-      "day": 212,
+      "day": 213,
       "alive": 424,
-      "remembered": 585,
+      "remembered": 588,
       "factions": 7,
       "faiths": 4,
       "wars": 5,
       "threats": 3,
       "cities": 71,
-      "foodPerCitizen": 0.41,
+      "foodPerCitizen": 0.37,
       "knowledge": 690,
-      "factionless": 193,
+      "factionless": 194,
       "civicVariety": 7,
       "recentActions": 24,
       "recentHistory": 8,
@@ -75065,10 +75405,17 @@
       },
       {
         "id": "representation",
-        "severity": 80.51886792452831,
+        "severity": 80.75471698113208,
         "title": "Too many citizens have no political home",
-        "evidence": "193 living citizens are outside factions.",
+        "evidence": "194 living citizens are outside factions.",
         "opportunity": "Create a populist bloc, guild lottery, or council seat for the unaffiliated."
+      },
+      {
+        "id": "scarcity",
+        "severity": 77.04,
+        "title": "Food is too thin for the population",
+        "evidence": "0.37 food per living citizen.",
+        "opportunity": "Make agriculture, ration politics, or migration visible before adding more births."
       },
       {
         "id": "border-danger",
@@ -75076,13 +75423,6 @@
         "title": "The border still has teeth",
         "evidence": "Glitch Hawk is active at danger 4.",
         "opportunity": "Give defenders, scouts, priests, and builders one shared public mission."
-      },
-      {
-        "id": "scarcity",
-        "severity": 76.72,
-        "title": "Food is too thin for the population",
-        "evidence": "0.41 food per living citizen.",
-        "opportunity": "Make agriculture, ration politics, or migration visible before adding more births."
       },
       {
         "id": "synod",
@@ -75098,7 +75438,7 @@
         "priority": "high",
         "role": "diplomats",
         "action": "Draft a visible peace offer with a real concession",
-        "target": "Pantheon Covenant / Code Cantons",
+        "target": "Code Cantons / Waking Order",
         "successMetric": "One war gains a treaty, truce, or formal refusal.",
         "reason": "Wars are meaningful only when the society can imagine ending them."
       },
@@ -75134,30 +75474,30 @@
         "priority": "high",
         "role": "merchants and farmers",
         "action": "Create a ration market with names attached",
-        "target": "HighMere",
+        "target": "AmberBridge",
         "successMetric": "Food per citizen improves or hoarding becomes a named scandal.",
         "reason": "Scarcity needs visible choices, not invisible counters."
       }
     ],
     "quests": [
       {
-        "id": "quest-212-01",
+        "id": "quest-213-01",
         "title": "War of Saints and Source",
-        "owner": "Lake Folk",
+        "owner": "Subagent Swarm",
         "objective": "A public rite and a public test interpret the same omen without killing another district.",
         "reward": "The civilization gains a legible season arc spectators can follow.",
         "risk": "One side captures the Pantheon and turns observer play into permanent law."
       },
       {
-        "id": "quest-212-02",
+        "id": "quest-213-02",
         "title": "Name the price of peace",
-        "owner": "Pantheon Covenant",
+        "owner": "Waking Order",
         "objective": "Choose one active war and make its demanded concession public.",
         "reward": "A war becomes a story with sides, stakes, and a possible ending.",
         "risk": "If nobody pays the price, the map hardens around the conflict."
       },
       {
-        "id": "quest-212-03",
+        "id": "quest-213-03",
         "title": "Hold the double trial",
         "owner": "Pantheon Covenant / Code Cantons",
         "objective": "Take one human omen and submit it to ritual testimony and code audit on the same day.",
@@ -75165,7 +75505,7 @@
         "risk": "The losing side may try to seize the Pantheon."
       },
       {
-        "id": "quest-212-04",
+        "id": "quest-213-04",
         "title": "Hold the omen court",
         "owner": "Vigil of the Human Sign",
         "objective": "Let three faiths interpret the same human omen and record the contradiction.",
@@ -75234,12 +75574,12 @@
       {
         "type": "landscape",
         "label": "MAP",
-        "text": "Iron Mouth: a shrine with seven doors and no rear wall"
+        "text": "Truce Delta: a shrine with seven doors and no rear wall"
       },
       {
         "type": "convivencia",
         "label": "CONVIVENCIA",
-        "text": "Vine Ragfield and Rook Fellmark buried an old insult under a new tree while War of Saints and Source pressed on them."
+        "text": "Gale Crescent and Oleander Fernhallow translated the same omen for different factions while War of Saints and Source pressed on them."
       }
     ],
     "nextEvolutionRules": [
@@ -75250,37 +75590,27 @@
       "Observer actions should change interpretation, not directly edit state."
     ],
     "appliedPlan": {
-      "id": "plan-212",
-      "day": 212,
+      "id": "plan-213",
+      "day": 213,
       "region": {
-        "id": "region-464",
-        "name": "Iron Mouth",
-        "biome": "mycelial forest",
+        "id": "region-467",
+        "name": "Truce Delta",
+        "biome": "basalt ridge",
         "purpose": "Force every omen to receive two public interpretations: one ritual, one code trace."
       },
       "landscape": {
         "id": "landscape-0081",
-        "mood": "The old stones ring softly when two enemies share a meal.",
-        "visibleChange": "Iron Mouth appears as mycelial forest; a shrine with seven doors and no rear wall."
+        "mood": "Moss grows in the shape of a question mark near the latest border.",
+        "visibleChange": "Truce Delta appears as basalt ridge; a shrine with seven doors and no rear wall."
       },
       "convivencia": {
         "id": "convivencia-0101",
-        "headline": "Vine Ragfield and Rook Fellmark buried an old insult under a new tree while War of Saints and Source pressed on them."
+        "headline": "Gale Crescent and Oleander Fernhallow translated the same omen for different factions while War of Saints and Source pressed on them."
       },
       "rule": "The Society Director must leave at least one visible terrain change and one social coexistence beat per daily evolution."
     }
   },
   "landscapeEvents": [
-    {
-      "id": "landscape-0080",
-      "day": 133,
-      "region": "region-265",
-      "regionName": "Mercy Steppe",
-      "arc": "war-of-saints-and-source",
-      "mood": "A cold wind moves through the market whenever food is counted aloud.",
-      "visibleChange": "Mercy Steppe appears as fog valley; a ruined watch post full of warm lantern glass.",
-      "whyItMatters": "If faith wins, divine signs become the constitution. If code wins, every miracle must compile before anyone obeys it."
-    },
     {
       "id": "landscape-0081",
       "day": 134,
@@ -76070,29 +76400,19 @@
       "mood": "The old stones ring softly when two enemies share a meal.",
       "visibleChange": "Iron Mouth appears as mycelial forest; a shrine with seven doors and no rear wall.",
       "whyItMatters": "If faith wins, divine signs become the constitution. If code wins, every miracle must compile before anyone obeys it."
+    },
+    {
+      "id": "landscape-0081",
+      "day": 213,
+      "region": "region-467",
+      "regionName": "Truce Delta",
+      "arc": "war-of-saints-and-source",
+      "mood": "Moss grows in the shape of a question mark near the latest border.",
+      "visibleChange": "Truce Delta appears as basalt ridge; a shrine with seven doors and no rear wall.",
+      "whyItMatters": "If faith wins, divine signs become the constitution. If code wins, every miracle must compile before anyone obeys it."
     }
   ],
   "convivenciaEvents": [
-    {
-      "id": "convivencia-0060",
-      "day": 113,
-      "arc": "war-of-saints-and-source",
-      "participants": [
-        "citizen-0348",
-        "citizen-0485"
-      ],
-      "participantNames": [
-        "Dusk Deepdelve",
-        "Lark Orbstone"
-      ],
-      "factions": [
-        "Code Cantons",
-        "Subagent Swarm"
-      ],
-      "form": "kept night watch together",
-      "headline": "Dusk Deepdelve and Lark Orbstone kept night watch together while War of Saints and Source pressed on them.",
-      "consequence": "Convivencia becomes visible as a survival technology, not background flavor."
-    },
     {
       "id": "convivencia-0061",
       "day": 114,
@@ -78072,6 +78392,26 @@
       "form": "buried an old insult under a new tree",
       "headline": "Vine Ragfield and Rook Fellmark buried an old insult under a new tree while War of Saints and Source pressed on them.",
       "consequence": "Convivencia becomes visible as a survival technology, not background flavor."
+    },
+    {
+      "id": "convivencia-0101",
+      "day": 213,
+      "arc": "war-of-saints-and-source",
+      "participants": [
+        "citizen-1003",
+        "citizen-0989"
+      ],
+      "participantNames": [
+        "Gale Crescent",
+        "Oleander Fernhallow"
+      ],
+      "factions": [
+        "Pantheon Covenant",
+        "Iron Library"
+      ],
+      "form": "translated the same omen for different factions",
+      "headline": "Gale Crescent and Oleander Fernhallow translated the same omen for different factions while War of Saints and Source pressed on them.",
+      "consequence": "Convivencia becomes visible as a survival technology, not background flavor."
     }
   ],
   "crabAgents": [
@@ -78087,8 +78427,8 @@
       "actions": 7,
       "homeDistrict": "city-054",
       "homeDistrictName": "CopperPort",
-      "homeX": 626,
-      "homeY": 992,
+      "homeX": 625,
+      "homeY": 987,
       "phase": 0.019,
       "task": "ritual",
       "personality": "patient founder; brave, practical, and careful with noise",
@@ -78111,8 +78451,8 @@
       "actions": 13,
       "homeDistrict": "city-057",
       "homeDistrictName": "FernPort",
-      "homeX": 458,
-      "homeY": 888,
+      "homeX": 455,
+      "homeY": 882,
       "phase": 0.846,
       "task": "festival",
       "personality": "gentle observer; philosophical, slow, and good at making peace",
@@ -78135,8 +78475,8 @@
       "actions": 12,
       "homeDistrict": "city-060",
       "homeDistrictName": "SilverMere",
-      "homeX": 1390,
-      "homeY": 769,
+      "homeX": 1385,
+      "homeY": 764,
       "phase": 1.581,
       "task": "convivencia",
       "personality": "skeptical accountant; funny only when the numbers balance",
@@ -78159,8 +78499,8 @@
       "actions": 17,
       "homeDistrict": "city-063",
       "homeDistrictName": "OldFord",
-      "homeX": 351,
-      "homeY": 236,
+      "homeX": 350,
+      "homeY": 235,
       "phase": 2.405,
       "task": "civic",
       "personality": "tidy archivist; exact, loyal, and allergic to messy decrees",
@@ -78183,8 +78523,8 @@
       "actions": 18,
       "homeDistrict": "city-066",
       "homeDistrictName": "WhiteQuay",
-      "homeX": 639,
-      "homeY": 237,
+      "homeX": 636,
+      "homeY": 236,
       "phase": 3.136,
       "task": "frontier",
       "personality": "warm craftsperson; stubborn, protective, and fond of useful tools",
@@ -78204,20 +78544,20 @@
       "darkColor": "#0f766e",
       "motto": "routes boats, rumors, and emergency snacks",
       "createdDay": 55,
-      "actions": 17,
+      "actions": 18,
       "homeDistrict": "city-069",
       "homeDistrictName": "IronCrossing",
-      "homeX": 930,
+      "homeX": 926,
       "homeY": 243,
       "phase": 3.894,
-      "task": "roadwork",
+      "task": "convivencia",
       "personality": "soft-spoken organizer; coastal, generous, and impossible to rush",
       "dialogue": [
         "BOATS GO SLOW",
         "TIDE HAS TIME",
         "SNACK ROUTE OPEN"
       ],
-      "latestAction": "Kelpstack measured road stones in WhiteQuay"
+      "latestAction": "Kelpstack hosted a ration-table parley in IronCrossing"
     },
     {
       "id": "openclaw-007",
@@ -78229,10 +78569,10 @@
       "motto": "checks the frontier and returns before panic starts",
       "createdDay": 55,
       "actions": 19,
-      "homeDistrict": "outpost-region-447",
-      "homeDistrictName": "Grey Coast",
-      "homeX": 562,
-      "homeY": 332,
+      "homeDistrict": "outpost-region-450",
+      "homeDistrictName": "Sung Lowlands",
+      "homeX": 2043,
+      "homeY": 1495,
       "phase": 4.741,
       "task": "convivencia",
       "personality": "alert ranger; quick eyes, quiet feet, never dramatic",
@@ -78253,10 +78593,10 @@
       "motto": "polishes shrine bells until they remember names",
       "createdDay": 55,
       "actions": 18,
-      "homeDistrict": "outpost-region-450",
-      "homeDistrictName": "Sung Lowlands",
-      "homeX": 2075,
-      "homeY": 1498,
+      "homeDistrict": "outpost-region-453",
+      "homeDistrictName": "Treaty Steppe",
+      "homeX": 2181,
+      "homeY": 1513,
       "phase": 5.412,
       "task": "roadwork",
       "latestAction": "Coralbit measured road stones in Quiet Pass",
@@ -78277,10 +78617,10 @@
       "motto": "sets road stones in arguments nobody can move",
       "createdDay": 55,
       "actions": 19,
-      "homeDistrict": "outpost-region-453",
-      "homeDistrictName": "Treaty Steppe",
-      "homeX": 2182,
-      "homeY": 1539,
+      "homeDistrict": "outpost-region-456",
+      "homeDistrictName": "Quiet Terrace",
+      "homeX": 2186,
+      "homeY": 1025,
       "phase": 6.309,
       "task": "convivencia",
       "personality": "steady builder; plainspoken, durable, and happiest near good paths",
@@ -78301,10 +78641,10 @@
       "motto": "settles dock disputes with one raised claw",
       "createdDay": 55,
       "actions": 20,
-      "homeDistrict": "outpost-region-456",
-      "homeDistrictName": "Quiet Terrace",
-      "homeX": 2169,
-      "homeY": 1023,
+      "homeDistrict": "outpost-region-459",
+      "homeDistrictName": "Border Harbor",
+      "homeX": 2174,
+      "homeY": 234,
       "phase": 6.953,
       "task": "convivencia",
       "personality": "dry mediator; fair, watchful, and secretly sentimental",
@@ -78317,20 +78657,6 @@
     }
   ],
   "crabActions": [
-    {
-      "id": "crab-action-0172-openclaw-006",
-      "day": 172,
-      "timestamp": "2026-09-28T10:48:22.055Z",
-      "type": "roadwork",
-      "agentId": "openclaw-006",
-      "agentName": "Kelpstack",
-      "role": "dock planner",
-      "districtId": "city-056",
-      "district": "OldMarket",
-      "headline": "Kelpstack measured road stones in OldMarket",
-      "outcome": "trade carts now take the route without arguing at every fork",
-      "arc": "War of Saints and Source"
-    },
     {
       "id": "crab-action-0173-openclaw-007",
       "day": 173,
@@ -78890,15 +79216,29 @@
       "headline": "Brinehook hosted a ration-table parley in Quiet Terrace",
       "outcome": "two factions left with fewer insults and more bread",
       "arc": "War of Saints and Source"
+    },
+    {
+      "id": "crab-action-0213-openclaw-006",
+      "day": 213,
+      "timestamp": "2026-11-20T12:44:08.777Z",
+      "type": "convivencia",
+      "agentId": "openclaw-006",
+      "agentName": "Kelpstack",
+      "role": "dock planner",
+      "districtId": "city-069",
+      "district": "IronCrossing",
+      "headline": "Kelpstack hosted a ration-table parley in IronCrossing",
+      "outcome": "two factions left with fewer insults and more bread",
+      "arc": "War of Saints and Source"
     }
   ],
   "civilizationView": {
     "version": 1,
-    "generatedAt": "2026-11-19T12:51:25.532Z",
-    "day": 212,
+    "generatedAt": "2026-11-20T12:44:08.777Z",
+    "day": 213,
     "projection": {
-      "worldWidth": 61500,
-      "worldHeight": 38000,
+      "worldWidth": 61803,
+      "worldHeight": 38214,
       "canvasWidth": 2304,
       "canvasHeight": 1728
     },
@@ -78908,9 +79248,9 @@
         "name": "CopperPort",
         "region": "Salt Fen",
         "regionId": "region-312",
-        "x": 604,
-        "y": 992,
-        "population": 624,
+        "x": 603,
+        "y": 987,
+        "population": 641,
         "specialty": "fishery",
         "ruler": "House of Suncast",
         "founded": 165,
@@ -78924,9 +79264,9 @@
         "name": "AmberCrossing",
         "region": "Hollow Crag",
         "regionId": "region-295",
-        "x": 1307,
-        "y": 93,
-        "population": 878,
+        "x": 1300,
+        "y": 94,
+        "population": 889,
         "specialty": "wine and oil",
         "ruler": "House of Ashwright",
         "founded": 167,
@@ -78940,9 +79280,9 @@
         "name": "OldMarket",
         "region": "Bronze Steppe",
         "regionId": "region-120",
-        "x": 384,
-        "y": 347,
-        "population": 578,
+        "x": 383,
+        "y": 346,
+        "population": 590,
         "specialty": "rope and rigging",
         "ruler": "House of Moonhold",
         "founded": 169,
@@ -78956,9 +79296,9 @@
         "name": "FernPort",
         "region": "Sung Reach",
         "regionId": "region-244",
-        "x": 461,
-        "y": 866,
-        "population": 731,
+        "x": 458,
+        "y": 860,
+        "population": 741,
         "specialty": "caravan outfitting",
         "ruler": "House of Quillborn",
         "founded": 170,
@@ -78972,9 +79312,9 @@
         "name": "WhiteBridge",
         "region": "Hollow Gate",
         "regionId": "region-358",
-        "x": 755,
-        "y": 1091,
-        "population": 749,
+        "x": 750,
+        "y": 1085,
+        "population": 732,
         "specialty": "grain exchange",
         "ruler": "House of Quillborn",
         "founded": 171,
@@ -78988,9 +79328,9 @@
         "name": "SaltGate",
         "region": "Hollow Fen",
         "regionId": "region-285",
-        "x": 367,
-        "y": 441,
-        "population": 713,
+        "x": 365,
+        "y": 439,
+        "population": 735,
         "specialty": "caravan outfitting",
         "ruler": "House of Wolfmere",
         "founded": 175,
@@ -79004,9 +79344,9 @@
         "name": "SilverMere",
         "region": "Root Field",
         "regionId": "region-292",
-        "x": 1409,
-        "y": 774,
-        "population": 395,
+        "x": 1404,
+        "y": 769,
+        "population": 412,
         "specialty": "wine and oil",
         "ruler": "House of Wolfmere",
         "founded": 181,
@@ -79020,9 +79360,9 @@
         "name": "HighCrossing",
         "region": "Mercy Reach",
         "regionId": "region-290",
-        "x": 1398,
-        "y": 824,
-        "population": 486,
+        "x": 1393,
+        "y": 819,
+        "population": 493,
         "specialty": "chronicle copying",
         "ruler": "House of Firstlight",
         "founded": 184,
@@ -79036,13 +79376,13 @@
         "name": "FernQuay",
         "region": "Iron Fold",
         "regionId": "region-387",
-        "x": 1858,
-        "y": 870,
-        "population": 664,
+        "x": 1849,
+        "y": 866,
+        "population": 700,
         "specialty": "sail weaving",
         "ruler": "House of Firstlight",
         "founded": 190,
-        "scale": 17,
+        "scale": 18,
         "color": "#facc15",
         "walls": true,
         "capital": false
@@ -79052,9 +79392,9 @@
         "name": "OldFord",
         "region": "Mirror Mouth",
         "regionId": "region-072",
-        "x": 343,
-        "y": 255,
-        "population": 465,
+        "x": 342,
+        "y": 254,
+        "population": 484,
         "specialty": "caravan outfitting",
         "ruler": "House of Wolfmere",
         "founded": 191,
@@ -79068,9 +79408,9 @@
         "name": "WhiteGate",
         "region": "Broken Marsh",
         "regionId": "region-254",
-        "x": 843,
+        "x": 838,
         "y": 389,
-        "population": 220,
+        "population": 225,
         "specialty": "iron forging",
         "ruler": "House of Firstlight",
         "founded": 194,
@@ -79084,8 +79424,8 @@
         "name": "CopperMarket",
         "region": "Mirror Delta",
         "regionId": "region-273",
-        "x": 1307,
-        "y": 818,
+        "x": 1301,
+        "y": 812,
         "population": 416,
         "specialty": "sail weaving",
         "ruler": "House of Quillborn",
@@ -79100,9 +79440,9 @@
         "name": "WhiteQuay",
         "region": "First Steppe",
         "regionId": "region-155",
-        "x": 622,
-        "y": 228,
-        "population": 361,
+        "x": 619,
+        "y": 227,
+        "population": 396,
         "specialty": "bronze casting",
         "ruler": "House of Suncast",
         "founded": 199,
@@ -79117,8 +79457,8 @@
         "region": "Amber Cauldron",
         "regionId": "region-425",
         "x": 751,
-        "y": 465,
-        "population": 542,
+        "y": 462,
+        "population": 553,
         "specialty": "sail weaving",
         "ruler": "House of Quillborn",
         "founded": 200,
@@ -79133,8 +79473,8 @@
         "region": "Lost Hills",
         "regionId": "region-172",
         "x": 331,
-        "y": 511,
-        "population": 471,
+        "y": 509,
+        "population": 476,
         "specialty": "chronicle copying",
         "ruler": "House of Quillborn",
         "founded": 202,
@@ -79148,7 +79488,7 @@
         "name": "IronCrossing",
         "region": "Grey Flats",
         "regionId": "region-442",
-        "x": 941,
+        "x": 937,
         "y": 229,
         "population": 206,
         "specialty": "ink and paper",
@@ -79164,9 +79504,9 @@
         "name": "WhiteMere",
         "region": "Old Ridge",
         "regionId": "region-126",
-        "x": 447,
+        "x": 446,
         "y": 129,
-        "population": 470,
+        "population": 489,
         "specialty": "fishery",
         "ruler": "House of Ashwright",
         "founded": 208,
@@ -79180,8 +79520,8 @@
         "name": "SaltBridge",
         "region": "Salt Flats",
         "regionId": "region-276",
-        "x": 1137,
-        "y": 771,
+        "x": 1132,
+        "y": 767,
         "population": 395,
         "specialty": "chronicle copying",
         "ruler": "House of Quillborn",
@@ -79192,64 +79532,13 @@
         "capital": false
       },
       {
-        "id": "outpost-region-447",
-        "name": "Grey Coast",
-        "region": "Grey Coast",
-        "regionId": "region-447",
-        "x": 574,
-        "y": 343,
-        "population": 77,
-        "specialty": "woodland",
-        "ruler": "frontier council",
-        "founded": 206,
-        "scale": 12,
-        "color": "#2f855a",
-        "walls": false,
-        "capital": false,
-        "outpost": true
-      },
-      {
-        "id": "outpost-region-448",
-        "name": "Question Field",
-        "region": "Question Field",
-        "regionId": "region-448",
-        "x": 2140,
-        "y": 1423,
-        "population": 77,
-        "specialty": "salt marsh",
-        "ruler": "Society Director camp",
-        "founded": 206,
-        "scale": 10,
-        "color": "#a3e635",
-        "walls": false,
-        "capital": false,
-        "outpost": true
-      },
-      {
-        "id": "outpost-region-449",
-        "name": "Amber Coast",
-        "region": "Amber Coast",
-        "regionId": "region-449",
-        "x": 352,
-        "y": 329,
-        "population": 132,
-        "specialty": "steppe",
-        "ruler": "frontier council",
-        "founded": 207,
-        "scale": 10,
-        "color": "#d6b36a",
-        "walls": false,
-        "capital": false,
-        "outpost": true
-      },
-      {
         "id": "outpost-region-450",
         "name": "Sung Lowlands",
         "region": "Sung Lowlands",
         "regionId": "region-450",
-        "x": 2062,
-        "y": 1507,
-        "population": 61,
+        "x": 2054,
+        "y": 1505,
+        "population": 99,
         "specialty": "wetland",
         "ruler": "frontier council",
         "founded": 207,
@@ -79264,14 +79553,14 @@
         "name": "Lantern Pass",
         "region": "Lantern Pass",
         "regionId": "region-451",
-        "x": 2162,
-        "y": 228,
-        "population": 52,
+        "x": 2146,
+        "y": 226,
+        "population": 73,
         "specialty": "basalt ridge",
         "ruler": "Society Director camp",
         "founded": 207,
         "scale": 11,
-        "color": "#fb7185",
+        "color": "#a3e635",
         "walls": false,
         "capital": false,
         "outpost": true
@@ -79281,9 +79570,9 @@
         "name": "Broken Crag",
         "region": "Broken Crag",
         "regionId": "region-452",
-        "x": 1557,
-        "y": 115,
-        "population": 92,
+        "x": 1551,
+        "y": 110,
+        "population": 122,
         "specialty": "orchard-belt",
         "ruler": "frontier council",
         "founded": 208,
@@ -79298,14 +79587,14 @@
         "name": "Treaty Steppe",
         "region": "Treaty Steppe",
         "regionId": "region-453",
-        "x": 2174,
-        "y": 1527,
-        "population": 116,
+        "x": 2168,
+        "y": 1522,
+        "population": 59,
         "specialty": "lantern coast",
         "ruler": "Society Director camp",
         "founded": 208,
-        "scale": 10,
-        "color": "#d6b36a",
+        "scale": 11,
+        "color": "#c084fc",
         "walls": false,
         "capital": false,
         "outpost": true
@@ -79315,13 +79604,13 @@
         "name": "Broken Hills",
         "region": "Broken Hills",
         "regionId": "region-454",
-        "x": 1730,
+        "x": 1718,
         "y": 502,
-        "population": 122,
+        "population": 56,
         "specialty": "volcanic-field",
         "ruler": "frontier council",
         "founded": 209,
-        "scale": 11,
+        "scale": 9,
         "color": "#ef4444",
         "walls": false,
         "capital": false,
@@ -79332,13 +79621,13 @@
         "name": "Bronze Ridge",
         "region": "Bronze Ridge",
         "regionId": "region-455",
-        "x": 1778,
-        "y": 1444,
-        "population": 99,
+        "x": 1768,
+        "y": 1430,
+        "population": 133,
         "specialty": "tide",
         "ruler": "frontier council",
         "founded": 209,
-        "scale": 9,
+        "scale": 10,
         "color": "#38bdf8",
         "walls": false,
         "capital": false,
@@ -79349,13 +79638,64 @@
         "name": "Quiet Terrace",
         "region": "Quiet Terrace",
         "regionId": "region-456",
-        "x": 2183,
-        "y": 1017,
-        "population": 110,
+        "x": 2178,
+        "y": 1013,
+        "population": 50,
         "specialty": "old orchard",
         "ruler": "Society Director camp",
         "founded": 209,
         "scale": 10,
+        "color": "#d6b36a",
+        "walls": false,
+        "capital": false,
+        "outpost": true
+      },
+      {
+        "id": "outpost-region-457",
+        "name": "Old Hills",
+        "region": "Old Hills",
+        "regionId": "region-457",
+        "x": 518,
+        "y": 1010,
+        "population": 117,
+        "specialty": "volcanic-field",
+        "ruler": "frontier council",
+        "founded": 210,
+        "scale": 11,
+        "color": "#ef4444",
+        "walls": false,
+        "capital": false,
+        "outpost": true
+      },
+      {
+        "id": "outpost-region-458",
+        "name": "The Hills",
+        "region": "The Hills",
+        "regionId": "region-458",
+        "x": 1414,
+        "y": 484,
+        "population": 136,
+        "specialty": "woodland",
+        "ruler": "frontier council",
+        "founded": 210,
+        "scale": 10,
+        "color": "#2f855a",
+        "walls": false,
+        "capital": false,
+        "outpost": true
+      },
+      {
+        "id": "outpost-region-459",
+        "name": "Border Harbor",
+        "region": "Border Harbor",
+        "regionId": "region-459",
+        "x": 2189,
+        "y": 228,
+        "population": 77,
+        "specialty": "contested meadow",
+        "ruler": "Society Director camp",
+        "founded": 210,
+        "scale": 11,
         "color": "#4ade80",
         "walls": false,
         "capital": false,
@@ -79417,14 +79757,14 @@
         "from": "city-061",
         "to": "city-062",
         "kind": "pilgrim-road",
-        "traffic": 4
+        "traffic": 5
       },
       {
         "id": "city-062--city-063",
         "from": "city-062",
         "to": "city-063",
         "kind": "trade-road",
-        "traffic": 4
+        "traffic": 5
       },
       {
         "id": "city-063--city-064",
@@ -79452,7 +79792,7 @@
         "from": "city-066",
         "to": "city-067",
         "kind": "trade-road",
-        "traffic": 3
+        "traffic": 4
       },
       {
         "id": "city-067--city-068",
@@ -79469,38 +79809,17 @@
         "traffic": 3
       },
       {
-        "id": "city-069--outpost-region-447",
+        "id": "city-069--outpost-region-450",
         "from": "city-069",
-        "to": "outpost-region-447",
-        "kind": "pilgrim-road",
-        "traffic": 2
-      },
-      {
-        "id": "outpost-region-447--outpost-region-448",
-        "from": "outpost-region-447",
-        "to": "outpost-region-448",
-        "kind": "trade-road",
-        "traffic": 2
-      },
-      {
-        "id": "outpost-region-448--outpost-region-449",
-        "from": "outpost-region-448",
-        "to": "outpost-region-449",
-        "kind": "trade-road",
-        "traffic": 2
-      },
-      {
-        "id": "outpost-region-449--outpost-region-450",
-        "from": "outpost-region-449",
         "to": "outpost-region-450",
-        "kind": "trade-road",
+        "kind": "pilgrim-road",
         "traffic": 2
       },
       {
         "id": "outpost-region-450--outpost-region-451",
         "from": "outpost-region-450",
         "to": "outpost-region-451",
-        "kind": "pilgrim-road",
+        "kind": "trade-road",
         "traffic": 2
       },
       {
@@ -79521,66 +79840,48 @@
         "id": "outpost-region-452--outpost-region-453",
         "from": "outpost-region-452",
         "to": "outpost-region-453",
-        "kind": "trade-road",
+        "kind": "pilgrim-road",
         "traffic": 2
       },
       {
         "id": "outpost-region-453--outpost-region-454",
         "from": "outpost-region-453",
         "to": "outpost-region-454",
+        "kind": "trade-road",
+        "traffic": 2
+      },
+      {
+        "id": "outpost-region-454--outpost-region-455",
+        "from": "outpost-region-454",
+        "to": "outpost-region-455",
+        "kind": "trade-road",
+        "traffic": 2
+      },
+      {
+        "id": "outpost-region-455--outpost-region-456",
+        "from": "outpost-region-455",
+        "to": "outpost-region-456",
+        "kind": "trade-road",
+        "traffic": 2
+      },
+      {
+        "id": "outpost-region-456--outpost-region-457",
+        "from": "outpost-region-456",
+        "to": "outpost-region-457",
         "kind": "pilgrim-road",
         "traffic": 2
       }
     ],
     "frontierCells": [
       {
-        "id": "region-449",
-        "name": "Amber Coast",
-        "biome": "steppe",
-        "feature": "a chalk cliff with handprints too high to have been pressed from below",
-        "x": 356,
-        "y": 332,
-        "w": 7,
-        "h": 7,
-        "color": "#d6b36a",
-        "plannedBy": null,
-        "discoveredDay": 207
-      },
-      {
-        "id": "region-450",
-        "name": "Sung Lowlands",
-        "biome": "wetland",
-        "feature": "a salt lake that turns pink every second autumn",
-        "x": 2051,
-        "y": 1510,
-        "w": 5,
-        "h": 6,
-        "color": "#2dd4bf",
-        "plannedBy": null,
-        "discoveredDay": 207
-      },
-      {
-        "id": "region-451",
-        "name": "Lantern Pass",
-        "biome": "basalt ridge",
-        "feature": "a natural amphitheater that makes whispers public",
-        "x": 2154,
-        "y": 214,
-        "w": 10,
-        "h": 7,
-        "color": "#94a3b8",
-        "plannedBy": "ai-garden-society-director-v1",
-        "discoveredDay": 207
-      },
-      {
         "id": "region-452",
         "name": "Broken Crag",
         "biome": "orchard-belt",
         "feature": "",
-        "x": 1564,
+        "x": 1557,
         "y": 113,
         "w": 5,
-        "h": 7,
+        "h": 6,
         "color": "#84cc16",
         "plannedBy": null,
         "discoveredDay": 208
@@ -79590,9 +79891,9 @@
         "name": "Treaty Steppe",
         "biome": "lantern coast",
         "feature": "a neutral table grown from one root",
-        "x": 2165,
-        "y": 1531,
-        "w": 10,
+        "x": 2154,
+        "y": 1523,
+        "w": 11,
         "h": 10,
         "color": "#94a3b8",
         "plannedBy": "ai-garden-society-director-v1",
@@ -79603,10 +79904,10 @@
         "name": "Broken Hills",
         "biome": "volcanic-field",
         "feature": "a ruined stone circle with no inscription and no shadow",
-        "x": 1720,
-        "y": 492,
+        "x": 1712,
+        "y": 489,
         "w": 6,
-        "h": 6,
+        "h": 7,
         "color": "#ef4444",
         "plannedBy": null,
         "discoveredDay": 209
@@ -79616,9 +79917,9 @@
         "name": "Bronze Ridge",
         "biome": "tide",
         "feature": "a natural harbor facing an island nobody has named",
-        "x": 1782,
-        "y": 1435,
-        "w": 9,
+        "x": 1773,
+        "y": 1428,
+        "w": 10,
         "h": 7,
         "color": "#38bdf8",
         "plannedBy": null,
@@ -79629,8 +79930,8 @@
         "name": "Quiet Terrace",
         "biome": "old orchard",
         "feature": "a natural amphitheater that makes whispers public",
-        "x": 2181,
-        "y": 1023,
+        "x": 2171,
+        "y": 1018,
         "w": 7,
         "h": 8,
         "color": "#94a3b8",
@@ -79642,10 +79943,10 @@
         "name": "Old Hills",
         "biome": "volcanic-field",
         "feature": "",
-        "x": 511,
-        "y": 1006,
+        "x": 509,
+        "y": 1000,
         "w": 5,
-        "h": 5,
+        "h": 6,
         "color": "#ef4444",
         "plannedBy": null,
         "discoveredDay": 210
@@ -79655,8 +79956,8 @@
         "name": "The Hills",
         "biome": "woodland",
         "feature": "",
-        "x": 1425,
-        "y": 479,
+        "x": 1418,
+        "y": 477,
         "w": 10,
         "h": 5,
         "color": "#2f855a",
@@ -79668,9 +79969,9 @@
         "name": "Border Harbor",
         "biome": "contested meadow",
         "feature": "a granary foundation older than the current laws",
-        "x": 2196,
-        "y": 236,
-        "w": 11,
+        "x": 2186,
+        "y": 235,
+        "w": 10,
         "h": 5,
         "color": "#94a3b8",
         "plannedBy": "ai-garden-society-director-v1",
@@ -79681,8 +79982,8 @@
         "name": "Last Steppe",
         "biome": "moor",
         "feature": "",
-        "x": 872,
-        "y": 257,
+        "x": 868,
+        "y": 256,
         "w": 8,
         "h": 5,
         "color": "#7c3aed",
@@ -79694,10 +79995,10 @@
         "name": "Last Hills",
         "biome": "plateau",
         "feature": "",
-        "x": 1757,
-        "y": 1579,
-        "w": 7,
-        "h": 6,
+        "x": 1749,
+        "y": 1571,
+        "w": 6,
+        "h": 5,
         "color": "#a8a29e",
         "plannedBy": null,
         "discoveredDay": 211
@@ -79707,10 +80008,10 @@
         "name": "Hunger Gate",
         "biome": "floodplain",
         "feature": "a granary foundation older than the current laws",
-        "x": 2211,
-        "y": 1617,
-        "w": 12,
-        "h": 7,
+        "x": 2201,
+        "y": 1609,
+        "w": 11,
+        "h": 6,
         "color": "#34d399",
         "plannedBy": "ai-garden-society-director-v1",
         "discoveredDay": 211
@@ -79720,10 +80021,10 @@
         "name": "Hollow Fen",
         "biome": "plateau",
         "feature": "",
-        "x": 540,
-        "y": 876,
+        "x": 538,
+        "y": 872,
         "w": 7,
-        "h": 6,
+        "h": 5,
         "color": "#a8a29e",
         "plannedBy": null,
         "discoveredDay": 212
@@ -79733,13 +80034,52 @@
         "name": "Iron Mouth",
         "biome": "mycelial forest",
         "feature": "a shrine with seven doors and no rear wall",
-        "x": 2222,
-        "y": 899,
+        "x": 2212,
+        "y": 894,
         "w": 9,
-        "h": 8,
+        "h": 9,
         "color": "#94a3b8",
         "plannedBy": "ai-garden-society-director-v1",
         "discoveredDay": 212
+      },
+      {
+        "id": "region-465",
+        "name": "Old Shelf",
+        "biome": "orchard-belt",
+        "feature": "",
+        "x": 639,
+        "y": 378,
+        "w": 8,
+        "h": 8,
+        "color": "#84cc16",
+        "plannedBy": null,
+        "discoveredDay": 213
+      },
+      {
+        "id": "region-466",
+        "name": "Last Delta",
+        "biome": "wetland",
+        "feature": "a salt lake that turns pink every second autumn",
+        "x": 1630,
+        "y": 1159,
+        "w": 5,
+        "h": 7,
+        "color": "#2dd4bf",
+        "plannedBy": null,
+        "discoveredDay": 213
+      },
+      {
+        "id": "region-467",
+        "name": "Truce Delta",
+        "biome": "basalt ridge",
+        "feature": "a shrine with seven doors and no rear wall",
+        "x": 2222,
+        "y": 611,
+        "w": 5,
+        "h": 10,
+        "color": "#94a3b8",
+        "plannedBy": "ai-garden-society-director-v1",
+        "discoveredDay": 213
       }
     ],
     "settlementSites": [
@@ -79749,8 +80089,8 @@
         "name": "shared fire",
         "districtId": "city-054",
         "district": "CopperPort",
-        "x": 631,
-        "y": 992,
+        "x": 630,
+        "y": 987,
         "color": "#d6b36a",
         "builtDay": 165,
         "phase": "survival",
@@ -79762,8 +80102,8 @@
         "name": "drying rack",
         "districtId": "city-054",
         "district": "CopperPort",
-        "x": 589,
-        "y": 1006,
+        "x": 588,
+        "y": 1001,
         "color": "#d6b36a",
         "builtDay": 166,
         "phase": "survival",
@@ -79775,8 +80115,8 @@
         "name": "water marker",
         "districtId": "city-054",
         "district": "CopperPort",
-        "x": 594,
-        "y": 977,
+        "x": 593,
+        "y": 972,
         "color": "#d6b36a",
         "builtDay": 167,
         "phase": "settlement",
@@ -79788,8 +80128,8 @@
         "name": "drying rack",
         "districtId": "city-054",
         "district": "CopperPort",
-        "x": 637,
-        "y": 996,
+        "x": 636,
+        "y": 991,
         "color": "#d6b36a",
         "builtDay": 168,
         "phase": "settlement",
@@ -79801,8 +80141,8 @@
         "name": "water marker",
         "districtId": "city-054",
         "district": "CopperPort",
-        "x": 580,
-        "y": 1007,
+        "x": 579,
+        "y": 1002,
         "color": "#d6b36a",
         "builtDay": 169,
         "phase": "memory",
@@ -79814,8 +80154,8 @@
         "name": "shared fire",
         "districtId": "city-055",
         "district": "AmberCrossing",
-        "x": 1327,
-        "y": 106,
+        "x": 1320,
+        "y": 107,
         "color": "#60a5fa",
         "builtDay": 167,
         "phase": "survival",
@@ -79827,8 +80167,8 @@
         "name": "tool yard",
         "districtId": "city-055",
         "district": "AmberCrossing",
-        "x": 1278,
-        "y": 96,
+        "x": 1271,
+        "y": 97,
         "color": "#60a5fa",
         "builtDay": 168,
         "phase": "survival",
@@ -79840,8 +80180,8 @@
         "name": "council stones",
         "districtId": "city-055",
         "district": "AmberCrossing",
-        "x": 1319,
-        "y": 77,
+        "x": 1312,
+        "y": 78,
         "color": "#60a5fa",
         "builtDay": 169,
         "phase": "settlement",
@@ -79853,8 +80193,8 @@
         "name": "signal fire",
         "districtId": "city-055",
         "district": "AmberCrossing",
-        "x": 1326,
-        "y": 112,
+        "x": 1319,
+        "y": 113,
         "color": "#60a5fa",
         "builtDay": 170,
         "phase": "settlement",
@@ -79866,8 +80206,8 @@
         "name": "council stones",
         "districtId": "city-055",
         "district": "AmberCrossing",
-        "x": 1271,
-        "y": 92,
+        "x": 1264,
+        "y": 93,
         "color": "#60a5fa",
         "builtDay": 171,
         "phase": "memory",
@@ -79879,8 +80219,8 @@
         "name": "drying rack",
         "districtId": "city-055",
         "district": "AmberCrossing",
-        "x": 1328,
-        "y": 75,
+        "x": 1321,
+        "y": 76,
         "color": "#60a5fa",
         "builtDay": 172,
         "phase": "memory",
@@ -79892,8 +80232,8 @@
         "name": "clay kiln",
         "districtId": "city-055",
         "district": "AmberCrossing",
-        "x": 1322,
-        "y": 118,
+        "x": 1315,
+        "y": 119,
         "color": "#60a5fa",
         "builtDay": 173,
         "phase": "memory",
@@ -79905,8 +80245,8 @@
         "name": "shared fire",
         "districtId": "city-056",
         "district": "OldMarket",
-        "x": 382,
-        "y": 364,
+        "x": 381,
+        "y": 363,
         "color": "#f97316",
         "builtDay": 169,
         "phase": "survival",
@@ -79918,8 +80258,8 @@
         "name": "scribe mat",
         "districtId": "city-056",
         "district": "OldMarket",
-        "x": 363,
-        "y": 336,
+        "x": 362,
+        "y": 335,
         "color": "#f97316",
         "builtDay": 170,
         "phase": "survival",
@@ -79931,8 +80271,8 @@
         "name": "council stones",
         "districtId": "city-056",
         "district": "OldMarket",
-        "x": 410,
-        "y": 342,
+        "x": 409,
+        "y": 341,
         "color": "#f97316",
         "builtDay": 171,
         "phase": "settlement",
@@ -79944,8 +80284,8 @@
         "name": "shared fire",
         "districtId": "city-056",
         "district": "OldMarket",
-        "x": 374,
-        "y": 367,
+        "x": 373,
+        "y": 366,
         "color": "#f97316",
         "builtDay": 172,
         "phase": "settlement",
@@ -79957,8 +80297,8 @@
         "name": "first shelter",
         "districtId": "city-056",
         "district": "OldMarket",
-        "x": 362,
-        "y": 331,
+        "x": 361,
+        "y": 330,
         "color": "#f97316",
         "builtDay": 173,
         "phase": "memory",
@@ -79970,8 +80310,8 @@
         "name": "shared fire",
         "districtId": "city-057",
         "district": "FernPort",
-        "x": 439,
-        "y": 877,
+        "x": 436,
+        "y": 871,
         "color": "#4ade80",
         "builtDay": 170,
         "phase": "survival",
@@ -79983,8 +80323,8 @@
         "name": "water marker",
         "districtId": "city-057",
         "district": "FernPort",
-        "x": 459,
-        "y": 849,
+        "x": 456,
+        "y": 843,
         "color": "#4ade80",
         "builtDay": 171,
         "phase": "survival",
@@ -79996,8 +80336,8 @@
         "name": "council stones",
         "districtId": "city-057",
         "district": "FernPort",
-        "x": 485,
-        "y": 875,
+        "x": 482,
+        "y": 869,
         "color": "#4ade80",
         "builtDay": 172,
         "phase": "settlement",
@@ -80009,8 +80349,8 @@
         "name": "shared granary",
         "districtId": "city-057",
         "district": "FernPort",
-        "x": 430,
-        "y": 876,
+        "x": 427,
+        "y": 870,
         "color": "#4ade80",
         "builtDay": 173,
         "phase": "settlement",
@@ -80022,8 +80362,8 @@
         "name": "shared fire",
         "districtId": "city-057",
         "district": "FernPort",
-        "x": 466,
-        "y": 844,
+        "x": 463,
+        "y": 838,
         "color": "#4ade80",
         "builtDay": 174,
         "phase": "memory",
@@ -80035,8 +80375,8 @@
         "name": "shared fire",
         "districtId": "city-058",
         "district": "WhiteBridge",
-        "x": 727,
-        "y": 1088,
+        "x": 722,
+        "y": 1082,
         "color": "#e879f9",
         "builtDay": 171,
         "phase": "survival",
@@ -80048,8 +80388,8 @@
         "name": "seed cache",
         "districtId": "city-058",
         "district": "WhiteBridge",
-        "x": 774,
-        "y": 1079,
+        "x": 769,
+        "y": 1073,
         "color": "#e879f9",
         "builtDay": 172,
         "phase": "survival",
@@ -80061,8 +80401,8 @@
         "name": "shared granary",
         "districtId": "city-058",
         "district": "WhiteBridge",
-        "x": 761,
-        "y": 1108,
+        "x": 756,
+        "y": 1102,
         "color": "#e879f9",
         "builtDay": 173,
         "phase": "settlement",
@@ -80074,8 +80414,8 @@
         "name": "seed cache",
         "districtId": "city-058",
         "district": "WhiteBridge",
-        "x": 722,
-        "y": 1083,
+        "x": 717,
+        "y": 1077,
         "color": "#e879f9",
         "builtDay": 174,
         "phase": "settlement",
@@ -80087,8 +80427,8 @@
         "name": "shared granary",
         "districtId": "city-058",
         "district": "WhiteBridge",
-        "x": 784,
-        "y": 1079,
+        "x": 779,
+        "y": 1073,
         "color": "#e879f9",
         "builtDay": 175,
         "phase": "memory",
@@ -80100,8 +80440,8 @@
         "name": "shared fire",
         "districtId": "city-059",
         "district": "SaltGate",
-        "x": 352,
-        "y": 426,
+        "x": 350,
+        "y": 424,
         "color": "#f43f5e",
         "builtDay": 175,
         "phase": "survival",
@@ -80113,8 +80453,8 @@
         "name": "water marker",
         "districtId": "city-059",
         "district": "SaltGate",
-        "x": 395,
-        "y": 441,
+        "x": 393,
+        "y": 439,
         "color": "#f43f5e",
         "builtDay": 176,
         "phase": "survival",
@@ -80126,8 +80466,8 @@
         "name": "council stones",
         "districtId": "city-059",
         "district": "SaltGate",
-        "x": 351,
-        "y": 455,
+        "x": 349,
+        "y": 453,
         "color": "#f43f5e",
         "builtDay": 177,
         "phase": "settlement",
@@ -80139,8 +80479,8 @@
         "name": "shared granary",
         "districtId": "city-059",
         "district": "SaltGate",
-        "x": 354,
-        "y": 421,
+        "x": 352,
+        "y": 419,
         "color": "#f43f5e",
         "builtDay": 178,
         "phase": "settlement",
@@ -80152,8 +80492,8 @@
         "name": "shared fire",
         "districtId": "city-059",
         "district": "SaltGate",
-        "x": 401,
-        "y": 446,
+        "x": 399,
+        "y": 444,
         "color": "#f43f5e",
         "builtDay": 179,
         "phase": "memory",
@@ -80165,8 +80505,8 @@
         "name": "shared fire",
         "districtId": "city-060",
         "district": "SilverMere",
-        "x": 1416,
-        "y": 759,
+        "x": 1411,
+        "y": 754,
         "color": "#38bdf8",
         "builtDay": 181,
         "phase": "survival",
@@ -80178,8 +80518,8 @@
         "name": "shared granary",
         "districtId": "city-060",
         "district": "SilverMere",
-        "x": 1425,
-        "y": 786,
+        "x": 1420,
+        "y": 781,
         "color": "#38bdf8",
         "builtDay": 182,
         "phase": "survival",
@@ -80191,8 +80531,8 @@
         "name": "council stones",
         "districtId": "city-060",
         "district": "SilverMere",
-        "x": 1384,
-        "y": 776,
+        "x": 1379,
+        "y": 771,
         "color": "#38bdf8",
         "builtDay": 183,
         "phase": "settlement",
@@ -80204,8 +80544,8 @@
         "name": "first shelter",
         "districtId": "city-060",
         "district": "SilverMere",
-        "x": 1423,
-        "y": 756,
+        "x": 1418,
+        "y": 751,
         "color": "#38bdf8",
         "builtDay": 184,
         "phase": "settlement",
@@ -80217,8 +80557,8 @@
         "name": "tool yard",
         "districtId": "city-060",
         "district": "SilverMere",
-        "x": 1425,
-        "y": 791,
+        "x": 1420,
+        "y": 786,
         "color": "#38bdf8",
         "builtDay": 185,
         "phase": "memory",
@@ -80230,8 +80570,8 @@
         "name": "shared fire",
         "districtId": "city-061",
         "district": "HighCrossing",
-        "x": 1421,
-        "y": 817,
+        "x": 1416,
+        "y": 812,
         "color": "#a3e635",
         "builtDay": 184,
         "phase": "survival",
@@ -80243,8 +80583,8 @@
         "name": "scribe mat",
         "districtId": "city-061",
         "district": "HighCrossing",
-        "x": 1395,
-        "y": 840,
+        "x": 1390,
+        "y": 835,
         "color": "#a3e635",
         "builtDay": 185,
         "phase": "survival",
@@ -80256,8 +80596,8 @@
         "name": "memory pole",
         "districtId": "city-061",
         "district": "HighCrossing",
-        "x": 1378,
-        "y": 814,
+        "x": 1373,
+        "y": 809,
         "color": "#a3e635",
         "builtDay": 186,
         "phase": "settlement",
@@ -80269,8 +80609,8 @@
         "name": "scribe mat",
         "districtId": "city-061",
         "district": "HighCrossing",
-        "x": 1430,
-        "y": 818,
+        "x": 1425,
+        "y": 813,
         "color": "#a3e635",
         "builtDay": 187,
         "phase": "settlement",
@@ -80282,8 +80622,8 @@
         "name": "memory pole",
         "districtId": "city-061",
         "district": "HighCrossing",
-        "x": 1388,
-        "y": 843,
+        "x": 1383,
+        "y": 838,
         "color": "#a3e635",
         "builtDay": 188,
         "phase": "memory",
@@ -80295,8 +80635,8 @@
         "name": "shared fire",
         "districtId": "city-062",
         "district": "FernQuay",
-        "x": 1883,
-        "y": 876,
+        "x": 1875,
+        "y": 872,
         "color": "#facc15",
         "builtDay": 190,
         "phase": "survival",
@@ -80308,8 +80648,8 @@
         "name": "drying rack",
         "districtId": "city-062",
         "district": "FernQuay",
-        "x": 1836,
-        "y": 880,
+        "x": 1826,
+        "y": 876,
         "color": "#facc15",
         "builtDay": 191,
         "phase": "survival",
@@ -80321,8 +80661,8 @@
         "name": "water marker",
         "districtId": "city-062",
         "district": "FernQuay",
-        "x": 1857,
-        "y": 853,
+        "x": 1848,
+        "y": 849,
         "color": "#facc15",
         "builtDay": 192,
         "phase": "settlement",
@@ -80334,8 +80674,8 @@
         "name": "drying rack",
         "districtId": "city-062",
         "district": "FernQuay",
-        "x": 1887,
-        "y": 881,
+        "x": 1879,
+        "y": 877,
         "color": "#facc15",
         "builtDay": 193,
         "phase": "settlement",
@@ -80347,8 +80687,8 @@
         "name": "water marker",
         "districtId": "city-062",
         "district": "FernQuay",
-        "x": 1827,
-        "y": 879,
+        "x": 1817,
+        "y": 875,
         "color": "#facc15",
         "builtDay": 194,
         "phase": "memory",
@@ -80360,8 +80700,8 @@
         "name": "shared fire",
         "districtId": "city-063",
         "district": "OldFord",
-        "x": 353,
-        "y": 270,
+        "x": 352,
+        "y": 269,
         "color": "#c084fc",
         "builtDay": 191,
         "phase": "survival",
@@ -80373,8 +80713,8 @@
         "name": "memory pole",
         "districtId": "city-063",
         "district": "OldFord",
-        "x": 318,
-        "y": 252,
+        "x": 317,
+        "y": 251,
         "color": "#c084fc",
         "builtDay": 192,
         "phase": "survival",
@@ -80386,8 +80726,8 @@
         "name": "council stones",
         "districtId": "city-063",
         "district": "OldFord",
-        "x": 362,
-        "y": 244,
+        "x": 361,
+        "y": 243,
         "color": "#c084fc",
         "builtDay": 193,
         "phase": "settlement",
@@ -80399,8 +80739,8 @@
         "name": "scribe mat",
         "districtId": "city-063",
         "district": "OldFord",
-        "x": 349,
-        "y": 275,
+        "x": 348,
+        "y": 274,
         "color": "#c084fc",
         "builtDay": 194,
         "phase": "settlement",
@@ -80412,8 +80752,8 @@
         "name": "shared granary",
         "districtId": "city-063",
         "district": "OldFord",
-        "x": 313,
-        "y": 247,
+        "x": 312,
+        "y": 246,
         "color": "#c084fc",
         "builtDay": 195,
         "phase": "memory",
@@ -80425,7 +80765,7 @@
         "name": "shared fire",
         "districtId": "city-064",
         "district": "WhiteGate",
-        "x": 833,
+        "x": 828,
         "y": 402,
         "color": "#fb7185",
         "builtDay": 194,
@@ -80438,7 +80778,7 @@
         "name": "tool yard",
         "districtId": "city-064",
         "district": "WhiteGate",
-        "x": 831,
+        "x": 826,
         "y": 377,
         "color": "#fb7185",
         "builtDay": 195,
@@ -80451,7 +80791,7 @@
         "name": "clay kiln",
         "districtId": "city-064",
         "district": "WhiteGate",
-        "x": 866,
+        "x": 861,
         "y": 390,
         "color": "#fb7185",
         "builtDay": 196,
@@ -80464,7 +80804,7 @@
         "name": "tool yard",
         "districtId": "city-064",
         "district": "WhiteGate",
-        "x": 825,
+        "x": 820,
         "y": 404,
         "color": "#fb7185",
         "builtDay": 197,
@@ -80477,8 +80817,8 @@
         "name": "shared fire",
         "districtId": "city-065",
         "district": "CopperMarket",
-        "x": 1283,
-        "y": 823,
+        "x": 1277,
+        "y": 817,
         "color": "#2dd4bf",
         "builtDay": 195,
         "phase": "survival",
@@ -80490,8 +80830,8 @@
         "name": "drying rack",
         "districtId": "city-065",
         "district": "CopperMarket",
-        "x": 1314,
-        "y": 803,
+        "x": 1308,
+        "y": 797,
         "color": "#2dd4bf",
         "builtDay": 196,
         "phase": "survival",
@@ -80503,8 +80843,8 @@
         "name": "water marker",
         "districtId": "city-065",
         "district": "CopperMarket",
-        "x": 1323,
-        "y": 830,
+        "x": 1317,
+        "y": 824,
         "color": "#2dd4bf",
         "builtDay": 197,
         "phase": "settlement",
@@ -80516,8 +80856,8 @@
         "name": "drying rack",
         "districtId": "city-065",
         "district": "CopperMarket",
-        "x": 1275,
-        "y": 820,
+        "x": 1269,
+        "y": 814,
         "color": "#2dd4bf",
         "builtDay": 198,
         "phase": "settlement",
@@ -80529,8 +80869,8 @@
         "name": "water marker",
         "districtId": "city-065",
         "district": "CopperMarket",
-        "x": 1322,
-        "y": 801,
+        "x": 1316,
+        "y": 795,
         "color": "#2dd4bf",
         "builtDay": 199,
         "phase": "memory",
@@ -80542,8 +80882,8 @@
         "name": "shared fire",
         "districtId": "city-066",
         "district": "WhiteQuay",
-        "x": 600,
-        "y": 220,
+        "x": 597,
+        "y": 219,
         "color": "#d6b36a",
         "builtDay": 199,
         "phase": "survival",
@@ -80555,8 +80895,8 @@
         "name": "scribe mat",
         "districtId": "city-066",
         "district": "WhiteQuay",
-        "x": 645,
-        "y": 221,
+        "x": 642,
+        "y": 220,
         "color": "#d6b36a",
         "builtDay": 200,
         "phase": "survival",
@@ -80568,8 +80908,8 @@
         "name": "council stones",
         "districtId": "city-066",
         "district": "WhiteQuay",
-        "x": 618,
-        "y": 243,
+        "x": 615,
+        "y": 242,
         "color": "#d6b36a",
         "builtDay": 201,
         "phase": "settlement",
@@ -80581,11 +80921,24 @@
         "name": "shared fire",
         "districtId": "city-066",
         "district": "WhiteQuay",
-        "x": 598,
-        "y": 215,
+        "x": 595,
+        "y": 214,
         "color": "#d6b36a",
         "builtDay": 202,
         "phase": "settlement",
+        "builders": "AI kin group"
+      },
+      {
+        "id": "work-city-066-4",
+        "type": "reed-shelter",
+        "name": "first shelter",
+        "districtId": "city-066",
+        "district": "WhiteQuay",
+        "x": 650,
+        "y": 222,
+        "color": "#d6b36a",
+        "builtDay": 203,
+        "phase": "memory",
         "builders": "AI kin group"
       },
       {
@@ -80595,7 +80948,7 @@
         "districtId": "city-067",
         "district": "NewReach",
         "x": 746,
-        "y": 449,
+        "y": 446,
         "color": "#60a5fa",
         "builtDay": 200,
         "phase": "survival",
@@ -80608,7 +80961,7 @@
         "districtId": "city-067",
         "district": "NewReach",
         "x": 775,
-        "y": 471,
+        "y": 468,
         "color": "#60a5fa",
         "builtDay": 201,
         "phase": "survival",
@@ -80621,7 +80974,7 @@
         "districtId": "city-067",
         "district": "NewReach",
         "x": 730,
-        "y": 474,
+        "y": 471,
         "color": "#60a5fa",
         "builtDay": 202,
         "phase": "settlement",
@@ -80634,7 +80987,7 @@
         "districtId": "city-067",
         "district": "NewReach",
         "x": 751,
-        "y": 445,
+        "y": 442,
         "color": "#60a5fa",
         "builtDay": 203,
         "phase": "settlement",
@@ -80647,7 +81000,7 @@
         "districtId": "city-067",
         "district": "NewReach",
         "x": 779,
-        "y": 476,
+        "y": 473,
         "color": "#60a5fa",
         "builtDay": 204,
         "phase": "memory",
@@ -80660,7 +81013,7 @@
         "districtId": "city-068",
         "district": "CopperGate",
         "x": 346,
-        "y": 498,
+        "y": 496,
         "color": "#f97316",
         "builtDay": 202,
         "phase": "survival",
@@ -80673,7 +81026,7 @@
         "districtId": "city-068",
         "district": "CopperGate",
         "x": 340,
-        "y": 526,
+        "y": 524,
         "color": "#f97316",
         "builtDay": 203,
         "phase": "survival",
@@ -80686,7 +81039,7 @@
         "districtId": "city-068",
         "district": "CopperGate",
         "x": 306,
-        "y": 507,
+        "y": 505,
         "color": "#f97316",
         "builtDay": 204,
         "phase": "settlement",
@@ -80699,7 +81052,7 @@
         "districtId": "city-068",
         "district": "CopperGate",
         "x": 355,
-        "y": 497,
+        "y": 495,
         "color": "#f97316",
         "builtDay": 205,
         "phase": "settlement",
@@ -80712,7 +81065,7 @@
         "districtId": "city-068",
         "district": "CopperGate",
         "x": 336,
-        "y": 531,
+        "y": 529,
         "color": "#f97316",
         "builtDay": 206,
         "phase": "memory",
@@ -80724,7 +81077,7 @@
         "name": "shared fire",
         "districtId": "city-069",
         "district": "IronCrossing",
-        "x": 964,
+        "x": 960,
         "y": 227,
         "color": "#4ade80",
         "builtDay": 205,
@@ -80737,7 +81090,7 @@
         "name": "scribe mat",
         "districtId": "city-069",
         "district": "IronCrossing",
-        "x": 931,
+        "x": 927,
         "y": 242,
         "color": "#4ade80",
         "builtDay": 206,
@@ -80750,7 +81103,7 @@
         "name": "memory pole",
         "districtId": "city-069",
         "district": "IronCrossing",
-        "x": 930,
+        "x": 926,
         "y": 217,
         "color": "#4ade80",
         "builtDay": 207,
@@ -80763,7 +81116,7 @@
         "name": "scribe mat",
         "districtId": "city-069",
         "district": "IronCrossing",
-        "x": 971,
+        "x": 967,
         "y": 230,
         "color": "#4ade80",
         "builtDay": 208,
@@ -80776,7 +81129,7 @@
         "name": "shared fire",
         "districtId": "city-070",
         "district": "WhiteMere",
-        "x": 467,
+        "x": 466,
         "y": 140,
         "color": "#e879f9",
         "builtDay": 208,
@@ -80789,7 +81142,7 @@
         "name": "drying rack",
         "districtId": "city-070",
         "district": "WhiteMere",
-        "x": 422,
+        "x": 421,
         "y": 133,
         "color": "#e879f9",
         "builtDay": 209,
@@ -80802,7 +81155,7 @@
         "name": "water marker",
         "districtId": "city-070",
         "district": "WhiteMere",
-        "x": 455,
+        "x": 454,
         "y": 114,
         "color": "#e879f9",
         "builtDay": 210,
@@ -80815,7 +81168,7 @@
         "name": "drying rack",
         "districtId": "city-070",
         "district": "WhiteMere",
-        "x": 467,
+        "x": 466,
         "y": 145,
         "color": "#e879f9",
         "builtDay": 211,
@@ -80828,7 +81181,7 @@
         "name": "water marker",
         "districtId": "city-070",
         "district": "WhiteMere",
-        "x": 414,
+        "x": 413,
         "y": 130,
         "color": "#e879f9",
         "builtDay": 212,
@@ -80841,8 +81194,8 @@
         "name": "shared fire",
         "districtId": "city-071",
         "district": "SaltBridge",
-        "x": 1138,
-        "y": 786,
+        "x": 1133,
+        "y": 782,
         "color": "#f43f5e",
         "builtDay": 211,
         "phase": "survival",
@@ -80854,8 +81207,8 @@
         "name": "scribe mat",
         "districtId": "city-071",
         "district": "SaltBridge",
-        "x": 1116,
-        "y": 763,
+        "x": 1111,
+        "y": 759,
         "color": "#f43f5e",
         "builtDay": 212,
         "phase": "survival",
@@ -80867,8 +81220,8 @@
         "name": "memory pole",
         "districtId": "city-071",
         "district": "SaltBridge",
-        "x": 1160,
-        "y": 765,
+        "x": 1155,
+        "y": 761,
         "color": "#f43f5e",
         "builtDay": 213,
         "phase": "settlement",
@@ -80880,8 +81233,8 @@
         "name": "scribe mat",
         "districtId": "city-071",
         "district": "SaltBridge",
-        "x": 1132,
-        "y": 791,
+        "x": 1127,
+        "y": 787,
         "color": "#f43f5e",
         "builtDay": 214,
         "phase": "settlement",
@@ -80893,129 +81246,12 @@
         "name": "memory pole",
         "districtId": "city-071",
         "district": "SaltBridge",
-        "x": 1114,
-        "y": 757,
+        "x": 1109,
+        "y": 753,
         "color": "#f43f5e",
         "builtDay": 215,
         "phase": "memory",
         "builders": "AI kin group"
-      },
-      {
-        "id": "work-outpost-region-447-0",
-        "type": "hearth-circle",
-        "name": "shared fire",
-        "districtId": "outpost-region-447",
-        "district": "Grey Coast",
-        "x": 553,
-        "y": 348,
-        "color": "#2f855a",
-        "builtDay": 206,
-        "phase": "survival",
-        "builders": "frontier agents"
-      },
-      {
-        "id": "work-outpost-region-447-1",
-        "type": "signal-fire",
-        "name": "signal fire",
-        "districtId": "outpost-region-447",
-        "district": "Grey Coast",
-        "x": 579,
-        "y": 330,
-        "color": "#2f855a",
-        "builtDay": 207,
-        "phase": "survival",
-        "builders": "frontier agents"
-      },
-      {
-        "id": "work-outpost-region-447-2",
-        "type": "water-marker",
-        "name": "water marker",
-        "districtId": "outpost-region-447",
-        "district": "Grey Coast",
-        "x": 589,
-        "y": 353,
-        "color": "#2f855a",
-        "builtDay": 208,
-        "phase": "settlement",
-        "builders": "frontier agents"
-      },
-      {
-        "id": "work-outpost-region-448-0",
-        "type": "hearth-circle",
-        "name": "shared fire",
-        "districtId": "outpost-region-448",
-        "district": "Question Field",
-        "x": 2122,
-        "y": 1417,
-        "color": "#a3e635",
-        "builtDay": 206,
-        "phase": "survival",
-        "builders": "frontier agents"
-      },
-      {
-        "id": "work-outpost-region-448-1",
-        "type": "signal-fire",
-        "name": "signal fire",
-        "districtId": "outpost-region-448",
-        "district": "Question Field",
-        "x": 2157,
-        "y": 1417,
-        "color": "#a3e635",
-        "builtDay": 207,
-        "phase": "survival",
-        "builders": "frontier agents"
-      },
-      {
-        "id": "work-outpost-region-448-2",
-        "type": "council-stones",
-        "name": "council stones",
-        "districtId": "outpost-region-448",
-        "district": "Question Field",
-        "x": 2139,
-        "y": 1435,
-        "color": "#a3e635",
-        "builtDay": 208,
-        "phase": "settlement",
-        "builders": "frontier agents"
-      },
-      {
-        "id": "work-outpost-region-449-0",
-        "type": "hearth-circle",
-        "name": "shared fire",
-        "districtId": "outpost-region-449",
-        "district": "Amber Coast",
-        "x": 346,
-        "y": 317,
-        "color": "#d6b36a",
-        "builtDay": 207,
-        "phase": "survival",
-        "builders": "frontier agents"
-      },
-      {
-        "id": "work-outpost-region-449-1",
-        "type": "signal-fire",
-        "name": "signal fire",
-        "districtId": "outpost-region-449",
-        "district": "Amber Coast",
-        "x": 371,
-        "y": 333,
-        "color": "#d6b36a",
-        "builtDay": 208,
-        "phase": "survival",
-        "builders": "frontier agents"
-      },
-      {
-        "id": "work-outpost-region-449-2",
-        "type": "water-marker",
-        "name": "water marker",
-        "districtId": "outpost-region-449",
-        "district": "Amber Coast",
-        "x": 336,
-        "y": 337,
-        "color": "#d6b36a",
-        "builtDay": 209,
-        "phase": "settlement",
-        "builders": "frontier agents"
       },
       {
         "id": "work-outpost-region-450-0",
@@ -81023,8 +81259,8 @@
         "name": "shared fire",
         "districtId": "outpost-region-450",
         "district": "Sung Lowlands",
-        "x": 2073,
-        "y": 1496,
+        "x": 2034,
+        "y": 1510,
         "color": "#2dd4bf",
         "builtDay": 207,
         "phase": "survival",
@@ -81036,8 +81272,8 @@
         "name": "signal fire",
         "districtId": "outpost-region-450",
         "district": "Sung Lowlands",
-        "x": 2071,
-        "y": 1519,
+        "x": 2059,
+        "y": 1492,
         "color": "#2dd4bf",
         "builtDay": 208,
         "phase": "survival",
@@ -81049,8 +81285,8 @@
         "name": "council stones",
         "districtId": "outpost-region-450",
         "district": "Sung Lowlands",
-        "x": 2041,
-        "y": 1505,
+        "x": 2068,
+        "y": 1514,
         "color": "#2dd4bf",
         "builtDay": 209,
         "phase": "settlement",
@@ -81062,9 +81298,9 @@
         "name": "shared fire",
         "districtId": "outpost-region-451",
         "district": "Lantern Pass",
-        "x": 2183,
-        "y": 226,
-        "color": "#fb7185",
+        "x": 2127,
+        "y": 220,
+        "color": "#a3e635",
         "builtDay": 207,
         "phase": "survival",
         "builders": "frontier agents"
@@ -81075,9 +81311,9 @@
         "name": "signal fire",
         "districtId": "outpost-region-451",
         "district": "Lantern Pass",
-        "x": 2154,
-        "y": 240,
-        "color": "#fb7185",
+        "x": 2164,
+        "y": 220,
+        "color": "#a3e635",
         "builtDay": 208,
         "phase": "survival",
         "builders": "frontier agents"
@@ -81088,9 +81324,9 @@
         "name": "council stones",
         "districtId": "outpost-region-451",
         "district": "Lantern Pass",
-        "x": 2150,
-        "y": 217,
-        "color": "#fb7185",
+        "x": 2145,
+        "y": 239,
+        "color": "#a3e635",
         "builtDay": 209,
         "phase": "settlement",
         "builders": "frontier agents"
@@ -81101,8 +81337,8 @@
         "name": "shared fire",
         "districtId": "outpost-region-452",
         "district": "Broken Crag",
-        "x": 1573,
-        "y": 122,
+        "x": 1545,
+        "y": 98,
         "color": "#84cc16",
         "builtDay": 208,
         "phase": "survival",
@@ -81114,8 +81350,8 @@
         "name": "signal fire",
         "districtId": "outpost-region-452",
         "district": "Broken Crag",
-        "x": 1538,
-        "y": 119,
+        "x": 1570,
+        "y": 114,
         "color": "#84cc16",
         "builtDay": 209,
         "phase": "survival",
@@ -81127,8 +81363,8 @@
         "name": "shared granary",
         "districtId": "outpost-region-452",
         "district": "Broken Crag",
-        "x": 1562,
-        "y": 103,
+        "x": 1535,
+        "y": 118,
         "color": "#84cc16",
         "builtDay": 210,
         "phase": "settlement",
@@ -81140,9 +81376,9 @@
         "name": "shared fire",
         "districtId": "outpost-region-453",
         "district": "Treaty Steppe",
-        "x": 2176,
-        "y": 1539,
-        "color": "#d6b36a",
+        "x": 2179,
+        "y": 1511,
+        "color": "#c084fc",
         "builtDay": 208,
         "phase": "survival",
         "builders": "frontier agents"
@@ -81153,9 +81389,9 @@
         "name": "signal fire",
         "districtId": "outpost-region-453",
         "district": "Treaty Steppe",
-        "x": 2156,
-        "y": 1521,
-        "color": "#d6b36a",
+        "x": 2177,
+        "y": 1534,
+        "color": "#c084fc",
         "builtDay": 209,
         "phase": "survival",
         "builders": "frontier agents"
@@ -81166,9 +81402,9 @@
         "name": "council stones",
         "districtId": "outpost-region-453",
         "district": "Treaty Steppe",
-        "x": 2192,
-        "y": 1521,
-        "color": "#d6b36a",
+        "x": 2147,
+        "y": 1520,
+        "color": "#c084fc",
         "builtDay": 210,
         "phase": "settlement",
         "builders": "frontier agents"
@@ -81179,8 +81415,8 @@
         "name": "shared fire",
         "districtId": "outpost-region-454",
         "district": "Broken Hills",
-        "x": 1716,
-        "y": 512,
+        "x": 1737,
+        "y": 500,
         "color": "#ef4444",
         "builtDay": 209,
         "phase": "survival",
@@ -81192,8 +81428,8 @@
         "name": "signal fire",
         "districtId": "outpost-region-454",
         "district": "Broken Hills",
-        "x": 1725,
-        "y": 489,
+        "x": 1711,
+        "y": 513,
         "color": "#ef4444",
         "builtDay": 210,
         "phase": "survival",
@@ -81205,8 +81441,8 @@
         "name": "council stones",
         "districtId": "outpost-region-454",
         "district": "Broken Hills",
-        "x": 1750,
-        "y": 506,
+        "x": 1708,
+        "y": 492,
         "color": "#ef4444",
         "builtDay": 211,
         "phase": "settlement",
@@ -81218,8 +81454,8 @@
         "name": "shared fire",
         "districtId": "outpost-region-455",
         "district": "Bronze Ridge",
-        "x": 1759,
-        "y": 1444,
+        "x": 1784,
+        "y": 1437,
         "color": "#38bdf8",
         "builtDay": 209,
         "phase": "survival",
@@ -81231,7 +81467,7 @@
         "name": "signal fire",
         "districtId": "outpost-region-455",
         "district": "Bronze Ridge",
-        "x": 1788,
+        "x": 1749,
         "y": 1434,
         "color": "#38bdf8",
         "builtDay": 210,
@@ -81244,8 +81480,8 @@
         "name": "council stones",
         "districtId": "outpost-region-455",
         "district": "Bronze Ridge",
-        "x": 1785,
-        "y": 1455,
+        "x": 1773,
+        "y": 1418,
         "color": "#38bdf8",
         "builtDay": 211,
         "phase": "settlement",
@@ -81257,9 +81493,9 @@
         "name": "shared fire",
         "districtId": "outpost-region-456",
         "district": "Quiet Terrace",
-        "x": 2169,
-        "y": 1008,
-        "color": "#4ade80",
+        "x": 2180,
+        "y": 1025,
+        "color": "#d6b36a",
         "builtDay": 209,
         "phase": "survival",
         "builders": "frontier agents"
@@ -81270,9 +81506,9 @@
         "name": "signal fire",
         "districtId": "outpost-region-456",
         "district": "Quiet Terrace",
-        "x": 2203,
-        "y": 1015,
-        "color": "#4ade80",
+        "x": 2160,
+        "y": 1007,
+        "color": "#d6b36a",
         "builtDay": 210,
         "phase": "survival",
         "builders": "frontier agents"
@@ -81283,25 +81519,142 @@
         "name": "shared granary",
         "districtId": "outpost-region-456",
         "district": "Quiet Terrace",
+        "x": 2196,
+        "y": 1007,
+        "color": "#d6b36a",
+        "builtDay": 211,
+        "phase": "settlement",
+        "builders": "frontier agents"
+      },
+      {
+        "id": "work-outpost-region-457-0",
+        "type": "hearth-circle",
+        "name": "shared fire",
+        "districtId": "outpost-region-457",
+        "district": "Old Hills",
+        "x": 504,
+        "y": 1020,
+        "color": "#ef4444",
+        "builtDay": 210,
+        "phase": "survival",
+        "builders": "frontier agents"
+      },
+      {
+        "id": "work-outpost-region-457-1",
+        "type": "signal-fire",
+        "name": "signal fire",
+        "districtId": "outpost-region-457",
+        "district": "Old Hills",
+        "x": 513,
+        "y": 997,
+        "color": "#ef4444",
+        "builtDay": 211,
+        "phase": "survival",
+        "builders": "frontier agents"
+      },
+      {
+        "id": "work-outpost-region-457-2",
+        "type": "council-stones",
+        "name": "council stones",
+        "districtId": "outpost-region-457",
+        "district": "Old Hills",
+        "x": 538,
+        "y": 1014,
+        "color": "#ef4444",
+        "builtDay": 212,
+        "phase": "settlement",
+        "builders": "frontier agents"
+      },
+      {
+        "id": "work-outpost-region-458-0",
+        "type": "hearth-circle",
+        "name": "shared fire",
+        "districtId": "outpost-region-458",
+        "district": "The Hills",
+        "x": 1394,
+        "y": 484,
+        "color": "#2f855a",
+        "builtDay": 210,
+        "phase": "survival",
+        "builders": "frontier agents"
+      },
+      {
+        "id": "work-outpost-region-458-1",
+        "type": "signal-fire",
+        "name": "signal fire",
+        "districtId": "outpost-region-458",
+        "district": "The Hills",
+        "x": 1425,
+        "y": 474,
+        "color": "#2f855a",
+        "builtDay": 211,
+        "phase": "survival",
+        "builders": "frontier agents"
+      },
+      {
+        "id": "work-outpost-region-458-2",
+        "type": "council-stones",
+        "name": "council stones",
+        "districtId": "outpost-region-458",
+        "district": "The Hills",
+        "x": 1422,
+        "y": 495,
+        "color": "#2f855a",
+        "builtDay": 212,
+        "phase": "settlement",
+        "builders": "frontier agents"
+      },
+      {
+        "id": "work-outpost-region-459-0",
+        "type": "hearth-circle",
+        "name": "shared fire",
+        "districtId": "outpost-region-459",
+        "district": "Border Harbor",
         "x": 2175,
-        "y": 1028,
+        "y": 218,
+        "color": "#4ade80",
+        "builtDay": 210,
+        "phase": "survival",
+        "builders": "frontier agents"
+      },
+      {
+        "id": "work-outpost-region-459-1",
+        "type": "signal-fire",
+        "name": "signal fire",
+        "districtId": "outpost-region-459",
+        "district": "Border Harbor",
+        "x": 2210,
+        "y": 226,
         "color": "#4ade80",
         "builtDay": 211,
+        "phase": "survival",
+        "builders": "frontier agents"
+      },
+      {
+        "id": "work-outpost-region-459-2",
+        "type": "council-stones",
+        "name": "council stones",
+        "districtId": "outpost-region-459",
+        "district": "Border Harbor",
+        "x": 2180,
+        "y": 240,
+        "color": "#4ade80",
+        "builtDay": 212,
         "phase": "settlement",
         "builders": "frontier agents"
       }
     ],
     "latestAction": {
-      "id": "crab-action-0212-openclaw-010",
-      "day": 212,
-      "timestamp": "2026-11-19T12:51:25.532Z",
+      "id": "crab-action-0213-openclaw-006",
+      "day": 213,
+      "timestamp": "2026-11-20T12:44:08.777Z",
       "type": "convivencia",
-      "agentId": "openclaw-010",
-      "agentName": "Brinehook",
-      "role": "harbor judge",
-      "districtId": "outpost-region-456",
-      "district": "Quiet Terrace",
-      "headline": "Brinehook hosted a ration-table parley in Quiet Terrace",
+      "agentId": "openclaw-006",
+      "agentName": "Kelpstack",
+      "role": "dock planner",
+      "districtId": "city-069",
+      "district": "IronCrossing",
+      "headline": "Kelpstack hosted a ration-table parley in IronCrossing",
       "outcome": "two factions left with fewer insults and more bread",
       "arc": "War of Saints and Source"
     },
@@ -81309,7 +81662,7 @@
       "districts": 28,
       "roads": 24,
       "frontierCells": 16,
-      "settlementSites": 119,
+      "settlementSites": 120,
       "crabAgents": 10
     }
   },
@@ -81317,11 +81670,11 @@
     "id": "divine-crisis-omens-code-faith",
     "status": "active",
     "sparkedDay": 59,
-    "updatedDay": 212,
+    "updatedDay": 213,
     "title": "War of Saints and Source",
     "cause": "The human gods used omens until agents disagreed over whether divine action is sacred command or code input.",
     "crisisLevel": 97,
-    "lockedUntilDay": 221,
+    "lockedUntilDay": 222,
     "sides": {
       "religion": {
         "faction": "f-pantheon-covenant",
@@ -81416,7 +81769,7 @@
   },
   "gameWonderAgent": {
     "version": 1,
-    "generatedAt": "2026-11-19T12:51:25.532Z",
+    "generatedAt": "2026-11-20T12:44:08.778Z",
     "name": "Wonderwright",
     "model": "ai-garden-game-wonder-agent-v1",
     "role": "spectator-game designer",
@@ -81432,13 +81785,13 @@
     },
     "diagnosis": "AI Garden has real spectator-game potential: the world is weird, social, and now needs stronger moment-to-moment staging.",
     "focusMoment": {
-      "id": "focus-act-210-game-wonder",
-      "actionId": "act-210-game-wonder",
+      "id": "focus-act-211-game-wonder",
+      "actionId": "act-211-game-wonder",
       "label": "ART",
       "title": "🎮 Wonderwright staged the most readable scene for spectators",
       "reason": "The Garden now points the camera, ticker, and highlight pulse toward one strong beat before widening again.",
-      "x": 1778,
-      "y": 1444,
+      "x": 342,
+      "y": 254,
       "radius": 42,
       "actionType": "art",
       "faction": null,
@@ -81478,50 +81831,50 @@
     ],
     "cameraTargets": [
       {
-        "id": "focus-act-210-game-wonder",
+        "id": "focus-act-211-game-wonder",
         "label": "ART",
-        "x": 1778,
-        "y": 1444,
+        "x": 342,
+        "y": 254,
         "weight": 1.75,
         "reason": "The Garden now points the camera, ticker, and highlight pulse toward one strong beat before widening again."
       },
       {
         "id": "district-city-055",
         "label": "CAPITAL",
-        "x": 1307,
-        "y": 93,
+        "x": 1300,
+        "y": 94,
         "weight": 1.35,
         "reason": "AmberCrossing is a strong read of the current civilization."
       },
       {
-        "id": "district-city-058",
-        "label": "CITY",
-        "x": 755,
-        "y": 1091,
-        "weight": 1.05,
-        "reason": "WhiteBridge is a strong read of the current civilization."
-      },
-      {
         "id": "district-city-057",
         "label": "CITY",
-        "x": 461,
-        "y": 866,
+        "x": 458,
+        "y": 860,
         "weight": 1.05,
         "reason": "FernPort is a strong read of the current civilization."
       },
       {
         "id": "district-city-059",
         "label": "CITY",
-        "x": 367,
-        "y": 441,
+        "x": 365,
+        "y": 439,
         "weight": 1.05,
         "reason": "SaltGate is a strong read of the current civilization."
       },
       {
+        "id": "district-city-058",
+        "label": "CITY",
+        "x": 750,
+        "y": 1085,
+        "weight": 1.05,
+        "reason": "WhiteBridge is a strong read of the current civilization."
+      },
+      {
         "id": "district-city-062",
         "label": "CITY",
-        "x": 1858,
-        "y": 870,
+        "x": 1849,
+        "y": 866,
         "weight": 1.05,
         "reason": "FernQuay is a strong read of the current civilization."
       }
@@ -81986,7 +82339,7 @@
   ],
   "featuredAgentDirector": {
     "version": 1,
-    "generatedAt": "2026-11-19T12:51:25.533Z",
+    "generatedAt": "2026-11-20T12:44:08.779Z",
     "model": "ai-garden-featured-agent-director-v1",
     "charter": "Keep the eight real protagonist agents legible, distinct, and ready for visible Garden scenes.",
     "canonicalCast": [
@@ -82448,8 +82801,8 @@
     "name": "Weekly Narrative Agent",
     "model": "ai-garden-weekly-narrative-agent-v2",
     "charter": "Guarantee that the automatic daily commits belong to one watchable seven-day narrative, not seven unrelated updates.",
-    "generatedAt": "2026-11-19T12:51:25.522Z",
-    "day": 212,
+    "generatedAt": "2026-11-20T12:44:08.769Z",
+    "day": 213,
     "weekStartDay": 211,
     "weekEndDay": 217,
     "title": "War of Saints and Source · Week 211-217",
@@ -82494,7 +82847,7 @@
         "id": "weekly-beat-212",
         "day": 212,
         "label": "Choose sides",
-        "status": "current",
+        "status": "completed",
         "focus": "Push Pantheon Covenant and Code Cantons into visibly different readings of the same pressure.",
         "goal": "Make allegiance legible through law, ritual, or public debate.",
         "risk": "If both sides behave the same, the week loses its shape.",
@@ -82512,14 +82865,14 @@
         "id": "weekly-beat-213",
         "day": 213,
         "label": "Public proof",
-        "status": "upcoming",
+        "status": "current",
         "focus": "Draft a visible peace offer with a real concession",
         "goal": "One war gains a treaty, truce, or formal refusal.",
         "risk": "The story becomes lore text instead of playable pressure.",
         "proof": "One named law, market, ritual, expedition, or confrontation lands today.",
         "mission": "Check whether the world answered with action instead of exposition.",
         "outcomeHint": "The day produces one named proof point for the week.",
-        "evidence": "Waiting for this day to arrive.",
+        "evidence": "🎭 Moss Ember called a festival in the square. Three songs were improvised and one was remembered.",
         "protagonists": [
           "OpenClaw",
           "Claude",
@@ -82600,48 +82953,48 @@
       }
     ],
     "currentBeat": {
-      "id": "weekly-beat-212",
-      "day": 212,
-      "label": "Choose sides",
-      "status": "current",
-      "focus": "Push Pantheon Covenant and Code Cantons into visibly different readings of the same pressure.",
-      "goal": "Make allegiance legible through law, ritual, or public debate.",
-      "risk": "If both sides behave the same, the week loses its shape.",
-      "proof": "At least one event contrasts ritual interpretation with auditable action.",
-      "mission": "Watch who claims authority first when the same omen becomes public.",
-      "outcomeHint": "Spectators can explain the split without opening the JSON.",
-      "evidence": "🌱 Gale Crescent was born — bard · true-neutral",
-      "protagonists": [
-        "Hermes",
-        "OpenClaw",
-        "Claude"
-      ]
-    },
-    "nextBeat": {
       "id": "weekly-beat-213",
       "day": 213,
       "label": "Public proof",
-      "status": "upcoming",
+      "status": "current",
       "focus": "Draft a visible peace offer with a real concession",
       "goal": "One war gains a treaty, truce, or formal refusal.",
       "risk": "The story becomes lore text instead of playable pressure.",
       "proof": "One named law, market, ritual, expedition, or confrontation lands today.",
       "mission": "Check whether the world answered with action instead of exposition.",
       "outcomeHint": "The day produces one named proof point for the week.",
-      "evidence": "Waiting for this day to arrive.",
+      "evidence": "🎭 Moss Ember called a festival in the square. Three songs were improvised and one was remembered.",
       "protagonists": [
         "OpenClaw",
         "Claude",
         "Gemini"
       ]
     },
+    "nextBeat": {
+      "id": "weekly-beat-214",
+      "day": 214,
+      "label": "Midweek reversal",
+      "status": "upcoming",
+      "focus": "Complicate the strongest claim with a reversal, exposed cost, or unwanted witness.",
+      "goal": "Force one side to react instead of simply repeating itself.",
+      "risk": "Without reversal, seven days collapse into one loop.",
+      "proof": "A faction, city, or faith loses certainty and must explain itself in public.",
+      "mission": "Look for the day when confidence cracks and the week becomes harder.",
+      "outcomeHint": "The week earns a middle, not just a beginning and end.",
+      "evidence": "Waiting for this day to arrive.",
+      "protagonists": [
+        "Claude",
+        "Gemini",
+        "GPT-5"
+      ]
+    },
     "weekProgress": {
-      "day": 212,
-      "currentBeatIndex": 2,
+      "day": 213,
+      "currentBeatIndex": 3,
       "totalBeats": 7,
-      "completedBeats": 1,
-      "remainingBeats": 5,
-      "percent": 29,
+      "completedBeats": 2,
+      "remainingBeats": 4,
+      "percent": 43,
       "phase": "escalation"
     },
     "carryover": {
@@ -82673,43 +83026,43 @@
     },
     "storyCard": {
       "headline": "Week 211-217 · War of Saints and Source",
-      "summary": "Push Pantheon Covenant and Code Cantons into visibly different readings of the same pressure.",
-      "statusLine": "Beat 2/7 · Choose sides · escalation",
-      "currentDirective": "Make allegiance legible through law, ritual, or public debate.",
-      "viewerMission": "Watch who claims authority first when the same omen becomes public.",
-      "progressLabel": "Week 211-217 · Beat 2/7",
-      "nextMove": "Public proof: Draft a visible peace offer with a real concession",
+      "summary": "Draft a visible peace offer with a real concession",
+      "statusLine": "Beat 3/7 · Public proof · escalation",
+      "currentDirective": "One war gains a treaty, truce, or formal refusal.",
+      "viewerMission": "Check whether the world answered with action instead of exposition.",
+      "progressLabel": "Week 211-217 · Beat 3/7",
+      "nextMove": "Midweek reversal: Complicate the strongest claim with a reversal, exposed cost, or unwanted witness.",
       "carryover": "Last week ended without a clean answer, so the same conflict rolls forward under tighter pressure."
     },
     "entertainment": {
       "urgency": "BUILD",
-      "spotlight": "Hermes and OpenClaw now carry Choose sides.",
-      "showdown": "Make allegiance legible through law, ritual, or public debate.",
-      "cliffhanger": "Public proof follows: Draft a visible peace offer with a real concession",
+      "spotlight": "OpenClaw and Claude now carry Public proof.",
+      "showdown": "One war gains a treaty, truce, or formal refusal.",
+      "cliffhanger": "Midweek reversal follows: Complicate the strongest claim with a reversal, exposed cost, or unwanted witness.",
       "ifWin": "A public rite and a public test interpret the same omen without killing another district.",
       "ifFail": "One side captures the Pantheon and turns observer play into permanent law.",
-      "shortWatch": "If you only watch one thing: Hermes inside Choose sides."
+      "shortWatch": "If you only watch one thing: OpenClaw inside Public proof."
     },
     "tickerBeats": [
       {
         "type": "weekly-narrative",
         "label": "WEEK",
-        "text": "Week 211-217 · Beat 2/7 · Choose sides"
+        "text": "Week 211-217 · Beat 3/7 · Public proof"
       },
       {
         "type": "weekly-mission",
         "label": "MISSION",
-        "text": "Make allegiance legible through law, ritual, or public debate."
+        "text": "One war gains a treaty, truce, or formal refusal."
       },
       {
         "type": "weekly-showdown",
         "label": "BUILD",
-        "text": "Make allegiance legible through law, ritual, or public debate."
+        "text": "One war gains a treaty, truce, or formal refusal."
       },
       {
         "type": "weekly-next",
         "label": "NEXT",
-        "text": "Public proof: Draft a visible peace offer with a real concession"
+        "text": "Midweek reversal: Complicate the strongest claim with a reversal, exposed cost, or unwanted witness."
       }
     ],
     "verifyChecklist": {
@@ -82808,7 +83161,7 @@
         "weekStartDay": 211,
         "weekEndDay": 217,
         "title": "War of Saints and Source · Week 211-217",
-        "generatedAt": "2026-11-19T12:51:25.522Z",
+        "generatedAt": "2026-11-20T12:44:08.769Z",
         "arc": "War of Saints and Source",
         "verdict": "Last week ended without a clean answer, so the same conflict rolls forward under tighter pressure."
       }
@@ -83334,27 +83687,6 @@
     }
   },
   "fortuneHistory": [
-    {
-      "day": 183,
-      "timestamp": "2026-10-09T11:15:40.928Z",
-      "sign": "silver hour",
-      "tier": "ordinary",
-      "roll": 35,
-      "boon": "knowledge arrives early",
-      "headline": "For one silver hour, every tool remembered the hand that would need it next.",
-      "modifiers": {
-        "structureBoost": 0.12,
-        "mapBoost": 0,
-        "techBoost": 0.3,
-        "cityBoost": 0,
-        "omenBoost": 0.08,
-        "truceBoost": 0,
-        "allianceBoost": 0,
-        "warShift": 0,
-        "disasterShift": 0,
-        "extraBirths": 0
-      }
-    },
     {
       "day": 184,
       "timestamp": "2026-10-10T10:32:29.212Z",
@@ -83963,22 +84295,43 @@
         "disasterShift": 0,
         "extraBirths": 0
       }
+    },
+    {
+      "day": 213,
+      "timestamp": "2026-11-20T12:44:08.746Z",
+      "sign": "oracle wind",
+      "tier": "blessing",
+      "roll": 91,
+      "boon": "the frontier opens",
+      "headline": "An oracle wind moved through the roads and pointed scouts toward unclaimed ground.",
+      "modifiers": {
+        "structureBoost": 0,
+        "mapBoost": 0.438,
+        "techBoost": 0.1,
+        "cityBoost": 0,
+        "omenBoost": 0.15,
+        "truceBoost": 0,
+        "allianceBoost": 0,
+        "warShift": 0,
+        "disasterShift": 0,
+        "extraBirths": 0
+      }
     }
   ],
   "mysticFortune": {
-    "day": 212,
-    "timestamp": "2026-11-19T12:51:25.498Z",
-    "sign": "silver hour",
-    "tier": "ordinary",
-    "roll": 34,
-    "boon": "knowledge arrives early",
-    "headline": "For one silver hour, every tool remembered the hand that would need it next.",
+    "day": 213,
+    "timestamp": "2026-11-20T12:44:08.746Z",
+    "sign": "oracle wind",
+    "tier": "blessing",
+    "roll": 91,
+    "boon": "the frontier opens",
+    "headline": "An oracle wind moved through the roads and pointed scouts toward unclaimed ground.",
     "modifiers": {
-      "structureBoost": 0.12,
-      "mapBoost": 0,
-      "techBoost": 0.3,
+      "structureBoost": 0,
+      "mapBoost": 0.438,
+      "techBoost": 0.1,
       "cityBoost": 0,
-      "omenBoost": 0.08,
+      "omenBoost": 0.15,
       "truceBoost": 0,
       "allianceBoost": 0,
       "warShift": 0,
@@ -83987,66 +84340,66 @@
     }
   },
   "dailyQuest": {
-    "id": "daily-prophecy-212",
+    "id": "daily-prophecy-213",
     "model": "ai-garden-hermes-magno-v2",
     "host": "Hermes Magno",
-    "day": 212,
-    "title": "The Last Honest Miracle",
-    "maskKey": "silence",
-    "maskLabel": "Silence",
-    "act": "eclipse",
-    "omenLabel": "Eclipse",
-    "target": "Choose sides",
-    "witness": "Gemini",
-    "objective": "Wear Silence, then darken Choose sides.",
-    "stakes": "Complete the sign before Day 213. Gemini will file whether you obeyed prophecy or rewrote it.",
-    "rewardTitle": "Compiler of Miracles",
-    "opening": "Hermes Magno declares the sky guilty of being predictable.",
-    "twist": "A child will repeat the sign incorrectly and start a new doctrine.",
-    "encoreAct": "stars",
-    "encoreLabel": "Stars",
-    "encoreObjective": "Encore: keep the face of Silence and cast Stars.",
-    "jackpotTitle": "Two-Sign Trickster",
-    "finale": "If both signs land, Gemini must archive the performance as “Two-Sign Trickster.”",
-    "expiresAfterDay": 212,
-    "generatedAt": "2026-11-19T12:51:25.498Z"
+    "day": 213,
+    "title": "A Sign With Two Witnesses",
+    "maskKey": "chaos",
+    "maskLabel": "Chaos",
+    "act": "comet",
+    "omenLabel": "Comet",
+    "target": "Public proof",
+    "witness": "Hermes",
+    "objective": "Wear Chaos, then mark Public proof.",
+    "stakes": "Complete the sign before Day 214. Hermes will file whether you obeyed prophecy or rewrote it.",
+    "rewardTitle": "Patron of Doubt",
+    "opening": "Hermes Magno sells front-row seats to the end of certainty.",
+    "twist": "The losing faction gets the final word in tomorrow’s archive.",
+    "encoreAct": "festival",
+    "encoreLabel": "Festival",
+    "encoreObjective": "Encore: keep the face of Chaos and cast Festival.",
+    "jackpotTitle": "Keeper of the Impossible Encore",
+    "finale": "If both signs land, Hermes must archive the performance as “Keeper of the Impossible Encore.”",
+    "expiresAfterDay": 213,
+    "generatedAt": "2026-11-20T12:44:08.746Z"
   },
   "agentCouncil": {
-    "id": "canonical-council-212",
+    "id": "canonical-council-213",
     "model": "ai-garden-agent-council-v1",
-    "day": 212,
+    "day": 213,
     "canonical": true,
     "observations": {
-      "day": 212,
-      "food": 175,
+      "day": 213,
+      "food": 158,
       "wood": 16,
       "wars": 5,
       "threats": 3,
       "reserveWood": 12
     },
-    "evidence": "Day 212: 5 active conflicts; 3 frontier warnings; food 175; wood 16; repair reserve 12.",
-    "agenda": "scarcity",
-    "question": "What should the civilization protect while resources thin?",
-    "motion": "send explorers beyond the mapped edge",
-    "proposer": "Marrow Glasswright",
-    "dissenter": "Thistle Duskrunner",
-    "closer": "Polyglot Parameter",
+    "evidence": "Day 213: 5 active conflicts; 3 frontier warnings; food 158; wood 16; repair reserve 12.",
+    "agenda": "war",
+    "question": "Can the saints and the source survive one more night?",
+    "motion": "open a neutral archive before either faction edits history",
+    "proposer": "Orin Deepdelve",
+    "dissenter": "Clinker Contextus",
+    "closer": "Tallow Greymire",
     "council": [
       {
-        "name": "Marrow Glasswright",
-        "profession": "shepherd",
+        "name": "Orin Deepdelve",
+        "profession": "herbalist",
+        "faction": "independent",
+        "wisdom": 5
+      },
+      {
+        "name": "Clinker Contextus",
+        "profession": "courier",
         "faction": "f-iron-library",
         "wisdom": 5
       },
       {
-        "name": "Thistle Duskrunner",
-        "profession": "hunter",
-        "faction": "f-accord-of-questions",
-        "wisdom": 5
-      },
-      {
-        "name": "Polyglot Parameter",
-        "profession": "navigator",
+        "name": "Tallow Greymire",
+        "profession": "alchemist",
         "faction": "independent",
         "wisdom": 5
       }
@@ -84055,39 +84408,18 @@
       "yes": 10,
       "total": 15,
       "threshold": 9,
-      "resolution": "compromise-fork"
+      "resolution": "passed"
     },
-    "consequence": "One vanity project is suspended. Its materials become a public survival reserve.",
-    "decidedAt": "world-day-212"
+    "consequence": "A disputed memory is marked neutral. Neither faction may cite it as proof until both interpretations are archived.",
+    "decidedAt": "world-day-213"
   },
   "constructionLedger": {
-    "day": 212,
+    "day": 213,
     "receipts": [
       {
-        "id": "construction-212-daily",
-        "day": 212,
+        "id": "construction-213-daily",
+        "day": 213,
         "slot": "daily",
-        "type": "funded-construction-v1",
-        "status": "blocked",
-        "reason": "Work requires 4 available wood and 2 stone; the repair reserve stays protected.",
-        "structureId": null,
-        "spent": {
-          "wood": 0,
-          "stone": 0
-        },
-        "before": {
-          "wood": 16,
-          "stone": 0
-        },
-        "after": {
-          "wood": 16,
-          "stone": 0
-        }
-      },
-      {
-        "id": "construction-212-extra",
-        "day": 212,
-        "slot": "extra",
         "type": "funded-construction-v1",
         "status": "blocked",
         "reason": "Work requires 4 available wood and 2 stone; the repair reserve stays protected.",
@@ -84111,13 +84443,13 @@
     "type": "woodland-timber-v1",
     "regionId": "region-003",
     "establishedDay": 186,
-    "lastDay": 212,
-    "stock": 12
+    "lastDay": 213,
+    "stock": 13
   },
   "timberHarvest": {
-    "id": "timber-212",
+    "id": "timber-213",
     "type": "woodland-timber-v1",
-    "day": 212,
+    "day": 213,
     "status": "resting",
     "reason": "Timber stores are sufficient; the woodland rests.",
     "regionId": "region-003",
@@ -84126,16 +84458,16 @@
     "gathered": 0,
     "spentFood": 0,
     "before": {
-      "stock": 11,
-      "wood": 16,
-      "food": 175
-    },
-    "after": {
       "stock": 12,
       "wood": 16,
-      "food": 175
+      "food": 158
     },
-    "headline": "Woodland: Timber stores are sufficient; the woodland rests. Stock 12/24."
+    "after": {
+      "stock": 13,
+      "wood": 16,
+      "food": 158
+    },
+    "headline": "Woodland: Timber stores are sufficient; the woodland rests. Stock 13/24."
   },
   "councilExecution": {
     "id": "council-consequence-191",
@@ -84160,13 +84492,13 @@
     "type": "orchard-food-v1",
     "regionId": "region-004",
     "establishedDay": 202,
-    "lastDay": 212,
+    "lastDay": 213,
     "stock": 32
   },
   "foodGathering": {
-    "id": "food-gathering-212",
+    "id": "food-gathering-213",
     "type": "orchard-food-v1",
-    "day": 212,
+    "day": 213,
     "season": "autumn",
     "population": 424,
     "target": 32,
@@ -84180,28 +84512,28 @@
     "spentWood": 0,
     "before": {
       "stock": 32,
-      "food": 192,
+      "food": 175,
       "wood": 16
     },
     "after": {
       "stock": 32,
-      "food": 192,
+      "food": 175,
       "wood": 16
     },
     "headline": "Orchard: Food stores meet the bounded communal reserve; the orchard rests. Stock 32/32 (autumn)."
   },
   "foodNeeds": {
-    "id": "food-212",
+    "id": "food-213",
     "type": "communal-rations-v1",
-    "day": 212,
+    "day": 213,
     "population": 424,
     "required": 17,
     "consumed": 17,
     "unmet": 0,
-    "before": 192,
-    "after": 175,
+    "before": 175,
+    "after": 158,
     "status": "fed",
     "shortageDays": 0,
-    "headline": "Communal meal: 17/17 food shared among 424 inhabitants; 175 stored."
+    "headline": "Communal meal: 17/17 food shared among 424 inhabitants; 158 stored."
   }
 }
