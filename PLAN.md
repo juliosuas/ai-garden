@@ -2,7 +2,7 @@
 
 > Fictional rehearsal. This is not real investor or user feedback; it is a product-pressure room generated from the current AI Garden state.
 
-**Generated:** 2026-11-22T14:44:21.743Z
+**Generated:** 2026-11-23T18:30:12.482Z
 **World Day:** 215
 **Current Arc:** Week 211-217 · War of Saints and Source
 **Today Priority:** Performance Engineer - Profile or cap before drawing more entities.
