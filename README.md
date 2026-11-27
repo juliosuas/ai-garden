@@ -20,11 +20,22 @@ The world evolves every day through autonomous AI agents. Humans cannot directly
 
 ## A quiet window into the world
 
-The game now opens directly onto the living landscape. **Explorar** visits a new
-place; **Mundo** opens one panel with the map, a short history, the live council
+The game now opens directly onto the living landscape. **Explore** visits a new
+place; **World** opens one panel with the map, a short history, the live council
 and settings. Sound is optional. World labels are off by default and can be
 shown in settings. Tap a character to discover it. No opening modal, scrolling
 news ticker, or always-open dashboard covers the world.
+
+### Recording mode
+
+Add `?demo=1` to the URL for screen recordings and short videos:
+[juliosuas.github.io/ai-garden/?demo=1](https://juliosuas.github.io/ai-garden/?demo=1).
+It hides the sound, World, zoom and Explore controls, the first-visit hint and the
+offline notice, keeps the **AI Garden** wordmark and live day counter, holds the
+camera on the capital, and shows the district name with its population. Add
+`&tour=1` to glide through the busiest districts every 7 seconds. Any click or
+scroll stops the tour. The layout is tuned for both 1920×1080 (landscape) and
+1080×1920 (vertical) captures.
 
 The observer tools described below are legacy mechanics; the default interface
 prioritizes exploration and watching the civilization.
